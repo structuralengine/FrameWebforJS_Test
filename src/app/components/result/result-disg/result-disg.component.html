@@ -1,0 +1,73 @@
+<div class="btn-group">
+  <nav>
+    <a
+      routerLink="/result-disg"
+      routerLinkActive="selected-item"
+      class="btn-change active"
+      >基本ケース</a
+    >
+    <a
+      routerLink="/result-comb_disg"
+      routerLinkActive="selected-item"
+      class="btn-change"
+      >COMBINE</a
+    >
+    <a
+      routerLink="/result-pic_disg"
+      routerLinkActive="selected-item"
+      class="btn-change"
+      >PICKUP</a
+    >
+  </nav>
+</div>
+
+<div class="pager">
+  <app-pager (event)="onReceiveEventFromChild($event)"></app-pager>
+  <p class="load-name">{{ load_name }}</p>
+</div>
+<div class="result_table">
+  <table #userinput id="userinput">
+    <thead>
+      <div *ngIf="dimension===3">
+        <tr>
+          <th class="result-sm">No</th>
+          <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
+          <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
+          <th class="result-lg">z方向の<br />移動量<br />(mm)</th>
+          <th class="result-lg">x軸回りの<br />回転量<br />(‰rad)</th>
+          <th class="result-lg">y軸回りの<br />回転量<br />(‰rad)</th>
+          <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+        </tr>
+      </div>
+      <div *ngIf="dimension===2">
+        <tr>
+          <th class="result-sm">No</th>
+          <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
+          <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
+          <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+        </tr>
+      </div>
+    </thead>
+    <tbody>
+      <div *ngIf="dimension===3">
+        <tr *ngFor="let resultData of dataset; index as i">
+          <td class="result-sm">{{ resultData.id }}</td>
+          <td class="result-lg">{{ resultData.dx }}</td>
+          <td class="result-lg">{{ resultData.dy }}</td>
+          <td class="result-lg">{{ resultData.dz }}</td>
+          <td class="result-lg">{{ resultData.rx }}</td>
+          <td class="result-lg">{{ resultData.ry }}</td>
+          <td class="result-lg">{{ resultData.rz }}</td>
+        </tr>
+      </div>
+      <div *ngIf="dimension===2">
+        <tr *ngFor="let resultData of dataset; index as i">
+          <td class="result-sm">{{ resultData.id }}</td>
+          <td class="result-lg">{{ resultData.dx }}</td>
+          <td class="result-lg">{{ resultData.dy }}</td>
+          <td class="result-lg">{{ resultData.rz }}</td>
+        </tr>
+      </div>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,20 @@
+<div class="datasheet_inner">
+  <div class="btn-group">
+    <nav>
+      <a
+        routerLink="/input-load-name"
+        routerLinkActive="selected-item"
+        class="btn-change active"
+        >荷重名称</a
+      >
+      <a
+        routerLink="/input-loads"
+        routerLinkActive="selected-item"
+        class="btn-change"
+        >荷重強度</a
+      >
+    </nav>
+  </div>
+
+  <app-sheet #grid [options]="options"></app-sheet>
+</div>
