@@ -151,7 +151,16 @@ export class InputLoadNameComponent implements OnInit {
       const row = range[0].r1;
       const column = range[0].c1;
       const caseNo = row + 1;
-      this.three.ChangePage(caseNo);
+
+      const target = this.dataset[row];
+      const fm = this.helper.toNumber(target["fix_member"]);
+      const fn = this.helper.toNumber(target["fix_node"]);
+      const option ={
+        fixMemberPage: (fm !== null) ? fm : -1,
+        fixNodePage: (fn !== null) ? fn : -1
+      };
+      this.three.ChangePage(caseNo, option);
+
       this.three.selectChange("load_names", row, column);
     },
     change: (evt, ui) => {
