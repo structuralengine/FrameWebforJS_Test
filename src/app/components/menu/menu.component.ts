@@ -53,7 +53,7 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
     this.fileName = "立体骨組構造解析ソフトver1.6.3"
     this.helper.isContentsDailogShow = false;
-    this.helper.dimension = 3;
+    this.setDimension(2);
   }
 
 
