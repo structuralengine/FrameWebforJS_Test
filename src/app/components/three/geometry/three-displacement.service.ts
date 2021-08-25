@@ -106,7 +106,7 @@ export class ThreeDisplacementService {
       return;
     }
 
-    const gui_step: number = this.gui_max_scale * 0.001;
+    const gui_step: number = this.gui_max_scale * 0.01;
     this.gui = this.scene.gui.add(this.params, 'dispScale', 0, this.gui_max_scale).step(gui_step).onChange((value) => {
       this.scale = value;
       this.onResize();
@@ -242,7 +242,7 @@ export class ThreeDisplacementService {
     let maxDistance: number;
     [minDistance, maxDistance] = this.getDistance();
 
-    const maxValue: number = this.allDisgData['max_value'];
+    const maxValue: number = this.allDisgData['max_value'+ targetKey];
     this.targetData['scale'] = minDistance / maxValue;
     this.gui_max_scale = maxDistance / minDistance;
 

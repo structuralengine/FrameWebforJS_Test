@@ -163,15 +163,17 @@ export class ThreeSectionForceService {
         this.scale = value;
         this.onResize();
         this.scene.render();
-      }),
-      textCount: this.scene.gui.add(this.params, 'textCount', 0, 100).step(10).onChange((value) => {
+      })
+    };
+    // if(this.helper.dimension === 2){
+      this.gui['textCount'] = this.scene.gui.add(this.params, 'textCount', 0, 100).step(10).onChange((value) => {
         // guiによる設定
         this.textCount = value;
         this.changeMesh();
         this.onResize();
         this.scene.render();
-      })
-    };
+      });
+    // }
     
     for (const key of this.radioButtons) {
       this.gui[key] = this.scene.gui.add(this.params, key, this.params[key]).listen().onChange((value) => {
@@ -364,7 +366,7 @@ export class ThreeSectionForceService {
     }
 
     // 主な点に文字を追加する
-    if(this.helper.dimension === 3) return;
+    // if(this.helper.dimension === 3) return;
     // 断面力の大きい順に並び変える
     textValues.sort((a,b) => {
       return Math.abs(a) < Math.abs(b) ? 1 : -1;

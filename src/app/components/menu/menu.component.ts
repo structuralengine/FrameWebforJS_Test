@@ -51,9 +51,9 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fileName = "立体骨組構造解析ソフトver1.6.0"
+    this.fileName = "立体骨組構造解析ソフトver1.6.4"
     this.helper.isContentsDailogShow = false;
-    this.helper.dimension = 3;
+    this.setDimension(2);
   }
 
 
@@ -63,7 +63,7 @@ export class MenuComponent implements OnInit {
     this.InputData.clear();
     this.ResultData.clear();
     this.three.ClearData();
-    this.fileName = "立体骨組構造解析ソフトver1.6.0"
+    this.fileName = "立体骨組構造解析ソフトver1.6.4"
   }
 
   // ファイルを開く
@@ -157,7 +157,7 @@ export class MenuComponent implements OnInit {
 
   private post_compress(jsonData: {}, modalRef: NgbModalRef) {
 
-    const url = 'https://asia-northeast1-the-structural-engine.cloudfunctions.net/frameWeb-2';
+    const url = environment.calcURL; // 'https://asia-northeast1-the-structural-engine.cloudfunctions.net/frameWeb-2';
 
     // json string にする
     const json = JSON.stringify(jsonData, null, 0);

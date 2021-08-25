@@ -10,7 +10,7 @@ addEventListener('message', ({ data }) => {
   try {
 
     for (const typNo of Object.keys(disg)){
-      if(typNo === 'max_value'){
+      if(typNo.includes('max_value')){
         continue;
       }
       // タイプ番号を探す

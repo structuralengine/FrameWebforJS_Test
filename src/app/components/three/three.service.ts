@@ -155,7 +155,7 @@ export class ThreeService {
         break;
 
       case "load_names":
-        this.load.selectChange(-1, index_sub);//, "name");
+        this.load.selectChange(-1, index_sub);// 選択を解除する
         break;
   
       case "load_values":
@@ -185,7 +185,7 @@ export class ThreeService {
 
   //////////////////////////////////////////////////////
   // 編集ページの変更通知を処理する
-  public ChangePage(currentPage: number): void {
+  public ChangePage(currentPage: number, option = {}): void {
     if (this.currentIndex === currentPage) {
       return;
     }
@@ -211,8 +211,12 @@ export class ThreeService {
         break;
 
       case "load_names":
+        if('fixMemberPage' in option)
+          this.fixMember.changeData(option['fixMemberPage']);
+        if('fixNodePage' in option)
+          this.fixNode.changeData( option['fixNodePage']);
         this.load.changeCase(currentPage);
-        break;
+        break; 
 
       case "load_values":
         this.load.changeCase(currentPage);

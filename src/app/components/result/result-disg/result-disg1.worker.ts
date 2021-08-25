@@ -23,8 +23,6 @@ addEventListener('message', ({ data }) => {
 
   try {
 
-    let max_d = 0;
-    let max_r = 0;
 
     for (const caseNo of Object.keys(jsonData)) {
       const target = new Array();
@@ -38,6 +36,9 @@ addEventListener('message', ({ data }) => {
         continue;
       }
       const json: {} = caseData["disg"];
+
+      let max_d = 0;
+      let max_r = 0;
 
       for (const n of Object.keys(json)) {
 
@@ -73,7 +74,7 @@ addEventListener('message', ({ data }) => {
           rz: rz,
         };
         target.push(result);
-
+    
         // 最大値を記録する three.js で使う
         for (const v of [dx, dy, dz]) {
           if (Math.abs(max_d) < Math.abs(v)) {
@@ -87,8 +88,8 @@ addEventListener('message', ({ data }) => {
         }
       }
       disg[caseNo.replace("Case", "")] = target;
+      disg["max_value" + caseNo] = Math.abs(max_d);
     }
-    disg["max_value"] = Math.abs(max_d); // Math.max(Math.abs(max_d), Math.abs(max_r));
 
   } catch (e) {
     error = e;

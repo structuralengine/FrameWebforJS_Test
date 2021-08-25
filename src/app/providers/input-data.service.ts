@@ -170,16 +170,17 @@ export class InputDataService {
       jsonData['three'] = this.three.getSettingJson();
     }
 
+    const error = this.checkError(jsonData);
+    if (error !== null) {
+      jsonData['error'] = error;
+      return jsonData;
+    }
+
     if (this.helper.dimension === 2 && empty === 0) {
       this.create2Ddata(jsonData);
     }
 
     jsonData['dimension'] = this.helper.dimension;
-
-    const error = this.checkError(jsonData);
-    if (error !== null) {
-      jsonData['error'] = error;
-    }
 
     return jsonData;
   }
@@ -297,10 +298,8 @@ export class InputDataService {
     if (shells !== undefined) {
       shellKeys = Object.keys(shells);
     }
-    if (memberKeys.length <= 0) {
-      if (shellKeys.length <= 0) {
-        return 'member データがありません';
-      }
+    if (memberKeys.length + shellKeys.length <= 0) {
+      return 'member データがありません';
     }
 
     // 部材で使われている 節点番号が存在するか調べる
@@ -337,6 +336,80 @@ export class InputDataService {
       return 'load データがありません';
     }
 
+    // 荷重ケース毎にエラーチェック
+    const elements = jsonData['element'];
+    const fix_members = ('fix_member' in jsonData) ? jsonData['fix_member']: {};
+    const fix_nodes = ('fix_node' in jsonData) ? jsonData['fix_node'] : {};
+    for(const key of loadKeys){
+      const load = loads[key];
+      
+      // 断面のチェック
+      const e = load.element.toString();
+      if(!(e in elements)){
+        return '荷重No.' + key + 'における断面番号' + e + 'は存在しません。';
+      }
+
+      // バネ支点のチェック
+      const fn =  load.fix_node.toString();
+      const fm =  load.fix_member.toString();
+      
+      const fix_node = (fn in fix_nodes) ? fix_nodes[fn]: [];
+      const fix_member = (fm in fix_members) ? fix_members[fm]: [];
+
+      if(fix_node.length + fix_member.length <= 0 ){
+        return '荷重No.' + key + 'は、支点もバネもありません。';
+      }
+
+      let nFlg = false;
+      for(const ffn of fix_node){
+        if(!(ffn['n'] in nodes)){ 
+          return '支点No.' + fn + 'の入力において 節点No.' + ffn['n'] + 'は存在しません。';
+        }
+        for(const k of ['rx', 'ry', 'rz', 'tx', 'ty', 'tz']){
+          if(!(k in ffn)){ continue; }
+          if(ffn[k] === 0){ continue; }
+          nFlg = true;
+          break;
+        }
+        if(nFlg === true) {break;}
+      }
+      if(nFlg === false) {
+        for(const ffm of fix_member){
+          if(!(ffm['m'] in members)){ 
+            return 'バネNo.' + fm + 'の入力において 要素No.' + ffm['m'] + 'は存在しません。';
+          }
+          for(const k of ['tx', 'ty', 'tz', 'tr']){
+            if(!(k in ffm)){ continue; }
+            if(ffm[k] === 0){ continue; }
+            nFlg = true;
+            break;
+          }
+          if(nFlg === true) {break;}
+        }       
+      }
+      if(nFlg === false){
+        return '荷重No.' + key + 'は、支点もバネもありません。';
+      }
+
+      // 節点荷重の確認
+      if('load_node' in load){
+        for(const ln of load.load_node){
+          if(!(ln['n'] in nodes)){ 
+            return '荷重No.' + key + 'の' + ln['row'] + '行目の入力において 節点No.' + ln['n'] + 'は存在しません。';
+          }
+        }
+      }
+
+      // 要素荷重の確認
+      if('load_member' in load){
+        for(const lm of load.load_member){
+          if(!(lm['m'] in members)){ 
+            return '荷重No.' + key + 'の' + lm['row'] + '行目の入力において 要素No.' + lm['m'] + 'は存在しません。';
+          }
+        }
+      }
+
+    } // Next 荷重ケース
 
     return null;
   }
