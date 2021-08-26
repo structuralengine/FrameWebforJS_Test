@@ -14,7 +14,7 @@
               </span>
             </label>
             <button ngbDropdownItem (click)="save()">ファイルを保存</button>
-            <button ngbDropdownItem (click)="pickup()">
+            <button *ngIf="isCalculated" ngbDropdownItem (click)="pickup()">
               ピックアップファイル出力
             </button>
 
