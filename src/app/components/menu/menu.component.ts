@@ -51,7 +51,7 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fileName = "立体骨組構造解析ソフトver1.6.4"
+    this.fileName = "立体骨組構造解析ソフトver1.6.5"
     this.helper.isContentsDailogShow = false;
     this.setDimension(2);
   }
@@ -63,7 +63,8 @@ export class MenuComponent implements OnInit {
     this.InputData.clear();
     this.ResultData.clear();
     this.three.ClearData();
-    this.fileName = "立体骨組構造解析ソフトver1.6.4"
+    this.fileName = "立体骨組構造解析ソフトver1.6.5"
+    this.isCalculated = false;
   }
 
   // ファイルを開く
@@ -88,6 +89,7 @@ export class MenuComponent implements OnInit {
         }
         this.three.fileload();
         modalRef.close();
+        this.isCalculated = false;
       })
       .catch(err => {
         alert(err);
@@ -213,7 +215,7 @@ export class MenuComponent implements OnInit {
 
           // 解析結果を集計する
           this.ResultData.loadResultData(_jsonData);
-
+          this.isCalculated = true;
         } catch (e) {
           alert(e);
         } finally {
