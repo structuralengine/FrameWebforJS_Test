@@ -109,6 +109,9 @@ export class InputMembersService {
   public getMemberLength(memberNo: string): number {
 
     const memb = this.getMember(memberNo.toString());
+    if (memb.ni === undefined || memb.nj === undefined) {
+      return null;
+    }
     const ni: string = memb.ni;
     const nj: string = memb.nj;
     if (ni === null || nj === null) {
