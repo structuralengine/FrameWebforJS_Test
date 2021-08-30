@@ -170,14 +170,17 @@ export class InputDataService {
       jsonData['three'] = this.three.getSettingJson();
     }
 
-    const error = this.checkError(jsonData);
-    if (error !== null) {
-      jsonData['error'] = error;
-      return jsonData;
-    }
+    // 解析するモードの場合
+    if(empty === 0){
+      const error = this.checkError(jsonData);
+      if (error !== null) {
+        jsonData['error'] = error;
+        return jsonData;
+      }
 
-    if (this.helper.dimension === 2 && empty === 0) {
-      this.create2Ddata(jsonData);
+      if (this.helper.dimension === 2 ) {
+        this.create2Ddata(jsonData);
+      }
     }
 
     jsonData['dimension'] = this.helper.dimension;
