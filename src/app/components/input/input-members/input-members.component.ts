@@ -132,9 +132,12 @@ export class InputMembersComponent implements OnInit {
           continue;
         }
         const l: number = this.data.getMemberLength(m);
+        const column = this.dataset[row];
         if (l != null) {
-          this.dataset[row]['L'] = l.toFixed(3);
-          this.grid.refreshDataAndView();
+          column['L'] = l.toFixed(3);
+          // this.grid.refreshDataAndView();
+        } else {
+          column['L'] = null;
         }
       }
       this.three.changeData('members');
