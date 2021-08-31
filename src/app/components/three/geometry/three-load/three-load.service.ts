@@ -779,13 +779,15 @@ export class ThreeLoadService {
 
     // 値をスケールの決定に入れると入力を変更する度に全部書き直さなくてはならない
     for (const load of targetMemberLoad) {
-
+      
       const value = Math.max(Math.abs(load.P1), Math.abs(load.P2));
 
+      const direction = load.direction.trim().toLowerCase();
+
       if (load.mark === 2) {
-        if (load.direction === 'r') {
+        if (direction === 'r') {
           LoadList.rMax = Math.max(LoadList.rMax, value);
-        } else if (load.direction === 'x') {
+        } else if (direction === 'x') {
           LoadList.qMax = Math.max(LoadList.qMax, value);
         } else {
           LoadList.wMax = Math.max(LoadList.wMax, value);
@@ -854,14 +856,10 @@ export class ThreeLoadService {
       let P1: number = load.P1;
       let P2: number = load.P2;
       let direction: string = load.direction;
-      if(direction==='x'){
-        console.log()
-      }
       if (direction === null || direction === undefined) {
         direction = '';
       } else {
-        direction = direction.trim();
-        direction = direction.toLowerCase();
+        direction = direction.trim().toLowerCase();
       }
       if (localAxis.x.y === 0 && localAxis.x.z === 0) {
         //console.log(load.m, m, 'は x軸に平行な部材です')

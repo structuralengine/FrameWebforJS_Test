@@ -178,8 +178,12 @@ export class InputLoadService {
           const _m2: string = "m2" in item3 ? item3.m2 : "";
           const _L1: string = "L1" in item3 ? item3.L1 : "";
 
-          const _direction: string =
+          let _direction: string =
             "direction" in item3 ? item3.direction : "";
+          if ( _direction !== null ){
+            _direction = _direction.trim().toLowerCase();
+          }
+
           const _mark: string = "mark" in item3 ? item3.mark : "";
 
           const _L2: string = "L2" in item3 ? item3.L2 : "";
