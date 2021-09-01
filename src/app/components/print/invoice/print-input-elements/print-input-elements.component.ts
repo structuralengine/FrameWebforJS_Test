@@ -95,6 +95,7 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
         line[5] = item.Iy.toFixed(6);
         line[6] = item.Iz.toFixed(6);
         line[7] = item.J.toFixed(4);
+        line[8] = item.n;
         body.push(line);
         row++;
 
