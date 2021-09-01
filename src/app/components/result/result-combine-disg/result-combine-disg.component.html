@@ -1,79 +1,150 @@
-<div class="btn-group">
-  <nav>
-    <a routerLink="/result-disg" class="btn-change">基本ケース</a>
-    <a routesrLink="/result-comb_disg" class="btn-change active">COMBINE</a>
-    <a routerLink="/result-pic_disg" [class]="btnPickup">PICKUP</a>
-  </nav>
-</div>
+<div class="floaterMenu">
+    <div class="btn-group">
+        <nav>
+            <a routerLink="/result-disg" class="btn-change">基本ケース</a>
+            <a routesrLink="/result-comb_disg" class="btn-change active">COMBINE</a>
+            <a routerLink="/result-pic_disg" [class]="btnPickup">PICKUP</a>
+        </nav>
+    </div>
 
-<div class="pager">
-  <app-pager (event)="onReceiveEventFromChild($event)"></app-pager>
-  <p class="load-name">{{ load_name }}</p>
+    <div class="pager">
+        <app-pager (event)="onReceiveEventFromChild($event)"></app-pager>
+    </div>
 </div>
 
 <div *ngFor="let r of KEYS; index as i">
-  <input
-    id="{{ TITLES[i] }}"
-    class="acd-check"
-    type="checkbox"
-    [checked]="i == 0"
-  />
-  <label class="acd-label" for="{{ TITLES[i] }}">
-    <div class="conbine-title acd">
-      {{ TITLES[i] }}<i class="fas fa-sort-down"></i>
+    <div *ngIf="i === cal">
+        <div class="wrapper">
+            <div class="carousel " id="carousel">
+                <div class="card" id="comb">
+                    <div class="card-header">
+                        <p class="loadName">{{ load_name }}</p>
+                        <div class="detailName">
+                            <a id="prev" link="130" (click)="calPage(-1)" class="move" aria-label="previous"><i
+                  class="fas fa-caret-left"></i></a>
+                            <span>{{ TITLES[i] }}</span>
+                            <a id="next" link="136" (click)="calPage(1)" class="move" aria-label="Next"><i
+                  class="fas fa-caret-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="result_table">
+                            <table #userinput id="userinput">
+                                <thead>
+                                    <div *ngIf="dimension===3">
+                                        <tr>
+                                            <th class="result-sm">No</th>
+                                            <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
+                                            <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
+                                            <th class="result-lg">z方向の<br />移動量<br />(mm)</th>
+                                            <th class="result-lg">x軸回りの<br />回転量<br />(‰rad)</th>
+                                            <th class="result-lg">y軸回りの<br />回転量<br />(‰rad)</th>
+                                            <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+                                            <th class="result-lg">組み合わせ</th>
+                                        </tr>
+                                    </div>
+                                    <div *ngIf="dimension===2">
+                                        <tr>
+                                            <th class="result-sm">No</th>
+                                            <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
+                                            <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
+                                            <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+                                            <th class="result-lg">組み合わせ</th>
+                                        </tr>
+                                    </div>
+                                </thead>
+                                <tbody>
+                                    <div *ngIf="dimension===3">
+                                        <tr *ngFor="let resultData of dataset[i]; index as i">
+                                            <td class="result-sm">{{ resultData.id }}</td>
+                                            <td class="result-lg">{{ resultData.dx }}</td>
+                                            <td class="result-lg">{{ resultData.dy }}</td>
+                                            <td class="result-lg">{{ resultData.dz }}</td>
+                                            <td class="result-lg">{{ resultData.rx }}</td>
+                                            <td class="result-lg">{{ resultData.ry }}</td>
+                                            <td class="result-lg">{{ resultData.rz }}</td>
+                                            <td class="result-lg">{{ resultData.case }}</td>
+                                        </tr>
+                                    </div>
+                                    <div *ngIf="dimension===2">
+                                        <tr *ngFor="let resultData of dataset[i]; index as i">
+                                            <td class="result-sm">{{ resultData.id }}</td>
+                                            <td class="result-lg">{{ resultData.dx }}</td>
+                                            <td class="result-lg">{{ resultData.dy }}</td>
+                                            <td class="result-lg">{{ resultData.rz }}</td>
+                                            <td class="result-lg">{{ resultData.case }}</td>
+                                        </tr>
+                                    </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </label>
-
-  <div class="acd-content">
-    <div class="result_table">
-      <table #userinput id="userinput">
-        <thead>
-          <div *ngIf="dimension===3">
-            <tr>
-              <th class="result-sm">No</th>
-              <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
-              <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
-              <th class="result-lg">z方向の<br />移動量<br />(mm)</th>
-              <th class="result-lg">x軸回りの<br />回転量<br />(‰rad)</th>
-              <th class="result-lg">y軸回りの<br />回転量<br />(‰rad)</th>
-              <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
-              <th class="result-lg">組み合わせ</th>
-            </tr>
-          </div>
-          <div *ngIf="dimension===2">
-            <tr>
-              <th class="result-sm">No</th>
-              <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
-              <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
-              <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
-              <th class="result-lg">組み合わせ</th>
-            </tr>
-          </div>
-        </thead>
-        <tbody>
-          <div *ngIf="dimension===3">
-            <tr *ngFor="let resultData of dataset[i]; index as i">
-              <td class="result-sm">{{ resultData.id }}</td>
-              <td class="result-lg">{{ resultData.dx }}</td>
-              <td class="result-lg">{{ resultData.dy }}</td>
-              <td class="result-lg">{{ resultData.dz }}</td>
-              <td class="result-lg">{{ resultData.rx }}</td>
-              <td class="result-lg">{{ resultData.ry }}</td>
-              <td class="result-lg">{{ resultData.rz }}</td>
-              <td class="result-lg">{{ resultData.case }}</td>
-            </tr>
-          </div>
-          <div *ngIf="dimension===2">
-            <tr *ngFor="let resultData of dataset[i]; index as i">
-              <td class="result-sm">{{ resultData.id }}</td>
-              <td class="result-lg">{{ resultData.dx }}</td>
-              <td class="result-lg">{{ resultData.dy }}</td>
-              <td class="result-lg">{{ resultData.rz }}</td>
-              <td class="result-lg">{{ resultData.case }}</td>
-            </tr>
-          </div>
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>
+
+
+
+<!-- <div *ngFor="let r of KEYS; index as i">
+            <input id="{{ TITLES[i] }}" class="acd-check" type="checkbox" [checked]="i == 0" /> 
+            <label class="acd-label" for="{{ TITLES[i] }}">
+        <div class="conbine-title acd">
+          {{ TITLES[i] }}<i class="fas fa-sort-down"></i>
+        </div>
+      </label>
+
+            <div class="acd-content">
+                <div class="result_table">
+                    <table #userinput id="userinput">
+                        <thead>
+                            <div *ngIf="dimension===3">
+                                <tr>
+                                    <th class="result-sm">No</th>
+                                    <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
+                                    <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
+                                    <th class="result-lg">z方向の<br />移動量<br />(mm)</th>
+                                    <th class="result-lg">x軸回りの<br />回転量<br />(‰rad)</th>
+                                    <th class="result-lg">y軸回りの<br />回転量<br />(‰rad)</th>
+                                    <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+                                    <th class="result-lg">組み合わせ</th>
+                                </tr>
+                            </div>
+                            <div *ngIf="dimension===2">
+                                <tr>
+                                    <th class="result-sm">No</th>
+                                    <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
+                                    <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
+                                    <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+                                    <th class="result-lg">組み合わせ</th>
+                                </tr>
+                            </div>
+                        </thead>
+                        <tbody>
+                            <div *ngIf="dimension===3">
+                                <tr *ngFor="let resultData of dataset[i]; index as i">
+                                    <td class="result-sm">{{ resultData.id }}</td>
+                                    <td class="result-lg">{{ resultData.dx }}</td>
+                                    <td class="result-lg">{{ resultData.dy }}</td>
+                                    <td class="result-lg">{{ resultData.dz }}</td>
+                                    <td class="result-lg">{{ resultData.rx }}</td>
+                                    <td class="result-lg">{{ resultData.ry }}</td>
+                                    <td class="result-lg">{{ resultData.rz }}</td>
+                                    <td class="result-lg">{{ resultData.case }}</td>
+                                </tr>
+                            </div>
+                            <div *ngIf="dimension===2">
+                                <tr *ngFor="let resultData of dataset[i]; index as i">
+                                    <td class="result-sm">{{ resultData.id }}</td>
+                                    <td class="result-lg">{{ resultData.dx }}</td>
+                                    <td class="result-lg">{{ resultData.dy }}</td>
+                                    <td class="result-lg">{{ resultData.rz }}</td>
+                                    <td class="result-lg">{{ resultData.case }}</td>
+                                </tr>
+                            </div>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> -->

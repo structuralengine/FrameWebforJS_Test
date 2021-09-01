@@ -25,6 +25,8 @@ export class ResultCombineReacComponent implements OnInit {
   tableHeight: number;
   dimension: number;
   public showDetail: boolean;
+  cal: number = 0;
+
   constructor(
     private data: ResultCombineReacService,
     private comb: InputCombineService,
@@ -45,6 +47,7 @@ export class ResultCombineReacComponent implements OnInit {
   ngOnInit() {
     const n: number = this.comb.getCombineCaseCount();
     this.loadPage(1);
+    this.calPage(0);
 
     // ピックアップデータがあればボタンを表示する
     if (this.pic.isCalculated === true) {
@@ -59,7 +62,7 @@ export class ResultCombineReacComponent implements OnInit {
 
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
-    let pageNew:number = eventData;
+    let pageNew: number = eventData;
     this.loadPage(pageNew);
   }
 
@@ -73,7 +76,34 @@ export class ResultCombineReacComponent implements OnInit {
     }
     this.load_name = this.comb.getCombineName(currentPage);
 
-    this.three.ChangeMode('comb_reac');
+    this.three.ChangeMode("comb_reac");
     this.three.ChangePage(currentPage);
+  }
+
+  calPage(calPage: number) {
+    const carousel = document.getElementById("carousel");
+    if (carousel != null) {
+      carousel.classList.add("add");
+    }
+    const time = this.TITLES.length;
+    let cal = this.cal;
+    setTimeout(() => {
+      this.calcal(calPage);
+    }, 100);
+    setTimeout(function () {
+      if (carousel != null) {
+        carousel.classList.remove("add");
+      }
+    }, 500);
+  }
+
+  calcal(calpage: number) {
+    this.cal += calpage;
+    if (this.cal >= this.TITLES.length) {
+      this.cal = 0;
+    }
+    if (this.cal < 0) {
+      this.cal = this.TITLES.length - 1;
+    }
   }
 }
