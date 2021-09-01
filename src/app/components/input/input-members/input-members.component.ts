@@ -5,6 +5,7 @@ import { ThreeService } from '../../three/three.service';
 import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { InputElementsService } from '../input-elements/input-elements.service';
 
 @Component({
   selector: 'app-input-members',
@@ -31,6 +32,7 @@ export class InputMembersComponent implements OnInit {
     { title: 'コードアングル', align: 'center', colModel: [
       { title: "(°)", dataType: "float", dataIndx: "cg", sortable: false, width: 130 }
     ]},
+    { title: '材料名称', align: 'center', dataType: "string", dataIndx: "n", sortable: false, width: 100, editable: false, style: { "background": "#dae6f0" } },
   ];
   private columnHeaders2D =[
     { title: '節点', align: 'center', colModel: [
@@ -43,11 +45,13 @@ export class InputMembersComponent implements OnInit {
     { title: '材料', align: 'center', colModel: [
       { title: "No", dataType: "integer", dataIndx: "e",  sortable: false, minwidth: 10, width: 10 },
     ]},
+    { title: '材料名称', align: 'center', dataType: "string", dataIndx: "n", sortable: false, width: 100, editable: false, style: { "background": "#dae6f0" } },
   ];
 
   private ROWS_COUNT = 15;
   
   constructor(private data: InputMembersService,
+              private element: InputElementsService,
               private helper: DataHelperModule,
               private app: AppComponent,
               private three: ThreeService) {}
@@ -63,9 +67,12 @@ export class InputMembersComponent implements OnInit {
     for (let i = this.dataset.length + 1; i <= row; i++) {
       const member = this.data.getMemberColumns(i);
       const m: string = member['id'];
+      const e = member.e;
       if (m !== '') {
         const l: any = this.data.getMemberLength(m);
         member['L'] = (l != null) ? l.toFixed(3) : l;
+        const name = this.element.getElementName(e);
+        member['n'] = (name != null) ? name : '';
       }
       this.dataset.push(member);
     }
@@ -122,7 +129,7 @@ export class InputMembersComponent implements OnInit {
       const changes = ui.updateList;
       for (const target of changes) {
         const row: number = target.rowIndx;
-        if (!('ni' in target.newRow || 'nj' in target.newRow)) {
+        if (!('ni' in target.newRow || 'nj' in target.newRow || 'e' in target.newRow)) {
           continue;
         }
         //const new_value = target.rowData;
@@ -139,11 +146,16 @@ export class InputMembersComponent implements OnInit {
         } else {
           column['L'] = null;
         }
+        const n: string = this.element.getElementName(target.rowData.e);
+        if (n != null) {
+          this.dataset[row]['n'] = n;
+          this.grid.refreshDataAndView();
+        }
       }
       this.three.changeData('members');
     }
   };
 
-  width = (this.helper.dimension === 3) ? 480 : 350 ;
+  width = (this.helper.dimension === 3) ? 580 : 450 ;
 
 }

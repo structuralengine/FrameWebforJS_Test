@@ -38,7 +38,7 @@ export class InputElementsService {
 
     // 対象行が無かった時に処理
     if (result == null) {
-      result = { id: index, E: '', G: '', Xp: '', A: '', J: '', Iy: '', Iz: '' };
+      result = { id: index, E: '', G: '', Xp: '', A: '', J: '', Iy: '', Iz: '', n: ''};
       target.push(result);
       this.element[typNo] = target;
     }
@@ -67,6 +67,7 @@ export class InputElementsService {
         const J = this.helper.toNumber(item['J']);
         const Iy = this.helper.toNumber(item['Iy']);
         const Iz = this.helper.toNumber(item['Iz']);
+        const n = item['n'];
 
         const result = {
           id: index,
@@ -76,7 +77,8 @@ export class InputElementsService {
           A: (A === null) ? '' : A.toFixed(4),
           J: (J === null) ? '' : J.toFixed(4),
           Iy: (Iy === null) ? '' : Iy.toFixed(6),
-          Iz: (Iz === null) ? '' : Iz.toFixed(6)
+          Iz: (Iz === null) ? '' : Iz.toFixed(6),
+          n: (n === null) ? '' : n,
         };
 
         target.push(result);
@@ -110,6 +112,7 @@ export class InputElementsService {
         const J = this.helper.toNumber(row['J']);
         const Iy = this.helper.toNumber(row['Iy']);
         const Iz = this.helper.toNumber(row['Iz']);
+        const n = row['n'];
         
         if (E == null && G == null && Xp == null && A == null
           && J == null && Iy == null && Iz == null) {
@@ -124,7 +127,8 @@ export class InputElementsService {
           A: (A == null) ? empty : A, 
           J: (J == null) ? empty : J, 
           Iy: (Iy == null) ? empty : Iy, 
-          Iz: (Iz == null) ? empty : Iz
+          Iz: (Iz == null) ? empty : Iz,
+          n: (n == null) ? '' : n,
         };
           
       }
@@ -133,6 +137,51 @@ export class InputElementsService {
       }
     }
     return result;
+  }
+
+  public getElementName(e: any): string {
+
+    if (e === '') {
+      return '';
+    }
+
+    const key = Object.keys(this.element)[0];
+    const row = this.element[key];
+
+    const target = row.find((columns) => {
+      return columns.id.toString() === e.toString();
+    });
+    let name: string = '';
+    if (target !== undefined) {
+      name = (target.n !== undefined) ? target.n : '';
+    }
+
+    return name
+  }
+
+  public getAlignName(typeNo, row): string {
+
+    const before_dataset = this.element[typeNo];
+    const before_target_row = before_dataset[row];
+    const target_name = before_target_row.n;
+
+    const keys = Object.keys(this.element);
+    for (const key of Object.keys(this.element)) {
+      this.element[key][row].name = target_name;
+    }
+
+    return target_name
+  }
+
+  public matchName(data: any) {
+    for (const key of Object.keys(this.element)) {
+      const target = this.element[key].find((row) => {
+        return row.id === data.id || row.id === data.id.toString();
+      });
+      if (target !== undefined) {
+        target.n = data.n;
+      }
+    }
   }
 
 }
