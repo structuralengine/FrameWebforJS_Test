@@ -1,3 +1,11 @@
+.floaterMenu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 730px;
+    padding: 16px 0;
+}
+
 .conbine-title {
     margin-top: 32px;
     &.acd {
@@ -5,12 +13,101 @@
     }
 }
 
+.loadName {
+    &.normal {
+        margin-bottom: 16px;
+    }
+}
+
+.wrapper {
+    padding: 0 16px;
+    .carousel {
+        min-width: 800px;
+        .loadName {
+            float: left;
+        }
+        .detailName {
+            text-align: center;
+        }
+        >a {
+            display: block;
+            // margin: 0 16px;
+            padding: 16px;
+            // background-color: #002060;
+            // border-radius: 50%;
+        }
+        .card {
+            box-shadow: 2px 2px 4px;
+            .card-header {
+                p {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 16px;
+                    font-weight: bold;
+                    text-align: center;
+                }
+                .move {
+                    font-size: 17px;
+                    padding: 12px;
+                    &:hover {
+                        cursor: pointer;
+                        opacity: 0.7;
+                    }
+                }
+            }
+            .card-body {
+                padding: 20px;
+                p {
+                    text-align: center;
+                    .price {
+                        margin-right: 8px;
+                        color: red;
+                        font-size: 32px;
+                    }
+                }
+            }
+        }
+        tbody {
+            max-height: calc(100vh - 420px);
+        }
+    }
+}
+
+#comb {
+    .card-header {
+        background-color: #7bb7f8;
+        p {
+            color: #002060;
+        }
+    }
+}
+
+#pick {
+    .card-header {
+        background-color: #ef857d;
+        p {
+            color: #c00;
+        }
+    }
+}
+
+.add {
+    animation: fadein 1s forwards;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .result_table {
-    padding: 0 16px 16px;
     table {
         word-break: break-all;
         width: 100%;
-        margin-top: 16px;
         border-collapse: collapse;
         border-spacing: 0;
         &.acd {
@@ -42,11 +139,9 @@
         caption {
             text-align: left;
         }
-
         thead {
             display: block;
         }
-
         tbody {
             overflow-y: auto;
             // max-height: 250px;
@@ -132,7 +227,6 @@
     display: flex;
     padding: 0 16px;
     margin-right: auto;
-    margin-top: 16px !important;
     .ngb-pagination {
         float: left;
     }
@@ -146,7 +240,7 @@
         float: left;
     }
     .load-name {
-        margin-top: 16px;
+        margin: 16px 0;
     }
 }
 

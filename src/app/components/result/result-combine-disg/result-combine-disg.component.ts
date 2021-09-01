@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ResultCombineDisgService } from "./result-combine-disg.service";
 import { InputCombineService } from "../../input/input-combine/input-combine.service";
 import { ThreeService } from "../../three/three.service";
@@ -16,6 +16,8 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
   ],
 })
 export class ResultCombineDisgComponent implements OnInit {
+  @ViewChild("carousel") carousel: ElementRef;
+
   public KEYS: string[];
   public TITLES: string[];
 
@@ -25,7 +27,7 @@ export class ResultCombineDisgComponent implements OnInit {
   btnPickup: string;
   tableHeight: number;
   dimension: number;
-  cal: number;
+  cal: number = 0;
 
   constructor(
     private data: ResultCombineDisgService,
@@ -42,8 +44,7 @@ export class ResultCombineDisgComponent implements OnInit {
 
   ngOnInit() {
     this.loadPage(1);
-    this.cal = 1;
-    this.calPage(1);
+    this.calPage(0);
 
     // ピックアップデータがあればボタンを表示する
     if (this.pic.isCalculated === true) {
@@ -76,5 +77,30 @@ export class ResultCombineDisgComponent implements OnInit {
     this.three.ChangePage(currentPage);
   }
 
-  calPage(cal: number) {}
+  calPage(calPage: number) {
+    const carousel = document.getElementById("carousel");
+    if (carousel != null) {
+      carousel.classList.add("add");
+    }
+    const time = this.TITLES.length;
+    let cal = this.cal;
+    setTimeout(() => {
+      this.calcal(calPage);
+    }, 100);
+    setTimeout(function () {
+      if (carousel != null) {
+        carousel.classList.remove("add");
+      }
+    }, 500);
+  }
+
+  calcal(calpage: number) {
+    this.cal += calpage;
+    if (this.cal >= this.TITLES.length) {
+      this.cal = 0;
+    }
+    if (this.cal < 0) {
+      this.cal = this.TITLES.length - 1;
+    }
+  }
 }

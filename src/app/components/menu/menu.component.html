@@ -1,24 +1,24 @@
 <div class="title-and-menu" id="disTitle">
-  <div class="icon-area">
-    <ul>
-      <li>
-        <div ngbDropdown class="dropdownmenu">
-          <a class="icon file" id="dropdownBasic1" ngbDropdownToggle onfocus="this.blur();"><i
+    <div class="icon-area">
+        <ul>
+            <li>
+                <div ngbDropdown class="dropdownmenu">
+                    <a class="icon file" id="dropdownBasic1" ngbDropdownToggle onfocus="this.blur();"><i
               class="far fa-file"></i></a>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button ngbDropdownItem (click)="renew()">新規作成</button>
-            <label style="width: 100%; margin: 0px">
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                        <button ngbDropdownItem (click)="renew()">新規作成</button>
+                        <label style="width: 100%; margin: 0px">
               <span ngbDropdownItem style="padding: 8px">
                 ファイルを開く
                 <input type="file" accept="application/json" (change)="open($event)" style="display: none" />
               </span>
             </label>
-            <button ngbDropdownItem (click)="save()">ファイルを保存</button>
-            <button *ngIf="isCalculated" ngbDropdownItem (click)="pickup()">
+                        <button ngbDropdownItem (click)="save()">ファイルを保存</button>
+                        <button *ngIf="isCalculated" ngbDropdownItem (click)="pickup()">
               ピックアップファイル出力
             </button>
 
-            <!-- テスト用
+                        <!-- テスト用
             <label style="width: 100%; margin: 0px">
               <span ngbDropdownItem style="padding: 8px">
                 解析結果ファイルを開く
@@ -27,51 +27,52 @@
             </label>
             テスト用 -->
 
-          </div>
-        </div>
-      </li>
-      <li>
-        <a (click)="calcrate()"><i class="fas fa-calculator"></i></a>
-      </li>
-      <li>
-        <a routerLink="./print" (click)="contentsDailogShow(13)" routerLinkActive="selected-item" id="13"><i
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a (click)="calcrate()"><i class="fas fa-calculator"></i></a>
+            </li>
+            <li>
+                <a routerLink="./print" (click)="contentsDailogShow(13)" routerLinkActive="selected-item" id="13"><i
             class="fi fi-print"></i></a>
-      </li>
-      <li>
-        <a  (click)="goToLink()"><i
-            class="far fa-question-circle"></i></a>
-      </li>
-      <li>
-        <div class="toggle toggle--switch">
-          <input type="checkbox" id="toggle--switch" name="g2" class="toggle--checkbox" style="display: none;"
-            (change)="setDimension()" checked>
-          <label class="toggle--btn" for="toggle--switch"><span class="toggle--feature" data-label-on="3D"
+            </li>
+            <li>
+                <a (click)="goToLink()"><i class="far fa-question-circle"></i></a>
+            </li>
+            <li>
+                <div class="toggle toggle--switch">
+                    <input type="checkbox" id="toggle--switch" name="g2" class="toggle--checkbox" style="display: none;" (change)="setDimension()" checked>
+                    <label class="toggle--btn" for="toggle--switch"><span class="toggle--feature" data-label-on="3D"
               data-label-off="2D"></span></label>
-        </div>
+                </div>
 
-      </li>
-    </ul>
-  </div>
-
-  <div class="title">
-    <h1>{{ fileName }}</h1>
-  </div>
-
-  <div class="login-area">
-    <div *ngIf="auth.user | async as user; else showLogin" class="userInfo">
-      <div ngbDropdown>
-        <a class="icon file" id="dropdownBasic1" class="login-btn" ngbDropdownToggle onfocus="this.blur();"><i
-            class="far fa-user-circle"></i>{{ user.displayName }}</a>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <a (click)="auth.signOut()" (click)="logOut()" class="login-btn logOut">ログアウト</a>
-        </div>
-      </div>
+            </li>
+        </ul>
     </div>
-  </div>
-  <ng-template #showLogin>
-    <a (click)="logIn()" class="login-btn">
-      <i class="fas fa-sign-in-alt"></i> ログイン
-    </a>
-  </ng-template>
+
+    <div class="title">
+        <h1>{{ fileName }}</h1>
+    </div>
+
+    <div class="login-area">
+        <div *ngIf="auth.user | async as user; else showLogin" class="userInfo">
+            <div ngbDropdown>
+                <a class="icon file" id="dropdownBasic1" class="login-btn" ngbDropdownToggle onfocus="this.blur();"><i
+            class="far fa-user-circle"></i>{{ user.displayName }}</a>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <div *ngIf="userPoint > 0">
+                        <p class="userPoint">本日の累計ポイント：{{userPoint}}</p>
+                    </div>
+                    <a (click)="auth.signOut()" (click)="logOut()" class="login-btn logOut">ログアウト</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #showLogin>
+        <a (click)="logIn()" class="login-btn">
+            <i class="fas fa-sign-in-alt"></i> ログイン
+        </a>
+    </ng-template>
 
 </div>
