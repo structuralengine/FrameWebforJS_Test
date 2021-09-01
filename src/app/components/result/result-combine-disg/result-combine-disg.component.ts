@@ -4,6 +4,7 @@ import { InputCombineService } from "../../input/input-combine/input-combine.ser
 import { ThreeService } from "../../three/three.service";
 import { ResultPickupDisgService } from "../result-pickup-disg/result-pickup-disg.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+// import { MatCarousel, MatCarouselComponent } from "@ngmodule/material-carousel";
 
 @Component({
   selector: "app-result-combine-disg",
@@ -24,6 +25,7 @@ export class ResultCombineDisgComponent implements OnInit {
   btnPickup: string;
   tableHeight: number;
   dimension: number;
+  cal: number;
 
   constructor(
     private data: ResultCombineDisgService,
@@ -40,6 +42,8 @@ export class ResultCombineDisgComponent implements OnInit {
 
   ngOnInit() {
     this.loadPage(1);
+    this.cal = 1;
+    this.calPage(1);
 
     // ピックアップデータがあればボタンを表示する
     if (this.pic.isCalculated === true) {
@@ -54,7 +58,7 @@ export class ResultCombineDisgComponent implements OnInit {
 
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
-    let pageNew:number = eventData;
+    let pageNew: number = eventData;
     this.loadPage(pageNew);
   }
 
@@ -68,8 +72,9 @@ export class ResultCombineDisgComponent implements OnInit {
     }
     this.load_name = this.comb.getCombineName(currentPage);
 
-    this.three.ChangeMode('comb_disg');
+    this.three.ChangeMode("comb_disg");
     this.three.ChangePage(currentPage);
   }
 
+  calPage(cal: number) {}
 }
