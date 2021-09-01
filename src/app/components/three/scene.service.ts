@@ -16,8 +16,8 @@ export class SceneService {
   private scene: THREE.Scene;
 
   // レンダラー
-  private renderer: THREE.WebGLRenderer;
-  private labelRenderer: CSS2DRenderer;
+  private renderer: THREE.WebGLRenderer = null;
+  private labelRenderer: CSS2DRenderer = null;
 
   // カメラ
   private camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
@@ -101,6 +101,7 @@ export class SceneService {
 
   // コントロール
   public addControls() {
+    if(this.labelRenderer===null) return;
     const controls = new OrbitControls(this.camera, this.labelRenderer.domElement);
     controls.damping = 0.2;
     controls.addEventListener('change', this.render);
@@ -195,6 +196,7 @@ export class SceneService {
 
   // レンダリングする
   public render() {
+    if(this.renderer===null) return;
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
   }

@@ -16,6 +16,7 @@ import { ThreeLoadService } from "./geometry/three-load/three-load.service";
 import { ThreeDisplacementService } from "./geometry/three-displacement.service";
 import { ThreeSectionForceService } from "./geometry/three-section-force/three-section-force.service";
 import { ThreeReactService } from "./geometry/three-react.service";
+import html2canvas from "html2canvas";
 
 @Injectable({
   providedIn: "root",
@@ -23,6 +24,7 @@ import { ThreeReactService } from "./geometry/three-react.service";
 export class ThreeService {
   private mode: string;
   private currentIndex: number;
+  public canvasElement: HTMLCanvasElement;
 
   constructor(
     public scene: SceneService,
@@ -62,6 +64,7 @@ export class ThreeService {
 
     this.scene.render();
   }
+
 
   //////////////////////////////////////////////////////
   // データの変更通知を処理する
@@ -514,4 +517,23 @@ export class ThreeService {
     // 再描画
     //this.scene.render();
   }
+
+  // 印刷する図を収集する
+  public async getCaptureImage(): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      const result: string[] = new Array();
+
+      for(let i=0; i<10; i++){
+        html2canvas(this.canvasElement).then(canvas => {
+          result.push(canvas.toDataURL());
+
+          if(result.length===10){
+            resolve(result);
+          }
+        });
+      }
+    });
+  }
+
+
 }

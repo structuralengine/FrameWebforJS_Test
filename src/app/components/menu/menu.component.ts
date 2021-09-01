@@ -31,7 +31,6 @@ export class MenuComponent implements OnInit {
 
   loginUserName: string;
   fileName: string;
-  isCalculated: boolean;
 
   constructor(
     private modalService: NgbModal,
@@ -39,14 +38,13 @@ export class MenuComponent implements OnInit {
     private scene: SceneService,
     private helper: DataHelperModule,
     private InputData: InputDataService,
-    private ResultData: ResultDataService,
+    public ResultData: ResultDataService,
     private http: HttpClient,
     private three: ThreeService,
     public printService: PrintService,
     public countArea: DataCountService,
     public auth: AngularFireAuth,
-    public user: UserInfoService
-  ) {
+    public user: UserInfoService) {
     this.fileName = '';
   }
 
@@ -64,7 +62,6 @@ export class MenuComponent implements OnInit {
     this.ResultData.clear();
     this.three.ClearData();
     this.fileName = "立体骨組構造解析ソフトver1.6.8"
-    this.isCalculated = false;
   }
 
   // ファイルを開く
@@ -89,7 +86,7 @@ export class MenuComponent implements OnInit {
         }
         this.three.fileload();
         modalRef.close();
-        this.isCalculated = false;
+        this.ResultData.isCalculated = false;
       })
       .catch(err => {
         alert(err);
@@ -215,7 +212,7 @@ export class MenuComponent implements OnInit {
 
           // 解析結果を集計する
           this.ResultData.loadResultData(_jsonData);
-          this.isCalculated = true;
+          this.ResultData.isCalculated = true;
         } catch (e) {
           alert(e);
         } finally {
