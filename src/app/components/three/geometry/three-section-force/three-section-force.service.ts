@@ -97,23 +97,26 @@ export class ThreeSectionForceService {
   // データをクリアする
   public ClearData(): void {
 
-    for (const mesh of this.ThreeObject1.children) {
-      // 文字を削除する
-      let text: any = mesh.getObjectByName("text");
-      while(text !== undefined){
-        mesh.remove(text);
-        text.dispose();
-        text = mesh.getObjectByName("text");
-      }
-      // 文字以外の子要素を削除する
-      while (mesh.children.length > 0) {
-        const object = mesh.children[0];
-        object.parent.remove(object);
+      for (const children of [this.ThreeObject1.children, this.ThreeObject2.children,]) {
+        for (const mesh of children) {
+          // 文字を削除する
+        let text: any = mesh.getObjectByName("text");
+        while(text !== undefined){
+          mesh.remove(text);
+          text.dispose();
+          text = mesh.getObjectByName("text");
+        }
+        // 文字以外の子要素を削除する
+        while (mesh.children.length > 0) {
+          const object = mesh.children[0];
+          object.parent.remove(object);
+        }
       }
     }
     
     // オブジェクトを削除する
     this.ThreeObject1.children = new Array();
+    this.ThreeObject2.children = new Array();
 
   }
 
