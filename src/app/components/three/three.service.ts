@@ -17,6 +17,7 @@ import { ThreeDisplacementService } from "./geometry/three-displacement.service"
 import { ThreeSectionForceService } from "./geometry/three-section-force/three-section-force.service";
 import { ThreeReactService } from "./geometry/three-react.service";
 import html2canvas from "html2canvas";
+import { PrintService } from "../print/print.service";
 
 @Injectable({
   providedIn: "root",
@@ -37,7 +38,9 @@ export class ThreeService {
     private load: ThreeLoadService,
     private disg: ThreeDisplacementService,
     private reac: ThreeReactService,
-    private fsec: ThreeSectionForceService
+    private fsec: ThreeSectionForceService,
+    private helper: DataHelperModule,
+    private printService: PrintService
   ) {}
 
   //////////////////////////////////////////////////////
@@ -519,21 +522,155 @@ export class ThreeService {
   }
 
   // 印刷する図を収集する
-  public async getCaptureImage(): Promise<string[]> {
+  public async getCaptureImage(): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      const result: string[] = new Array();
+      const result = [];
+      const captureInfo = this.getCaptureCase();
+      const captureCase: string[] = captureInfo.captureCase;
+      const title1: string = captureInfo.title1;
+      const title2: string = captureInfo.title2;
 
-      for(let i=0; i<10; i++){
+      if(captureCase.length===0){
         html2canvas(this.canvasElement).then(canvas => {
-          result.push(canvas.toDataURL());
-
-          if(result.length===10){
-            resolve(result);
-          }
+          result.push({
+            title: title2,
+            src: canvas.toDataURL()
+          });
+          resolve(result);
         });
+      } else {
+        let counter = 0;
+        for(const key of captureCase){
+          counter++;
+
+          const number: number = this.helper.toNumber(key);
+          if(number===null){
+            continue;
+          }
+          this.ChangePage(number);
+
+          html2canvas(this.canvasElement).then(canvas => {
+            result.push({
+              title: title2 + key,
+              src: canvas.toDataURL()
+            });
+  
+            if(counter === captureCase.length){
+              resolve(result);
+            }
+          });
+        }
       }
     });
   }
+  // 印刷するケース数を返す
+  private getCaptureCase(): any{
 
+    let result: string[] = new Array();
+    let title1: string = '';
+    let title2: string = '';
+
+    switch (this.mode) {
+
+      case "fix_member":
+        if('fix_member' in this.printService.inputJson){
+          result = Object.keys(this.printService.inputJson.fix_member);
+        }
+        title1 = '部材バネ';
+        title2 = 'TYPE';
+        break;
+
+      case "fix_nodes":
+        if('fix_node' in this.printService.inputJson){
+          result = Object.keys(this.printService.inputJson.fix_node);
+        }
+        title1 = '支点';
+        title2 = 'TYPE';
+        break;
+
+      case "joints":
+        if('joint' in this.printService.inputJson){
+          result = Object.keys(this.printService.inputJson.joint);
+        }
+        title1 = '結合';
+        title2 = 'TYPE';
+        break;
+
+
+      case "load_values":
+      case "load_names":
+        if('load' in this.printService.inputJson){
+          result = Object.keys(this.printService.inputJson.load);
+        }
+        title1 = '荷重';
+        title2 = 'Case';
+        break;
+      case "disg":
+        if('load' in this.printService.inputJson){
+          result = Object.keys(this.printService.inputJson.load);
+        }
+        title1 = '変位';
+        title2 = 'Case';
+        break;
+      case "fsec":
+        if('load' in this.printService.inputJson){
+          result = Object.keys(this.printService.inputJson.load);
+        }
+        title1 = '断面力';
+        title2 = 'Case';
+        break;
+      case "reac":
+        if('load' in this.printService.inputJson){
+          result = Object.keys(this.printService.inputJson.load);
+        }
+        title1 = '反力';
+        title2 = 'Case';
+        break;
+
+      case "comb_disg":
+        result = Object.keys(this.printService.combineJson);
+        title1 = '組み合わせ 変位量';
+        title2 = 'Comb';
+        break;
+      case "comb_fsec":
+        result = Object.keys(this.printService.combineJson);
+        title1 = '組み合わせ 断面力';
+        title2 = 'Comb';
+        break;
+      case "comb_reac":
+        result = Object.keys(this.printService.combineJson);
+        title1 = '組み合わせ 反力';
+        title2 = 'Comb';
+        break;
+
+      case "pik_disg":
+        result = Object.keys(this.printService.pickupJson);
+        title1 = 'ピックアップ 変位量';
+        title2 = 'PickUp';
+        break;
+      case "pik_fsec":
+        result = Object.keys(this.printService.pickupJson);
+        title1 = 'ピックアップ 断面力';
+        title2 = 'PickUp';
+        break;
+      case "pik_reac":
+        result = Object.keys(this.printService.pickupJson);
+        title1 = 'ピックアップ 反力';
+        title2 = 'PickUp';
+        break;
+
+      case "nodes": // 図が 1種類のモード
+      case "members":
+      case "elements":
+      case "panel":
+      default:
+        break;
+    }
+    return {
+      title1,
+      title2,
+      captureCase: result
+    };
+  }
 
 }

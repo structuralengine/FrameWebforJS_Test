@@ -22,6 +22,8 @@ export class PrintComponent implements OnInit {
 
   public onPrintInvoice() {
 
+    this.printService.setprintDocument();
+    
     if(this.printService.contentEditable1[10]){
       // 図の印刷
       this.three.getCaptureImage().then(imgs =>{

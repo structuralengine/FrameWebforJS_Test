@@ -15,7 +15,7 @@ export class PrintService {
   public defineJson: any;
   public pickupJson: any;
 
-  public imgList: string[]; // Three.js 印刷 の図のデータ
+  public imgList: any[]; // Three.js 印刷 の図のデータ
 
   constructor(private router: Router,
               public InputData: InputDataService,) {
@@ -34,16 +34,16 @@ export class PrintService {
     ];
   }
 
-  printDocument(documentName: string, documentData: string[]) {
-    this.isPrinting = true;
-
+  public setprintDocument() {
     // 入力データを取得する
     this.inputJson = this.InputData.getInputJson(0);
     this.combineJson = this.InputData.combine.getCombineJson();
     this.defineJson = this.InputData.define.getDefineJson();
     this.pickupJson = this.InputData.pickup.getPickUpJson();
-    
-    // 
+  }
+
+  public printDocument(documentName: string, documentData: string[]) {
+    this.isPrinting = true;
     this.router.navigate(["/", {
         outlets: {
           print: ["print", documentName, documentData.join()],
@@ -52,7 +52,7 @@ export class PrintService {
     ]);
   }
 
-  onDataReady() {
+  public onDataReady() {
     setTimeout(() => {
       window.print();
       this.isPrinting = false;

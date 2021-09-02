@@ -1,3 +1,4 @@
-<img #img
-    class="fit-picture"
-    alt="Grapefruit slice atop a pile of other slices">
+<div *ngFor="let imgList of printService.imgList index as i">
+    <p>{{imgList.title}}</p>
+    <img class="fit-picture"src={{imgList.src}}>
+</div>

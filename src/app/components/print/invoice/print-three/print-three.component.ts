@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import html2canvas from 'html2canvas';
 import { PrintService } from '../../print.service';
 
 @Component({
@@ -8,20 +7,18 @@ import { PrintService } from '../../print.service';
   styleUrls: ['./print-three.component.scss']
 })
 export class PrintThreeComponent implements AfterViewInit, OnInit {
-  
-  @ViewChild('img') img: ElementRef;
 
+  // @ViewChild('img') img: ElementRef;
   constructor(public printService: PrintService) {
   }
 
   ngOnInit(): void {
-    
-
   }
 
   ngAfterViewInit(){
-
-    this.img.nativeElement.src = this.printService.imgList[0];
+    // for(const imgList of this.printService.imgList){
+    //   this.img.nativeElement.src = imgList.src;
+    // }
   }
 
 }
