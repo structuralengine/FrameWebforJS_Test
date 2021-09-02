@@ -1071,7 +1071,7 @@ export class ThreeLoadService {
         for (const item of list[k]) {
           const editor = item.editor;
           // 大きさを変更する
-          const scale: number = 4 * Math.abs(item.value) / loadList.pMax;
+          const scale: number = 4 * this.helper.getScale(Math.abs(item.value), loadList.pMax);
           editor.setSize(item, scale);
           // オフセットする
           if (item.value > 0) {
@@ -1088,7 +1088,7 @@ export class ThreeLoadService {
         let offset = 0;
         for (const item of list[k]) {
           const editor = item.editor;
-          const scale: number = item.value / loadList.mMax;
+          const scale: number = this.helper.getScale(item.value, loadList.mMax);
           editor.setSize(item, scale);
           editor.setOffset(item, offset);
           offset += this.baseScale() * 0.1;
@@ -1106,12 +1106,12 @@ export class ThreeLoadService {
         const editor = item.editor;
 
         if (item.name.indexOf(ThreeLoadMemberMoment.id) !== -1) {
-          const scale: number = 1 * Math.abs(item.value) / loadList.mMax;
+          const scale: number = this.helper.getScale(Math.abs(item.value), loadList.mMax);
           editor.setSize(item, scale);
 
         } else if (item.name.indexOf(ThreeLoadTorsion.id) !== -1) {
           // 大きさを変更する
-          const scale: number = 1 * Math.abs(item.value / loadList.rMax);
+          const scale: number = this.helper.getScale(Math.abs(item.value), loadList.rMax);
           editor.setSize(item, scale);
           offset0 += (scale * 0.5);
         }
@@ -1131,7 +1131,7 @@ export class ThreeLoadService {
           // 大きさを変更する
           if (item.name.indexOf(ThreeLoadDistribute.id) !== -1) {
             // 分布荷重
-            const scale: number = 1 * Math.abs(item.value) / loadList.wMax;
+            const scale: number = this.helper.getScale(Math.abs(item.value), loadList.wMax);
             editor.setSize(item, scale);
             //以降は当たり判定に用いる部分
             const vertice_points = [];
@@ -1146,7 +1146,7 @@ export class ThreeLoadService {
 
             all_check: //次のforループの名称 -> breakで使用
             for (let hit_points of Xarea1) {
-              const pre_scale: number = 1 * Math.abs(hit_points[10]) / loadList.wMax;
+              const pre_scale: number = this.helper.getScale(Math.abs(hit_points[10]), loadList.wMax);
               for (let num2 = 0; num2 < 5; num2++) {
 
                 //接触判定
@@ -1203,7 +1203,7 @@ export class ThreeLoadService {
 
           } else if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
             // 集中荷重
-            const scale: number = 1 * Math.abs(item.value) / loadList.pMax;
+            const scale: number = this.helper.getScale(Math.abs(item.value), loadList.pMax);
             editor.setSize(item, scale);
             // オフセットする
             if (item.value > 0) {
@@ -1232,7 +1232,7 @@ export class ThreeLoadService {
           // 大きさを変更する
           if (item.name.indexOf(ThreeLoadDistribute.id) !== -1) {
             // 分布荷重
-            const scale: number = 1 * Math.abs(item.value) / loadList.wMax;
+            const scale: number = this.helper.getScale(Math.abs(item.value), loadList.wMax);
             editor.setSize(item, scale);
             // オフセットする
             if (item.value > 0) {
@@ -1245,7 +1245,7 @@ export class ThreeLoadService {
 
           } else if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
             // 集中荷重
-            const scale: number = 1 * Math.abs(item.value) / loadList.pMax;
+            const scale: number = this.helper.getScale(Math.abs(item.value), loadList.pMax);
             editor.setSize(item, scale);
             // オフセットする
             if (item.value > 0) {
@@ -1265,11 +1265,11 @@ export class ThreeLoadService {
         const editor = item.editor;
         // 大きさを変更する
         if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
-          const scale: number = 1 * Math.abs(item.value) / loadList.pMax;
+          const scale: number = this.helper.getScale(Math.abs(item.value), loadList.pMax);
           editor.setSize(item, scale);
 
         } else if (item.name.indexOf(ThreeLoadAxial.id) !== -1) {
-          const scale: number = 1 * Math.abs(item.value) / loadList.qMax;
+          const scale: number = this.helper.getScale(Math.abs(item.value) ,loadList.qMax);
           editor.setSize(item, scale);
         }
       });

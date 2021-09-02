@@ -89,4 +89,12 @@ export class DataHelperModule {
     return ext.toLowerCase();
   }
 
+  public getScale(data: number, max: number): number {
+
+    const ratio = 1 * data / max;
+    const scale = ( 1 - ( ratio - 1)**2 )**0.5; //円を用いた倍率を設定する
+
+    return scale;
+  }
+
 }
