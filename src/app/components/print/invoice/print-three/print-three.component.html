@@ -1,5 +1,6 @@
 <h2>{{title1}}</h2>
-<div *ngFor="let item of printService.print_target index as i">
+<ng-container *ngFor="let item of print_target index as i">
     <p>{{item.title}}</p>
-    <img class="fit-picture"src={{item.src}}>
-</div>
+    <img class="fit-picture" src={{item.src}}>
+    <div *ngIf="item.judge" class="pagerBreak"></div>
+</ng-container>
