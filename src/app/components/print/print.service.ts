@@ -15,7 +15,7 @@ export class PrintService {
   public defineJson: any;
   public pickupJson: any;
 
-  public imgList: any[]; // Three.js 印刷 の図のデータ
+  public print_target: any; // Three.js 印刷 の図のデータ
 
   constructor(private router: Router,
               public InputData: InputDataService,) {

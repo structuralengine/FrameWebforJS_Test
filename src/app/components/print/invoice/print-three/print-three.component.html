@@ -1,4 +1,5 @@
-<div *ngFor="let imgList of printService.imgList index as i">
-    <p>{{imgList.title}}</p>
-    <img class="fit-picture"src={{imgList.src}}>
+<h2>{{title1}}</h2>
+<div *ngFor="let item of printService.print_target index as i">
+    <p>{{item.title}}</p>
+    <img class="fit-picture"src={{item.src}}>
 </div>

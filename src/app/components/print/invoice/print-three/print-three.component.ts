@@ -8,16 +8,19 @@ import { PrintService } from '../../print.service';
 })
 export class PrintThreeComponent implements AfterViewInit, OnInit {
 
+  public title1: string;
+  public print_target: any[];
   // @ViewChild('img') img: ElementRef;
   constructor(public printService: PrintService) {
   }
 
   ngOnInit(): void {
+
   }
 
   ngAfterViewInit(){
-    // for(const imgList of this.printService.imgList){
-    //   this.img.nativeElement.src = imgList.src;
+    // for(const print_target of this.printService.print_target){
+    //   this.img.nativeElement.src = print_target.src;
     // }
   }
 
