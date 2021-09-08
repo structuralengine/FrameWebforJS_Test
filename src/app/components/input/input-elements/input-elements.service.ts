@@ -141,7 +141,7 @@ export class InputElementsService {
 
   public getElementName(e: any): string {
 
-    if (e === '') {
+    if (e === '' || e === undefined) {
       return '';
     }
 
