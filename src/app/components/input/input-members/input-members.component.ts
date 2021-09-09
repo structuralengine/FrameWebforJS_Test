@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { InputMembersService } from './input-members.service';
+import { InputElementsService } from '../input-elements/input-elements.service';
 import { DataHelperModule } from '../../../providers/data-helper.module';
 import { ThreeService } from '../../three/three.service';
 import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
-import { InputElementsService } from '../input-elements/input-elements.service';
 
 @Component({
   selector: 'app-input-members',
@@ -146,7 +146,9 @@ export class InputMembersComponent implements OnInit {
         } else {
           column['L'] = null;
         }
-        const n: string = this.element.getElementName(target.rowData.e);
+        const n: string = (target.rowData.e === undefined) ? 
+                          '':
+                          this.element.getElementName(target.rowData.e);
         if (n != null) {
           this.dataset[row]['n'] = n;
           this.grid.refreshDataAndView();
