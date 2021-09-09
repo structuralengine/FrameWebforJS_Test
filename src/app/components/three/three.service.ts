@@ -522,7 +522,7 @@ export class ThreeService {
   }
 
   // 印刷する図を収集する
-  public async getCaptureImage(): Promise<any[]> {
+  public async getCaptureImage(): Promise<any> {
     return new Promise((resolve, reject) => {
       const result = [];
       const captureInfo = this.getCaptureCase();
@@ -536,12 +536,11 @@ export class ThreeService {
             title: title2,
             src: canvas.toDataURL()
           });
-          resolve(result);
+          resolve({result, title1});
         });
       } else {
         let counter = 0;
         for(const key of captureCase){
-          counter++;
 
           const number: number = this.helper.toNumber(key);
           if(number===null){
@@ -554,9 +553,10 @@ export class ThreeService {
               title: title2 + key,
               src: canvas.toDataURL()
             });
+            counter++;
   
             if(counter === captureCase.length){
-              resolve(result);
+              resolve({result, title1});
             }
           });
         }

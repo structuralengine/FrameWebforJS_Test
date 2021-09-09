@@ -52,7 +52,11 @@ export class ResultReacService {
     const load_name = this.load.getLoadNameJson(0);
 
     for(const k1 of Object.keys(jsonData)){
-      const fixNo = load_name[k1].fix_node;
+      const caseData: {} = jsonData[k1];
+      if (typeof (caseData) !== 'object') {
+        continue;
+      }
+      const fixNo = caseData['fix_node'];
       if ( fixNo in fix_node ) {
         const fixNode = fix_node[fixNo];
         for(const k2 of Object.keys(jsonData[k1].reac)){
