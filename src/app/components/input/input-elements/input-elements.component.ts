@@ -37,6 +37,7 @@ export class InputElementsComponent implements OnInit {
       { title: "Iy (m4)", dataType: "float", format: "#.000000", dataIndx: "Iy", sortable: false, width: 100 },
       { title: "Iz (m4)", dataType: "float", format: "#.000000", dataIndx: "Iz", sortable: false, width: 100 },
     ]},
+    { title: '名称', align: 'center', dataType: "string", format: "#.000000", dataIndx: "n", sortable: false, width: 100 },
   ];
   private columnHeaders2D = [
     { title: '弾性係数', align: 'center', colModel: [
@@ -51,10 +52,12 @@ export class InputElementsComponent implements OnInit {
     { title: '断面二次', align: 'center', colModel: [
       { title: "I(m4)", dataType: "float", format: "#.000000", dataIndx: "Iz", sortable: false, width: 100 },
     ]},
+    { title: '名称', align: 'center', dataType: "string", format: "#.000000", dataIndx: "n", sortable: false, width: 100 },
   ];
   
   private ROWS_COUNT = 15;
   private page = 1;
+  private before_page = 1;
 
   constructor(
     private data: InputElementsService,
@@ -84,6 +87,13 @@ export class InputElementsComponent implements OnInit {
       this.dataset.push(fix_node);
     }
     this.page = currentPage;
+
+    // nameを検索し、this.datasetに反映させる
+    for (let i = 0; i < this.dataset.length; i++) {
+      const name = this.data.getAlignName(this.before_page, i);
+      this.dataset[i].n = name;
+    }
+    this.before_page = currentPage;
   }
 
 
@@ -135,9 +145,13 @@ export class InputElementsComponent implements OnInit {
     },
     change: (evt, ui) => {
       this.three.changeData('elements', this.page);
+      // 名称が変更されたら、変更を内部データ全体に反映させる
+      if ('n' in ui.updateList[0].newRow) {
+        this.data.matchName(ui.updateList[0].rowData);
+      }
     }
   };
 
-  width = (this.helper.dimension === 3) ? 850 : 520 ;
+  width = (this.helper.dimension === 3) ? 950 : 620 ;
 
 }

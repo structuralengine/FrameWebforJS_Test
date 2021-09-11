@@ -45,6 +45,8 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
     div.parentNode.insertBefore(element, div.nextSibling);  // ボタンを置きたい場所にaタグを追加
     // レンダリングする
     this.animate();
+    // 
+    this.three.canvasElement = this.canvas;
   }
 
   ngOnDestroy() {

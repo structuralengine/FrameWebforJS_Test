@@ -55,6 +55,7 @@ export class ThreeReactService {
 
   // データをクリアする
   public ClearData(): void {
+    
     for (const mesh of this.pointLoadList) {
       // 文字を削除する
       while (mesh.children.length > 0) {

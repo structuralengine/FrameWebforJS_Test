@@ -82,12 +82,13 @@ export class PrintInputMembersComponent implements OnInit, AfterViewInit {
           break;
         }
 
-        const line = ["", "", "", "", "", ""];
+        const line = ["", "", "", "", "", "", ""];
         let index: string = keys[j];
 
         const item = json[index]; // 1行分のnodeデータを取り出す
 
         const len: number = this.InputData.member.getMemberLength(index); // 部材長さ
+        const name: string = this.InputData.element.getElementName(item.e); // 材料名称
         const s = j + 1;
 
         if (s > keys.length) {
@@ -102,6 +103,7 @@ export class PrintInputMembersComponent implements OnInit, AfterViewInit {
         line[3] = len.toFixed(3);
         line[4] = item.e.toString();
         line[5] = item.cg.toString();
+        line[6] = name;
 
         body.push(line);
       }

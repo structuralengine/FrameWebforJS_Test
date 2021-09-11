@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ResultCombineDisgService } from "./result-combine-disg.service";
 import { InputCombineService } from "../../input/input-combine/input-combine.service";
 import { ThreeService } from "../../three/three.service";
 import { ResultPickupDisgService } from "../result-pickup-disg/result-pickup-disg.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+// import { MatCarousel, MatCarouselComponent } from "@ngmodule/material-carousel";
 
 @Component({
   selector: "app-result-combine-disg",
@@ -15,6 +16,8 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
   ],
 })
 export class ResultCombineDisgComponent implements OnInit {
+  @ViewChild("carousel") carousel: ElementRef;
+
   public KEYS: string[];
   public TITLES: string[];
 
@@ -24,6 +27,7 @@ export class ResultCombineDisgComponent implements OnInit {
   btnPickup: string;
   tableHeight: number;
   dimension: number;
+  cal: number = 0;
 
   constructor(
     private data: ResultCombineDisgService,
@@ -40,6 +44,7 @@ export class ResultCombineDisgComponent implements OnInit {
 
   ngOnInit() {
     this.loadPage(1);
+    this.calPage(0);
 
     // ピックアップデータがあればボタンを表示する
     if (this.pic.isCalculated === true) {
@@ -54,7 +59,7 @@ export class ResultCombineDisgComponent implements OnInit {
 
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
-    let pageNew:number = eventData;
+    let pageNew: number = eventData;
     this.loadPage(pageNew);
   }
 
@@ -68,8 +73,34 @@ export class ResultCombineDisgComponent implements OnInit {
     }
     this.load_name = this.comb.getCombineName(currentPage);
 
-    this.three.ChangeMode('comb_disg');
+    this.three.ChangeMode("comb_disg");
     this.three.ChangePage(currentPage);
   }
 
+  calPage(calPage: number) {
+    const carousel = document.getElementById("carousel");
+    if (carousel != null) {
+      carousel.classList.add("add");
+    }
+    const time = this.TITLES.length;
+    let cal = this.cal;
+    setTimeout(() => {
+      this.calcal(calPage);
+    }, 100);
+    setTimeout(function () {
+      if (carousel != null) {
+        carousel.classList.remove("add");
+      }
+    }, 500);
+  }
+
+  calcal(calpage: number) {
+    this.cal += calpage;
+    if (this.cal >= this.TITLES.length) {
+      this.cal = 0;
+    }
+    if (this.cal < 0) {
+      this.cal = this.TITLES.length - 1;
+    }
+  }
 }

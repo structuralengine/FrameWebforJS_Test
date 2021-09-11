@@ -26,6 +26,8 @@ import { DataHelperModule } from './data-helper.module';
 })
 export class ResultDataService {
 
+  public isCalculated: boolean;
+
   private defList: any;
   private combList: any;
   private pickList: any;
@@ -56,6 +58,8 @@ export class ResultDataService {
 
   // データをクリアする ///////////////////////////////////////////////////////////////
   public clear(): void {
+    this.isCalculated = false;
+    
     this.disg.clear();
     this.reac.clear();
     this.fsec.clear();

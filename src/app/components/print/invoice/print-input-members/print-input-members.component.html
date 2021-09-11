@@ -12,6 +12,7 @@
           <th class="L">L(m)</th>
           <th class="number">材料番号</th>
           <th class="code">コードアングル</th>
+          <th class="N">材料名称</th>
         </tr>
         <tr *ngFor="let data of dataset">
           <td class="id">{{data[0]}}</td>
@@ -20,6 +21,7 @@
           <td class="L">{{data[3]}}</td>
           <td class="number">{{data[4]}}</td>
           <td class="code">{{data[5]}}</td>
+          <td class="N">{{data[6]}}</td>
         </tr>
       </div>
       <div *ngIf="dimension===2">
@@ -29,6 +31,7 @@
           <th class="J-TAN">J-TAN</th>
           <th class="L">L(m)</th>
           <th class="number">材料番号</th>
+          <th class="N">材料名称</th>
         </tr>
         <tr *ngFor="let data of dataset">
           <td class="id">{{data[0]}}</td>
@@ -36,6 +39,7 @@
           <td class="J-TAN">{{data[2]}}</td>
           <td class="L">{{data[3]}}</td>
           <td class="number">{{data[4]}}</td>
+          <td class="N">{{data[6]}}</td>
         </tr>
       </div>
     </table>

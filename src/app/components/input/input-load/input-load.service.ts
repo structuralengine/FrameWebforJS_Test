@@ -178,8 +178,12 @@ export class InputLoadService {
           const _m2: string = "m2" in item3 ? item3.m2 : "";
           const _L1: string = "L1" in item3 ? item3.L1 : "";
 
-          const _direction: string =
+          let _direction: string =
             "direction" in item3 ? item3.direction : "";
+          if ( _direction !== null ){
+            _direction = _direction.trim().toLowerCase();
+          }
+
           const _mark: string = "mark" in item3 ? item3.mark : "";
 
           const _L2: string = "L2" in item3 ? item3.L2 : "";
@@ -552,6 +556,7 @@ export class InputLoadService {
       if (direction === null || direction === undefined) {
         direction = "";
       }
+      direction = direction.trim().toLowerCase();
 
       const mark = this.helper.toNumber(row["mark"]);
       const L1 = this.helper.toNumber(row["L1"]);
@@ -659,14 +664,6 @@ export class InputLoadService {
       const m2 = this.helper.toNumber(targetLoad.m2);
       if (m1 < m2) {
         const newLoads = this.getMemberRepeatLoad(targetLoad);
-
-        // let b = m1;
-        // let c = b.toString();
-        // targetLoad.m1 = c;
-        // let d = m2;
-        // let e = d.toString();
-        // targetLoad.m2 = e;
-
         load2.splice(i, 1);
         for (let j = 0; j < newLoads.length; j++) {
           load2.push(newLoads[j]);
@@ -1005,9 +1002,9 @@ export class InputLoadService {
         ll = ll + this.member.getMemberLength(j.toString());
       }
       L2 = ll - (curPos + L2);
-      if (targetLoad.L2 < 0) {
-        L2 = 0;
-      }
+      // if (targetLoad.L2 < 0) {
+      //   L2 = 0;
+      // }
       targetLoad.m2 = Math.sign(targetLoad.m2) * m2;
       targetLoad.L2 = L2;
       L = this.member.getMemberLength(m2.toString());

@@ -1,0 +1,16 @@
+$height_header: 32px;
+$height_semiHeader: 32px;
+h2 {
+    height: $height_header;
+    line-height: 32px;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "ＭＳ Ｐゴシック";
+}
+
+h3 {
+    height: $height_semiHeader;
+    line-height: 32px;
+    font-size: 16px;
+    font-family: "ＭＳ 明朝";
+}

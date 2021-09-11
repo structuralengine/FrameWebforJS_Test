@@ -28,6 +28,7 @@ export class ResultPickupDisgComponent implements OnInit {
   btnCombine: string;
   tableHeight: number;
   dimension: number;
+  cal: number = 0;
 
   constructor(
     private data: ResultPickupDisgService,
@@ -44,6 +45,7 @@ export class ResultPickupDisgComponent implements OnInit {
 
   ngOnInit() {
     this.loadPage(1);
+    this.calPage(0);
 
     // コンバインデータがあればボタンを表示する
     if (this.comb.isCalculated === true) {
@@ -58,7 +60,7 @@ export class ResultPickupDisgComponent implements OnInit {
 
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
-    let pageNew:number = eventData;
+    let pageNew: number = eventData;
     this.loadPage(pageNew);
   }
 
@@ -72,8 +74,34 @@ export class ResultPickupDisgComponent implements OnInit {
     }
     this.load_name = this.pickup.getPickUpName(currentPage);
 
-    this.three.ChangeMode('pik_disg');
+    this.three.ChangeMode("pik_disg");
     this.three.ChangePage(currentPage);
   }
 
+  calPage(calPage: number) {
+    const carousel = document.getElementById("carousel");
+    if (carousel != null) {
+      carousel.classList.add("add");
+    }
+    const time = this.TITLES.length;
+    let cal = this.cal;
+    setTimeout(() => {
+      this.calcal(calPage);
+    }, 100);
+    setTimeout(function () {
+      if (carousel != null) {
+        carousel.classList.remove("add");
+      }
+    }, 500);
+  }
+
+  calcal(calpage: number) {
+    this.cal += calpage;
+    if (this.cal >= this.TITLES.length) {
+      this.cal = 0;
+    }
+    if (this.cal < 0) {
+      this.cal = this.TITLES.length - 1;
+    }
+  }
 }

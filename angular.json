@@ -36,7 +36,11 @@
             "scripts": [
               "node_modules/@fortawesome/fontawesome-free/js/all.min.js"
             ],
-            "webWorkerTsConfig": "tsconfig.worker.json"
+            "webWorkerTsConfig": "tsconfig.worker.json",
+            "allowedCommonJsDependencies": [
+              "file-saver",
+              "pqgrid"
+            ]
           },
           "configurations": {
             "production": {

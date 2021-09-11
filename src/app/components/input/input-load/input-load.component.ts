@@ -196,6 +196,10 @@ export class InputLoadComponent implements OnInit {
         if ( L1 === null) {
           range.rowData["L1"] = null;
         }
+        const direction = range.rowData["direction"];
+        if (direction !== undefined && direction !== null) {
+          range.rowData["direction"] = direction.trim().toLowerCase();
+        }     
         const row = range.rowIndx + 1;
         this.three.changeData("load_values", row);
       }

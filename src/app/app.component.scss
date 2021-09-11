@@ -44,7 +44,6 @@ $border-color: #428bca; // ボーダーライン
 }
 
 .btn-group {
-    margin-top: 4px;
     a {
         text-decoration: none;
         min-width: 60px;
@@ -142,6 +141,7 @@ $border-color: #428bca; // ボーダーライン
 .contents-dailog {
     border: solid 1px #ccc;
     color: rgba(0, 0, 0, 0.87);
+    min-width: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
