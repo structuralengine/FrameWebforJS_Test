@@ -51,23 +51,23 @@ export class ResultReacService {
     const fix_node = this.fixnode.getFixNodeJson(0);
     const load_name = this.load.getLoadNameJson(0);
 
-    for(const k1 of Object.keys(jsonData)){
-      const caseData: {} = jsonData[k1];
-      if (typeof (caseData) !== 'object') {
-        continue;
-      }
-      const fixNo = caseData['fix_node'];
-      if ( fixNo in fix_node ) {
-        const fixNode = fix_node[fixNo];
-        for(const k2 of Object.keys(jsonData[k1].reac)){
-          if( fixNode.find((e) => e.n === k2 ) === undefined){
-            delete jsonData[k1].reac[k2];
-          }
-        }
-      } else {
-        jsonData[k1].reac = {};
-      }
-    }
+    // for(const k1 of Object.keys(jsonData)){
+    //   const caseData: {} = jsonData[k1];
+    //   if (typeof (caseData) !== 'object') {
+    //     continue;
+    //   }
+    //   const fixNo = caseData['react'];
+    //   if ( fixNo in fix_node ) {
+    //     const fixNode = fix_node[fixNo];
+    //     for(const k2 of Object.keys(jsonData[k1].reac)){
+    //       if( fixNode.find((e) => e.n === k2 ) === undefined){
+    //         delete jsonData[k1].reac[k2];
+    //       }
+    //     }
+    //   } else {
+    //     jsonData[k1].reac = {};
+    //   }
+    // }
 
     if (typeof Worker !== 'undefined') {
       // Create a new
