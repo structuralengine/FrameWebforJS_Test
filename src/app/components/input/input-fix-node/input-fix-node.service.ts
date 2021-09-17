@@ -105,7 +105,7 @@ export class InputFixNodeService  {
           continue;
         }
 
-        jsonData.push({ 
+        const data = { 
           row: r, 
           n: row.n,
           tx: (item.tx == null) ? empty : item.tx, 
@@ -114,8 +114,14 @@ export class InputFixNodeService  {
           rx: (item.rx == null) ? empty : item.rx, 
           ry: (item.ry == null) ? empty : item.ry, 
           rz: (item.rz == null) ? empty : item.rz 
-        });
+        };
 
+        if (empty == 0 && data.tx == empty && data.ty == empty && data.tz == empty
+          && data.rx == empty && data.ry == empty && data.rz == empty) {
+          continue;
+        }
+
+        jsonData.push(data);
       }
 
       if (jsonData.length > 0) {
