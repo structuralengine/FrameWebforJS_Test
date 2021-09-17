@@ -4,10 +4,11 @@
     <!--combFsec_titileからtitleごとにデータを取り出す-->
     <div *ngFor="let title of combFsec_title; index as i">
         <div *ngIf="combFsec_case_break[i]" class="pagerBreak"></div>
-        <h3>{{ title }}</h3>
+        <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
         <!--combFsec_datasetからfxmaxなどを取り出す-->
         <div *ngFor="let dataset of combFsec_dataset[i]; index as j">
             <div *ngIf="combFsec_type_break[j]" class="pagerBreak"></div>
+            <h3>{{ title }}</h3>
             <h3>{{ dataset[0] }}</h3>
             <!--fxmaxなどからcase[0]が名称のため飛ばす-->
             <div *ngFor="let case of dataset; index as k">

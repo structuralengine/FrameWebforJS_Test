@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 export class DataCountService implements OnInit {
   currentY: number = 0;
   currentType: number;
+  bottomCell: number = 50;
 
   constructor(private router: Router) {
     this.currentY = 0;
@@ -24,7 +25,7 @@ export class DataCountService implements OnInit {
 
   setCurrentY(tableHeight: number, lastHeight: number): boolean {
     this.currentY += tableHeight;
-    if (this.currentY > 54 /*行*/) {
+    if (this.currentY > this.bottomCell /*行*/) {
       this.currentY = lastHeight;
       return true;
     } else {

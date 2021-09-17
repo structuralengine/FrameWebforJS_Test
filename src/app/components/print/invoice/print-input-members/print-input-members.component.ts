@@ -24,6 +24,7 @@ export class PrintInputMembersComponent implements OnInit, AfterViewInit {
   tableHeight: number;
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
+  bottomCell: number = 45;
 
   public member_dataset = [];
   public member_page: number;
@@ -73,9 +74,9 @@ export class PrintInputMembersComponent implements OnInit, AfterViewInit {
     let break_flg = true;
 
     while (break_flg) {
-      
-      for (let i = 0; i < 50; i++) {
-        const j = page * 50 + i;
+
+      for (let i = 0; i < this.bottomCell; i++) {
+        const j = page * this.bottomCell + i;
 
         if(keys.length <= j){
           break_flg = false;

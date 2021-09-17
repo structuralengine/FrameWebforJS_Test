@@ -26,6 +26,7 @@ export class PrintResultCombineReacComponent implements OnInit, AfterViewInit {
   invoiceDetails: Promise<any>[];
   row: number = 0;
   dimension: number;
+  bottomCell: number = 50;
 
   public combReac_dataset = [];
   public combReac_title = [];
@@ -77,7 +78,7 @@ export class PrintResultCombineReacComponent implements OnInit, AfterViewInit {
     const typeSum: any[] = new Array();
 
     const KEYS = this.combReac.reacKeys
-    const TITLES = this.combReac.titles; 
+    const TITLES = this.combReac.titles;
     // [
     //   "tx_max",
     //   "tx_min",
@@ -157,8 +158,8 @@ export class PrintResultCombineReacComponent implements OnInit, AfterViewInit {
           body.push(line);
           this.row++;
 
-          //１テーブルで59行以上データがあるならば
-          if (this.row > 54) {
+          //１テーブルでthis.bottomCell行以上データがあるならば
+          if (this.row > this.bottomCell) {
             table.push(body);
             body = [];
             this.row = 2;
@@ -217,7 +218,7 @@ export class PrintResultCombineReacComponent implements OnInit, AfterViewInit {
       for (let i = 0; i < KEYS.length; i++) {
         const key: string = KEYS[i];
         if(!(key in elieli)) continue;
-        
+
         const elist = elieli[key]; // 1行分のnodeデータを取り出す.
 
         // x方向Max,minなどのタイプでの分割
@@ -226,7 +227,7 @@ export class PrintResultCombineReacComponent implements OnInit, AfterViewInit {
         ROW_type += countCell_type;
         ROW_case += countCell_type;
 
-        if (ROW_type < 54) {
+        if (ROW_type < this.bottomCell) {
           break_after_type.push(false);
           ROW_type += 4;
         } else {
@@ -236,9 +237,9 @@ export class PrintResultCombineReacComponent implements OnInit, AfterViewInit {
             break_after_type.push(true);
             ROW_type = 0;
           }
-          let countHead_break = Math.floor((countCell_type / 54) * 2 + 2);
+          let countHead_break = Math.floor((countCell_type / this.bottomCell) * 2 + 2);
           ROW_type += countCell_type + countHead_break;
-          ROW_type = ROW_type % 54;
+          ROW_type = ROW_type % this.bottomCell;
           ROW_type += 4;
         }
       }
@@ -246,7 +247,7 @@ export class PrintResultCombineReacComponent implements OnInit, AfterViewInit {
       //荷重タイプごとに分割するかどうか
       countCell_case += Object.keys(elieli).length;
       ROW_case += countCell_case;
-      if (ROW_case < 54) {
+      if (ROW_case < this.bottomCell) {
         break_after_case.push(false);
         ROW_case += 6;
       } else {
@@ -255,15 +256,15 @@ export class PrintResultCombineReacComponent implements OnInit, AfterViewInit {
         } else {
           break_after_case.push(true);
         }
-        let countHead_breakLoad = Math.floor((countCell_type / 54) * 2 + 5);
+        let countHead_breakLoad = Math.floor((countCell_type / this.bottomCell) * 2 + 5);
         ROW_case += countCell_type + countHead_breakLoad;
-        ROW_case = ROW_type % 54;
+        ROW_case = ROW_type % this.bottomCell;
         ROW_case += 6;
       }
     }
 
     //最後のページの行数だけ取得している
-    let lastArrayCount: number = countTotal % 54;
+    let lastArrayCount: number = countTotal % this.bottomCell;
 
     return {
       titleSum,

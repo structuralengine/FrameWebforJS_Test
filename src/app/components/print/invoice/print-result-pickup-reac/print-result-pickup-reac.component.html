@@ -4,10 +4,11 @@
     <!--pickReac_titleからtitleごとにデータを取り出す-->
     <div *ngFor="let title of pickReac_title; index as i">
         <div *ngIf="pickReac_case_break[i]" class="pagerBreak"></div>
-        <h3>{{ title }}</h3>
+        <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
         <!--combDisg_datasetからtxmaxなどを取り出す-->
         <div *ngFor="let dataset of pickReac_dataset[i]; index as j">
             <div *ngIf="pickReac_type_break[j]" class="pagerBreak"></div>
+            <h3>{{ title }}</h3>
             <h3>{{ dataset[0] }}</h3>
             <!--txmaxなどからcase[0]が名称のため飛ばす-->
             <div *ngFor="let case of dataset; index as k">

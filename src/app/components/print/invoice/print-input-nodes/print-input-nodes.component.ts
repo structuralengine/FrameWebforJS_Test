@@ -156,11 +156,9 @@ export class PrintInputNodesComponent implements OnInit, AfterViewInit {
     if(keys.length === 0){
       this.countHead = 0 ;
     }else if(keys.length > 0){
-      this.countHead = Math.floor((keys.length / 50) * 3) + 3 ;
+      this.countHead = Math.floor((keys.length / this.bottomCell) * 3) + 3 ;
     }
     this.countTotal = keys.length + this.countHead;
-    
-
 
     return { page, splid, this: this.countTotal, last: lastArrayCount };
   }

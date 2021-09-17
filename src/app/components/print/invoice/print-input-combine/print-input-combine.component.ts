@@ -23,6 +23,7 @@ export class PrintInputCombineComponent implements OnInit, AfterViewInit {
   tableHeight: number;
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
+  bottomCell: number = 50;
 
   public comb_tables = [];
   public comb_dataset = [];
@@ -124,8 +125,8 @@ export class PrintInputCombineComponent implements OnInit, AfterViewInit {
         body.push(line2);
       }
 
-      //１テーブルで59行以上  になったら
-      if (row > 54) {
+      //１テーブルでthis.bottomCell行以上  になったら
+      if (row > this.bottomCell) {
         splid.push(body);
         body = [];
         row = 2;
