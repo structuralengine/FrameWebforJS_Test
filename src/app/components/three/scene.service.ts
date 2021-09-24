@@ -46,6 +46,7 @@ export class SceneService {
     // gui
     this.params = {
       GridHelper: true,
+      ReDraw: this.render
     };
   }
 
@@ -83,6 +84,7 @@ export class SceneService {
       this.GridHelper.visible = value;
       this.render();
     });
+    this.gui.add( this.params, 'ReDraw' );
     this.gui.open();
   }
 

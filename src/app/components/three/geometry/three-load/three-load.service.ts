@@ -400,10 +400,12 @@ export class ThreeLoadService {
     }
     // 格点の変更によって影響のある部材を特定する
     const targetMemberData = (this.newMemberData !== null) ? this.newMemberData : this.memberData;
-    for (const key of Object.keys(targetMemberData)) {
-      const newMember = targetMemberData[key];
-      if (newMember.ni in changeNodeList || newMember.nj in changeNodeList) {
-        changeMemberList[key] = 'node change'
+    if(targetMemberData !== null){
+      for (const key of Object.keys(targetMemberData)) {
+        const newMember = targetMemberData[key];
+        if (newMember.ni in changeNodeList || newMember.nj in changeNodeList) {
+          changeMemberList[key] = 'node change'
+        }
       }
     }
 
@@ -454,7 +456,9 @@ export class ThreeLoadService {
     }
 
     // 格点データを入手
-    //const nodeData = this.node.getNodeJson(0);
+    if (this.nodeData === null) {
+      return; // 格点がなければ 以降の処理は行わない
+    }
     if (Object.keys(this.nodeData).length <= 0) {
       return; // 格点がなければ 以降の処理は行わない
     }
@@ -466,7 +470,9 @@ export class ThreeLoadService {
 
 
     // 要素データを入手
-    //const memberData = this.member.getMemberJson(0);
+    if (this.memberData === null) {
+      return; //要素がなければ 以降の処理は行わない
+    }
     if (Object.keys(this.memberData).length <= 0) {
       return; //要素がなければ 以降の処理は行わない
     }
