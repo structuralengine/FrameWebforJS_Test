@@ -44,8 +44,16 @@ export class AppComponent implements OnInit {
   public contentsDailogShow(id): void {
     this.deactiveButtons();
     document.getElementById(id).classList.add('active');
-    //this.setDialogHeight();
+    this.changePosition();
     this.helper.isContentsDailogShow = true;
+  }
+  
+  // フローティングウィンドウの位置
+  public dragPosition = {x: 0, y: 0};
+  public changePosition() {
+    this.dragPosition = {
+      x: this.dragPosition.x, 
+      y: this.dragPosition.y};
   }
 
   // アクティブになっているボタンを全て非アクティブにする

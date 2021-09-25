@@ -11,6 +11,8 @@ export class DataHelperModule {
   public dimension: number;
   public isContentsDailogShow: boolean;
   
+
+
   // 文字列string を数値にする
   public toNumber(num: string, digit: number = null): number {
     let result: number = null;
