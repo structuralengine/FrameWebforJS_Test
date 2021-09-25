@@ -56,7 +56,7 @@ export class ThreePanelService {
     this.opacity = opacity;
 
     // guiの表示設定
-    if (flag === true) {
+    if (flag === true && opacity === 0.7) {
       this.guiEnable();
     } else {
       this.guiDisable();
@@ -276,7 +276,7 @@ export class ThreePanelService {
   private post_gmsh(): void {
 
     const geo: string = this.panel.getGeoString();
-    
+
     const inputJson: string = JSON.stringify({
       dim: 3, geo
     })

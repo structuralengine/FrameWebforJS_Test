@@ -1338,7 +1338,7 @@ export class ThreeLoadService {
 
   // マウス位置とぶつかったオブジェクトを検出する
   public detectObject(raycaster: THREE.Raycaster, action: string): void {
-
+    return;// マウスの位置と 当たり判定の位置が ずれてる・・・使いにくいので
     if (!(this.currentIndex in this.AllCaseLoadList)) {
       this.selecteddObject = null;
       return; // 対象がなければ何もしない
