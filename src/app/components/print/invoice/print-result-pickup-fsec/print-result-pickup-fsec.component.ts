@@ -28,6 +28,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
   invoiceDetails: Promise<any>[];
   row: number = 0;
   dimension: number;
+  bottomCell: number = 50;
 
   public pickFsec_dataset = [];
   public pickFsec_title = [];
@@ -76,9 +77,9 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     const body: any[] = new Array();
     const typeSum: any = [];
 
-    const KEYS = this.combFsec.fsecKeys; 
-    const TITLES = this.combFsec.titles; 
-    
+    const KEYS = this.combFsec.fsecKeys;
+    const TITLES = this.combFsec.titles;
+
     // [
     //   "fx_max",
     //   "fx_min",
@@ -160,8 +161,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
           body.push(line);
           this.row++;
 
-          //１テーブルで54行以上データがあるならば
-          if (this.row > 54) {
+          //１テーブルでthis.bottomCell行以上データがあるならば
+          if (this.row > this.bottomCell) {
             table.push(body);
             body = [];
             this.row = 3;
@@ -228,7 +229,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
         ROW_type += countCell_type;
         ROW_case += countCell_type;
 
-        if (ROW_type < 54) {
+        if (ROW_type < this.bottomCell) {
           break_after_type.push(false);
           ROW_type += 5;
         } else {
@@ -238,9 +239,9 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
             break_after_type.push(true);
             ROW_type = 0;
           }
-          let countHead_break = Math.floor((countCell_type / 54) * 3 + 2);
+          let countHead_break = Math.floor((countCell_type / this.bottomCell) * 3 + 2);
           ROW_type += countCell_type + countHead_break;
-          ROW_type = ROW_type % 54;
+          ROW_type = ROW_type % this.bottomCell;
           ROW_type += 5;
         }
       }
@@ -248,7 +249,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       //荷重タイプごとに分割するかどうか
       countCell_case += Object.keys(elieli).length;
       ROW_case += countCell_case;
-      if (ROW_case < 54) {
+      if (ROW_case < this.bottomCell) {
         break_after_case.push(false);
         ROW_case += 7;
       } else {
@@ -257,15 +258,15 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
         } else {
           break_after_case.push(true);
         }
-        let countHead_breakLoad = Math.floor((countCell_type / 54) * 3 + 5);
+        let countHead_breakLoad = Math.floor((countCell_type / this.bottomCell) * 3 + 5);
         ROW_case += countCell_type + countHead_breakLoad;
-        ROW_case = ROW_type % 54;
+        ROW_case = ROW_type % this.bottomCell;
         ROW_case += 7;
       }
     }
 
     //最後のページの行数だけ取得している
-    let lastArrayCount: number = countTotal % 54;
+    let lastArrayCount: number = countTotal % this.bottomCell;
 
     return {
       titleSum,

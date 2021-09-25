@@ -24,6 +24,7 @@ export class PrintInputPickupComponent implements OnInit, AfterViewInit {
   tableHeight: number;
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
+  bottomCell: number = 50;
 
   public pickup_dataset = [];
 
@@ -101,8 +102,8 @@ export class PrintInputPickupComponent implements OnInit, AfterViewInit {
         body.push(line); // 表の1行 登録
       }
 
-      //１テーブルで59行以上  になったら
-      if (row > 54) {
+      //１テーブルでthis.bottomCell行以上  になったら
+      if (row > this.bottomCell) {
         splid.push(body);
         body = [];
         row = 2;

@@ -256,7 +256,7 @@ export class ThreeSectionForceService {
       // ねじり曲げモーメント
       this.currentRadio = 'torsionalMoment';
       key1 = 'mx';
-      key2 = 'y';
+      key2 = 'z';
     } else if (this.params.shearForceY === true) {
       // Y方向のせん断力
       this.currentRadio = 'shearForceY';

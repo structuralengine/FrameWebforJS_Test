@@ -11,6 +11,8 @@ export class DataHelperModule {
   public dimension: number;
   public isContentsDailogShow: boolean;
   
+
+
   // 文字列string を数値にする
   public toNumber(num: string, digit: number = null): number {
     let result: number = null;
@@ -91,7 +93,7 @@ export class DataHelperModule {
 
   public getScale(data: number, max: number): number {
 
-    const ratio = 1 * data / max;
+    const ratio = 1 * Math.abs(data) / max;
     const scale = ( 1 - ( ratio - 1)**2 )**0.5; //円を用いた倍率を設定する
 
     return scale;

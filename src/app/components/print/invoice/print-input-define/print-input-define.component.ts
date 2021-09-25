@@ -23,6 +23,7 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
   tableHeight: number;
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
+  bottomCell: number = 50;
 
   public define_dataset = [];
 
@@ -94,8 +95,8 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
       if (counter > 0) {
         body.push(line); // 表の1行 登録
       }
-      //１テーブルで59行以上  になったら
-      if (row > 54) {
+      //１テーブルでthis.bottomCell行以上  になったら
+      if (row > this.bottomCell) {
         splid.push(body);
         body = [];
         row = 2;
@@ -112,12 +113,12 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
     if (countCell === 0) {
       this.countHead = 0;
     } else if (countCell > 0) {
-      this.countHead = Math.floor((countCell / 54) * 2) + 2;
+      this.countHead = Math.floor((countCell / this.bottomCell) * 2) + 2;
     }
     this.countTotal = countCell + this.countHead + 3;
 
     //最後のページの行数だけ取得している
-    const lastArrayCount = this.countTotal % 54;
+    const lastArrayCount = this.countTotal % this.bottomCell;
 
     return { splid, this: this.countTotal, last: lastArrayCount };
   }

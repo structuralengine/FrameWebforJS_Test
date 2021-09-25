@@ -26,6 +26,7 @@ export class PrintResultReacComponent implements OnInit, AfterViewInit {
   reROW: number = 0;
   remainCount: number = 0;
   dimension: number;
+  bottomCell: number = 50;
 
   public reac_table = [];
   public reac_break = [];
@@ -102,8 +103,8 @@ export class PrintResultReacComponent implements OnInit, AfterViewInit {
         body.push(line);
         row++;
 
-        //１テーブルで59行以上データがあるならば
-        if (row > 54) {
+        //１テーブルでthis.bottomCell行以上データがあるならば
+        if (row > this.bottomCell) {
           table.push(body);
           body = [];
           row = 2;
@@ -135,7 +136,7 @@ export class PrintResultReacComponent implements OnInit, AfterViewInit {
       let countCell = Object.keys(elist).length;
       ROW += countCell;
 
-      if (ROW < 54) {
+      if (ROW < this.bottomCell) {
         break_after.push(false);
         this.reROW = ROW + 4;
         ROW = ROW + 4;
@@ -146,10 +147,10 @@ export class PrintResultReacComponent implements OnInit, AfterViewInit {
           break_after.push(true);
           ROW = 0;
         }
-        let countHead_break = Math.floor((countCell / 54) * 2 + 2);
-        this.reROW = ROW % 55;
+        let countHead_break = Math.floor((countCell / this.bottomCell) * 2 + 2);
+        this.reROW = ROW % (this.bottomCell+1);
         ROW += countHead_break + countCell;
-        ROW = ROW % 54;
+        ROW = ROW % this.bottomCell;
         ROW += 4;
       }
     }

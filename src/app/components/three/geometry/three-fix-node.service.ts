@@ -60,9 +60,7 @@ export class ThreeFixNodeService {
 
     // guiの表示設定
     if (flag === true) {
-      if (this.fixnodeList.length > 0) {
-        this.guiEnable();
-      }
+      this.guiEnable();
     } else {
       this.guiDisable();
     }

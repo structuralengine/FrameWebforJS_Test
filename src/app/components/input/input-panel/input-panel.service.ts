@@ -7,6 +7,7 @@ import { InputNodesService } from '../input-nodes/input-nodes.service';
 })
 export class InputPanelService {
 
+
   public PANEL_VERTEXS_COUNT = 4;
   public panel_points: any[];
 
@@ -122,6 +123,37 @@ export class InputPanelService {
     const zj: number = jPos['z'];
 
     const result: number = Math.sqrt((xi - xj) ** 2 + (yi - yj) ** 2 + (zi - zj) ** 2);
+    return result;
+  }
+
+  // gmsh サーバーにpost する用の文字列を追加する
+  public getGeoString(): string {
+
+    let tmp: string[] = new Array();
+
+    tmp.push('Point(1) = {0, 0, 0}');
+    tmp.push('Point(2) = {1, 0, 0}');
+    tmp.push('Point(3) = {1, 1, 0}');
+    tmp.push('Point(4) = {0, 1, 0}');
+
+    tmp.push('Line(1) = {1,2}');
+    tmp.push('Line(2) = {3,2}');
+    tmp.push('Line(3) = {3,4}');
+    tmp.push('Line(4) = {4,1}');
+
+    tmp.push('Curve Loop(5) = {4,1,-2,3}');
+    tmp.push('Plane Surface(6) = {5}');
+
+    tmp.push('Transfinite Curve{1:4} = 10');
+    tmp.push('Transfinite Surface{6} Alternate');
+    tmp.push('Mesh.ElementOrder = 2');
+
+    let result = '';
+    for(const str of tmp){
+      result += str;
+      result += ';\n'; // 改行コードを追加
+    }
+    
     return result;
   }
 }

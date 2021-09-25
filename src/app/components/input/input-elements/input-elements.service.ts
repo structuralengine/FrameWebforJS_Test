@@ -128,8 +128,11 @@ export class InputElementsService {
           J: (J == null) ? empty : J, 
           Iy: (Iy == null) ? empty : Iy, 
           Iz: (Iz == null) ? empty : Iz,
-          n: (n == null) ? '' : n,
         };
+        if(empty===null){
+          // 計算以外では、名前を保存
+          jsonData[key]['n'] = n;
+        }
           
       }
       if (Object.keys(jsonData).length > 0) {

@@ -1,14 +1,10 @@
 import { SceneService } from '../scene.service';
 import { InputNodesService } from '../../input/input-nodes/input-nodes.service';
-import { InputMembersService } from '../../input/input-members/input-members.service';
-import { InputLoadService } from '../../input/input-load/input-load.service';
 import { InputPanelService } from '../../input/input-panel/input-panel.service';
-import { ThreeNodesService } from './three-nodes.service';
 import { Injectable } from '@angular/core';
 
 import * as THREE from 'three';
-import { ThreeMembersService } from './three-members.service';
-import { R3TargetBinder } from '@angular/compiler';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -19,29 +15,32 @@ export class ThreePanelService {
   private isVisible: boolean;
   private opacity: number;
   private currentIndex: string;
-  private currentIndex_sub: string;
-  private face_material: THREE.MeshBasicMaterial;
   private selectcolors: any[];
 
   private selectionItem: THREE.Object3D;     // 選択中のアイテム
 
-  constructor(private scene: SceneService,
-    private nodeThree: ThreeNodesService,
+  // 大きさを調整するためのスケール
+  private scale: number;
+  private params: any;          // GUIの表示制御
+  private gui: any;
+
+  constructor(
+    private scene: SceneService,
     private node: InputNodesService,
-    private member: InputMembersService,
     private panel: InputPanelService,
-    private three_member: ThreeMembersService) {
+    private http: HttpClient) {
+
     this.panelList = new Array();
     this.isVisible = null;
     this.opacity = 0.7;
     this.currentIndex = null;
-    this.currentIndex_sub = null;
-    /*this.face_material = new THREE.MeshBasicMaterial({
-      transparent: true,
-      side: THREE.DoubleSide,
-      color: 0x7f8F9F,
-      opacity: 0.7,
-    });*/
+    
+    // gui
+    this.scale = 1.0;
+    this.params = {
+      meshScale: this.scale
+    };
+    this.gui = null;
   }
 
   public visibleChange(flag: boolean, opacity: number = 0.7): void {
@@ -55,6 +54,38 @@ export class ThreePanelService {
     }
     this.isVisible = flag;
     this.opacity = opacity;
+
+    // guiの表示設定
+    if (flag === true && opacity === 0.7) {
+      this.guiEnable();
+    } else {
+      this.guiDisable();
+    }
+
+  }
+
+  // guiを表示する
+  private guiEnable(): void {
+    if (this.gui !== null) {
+      return;
+    }
+
+    this.gui = this.scene.gui
+    .add(this.params, 'meshScale', 0, 10)
+    .step(1)
+    .onFinishChange((value) => {
+      this.scale = value;
+      this.post_gmsh();
+    });
+  }
+
+  // guiを非表示にする
+  private guiDisable(): void {
+    if (this.gui === null) {
+      return;
+    }
+    this.scene.gui.remove(this.gui);
+    this.gui = null;
   }
 
   public changeData(index: number = 0): void {
@@ -66,20 +97,12 @@ export class ThreePanelService {
     if (Object.keys(nodeData).length <= 0) {
       return;
     }
-    // 要素データを入手
-    /*const memberData = this.member.getMemberJson(0);
-    if (Object.keys(memberData).length <= 0) {
-      return;
-    }*/
     
     // パネルデータを入手
     const panelData = this.panel.getPanelJson(0);
     if (Object.keys(panelData).length <= 0) {
       return;
     }
-
-    // createPanelLoadを実行させる
-    // const targetpanel = panelData;
 
     for (const key of Object.keys(panelData)) {
       const target = panelData[key];
@@ -106,13 +129,11 @@ export class ThreePanelService {
   }
 
   //シートの選択行が指すオブジェクトをハイライトする
-  //public selectChange(index_row, index_column): void {
   public selectChange(index_row): void {
 
     //[0]はハイライト用のカラー、[1]はデフォルトカラー
     this.selectcolors = [0x00AFAF, 0x7F8F9F]
 
-    //if (this.currentIndex === index_row && this.currentIndex_sub === index_column) {
     if (this.currentIndex === index_row) {
       //選択行及び列の変更がないとき，何もしない
       return
@@ -130,7 +151,6 @@ export class ThreePanelService {
     }
 
     this.currentIndex = index_row;
-    //this.currentIndex_sub = index_column;
 
     this.scene.render();
   }
@@ -146,7 +166,6 @@ export class ThreePanelService {
     for (let length = 0; length < geometry.vertices.length - 2; length++){
       geometry.faces.push( new THREE.Face3( 0, length + 1, length + 2 ) );
     }
-    //const material = this.face_material;
     const material = new THREE.MeshBasicMaterial({
       transparent: true,
       side: THREE.DoubleSide,
@@ -251,6 +270,33 @@ export class ThreePanelService {
         return;
     }
     this.scene.render();
+  }
+
+  //
+  private post_gmsh(): void {
+
+    const geo: string = this.panel.getGeoString();
+
+    const inputJson: string = JSON.stringify({
+      dim: 3, geo
+    })
+    const options = {
+      headers: new HttpHeaders({
+        'Accept': 'application/json'
+      })
+    };
+    const URL = 'https://uij0y12e2l.execute-api.ap-northeast-1.amazonaws.com/default/gmsh';
+
+    this.http.post(URL, inputJson, options).subscribe(
+      (response) => {
+        console.log('通信成功', response)
+        this.scene.render();
+      },
+      (error) => {
+        console.log('エラー',error)
+      }
+    );
+
   }
 
 }

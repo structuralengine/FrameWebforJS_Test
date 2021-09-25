@@ -28,6 +28,7 @@ export class PrintInputJointComponent implements OnInit, AfterViewInit {
   invoiceDetails: Promise<any>[];
   reROW: number = 0;
   remainCount: number = 0;
+  bottomCell: number = 50;
 
   public joint_table = [];
   public joint_break = [];
@@ -99,8 +100,8 @@ export class PrintInputJointComponent implements OnInit, AfterViewInit {
         body.push(line);
         row++;
 
-        //１テーブルで59行以上データがあるならば
-        if (row > 54) {
+        //１テーブルでthis.bottomCell行以上データがあるならば
+        if (row > this.bottomCell) {
           table.push(body);
           body = [];
           row = 3;
@@ -133,7 +134,7 @@ export class PrintInputJointComponent implements OnInit, AfterViewInit {
       const countCell = Object.keys(elist).length;
       ROW += countCell;
 
-      if (ROW < 54) {
+      if (ROW < this.bottomCell) {
         break_after.push(false);
         this.reROW = ROW + 5;
         ROW = ROW + 5;
@@ -144,10 +145,10 @@ export class PrintInputJointComponent implements OnInit, AfterViewInit {
           break_after.push(true);
           ROW = 0;
         }
-        let countHead_break = Math.floor((countCell / 54) * 3 + 2);
+        let countHead_break = Math.floor((countCell / this.bottomCell) * 3 + 2);
         ROW += countHead_break + countCell;
-        ROW = ROW % 54;
-        this.reROW = ROW % 55;
+        ROW = ROW % (this.bottomCell+1);
+        this.reROW = ROW % this.bottomCell;
         ROW += 5;
       }
     }

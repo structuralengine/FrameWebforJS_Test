@@ -24,6 +24,7 @@ export class PrintInputLoadNameComponent implements OnInit {
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
   empty: number;
+  bottomCell: number = 40;
 
   public loadName_dataset = [];
   public loadName_page = [];
@@ -73,11 +74,11 @@ export class PrintInputLoadNameComponent implements OnInit {
     let break_flg = true;
 
     while (break_flg) {
-      for (let i = 0; i < 47; i++) {
+      for (let i = 0; i < this.bottomCell; i++) {
         const line = ["", "", "", "", "", ""];
         let index: string = keys[i];
         const item = json[index]; // 1行分のnodeデータを取り出す
-        const j = page * 47 + i + 1;
+        const j = page * this.bottomCell + i + 1;
 
         if (keys.length === 0) {
           this.empty = 7;

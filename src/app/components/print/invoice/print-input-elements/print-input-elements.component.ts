@@ -28,6 +28,7 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
   invoiceDetails: Promise<any>[];
   reROW : number = 0;
   remainCount : number = 0;
+  bottomCell: number = 50;
 
   public elements_table = [];
   public elements_break = [];
@@ -99,8 +100,8 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
         body.push(line);
         row++;
 
-        //１テーブルで59行以上データがあるならば
-        if (row > 54) {
+        //１テーブルで this.bottomCell行以上データがあるならば
+        if (row > this.bottomCell) {
           table.push(body);
           body = [];
           row = 3;
@@ -110,7 +111,7 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
         table.push(body);
       }
       splid.push(table);
-      row = 5; 
+      row = 5;
     }
 
     // 全体の高さを計算する
@@ -122,7 +123,7 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
     const countHead = keys.length * 3;
     const countSemiHead = splid.length * 2 ;
     const countTotal = countCell + countHead + countSemiHead + 3;
-    
+
     // 各タイプの前に改ページ（break_after）が必要かどうか判定する
     const break_after: boolean[] = new Array();
     let ROW = 8;
@@ -131,8 +132,8 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
       const elist = json[index]; // 1テーブル分のデータを取り出す
       let countCell = Object.keys(elist).length;
       ROW += countCell;
-      
-      if (ROW < 54) {
+
+      if (ROW < this.bottomCell) {
         break_after.push(false);
         this.reROW = ROW + 5;
         ROW = ROW + 5;
@@ -143,10 +144,10 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
           break_after.push(true);
           ROW = 0;
         }
-        let countHead_break = Math.floor((countCell / 54) *3 + 2);
-        this.reROW = ROW % 55;
+        let countHead_break = Math.floor((countCell / this.bottomCell) *3 + 2);
+        this.reROW = ROW % (this.bottomCell+1);
         ROW += countHead_break + countCell;
-        ROW = ROW % 54;
+        ROW = ROW % this.bottomCell;
         ROW += 5;
       }
     }
@@ -156,7 +157,6 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
     //最後のページにどれだけデータが残っているかを求める
     let lastArrayCount: number = this.remainCount;
 
-  
     return {
       table: splid, // [タイプ１のテーブルリスト[], タイプ２のテーブルリスト[], ...]
       title: title, // [タイプ１のタイトル, タイプ２のタイトル, ... ]
@@ -164,5 +164,6 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
       last: lastArrayCount, // 最後のページの高さ
       break_after: break_after, // 各タイプの前に改ページ（break_after）が必要かどうか判定
     };
+
   }
 }

@@ -25,6 +25,7 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
   remainCount: number = 0;
+  bottomCell: number = 50;
 
   public load_title = [];
   public load_member = [];
@@ -105,8 +106,8 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
       ROW_mn += 2;
       if ("load_member" in elist) {
         countCell_member = elist.load_member.length;
-        if (countCell_member > 54) {
-          page_over_member = Math.floor(countCell_member / 54);
+        if (countCell_member > this.bottomCell) {
+          page_over_member = Math.floor(countCell_member / this.bottomCell);
           ROW_m = countCell_member +  page_over_member * 4 + 2;
         } else {
           ROW_m = countCell_member + 4;
@@ -117,8 +118,8 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
 
       if ("load_node" in elist) {
         countCell_node = elist.load_node.length;
-        if (countCell_node > 54) {
-          page_over_node = Math.floor(countCell_node / 54);
+        if (countCell_node > this.bottomCell) {
+          page_over_node = Math.floor(countCell_node / this.bottomCell);
           ROW_n = countCell_node + page_over_node * 3 + 2;
         } else {
           ROW_n = countCell_node + 3;
@@ -129,14 +130,14 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
 
       ROW_mn += ROW_m + ROW_n;
 
-      if (ROW_mn < 54) {
+      if (ROW_mn < this.bottomCell) {
         break_after.push(false);
         ROW_mn = ROW_mn;
         ROW_m = 0;
         ROW_n = 0;
-      } else if (ROW_mn === 54) {
+      } else if (ROW_mn === this.bottomCell) {
         break_after.push(false);
-        ROW_mn = 54;
+        ROW_mn = this.bottomCell;
         ROW_m = 0;
         ROW_n = 0;
       } else {
@@ -147,7 +148,7 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
         }
         ROW_mn = 0;
         let reROW = ROW_m + ROW_n;
-        ROW_mn = reROW % 54;
+        ROW_mn = reROW % this.bottomCell;
       }
     }
 
@@ -219,8 +220,8 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
           this.mload.push(line);
           // flg.push(0);
           row++;
-          //１テーブルで60行以上データがあるならば
-          if (row > 54) {
+          //１テーブルでthis.bottomCell行以上データがあるならば
+          if (row > this.bottomCell) {
             splidData_member.push(this.mload);
             this.mload = [];
             row = 4;
@@ -267,8 +268,8 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
           this.pload.push(line);
           row++;
 
-          //１テーブルで60行以上データがあるならば
-          if (row > 54) {
+          //１テーブルでthis.bottomCell行以上データがあるならば
+          if (row > this.bottomCell) {
             splidData_node.push(this.pload);
             this.pload = [];
             row = 4;

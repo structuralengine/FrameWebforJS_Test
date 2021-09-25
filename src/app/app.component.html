@@ -107,7 +107,9 @@
         </div>
     </div>
 
-    <div cdkDrag *ngIf="helper.isContentsDailogShow" class="contents-dailog" id="contents-dialog-id">
+    <div cdkDrag [cdkDragFreeDragPosition]="dragPosition"
+        *ngIf="helper.isContentsDailogShow" 
+        class="contents-dailog" id="contents-dialog-id">
         <!-- ドラッグハンドルをテーブルの後ろに敷いて、テーブル領域以外がドラッグされたらcontetns-dialogを移動するイメージ -->
         <div class="dialog-header">
             <div cdkDragHandle class="dialog-drag-handle">

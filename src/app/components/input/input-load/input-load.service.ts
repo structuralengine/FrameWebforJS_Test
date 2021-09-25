@@ -520,9 +520,12 @@ export class InputLoadService {
         for (let j = 0; j < load2.length; j++) {
           const row = load2[j];
 
+          let direction: string = row["direction"];
+          direction = direction.trim().toLowerCase();
+
           const tmp = {
             m: row["m1"],
-            direction: row["direction"],
+            direction: direction,
             mark: row["mark"],
             L1: this.helper.toNumber(row["L1"], 3),
             L2: this.helper.toNumber(row["L2"], 3),
