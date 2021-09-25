@@ -94,9 +94,16 @@ export class InputDataService {
   }
 
   // ファイルに保存用データを生成
-  // empty = null: ファイル保存時
-  // empty = 0: 計算時
   public getInputJson(empty: number = null): object {
+
+    // empty = null: ファイル保存時
+    // empty = 0: 計算時
+    // empty = 1: 印刷時
+    let isPrint = false;
+    if(empty===1){
+      empty = 0; // 印刷時 は 計算時と同じ
+      isPrint = true;
+    }
 
     const jsonData = {};
 
@@ -146,7 +153,7 @@ export class InputDataService {
       jsonData['fix_member'] = fix_member;
     }
 
-    const load: {} = this.load.getLoadJson(empty);
+    const load: {} = this.load.getLoadJson(empty, isPrint);
     if (Object.keys(load).length > 0) {
       jsonData['load'] = load;
     } else if(empty === 0){

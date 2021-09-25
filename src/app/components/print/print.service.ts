@@ -36,7 +36,7 @@ export class PrintService {
 
   public setprintDocument() {
     // 入力データを取得する
-    this.inputJson = this.InputData.getInputJson(0);
+    this.inputJson = this.InputData.getInputJson(1);
     this.combineJson = this.InputData.combine.getCombineJson();
     this.defineJson = this.InputData.define.getDefineJson();
     this.pickupJson = this.InputData.pickup.getPickUpJson();
