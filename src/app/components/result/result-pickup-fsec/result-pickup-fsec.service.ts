@@ -15,8 +15,8 @@ export class ResultPickupFsecService {
   constructor(private three: ThreeSectionForceService) {
     this.clear();
     this.isCalculated = false;
-    this.worker1 = new Worker('./result-pickup-fsec1.worker', { name: 'pickup-fsec1', type: 'module' });
-    this.worker2 = new Worker('./result-pickup-fsec2.worker', { name: 'pickup-fsec2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-pickup-fsec1.worker', import.meta.url), { name: 'pickup-fsec1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-pickup-fsec2.worker', import.meta.url), { name: 'pickup-fsec2', type: 'module' });
   }
 
   public clear(): void {

@@ -14,8 +14,8 @@ export class ResultPickupDisgService {
   constructor() { 
     this.clear();
     this.isCalculated = false;
-    this.worker1 = new Worker('./result-pickup-disg1.worker', { name: 'pickup-disg1', type: 'module' });
-    this.worker2 = new Worker('./result-pickup-disg2.worker', { name: 'pickup-disg2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-pickup-disg1.worker', import.meta.url), { name: 'pickup-disg1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-pickup-disg2.worker', import.meta.url), { name: 'pickup-disg2', type: 'module' });
   }
 
   public clear(): void {

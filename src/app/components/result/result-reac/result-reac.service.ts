@@ -22,8 +22,8 @@ export class ResultReacService {
     private three: ThreeReactService) {
 
     this.clear();
-    this.worker1 = new Worker('./result-reac1.worker', { name: 'result-reac1', type: 'module' });
-    this.worker2 = new Worker('./result-reac2.worker', { name: 'result-reac2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-reac1.worker', import.meta.url), { name: 'result-reac1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-reac2.worker', import.meta.url), { name: 'result-reac2', type: 'module' });
   }
 
   public clear(): void {

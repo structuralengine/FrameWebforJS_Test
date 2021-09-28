@@ -8,7 +8,7 @@ import { InputNodesService } from '../../../input/input-nodes/input-nodes.servic
 import { InputMembersService } from '../../../input/input-members/input-members.service';
 
 import { ThreeMembersService } from '../three-members.service';
-import { ThreeNodesService } from '../three-nodes.service.js';
+import { ThreeNodesService } from '../three-nodes.service';
 import { ThreeSectionForceMeshService } from './three-force-mesh';
 
 

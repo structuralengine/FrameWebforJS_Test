@@ -14,8 +14,8 @@ export class ResultPickupReacService {
   constructor() { 
     this.clear();
     this.isCalculated  = false;
-    this.worker1 = new Worker('./result-pickup-reac1.worker', { name: 'pickup-reac1', type: 'module' });
-    this.worker2 = new Worker('./result-pickup-reac2.worker', { name: 'pickup-reac2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-pickup-reac1.worker', import.meta.url), { name: 'pickup-reac1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-pickup-reac2.worker', import.meta.url), { name: 'pickup-reac2', type: 'module' });
   }
 
   public clear(): void {

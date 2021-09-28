@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import * as THREE from "three";
 import { Points, Vector2, Vector3 } from 'three';
 import { Line2 } from '../../libs/Line2.js';
-import { LineMaterial } from '../../libs/LineMaterial.js';
-import { LineGeometry } from '../../libs/LineGeometry.js';
-import { ThreeLoadText } from './three-load-text.js';
-import { ThreeLoadDimension } from './three-load-dimension.js';
+import { LineMaterial } from '../../libs/LineMaterial';
+import { LineGeometry } from '../../libs/LineGeometry';
+import { ThreeLoadText } from './three-load-text';
+import { ThreeLoadDimension } from './three-load-dimension';
 
 @Injectable({
   providedIn: 'root'

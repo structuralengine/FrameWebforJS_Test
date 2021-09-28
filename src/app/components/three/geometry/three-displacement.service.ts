@@ -17,8 +17,8 @@ import { ResultCombineDisgService } from '../../result/result-combine-disg/resul
 import { ResultPickupDisgService } from '../../result/result-pickup-disg/result-pickup-disg.service';
 
 import { ThreeNodesService } from './three-nodes.service';
-import { ThreeMembersService } from './three-members.service.js';
-import { ThreePanelService } from './three-panel.service.js';
+import { ThreeMembersService } from './three-members.service';
+import { ThreePanelService } from './three-panel.service';
 
 @Injectable({
   providedIn: 'root'

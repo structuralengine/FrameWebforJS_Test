@@ -20,8 +20,8 @@ export class ResultFsecService {
               private three: ThreeSectionForceService,
               private helper: DataHelperModule) {
     this.clear();
-    this.worker1 = new Worker('./result-fsec1.worker', { name: 'result-fsec1', type: 'module' });
-    this.worker2 = new Worker('./result-fsec2.worker', { name: 'result-fsec2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-fsec1.worker', import.meta.url), { name: 'result-fsec1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-fsec2.worker', import.meta.url), { name: 'result-fsec2', type: 'module' });
   }
 
   public clear(): void {
