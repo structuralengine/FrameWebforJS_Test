@@ -158,7 +158,7 @@ export class ThreeSectionForceService {
     }
 
     const gui_step: number = 1;
-    const gui_max_scale: number = 200;
+    const gui_max_scale: number = 1000;
 
     this.gui = {
       forceScale: this.scene.gui.add(this.params, 'forceScale', 0, gui_max_scale).step(gui_step).onChange((value) => {

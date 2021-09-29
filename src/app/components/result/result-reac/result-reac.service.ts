@@ -53,6 +53,12 @@ export class ResultReacService {
 
     for(const k1 of Object.keys(jsonData)){
       const caseData: any = jsonData[k1];
+      if (typeof (caseData) !== 'object') {
+        continue;
+      }
+      if (!('reac' in caseData)) {
+        continue;
+      }
       const caseLoad: any = load_name[k1];
       const fix_type: string = caseLoad.fix_node.toString();
       if (!(fix_type in fix_node)) {
