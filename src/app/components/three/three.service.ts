@@ -40,7 +40,8 @@ export class ThreeService {
     private reac: ThreeReactService,
     private fsec: ThreeSectionForceService,
     private helper: DataHelperModule,
-    private printService: PrintService
+    private printService: PrintService,
+    private InputData: InputDataService
   ) {}
 
   //////////////////////////////////////////////////////
@@ -645,32 +646,38 @@ export class ThreeService {
         result = Object.keys(this.printService.combineJson);
         title1 = '組み合わせ 変位量';
         title2 = 'Comb';
+        title3 = this.getCombTitle();
         break;
       case "comb_fsec":
         result = Object.keys(this.printService.combineJson);
         title1 = '組み合わせ 断面力';
         title2 = 'Comb';
+        title3 = this.getCombTitle();
         break;
       case "comb_reac":
         result = Object.keys(this.printService.combineJson);
         title1 = '組み合わせ 反力';
         title2 = 'Comb';
+        title3 = this.getCombTitle();
         break;
 
       case "pik_disg":
         result = Object.keys(this.printService.pickupJson);
         title1 = 'ピックアップ 変位量';
         title2 = 'PickUp';
+        title3 = this.getPickupTitle();
         break;
       case "pik_fsec":
         result = Object.keys(this.printService.pickupJson);
         title1 = 'ピックアップ 断面力';
         title2 = 'PickUp';
+        title3 = this.getPickupTitle();
         break;
       case "pik_reac":
         result = Object.keys(this.printService.pickupJson);
         title1 = 'ピックアップ 反力';
         title2 = 'PickUp';
+        title3 = this.getPickupTitle();
         break;
 
       case "nodes": // 図が 1種類のモード
@@ -704,4 +711,36 @@ export class ThreeService {
     }
     return title3;
   }
+
+  private getCombTitle(): string[]{
+
+    const title3: string[] = new Array();
+
+    const comb = this.InputData.combine.getCombineJson();
+    for( const key of Object.keys(this.printService.combineJson)){
+      const current = comb[key];
+      let str: string = key;
+      if(current.name.trim().length > 0)
+        str += ' ' + current.name;
+      title3.push(str);
+    }
+    return title3;
+  }
+
+  private getPickupTitle(): string[]{
+
+    const title3: string[] = new Array();
+
+    const pik = this.InputData.pickup.getPickUpJson();
+    for( const key of Object.keys(this.printService.pickupJson)){
+      const current = pik[key];
+      let str: string = key;
+      if(current.name.trim().length > 0)
+        str += ' ' + current.name;
+      title3.push(str);
+    }
+    return title3;
+  }
+
+
 }
