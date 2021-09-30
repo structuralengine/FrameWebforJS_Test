@@ -20,6 +20,7 @@ import { ThreeReactService } from '../components/three/geometry/three-react.serv
 import { ThreeDisplacementService } from '../components/three/geometry/three-displacement.service';
 
 import { DataHelperModule } from './data-helper.module';
+import { InputDataService } from './input-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,11 +29,12 @@ export class ResultDataService {
 
   public isCalculated: boolean;
 
-  private defList: any;
-  private combList: any;
-  private pickList: any;
+  private defList: any = null;
+  private combList: any = null;
+  private pickList: any = null;
 
   constructor(
+    private InputData: InputDataService,
     private combine: InputCombineService,
     private define: InputDefineService,
     private load: InputLoadService,
@@ -360,4 +362,26 @@ export class ResultDataService {
     }
     return val.slice((-1)*len);
   }
+
+  public getPickUpJson(){
+    if(this.pickList == null){
+      return this.InputData.define.getDefineJson();
+    }
+    return this.pickList;
+  }
+
+  public getDefineJson(){
+    if(this.defList == null){
+      return this.InputData.define.getDefineJson();
+    }
+    return this.defList;
+  }
+
+  public getCombineJson(){
+    if(this.combList == null){
+      return this.InputData.combine.getCombineJson();
+    }
+    return this.combList;
+  }
+
 }

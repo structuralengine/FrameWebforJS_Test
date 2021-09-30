@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { InputDataService } from "src/app/providers/input-data.service";
+import { ResultDataService } from "src/app/providers/result-data.service";
 
 @Injectable({
   providedIn: "root",
@@ -18,7 +19,8 @@ export class PrintService {
   public print_target: any; // Three.js 印刷 の図のデータ
 
   constructor(private router: Router,
-              public InputData: InputDataService,) {
+              public InputData: InputDataService,
+              private ResultData: ResultDataService) {
     this.contentEditable1 = [
       false,  // 0-入力データ
       false,  // 1-変位量
@@ -37,9 +39,9 @@ export class PrintService {
   public setprintDocument() {
     // 入力データを取得する
     this.inputJson = this.InputData.getInputJson(1);
-    this.combineJson = this.InputData.combine.getCombineJson();
-    this.defineJson = this.InputData.define.getDefineJson();
-    this.pickupJson = this.InputData.pickup.getPickUpJson();
+    this.combineJson = this.ResultData.getCombineJson();
+    this.defineJson = this.ResultData.getDefineJson();
+    this.pickupJson = this.ResultData.getPickUpJson();
   }
 
   public printDocument(documentName: string, documentData: string[]) {

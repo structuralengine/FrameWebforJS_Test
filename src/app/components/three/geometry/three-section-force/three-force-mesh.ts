@@ -177,13 +177,15 @@ export class ThreeSectionForceMeshService {
   }
 
   // 文字
-  public setText(group: any, Enable1: boolean, Enable2: boolean): void {
+  public async setText(group: any, Enable1: boolean, Enable2: boolean) {
+
+    const child = group.getObjectByName('group');
+
     // 一旦削除
     for(let i=0; i<2; i++){
       const key = 'P' + (i+1);
       const text = group.getObjectByName(key);
       if(text !== undefined){
-        const child = group.getObjectByName('group');
         child.remove(text);
         text.dispose();
       }
@@ -212,15 +214,13 @@ export class ThreeSectionForceMeshService {
       text.fontSize = 0.2;
       text.position.set(pos[i].x, pos[i].y, 0);
       text.color = 0x000000;
-      text.sync()
-
-
       text.rotateX(Math.PI);
       text.rotateZ(Math.PI/2);
       text.name = key;
-      const child = group.getObjectByName('group');
+      await text.sync();
       child.add(text);
     }
+
   }
 
 
