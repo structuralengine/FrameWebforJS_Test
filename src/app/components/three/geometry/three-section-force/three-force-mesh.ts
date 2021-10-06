@@ -182,6 +182,18 @@ export class ThreeSectionForceMeshService {
     const child = group.getObjectByName('group');
 
     // 一旦削除
+    const names = [];
+    for(const text of child.children){
+      if(text.name.includes('P')){ 
+        // name に P が付いた children 
+        names.push(text.name)
+      }
+    }
+    for(const key  of names){
+        const text = group.getObjectByName(key);
+        child.remove(text); // を消す
+        text.dispose();
+    }
     for(let i=0; i<2; i++){
       const key = 'P' + (i+1);
       const text = group.getObjectByName(key);
@@ -190,6 +202,8 @@ export class ThreeSectionForceMeshService {
         text.dispose();
       }
     }
+    // この時点で child に P1, P2 というオブジェクトは削除されている
+
     // Enable = true の 文字を追加
     const points = group.points;
     const pos = [];
