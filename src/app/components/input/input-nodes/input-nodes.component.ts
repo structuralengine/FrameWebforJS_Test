@@ -72,9 +72,6 @@ export class InputNodesComponent implements OnInit {
       width:45
     },
     colModel: (this.helper.dimension === 3) ? this.columnHeaders3D : this.columnHeaders2D,
-    animModel: {
-      on: true
-    },
     dataModel: {
       data: this.dataset
     },

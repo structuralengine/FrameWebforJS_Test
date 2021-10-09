@@ -101,9 +101,6 @@ export class InputFixMemberComponent implements OnInit {
       show: false // 行番号
     },
     colModel: (this.helper.dimension === 3) ? this.columnHeaders3D : this.columnHeaders2D,
-    animModel: {
-      on: true
-    },
     dataModel: {
       data: this.dataset
     },

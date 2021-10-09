@@ -96,9 +96,6 @@ export class InputPickupComponent implements OnInit {
       width:45
     },
     colModel: this.columnHeaders,
-    animModel: {
-      on: true
-    },
     dataModel: {
       data: this.dataset
     },
