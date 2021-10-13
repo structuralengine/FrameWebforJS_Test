@@ -218,7 +218,7 @@ export class ThreeLoadMemberMoment {
       for (const item_child1 of item.children) {
         if (item_child1.name === 'child') {
           for (const item_child2 of item_child1.children) {
-            if (item_child2.name === 'MomentLoad') {
+            if (item_child2.name.includes('MomentLoad')) {
               for (const item_child3 of item_child2.children) {
                 if (item_child3.name === 'group') {
                   for (const item_child4 of item_child3.children) {
@@ -257,7 +257,7 @@ export class ThreeLoadMemberMoment {
       for (const item_child1 of item.children) {
         if (item_child1.name === 'child') {
           for (const item_child2 of item_child1.children) {
-            if (item_child2.name === 'MomentLoad') {
+            if (item_child2.name.includes('MomentLoad')) {
               for (const item_child3 of item_child2.children) {
                 if (item_child3.name === 'group') {
                   for (const item_child4 of item_child3.children) {
