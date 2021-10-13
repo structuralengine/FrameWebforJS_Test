@@ -3,11 +3,11 @@
     <h2>COMBINE 反力</h2>
     <!--combReac_titleからtitleごとにデータを取り出す-->
     <div *ngFor="let title of combReac_title; index as i">
-        <div *ngIf="combReac_case_break[i]" class="pagerBreak"></div>
+        <div *ngIf="combReac_case_break[i]" class="pagerBreak space"></div>
         <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
         <!--combDisg_datasetからtxmaxなどを取り出す-->
         <div *ngFor="let dataset of combReac_dataset[i]; index as j">
-            <div *ngIf="combReac_type_break[j]" class="pagerBreak"></div>
+            <div *ngIf="combReac_type_break[j]" class="pagerBreak space"></div>
             <h3>{{ title }}</h3>
             <h3>{{ dataset[0] }}</h3>
             <!--txmaxなどからcase[0]が名称のため飛ばす-->

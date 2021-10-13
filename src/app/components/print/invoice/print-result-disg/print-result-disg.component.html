@@ -1,12 +1,12 @@
-<div *ngIf="isEnable"  class="invoicetTable disg">
-  <div *ngIf="judge" class="pagerBreak"></div>
+<div *ngIf="isEnable" class="invoicetTable disg">
+    <div *ngIf="judge" class="pagerBreak"></div>
     <h2>変位量</h2>
     <div *ngFor="let title of disg_typeNum; index as i">
-        <div *ngIf="disg_break[i]" class="pagerBreak"></div>
+        <div *ngIf="disg_break[i]" class="pagerBreak space"></div>
         <h3>{{title}}</h3>
         <div *ngFor="let dataset of disg_table[i] index as j">
-            <div *ngIf="j > 0" class="pagerBreak"></div>
-            <table class="print-lg">
+            <div *ngIf="j > 0" class="pagerBreak space"></div>
+            <table class="print-lg" >
                 <div *ngIf="dimension===3">
                     <tr>
                         <th>節点</th>

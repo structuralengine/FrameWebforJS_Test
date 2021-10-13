@@ -7,7 +7,7 @@
         <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
         <!--pickFsec_datasetからfxmaxなどを取り出す-->
         <div *ngFor="let dataset of pickFsec_dataset[i]; index as j">
-            <div *ngIf="pickFsec_type_break[j]" class="pagerBreak"></div>
+            <div *ngIf="pickFsec_type_break[j]" class="pagerBreak space"></div>
             <h3>{{ title }}</h3>
             <h3>{{ dataset[0] }}</h3>
             <!--fxmaxなどからcase[0]が名称のため飛ばす-->
@@ -15,7 +15,7 @@
                 <div *ngIf="k > 0">
                     <div *ngFor="let branch of case; index as l">
                         <div *ngFor="let datas of branch; index as m">
-                            <div *ngIf="m > 0" class="pagerBreak"></div>
+                            <div *ngIf="m > 0" class="pagerBreak space"></div>
                             <table class="print-sm">
                                 <div *ngIf="dimension===3">
                                     <tr>

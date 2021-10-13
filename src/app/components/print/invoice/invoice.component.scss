@@ -26,6 +26,9 @@ $height_content: 16px;
 .pagerBreak {
     size: A4;
     page-break-before: always;
+    &.space {
+        margin-top: 64px;
+    }
 }
 
 .show {
@@ -34,15 +37,21 @@ $height_content: 16px;
 
 //h2が3行、h3が2行、th/tdが1行
 .invoicetTable {
+    display: block;
+    // margin-top:96px;
     h2 {
+        display: block;
         height: $height_header;
+        padding: 80px 0 32px 0;
         line-height: 32px;
         font-size: 16px;
         font-weight: 400;
         font-family: "ＭＳ Ｐゴシック";
     }
     h3 {
-        height: $height_semiHeader;
+        // height: $height_semiHeader;
+        display: block;
+        // padding-top: 32px;
         line-height: 32px;
         font-size: 16px;
         font-family: "ＭＳ 明朝";
@@ -58,7 +67,7 @@ $height_content: 16px;
             text-align: center;
             font-size: 16px;
             font-weight: 400;
-            page-break-inside: avoid;
+            // page-break-inside: avoid;
             // page-break-after:auto;
         }
         td {
@@ -66,7 +75,7 @@ $height_content: 16px;
             // padding: 4px 8px;
             font-size: 16px;
             text-align: right;
-            page-break-inside: avoid;
+            // page-break-inside: avoid;
             //page-break-after:auto;
         }
 
