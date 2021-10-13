@@ -2,10 +2,10 @@
   <div *ngIf="judge" class="pagerBreak"></div>
     <h2>結合データ</h2>
     <div *ngFor="let title of joint_typeNum; index as i">
-        <div *ngIf="joint_break[i]" class="pagerBreak"></div>
+        <div *ngIf="joint_break[i]" class="pagerBreak space"></div>
         <h3>タイプ {{title}}</h3>
         <div *ngFor="let joint_dataset of joint_table[i] index as j">
-            <div *ngIf="j > 0" class="pagerBreak"></div>
+            <div *ngIf="j > 0" class="pagerBreak space"></div>
             <table class="print-lg">
                 <div *ngIf="dimension==3">
                     <tr>

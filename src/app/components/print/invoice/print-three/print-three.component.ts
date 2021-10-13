@@ -13,14 +13,16 @@ import { PrintService } from "../../print.service";
   styleUrls: [
     "./print-three.component.scss",
     "../../../../app.component.scss",
-    "../invoice.component.scss",
+    // "../invoice.component.scss",
   ],
 })
 export class PrintThreeComponent implements OnInit {
   public title1: string;
   public print_target: any[];
+  public three_break:any[];
   // @ViewChild('img') img: ElementRef;
-  constructor(public printService: PrintService) {}
+  constructor(public printService: PrintService) {
+  }
 
   ngOnInit(): void {
     this.print_target = this.printService.print_target.result;

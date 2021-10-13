@@ -7,14 +7,14 @@
         <h3>{{ title }}</h3>
         <!--pickDisg_datasetからdxmaxなどを取り出す-->
         <div *ngFor="let dataset of pickDisg_dataset[i]; index as j">
-            <div *ngIf="pickDisg_type_break[j]" class="pagerBreak"></div>
+            <div *ngIf="pickDisg_type_break[j]" class="pagerBreak space"></div>
             <h3>{{ dataset[0] }}</h3>
             <!--dxmaxなどからcase[0]が名称のため飛ばす-->
             <div *ngFor="let case of dataset; index as k">
                 <div *ngIf="k > 0">
                     <div *ngFor="let branch of case; index as l">
                         <div *ngFor="let datas of branch; index as m">
-                            <div *ngIf="m > 0" class="pagerBreak"></div>
+                            <div *ngIf="m > 0" class="pagerBreak space"></div>
                             <table class="print-md">
                                 <div *ngIf="dimension===3">
                                     <tr>

@@ -2,10 +2,10 @@
   <div *ngIf="judge" class="pagerBreak"></div>
     <h2>支点データ</h2>
     <div *ngFor="let title of fixNode_typeNum; index as i">
-        <div *ngIf="fixNode_break[i]" class="pagerBreak"></div>
+        <div *ngIf="fixNode_break[i]" class="pagerBreak space"></div>
         <h3>タイプ {{title}}</h3>
         <div *ngFor="let fixNode_dataset of fixNode_table[i]; index as j">
-            <div *ngIf="j > 0" class="pagerBreak"></div>
+            <div *ngIf="j > 0" class="pagerBreak space"></div>
             <table class="print-lg">
                 <div *ngIf="dimension===3">
                     <tr>
