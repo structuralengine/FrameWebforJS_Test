@@ -38,7 +38,7 @@ export class InputElementsService {
 
     // 対象行が無かった時に処理
     if (result == null) {
-      result = { id: index, E: '', G: '', Xp: '', A: '', J: '', Iy: '', Iz: '', n: ''};
+      result = { id: index.toString(), E: '', G: '', Xp: '', A: '', J: '', Iy: '', Iz: '', n: ''};
       target.push(result);
       this.element[typNo] = target;
     }
@@ -115,7 +115,7 @@ export class InputElementsService {
         const n = row['n'];
         
         if (E == null && G == null && Xp == null && A == null
-          && J == null && Iy == null && Iz == null) {
+          && J == null && Iy == null && Iz == null && n == "") {
           continue;
         }
 
@@ -165,12 +165,20 @@ export class InputElementsService {
   public getAlignName(typeNo, row): string {
 
     const before_dataset = this.element[typeNo];
-    const before_target_row = before_dataset[row];
+    const a = before_dataset.find((dataset) => dataset.id == (row + 1).toString())
+    if(a === undefined){
+      return null;
+    }
+    const before_target_row = a;
     const target_name = before_target_row.n;
 
-    const keys = Object.keys(this.element);
+    //const keys = Object.keys(this.element);
     for (const key of Object.keys(this.element)) {
-      this.element[key][row].name = target_name;
+      const target_element = this.element[key].find((element) => element.id === before_target_row.id);
+      if(target_element === undefined){
+        continue;
+      }
+      target_element.n = target_name;
     }
 
     return target_name
