@@ -84,9 +84,6 @@ export class InputPanelComponent {
       width: 45
     },
     colModel: this.columnHeaders,
-    animModel: {
-      on: true
-    },
     dataModel: {
       data: this.dataset
     },

@@ -22,8 +22,8 @@ export class ResultReacService {
     private three: ThreeReactService) {
 
     this.clear();
-    this.worker1 = new Worker('./result-reac1.worker', { name: 'result-reac1', type: 'module' });
-    this.worker2 = new Worker('./result-reac2.worker', { name: 'result-reac2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-reac1.worker', import.meta.url), { name: 'result-reac1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-reac2.worker', import.meta.url), { name: 'result-reac2', type: 'module' });
   }
 
   public clear(): void {
@@ -53,6 +53,12 @@ export class ResultReacService {
 
     for(const k1 of Object.keys(jsonData)){
       const caseData: any = jsonData[k1];
+      if (typeof (caseData) !== 'object') {
+        continue;
+      }
+      if (!('reac' in caseData)) {
+        continue;
+      }
       const caseLoad: any = load_name[k1];
       const fix_type: string = caseLoad.fix_node.toString();
       if (!(fix_type in fix_node)) {

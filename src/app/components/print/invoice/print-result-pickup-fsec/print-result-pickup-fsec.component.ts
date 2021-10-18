@@ -113,10 +113,10 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       // 荷重名称
       const title: any = [];
       let loadName: string = "";
-      const combineJson: any = this.InputData.combine.getCombineJson();
-      if (index in combineJson) {
-        if ("name" in combineJson[index]) {
-          loadName = combineJson[index].name;
+      const pickupJson: any = this.InputData.pickup.getPickUpJson();
+      if (index in pickupJson) {
+        if ("name" in pickupJson[index]) {
+          loadName = pickupJson[index].name;
           title.push(["Case" + index, loadName]);
         } else {
           title.push(["Case" + index]);

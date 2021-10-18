@@ -89,9 +89,6 @@ export class InputNoticePointsComponent implements OnInit {
       show: false // 行番号
     },
     colModel: this.columnHeaders,
-    animModel: {
-      on: true
-    },
     dataModel: {
       data: this.dataset
     },

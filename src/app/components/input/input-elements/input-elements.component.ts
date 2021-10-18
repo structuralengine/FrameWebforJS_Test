@@ -54,7 +54,7 @@ export class InputElementsComponent implements OnInit {
     ]},
     { title: '名称', align: 'center', dataType: "string", format: "#.000000", dataIndx: "n", sortable: false, width: 100 },
   ];
-  
+
   private ROWS_COUNT = 15;
   private page = 1;
   private before_page = 1;
@@ -70,7 +70,7 @@ export class InputElementsComponent implements OnInit {
     this.loadPage(1, this.ROWS_COUNT);
     this.three.ChangeMode("elements");
     this.three.ChangePage(1);
-   }
+  }
 
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
@@ -120,9 +120,6 @@ export class InputElementsComponent implements OnInit {
       width:45
     },
     colModel: (this.helper.dimension === 3) ? this.columnHeaders3D : this.columnHeaders2D,
-    animModel: {
-      on: true
-    },
     dataModel: {
       data: this.dataset
     },

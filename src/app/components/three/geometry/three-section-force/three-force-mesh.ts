@@ -177,17 +177,33 @@ export class ThreeSectionForceMeshService {
   }
 
   // 文字
-  public setText(group: any, Enable1: boolean, Enable2: boolean): void {
+  public async setText(group: any, Enable1: boolean, Enable2: boolean) {
+
+    const child = group.getObjectByName('group');
+
     // 一旦削除
+    const names = [];
+    for(const text of child.children){
+      if(text.name.includes('P')){ 
+        // name に P が付いた children 
+        names.push(text.name)
+      }
+    }
+    for(const key  of names){
+        const text = group.getObjectByName(key);
+        child.remove(text); // を消す
+        text.dispose();
+    }
     for(let i=0; i<2; i++){
       const key = 'P' + (i+1);
       const text = group.getObjectByName(key);
       if(text !== undefined){
-        const child = group.getObjectByName('group');
         child.remove(text);
         text.dispose();
       }
     }
+    // この時点で child に P1, P2 というオブジェクトは削除されている
+
     // Enable = true の 文字を追加
     const points = group.points;
     const pos = [];
@@ -212,15 +228,13 @@ export class ThreeSectionForceMeshService {
       text.fontSize = 0.2;
       text.position.set(pos[i].x, pos[i].y, 0);
       text.color = 0x000000;
-      text.sync()
-
-
       text.rotateX(Math.PI);
       text.rotateZ(Math.PI/2);
       text.name = key;
-      const child = group.getObjectByName('group');
+      await text.sync();
       child.add(text);
     }
+
   }
 
 

@@ -40,7 +40,8 @@ export class ThreeService {
     private reac: ThreeReactService,
     private fsec: ThreeSectionForceService,
     private helper: DataHelperModule,
-    private printService: PrintService
+    private printService: PrintService,
+    private InputData: InputDataService
   ) {}
 
   //////////////////////////////////////////////////////
@@ -529,6 +530,7 @@ export class ThreeService {
       const captureCase: string[] = captureInfo.captureCase;
       const title1: string = captureInfo.title1;
       const title2: string = captureInfo.title2;
+      const title3: string[] = captureInfo.title3;
 
       if(captureCase.length===0){
         html2canvas(this.canvasElement).then(canvas => {
@@ -540,7 +542,8 @@ export class ThreeService {
         });
       } else {
         let counter = 0;
-        for(const key of captureCase){
+        for( let i = 0; i < captureCase.length; i++){
+          const key = captureCase[i];
 
           const number: number = this.helper.toNumber(key);
           if(number===null){
@@ -548,9 +551,15 @@ export class ThreeService {
           }
           this.ChangePage(number);
 
+          // title3 に タイトルがあれば使う
+          let name = key;
+          if(title3.length > i){
+            name = title3[i];
+          }
+
           html2canvas(this.canvasElement).then(canvas => {
             result.push({
-              title: title2 + key,
+              title: title2 + name,
               src: canvas.toDataURL()
             });
             counter++;
@@ -569,6 +578,7 @@ export class ThreeService {
     let result: string[] = new Array();
     let title1: string = '';
     let title2: string = '';
+    let title3: string[] = new Array();
 
     switch (this.mode) {
 
@@ -599,8 +609,10 @@ export class ThreeService {
 
       case "load_values":
       case "load_names":
+
         if('load' in this.printService.inputJson){
           result = Object.keys(this.printService.inputJson.load);
+          title3 = this.getLoadTitle();
         }
         title1 = '荷重';
         title2 = 'Case';
@@ -608,6 +620,7 @@ export class ThreeService {
       case "disg":
         if('load' in this.printService.inputJson){
           result = Object.keys(this.printService.inputJson.load);
+          title3 = this.getLoadTitle();
         }
         title1 = '変位';
         title2 = 'Case';
@@ -615,6 +628,7 @@ export class ThreeService {
       case "fsec":
         if('load' in this.printService.inputJson){
           result = Object.keys(this.printService.inputJson.load);
+          title3 = this.getLoadTitle();
         }
         title1 = '断面力';
         title2 = 'Case';
@@ -622,6 +636,7 @@ export class ThreeService {
       case "reac":
         if('load' in this.printService.inputJson){
           result = Object.keys(this.printService.inputJson.load);
+          title3 = this.getLoadTitle();
         }
         title1 = '反力';
         title2 = 'Case';
@@ -631,32 +646,38 @@ export class ThreeService {
         result = Object.keys(this.printService.combineJson);
         title1 = '組み合わせ 変位量';
         title2 = 'Comb';
+        title3 = this.getCombTitle();
         break;
       case "comb_fsec":
         result = Object.keys(this.printService.combineJson);
         title1 = '組み合わせ 断面力';
         title2 = 'Comb';
+        title3 = this.getCombTitle();
         break;
       case "comb_reac":
         result = Object.keys(this.printService.combineJson);
         title1 = '組み合わせ 反力';
         title2 = 'Comb';
+        title3 = this.getCombTitle();
         break;
 
       case "pik_disg":
         result = Object.keys(this.printService.pickupJson);
         title1 = 'ピックアップ 変位量';
         title2 = 'PickUp';
+        title3 = this.getPickupTitle();
         break;
       case "pik_fsec":
         result = Object.keys(this.printService.pickupJson);
         title1 = 'ピックアップ 断面力';
         title2 = 'PickUp';
+        title3 = this.getPickupTitle();
         break;
       case "pik_reac":
         result = Object.keys(this.printService.pickupJson);
         title1 = 'ピックアップ 反力';
         title2 = 'PickUp';
+        title3 = this.getPickupTitle();
         break;
 
       case "nodes": // 図が 1種類のモード
@@ -669,8 +690,57 @@ export class ThreeService {
     return {
       title1,
       title2,
+      title3,
       captureCase: result
     };
   }
+
+  private getLoadTitle(): string[]{
+
+    const title3: string[] = new Array();
+
+    const load = this.printService.inputJson.load;
+    for( const key of Object.keys(load)){
+      const current = load[key];
+      let str: string = key;
+      if(current.symbol.trim().length > 0)
+        str += ' ' + current.symbol;
+      if(current.name.trim().length > 0)
+        str += ' ' + current.name;
+      title3.push(str);
+    }
+    return title3;
+  }
+
+  private getCombTitle(): string[]{
+
+    const title3: string[] = new Array();
+
+    const comb = this.InputData.combine.getCombineJson();
+    for( const key of Object.keys(this.printService.combineJson)){
+      const current = comb[key];
+      let str: string = key;
+      if(current.name.trim().length > 0)
+        str += ' ' + current.name;
+      title3.push(str);
+    }
+    return title3;
+  }
+
+  private getPickupTitle(): string[]{
+
+    const title3: string[] = new Array();
+
+    const pik = this.InputData.pickup.getPickUpJson();
+    for( const key of Object.keys(this.printService.pickupJson)){
+      const current = pik[key];
+      let str: string = key;
+      if(current.name.trim().length > 0)
+        str += ' ' + current.name;
+      title3.push(str);
+    }
+    return title3;
+  }
+
 
 }

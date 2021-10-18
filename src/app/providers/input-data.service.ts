@@ -94,9 +94,16 @@ export class InputDataService {
   }
 
   // ファイルに保存用データを生成
-  // empty = null: ファイル保存時
-  // empty = 0: 計算時
   public getInputJson(empty: number = null): object {
+
+    // empty = null: ファイル保存時
+    // empty = 0: 計算時
+    // empty = 1: 印刷時
+    let isPrint = false;
+    if(empty===1){
+      empty = 0; // 印刷時 は 計算時と同じ
+      isPrint = true;
+    }
 
     const jsonData = {};
 
@@ -146,7 +153,7 @@ export class InputDataService {
       jsonData['fix_member'] = fix_member;
     }
 
-    const load: {} = this.load.getLoadJson(empty);
+    const load: {} = this.load.getLoadJson(empty, isPrint);
     if (Object.keys(load).length > 0) {
       jsonData['load'] = load;
     } else if(empty === 0){
@@ -366,7 +373,7 @@ export class InputDataService {
       let nFlg = false;
       for(const ffn of fix_node){
         if(!(ffn['n'] in nodes)){ 
-          return '支点No.' + fn + 'の入力において 節点No.' + ffn['n'] + 'は存在しません。';
+          return '支点TYPE.' + fn + 'の入力において 節点No.' + ffn['n'] + 'は存在しません。';
         }
         for(const k of ['rx', 'ry', 'rz', 'tx', 'ty', 'tz']){
           if(!(k in ffn)){ continue; }
@@ -374,12 +381,11 @@ export class InputDataService {
           nFlg = true;
           break;
         }
-        if(nFlg === true) {break;}
       }
       if(nFlg === false) {
         for(const ffm of fix_member){
           if(!(ffm['m'] in members)){ 
-            return 'バネNo.' + fm + 'の入力において 要素No.' + ffm['m'] + 'は存在しません。';
+            return 'バネTYPE.' + fm + 'の入力において 要素No.' + ffm['m'] + 'は存在しません。';
           }
           for(const k of ['tx', 'ty', 'tz', 'tr']){
             if(!(k in ffm)){ continue; }
@@ -387,7 +393,6 @@ export class InputDataService {
             nFlg = true;
             break;
           }
-          if(nFlg === true) {break;}
         }       
       }
       if(nFlg === false){

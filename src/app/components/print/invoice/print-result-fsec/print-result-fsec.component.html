@@ -2,10 +2,10 @@
   <div *ngIf="judge" class="pagerBreak"></div>
     <h2>断面力</h2>
     <div *ngFor="let title of fsec_typeNum; index as i">
-        <div *ngIf="fsec_break[i]" class="pagerBreak"></div>
+        <div *ngIf="fsec_break[i]" class="pagerBreak space"></div>
         <h3>{{title}}</h3>
         <div *ngFor="let dataset of fsec_table[i] index as j">
-            <div *ngIf="j > 0" class="pagerBreak"></div>
+            <div *ngIf="j > 0" class="pagerBreak space"></div>
             <table class="print-md">
                 <div *ngIf="dimension===3">
                     <tr>

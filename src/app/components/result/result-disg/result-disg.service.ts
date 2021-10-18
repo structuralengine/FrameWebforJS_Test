@@ -17,8 +17,8 @@ export class ResultDisgService {
               private three: ThreeDisplacementService
               ){
     this.clear();
-    this.worker1 = new Worker('./result-disg1.worker', { name: 'result-disg1', type: 'module' });
-    this.worker2 = new Worker('./result-disg2.worker', { name: 'result-disg2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-disg1.worker', import.meta.url), { name: 'result-disg1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-disg2.worker', import.meta.url), { name: 'result-disg2', type: 'module' });
   }
 
   public clear(): void {

@@ -8,7 +8,7 @@ import { InputNodesService } from '../../../input/input-nodes/input-nodes.servic
 import { InputMembersService } from '../../../input/input-members/input-members.service';
 
 import { ThreeMembersService } from '../three-members.service';
-import { ThreeNodesService } from '../three-nodes.service.js';
+import { ThreeNodesService } from '../three-nodes.service';
 import { ThreeSectionForceMeshService } from './three-force-mesh';
 
 
@@ -158,7 +158,7 @@ export class ThreeSectionForceService {
     }
 
     const gui_step: number = 1;
-    const gui_max_scale: number = 200;
+    const gui_max_scale: number = 1000;
 
     this.gui = {
       forceScale: this.scene.gui.add(this.params, 'forceScale', 0, gui_max_scale).step(gui_step).onChange((value) => {
@@ -169,7 +169,7 @@ export class ThreeSectionForceService {
       })
     };
     // if(this.helper.dimension === 2){
-      this.gui['textCount'] = this.scene.gui.add(this.params, 'textCount', 0, 100).step(10).onChange((value) => {
+      this.gui['textCount'] = this.scene.gui.add(this.params, 'textCount', 0, 100).step(10).onFinishChange((value) => {
         // guiによる設定
         this.textCount = value;
         this.changeMesh();
@@ -376,18 +376,40 @@ export class ThreeSectionForceService {
     });
 
     // 上位、下位の順位の数値を選出する
+    const targetValues = Array.from(new Set(textValues));
     const count = Math.floor(textValues.length * (this.textCount / 100));
-    const Upper = textValues.slice(1, count);
+    let Upper = targetValues;
+    if(count < targetValues.length){
+      Upper = targetValues.slice(1, count);
+    }
     const targetList = Array.from(new Set(Upper));
 
     // 文字を追加する
+    let a1 = 0, a2 = 0; // 呼び出しと処理数が一致したら scene.render() する。
     for( let i = 0; i < ThreeObjects.length; i++){
       const ThreeObject = ThreeObjects[i];
+      if(ThreeObject.visible === false){
+        continue; // 非表示の ThreeObject の文字は追加しない
+      }
       for(const mesh of ThreeObject.children){
-        const P1 = (targetList.find(v=>v===mesh['P1'])!==undefined) ? true : false;
-        const P2 = (targetList.find(v=>v===mesh['P2'])!==undefined) ? true : false;
-        this.mesh.setText(mesh, P1, P2);
+
+        let f1 = false;
+        if(targetList.find(v=>v===mesh['P1'])!==undefined){
+          f1 = true;
         }
+        let f2 = false;
+        if(targetList.find(v=>v===mesh['P2'])!==undefined){
+          f2 = true;
+        }
+
+        a1++;
+        this.mesh.setText(mesh, f1, f2).finally(()=>{
+          a2++;
+          if(a1 === a2){ 
+            this.scene.render();
+          }
+        });
+      }
     }
 
   }

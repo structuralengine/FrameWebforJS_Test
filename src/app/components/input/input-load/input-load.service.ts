@@ -231,11 +231,11 @@ export class InputLoadService {
     }
   }
 
-  public getLoadJson(empty: number = null) {
+  public getLoadJson(empty: number = null, isPrint = false) {
     const result = {};
 
     // 荷重基本設定
-    const load_name = this.getLoadNameJson(empty);
+    const load_name = this.getLoadNameJson(empty, "", isPrint);
 
     // 節点荷重データ
     const load_node = this.getNodeLoadJson(empty);
@@ -328,7 +328,11 @@ export class InputLoadService {
   }
 
   // 荷重基本データ
-  public getLoadNameJson(empty: number = null, targetCase: string = ""): any {
+  public getLoadNameJson(
+    empty: number = null, 
+    targetCase: string = "", 
+    isPrint = false): any {
+
     const load_name = {};
 
     for (let i = 0; i < this.load_name.length; i++) {
@@ -375,7 +379,7 @@ export class InputLoadService {
         joint: joint == null ? empty : joint,
       };
 
-      if (empty === null) {
+      if (empty === null || isPrint === true) {
         temp["rate"] = rate == null ? empty : rate;
         temp["symbol"] = symbol;
         temp["name"] = name;

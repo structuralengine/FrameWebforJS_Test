@@ -65,8 +65,8 @@ export class ResultCombineDisgService {
               private helper: DataHelperModule,) {
     this.clear();
     this.isCalculated = false;
-    this.worker1 = new Worker('./result-combine-disg1.worker', { name: 'combine-disg1', type: 'module' });
-    this.worker2 = new Worker('./result-combine-disg2.worker', { name: 'combine-disg2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-combine-disg1.worker', import.meta.url), { name: 'combine-disg1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-combine-disg2.worker', import.meta.url), { name: 'combine-disg2', type: 'module' });
   }
 
   public clear(): void {

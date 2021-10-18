@@ -65,8 +65,8 @@ export class ResultCombineReacService {
               private helper: DataHelperModule) {
     this.clear();
     this.isCalculated = false;
-    this.worker1 = new Worker('./result-combine-reac1.worker', { name: 'combine-reac1', type: 'module' });
-    this.worker2 = new Worker('./result-combine-reac2.worker', { name: 'combine-reac2', type: 'module' });
+    this.worker1 = new Worker(new URL('./result-combine-reac1.worker', import.meta.url), { name: 'combine-reac1', type: 'module' });
+    this.worker2 = new Worker(new URL('./result-combine-reac2.worker', import.meta.url), { name: 'combine-reac2', type: 'module' });
   }
 
   public clear(): void {
