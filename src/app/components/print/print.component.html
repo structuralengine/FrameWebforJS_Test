@@ -91,9 +91,16 @@
         </div>
     </div>
     <!-- <ng-container *ngIf="ResultData.isCalculated"> -->
-    <div class="print-custom">
+    <div *ngIf="printService.contentEditable1[9]" class="print-custom">
         <app-print-custom-pick-fsec>
         </app-print-custom-pick-fsec>
     </div>
+
+    <div *ngIf="printService.contentEditable1[10]" class="print-custom">
+        <app-print-custom-three>
+        </app-print-custom-three>
+    </div>
+
+
     <!-- </ng-container> -->
 </div>

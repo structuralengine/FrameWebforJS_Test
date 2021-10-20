@@ -34,7 +34,7 @@ export class PrintCustomPickFsecComponent implements OnInit {
       dataType: "string",
       dataIndx: "n",
       sortable: false,
-      width: 300,
+      width: 250,
       editable: false,
       style: { background: "#dae6f0" },
     },
