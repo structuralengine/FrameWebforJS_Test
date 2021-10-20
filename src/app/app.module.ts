@@ -100,6 +100,7 @@ import { DataCountService } from "./components/print/invoice/dataCount.service";
 
 import { PagerComponent } from "./components/input/pager/pager.component";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
+import { PrintCustomPickFsecComponent } from './components/print/custom/print-custom-pick-fsec/print-custom-pick-fsec.component';
 
 
 @NgModule({
@@ -176,6 +177,7 @@ import { SheetComponent } from "./components/input/sheet/sheet.component";
     SheetComponent,
     PrintInputLoadNameComponent,
     PrintThreeComponent,
+    PrintCustomPickFsecComponent,
   ],
   entryComponents: [LoginDialogComponent, WaitDialogComponent],
   providers: [
