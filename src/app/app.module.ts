@@ -10,8 +10,8 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { MatInputModule } from "@angular/material/input";
 
-import { AngularFireModule } from '@angular/fire';
-import { environment } from '../environments/environment';
+import { AngularFireModule } from "@angular/fire";
+import { environment } from "../environments/environment";
 
 import { InputDataService } from "./providers/input-data.service";
 import { DataHelperModule } from "./providers/data-helper.module";
@@ -94,13 +94,15 @@ import { PrintResultReacComponent } from "./components/print/invoice/print-resul
 import { PrintResultPickupDisgComponent } from "./components/print/invoice/print-result-pickup-disg/print-result-pickup-disg.component";
 import { PrintResultPickupFsecComponent } from "./components/print/invoice/print-result-pickup-fsec/print-result-pickup-fsec.component";
 import { PrintResultPickupReacComponent } from "./components/print/invoice/print-result-pickup-reac/print-result-pickup-reac.component";
-import { PrintInputLoadNameComponent } from './components/print/invoice/print-input-load-name/print-input-load-name.component';
-import { PrintThreeComponent } from  './components/print/invoice/print-three/print-three.component';
+import { PrintInputLoadNameComponent } from "./components/print/invoice/print-input-load-name/print-input-load-name.component";
+import { PrintThreeComponent } from "./components/print/invoice/print-three/print-three.component";
 import { DataCountService } from "./components/print/invoice/dataCount.service";
 
 import { PagerComponent } from "./components/input/pager/pager.component";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
-
+import { PrintCustomPickFsecComponent } from "./components/print/custom/print-custom-pick-fsec/print-custom-pick-fsec.component";
+import { PrintCustomThreeComponent } from "./components/print/custom/print-custom-three/print-custom-three.component";
+import { PrintCustomComponent } from "./components/print/custom/print-custom.component";
 
 @NgModule({
   imports: [
@@ -176,6 +178,9 @@ import { SheetComponent } from "./components/input/sheet/sheet.component";
     SheetComponent,
     PrintInputLoadNameComponent,
     PrintThreeComponent,
+    PrintCustomPickFsecComponent,
+    PrintCustomThreeComponent,
+    PrintCustomComponent,
   ],
   entryComponents: [LoginDialogComponent, WaitDialogComponent],
   providers: [

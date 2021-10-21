@@ -10,27 +10,23 @@ import { PrintService } from "./print.service";
   styleUrls: ["./print.component.scss", "../../app.component.scss"],
 })
 export class PrintComponent implements OnInit {
-
   constructor(
     public printService: PrintService,
     public ResultData: ResultDataService,
     private three: ThreeService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {}
 
   public onPrintInvoice() {
-
     this.printService.setprintDocument();
-    
-    if(this.printService.contentEditable1[10]){
+
+    if (this.printService.contentEditable1[10]) {
       // 図の印刷
-      this.three.getCaptureImage().then(print_target =>{
+      this.three.getCaptureImage().then((print_target) => {
         this.printService.print_target = print_target;
         this.printService.printDocument("invoice", [""]);
-      })
-
+      });
     } else {
       this.printService.printDocument("invoice", [""]);
     }

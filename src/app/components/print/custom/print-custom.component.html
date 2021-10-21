@@ -1,0 +1,21 @@
+<div *ngIf="printService.flg == 9 || printService.flg == 10" class="print-custom">
+    <form>
+        <select [(ngModel)]="printService.selectedIndex" (change)="onSelectChange($event.target.value)" name="first">
+      <option *ngFor="let item of printService.printOption" [value]="item.id" [selected]="1">
+        {{ item.name }}
+      </option>
+    </select>
+    </form>
+</div>
+
+
+<div *ngIf="printService.flg == 9" class="print-custom-pick-fsec">
+    <app-print-custom-pick-fsec>
+    </app-print-custom-pick-fsec>
+</div>
+
+<div *ngIf="printService.flg == 10">
+    <app-print-custom-three>
+
+    </app-print-custom-three>
+</div>

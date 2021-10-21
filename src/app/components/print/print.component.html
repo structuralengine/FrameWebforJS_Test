@@ -1,146 +1,102 @@
-<div class="printdata-choice">
-  <h2>印刷データを選択</h2>
-</div>
-<div class="print-choice">
-  <ul>
-    <li>
-      <label style="width: 100%">
-        <input
-          type="checkbox"
-          name="checkbox-print"
-          class="checkbox-input"
-          id="result0"
-          [(ngModel)]="printService.contentEditable1[0]"
-        />
-        <span class="checkbox-parts">入力データ</span>
-      </label>
-    </li>
+<div class="print">
+    <div class="printdata-choice">
+        <h2>印刷データを選択</h2>
+        <div class="print-choice">
+            <ul>
+                <li>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="result0"
+              [(ngModel)]="printService.contentEditable1[0]" (click)="printService.select()" />
+            <span class="checkbox-parts">入力データ</span>
+          </label>
+                </li>
 
+                <ng-container *ngIf="ResultData.isCalculated">
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-print" class="checkbox-input" id="print1"
+                [(ngModel)]="printService.contentEditable1[1]" (click)="printService.select()" />
+              <span class="checkbox-parts">変位量</span>
+            </label>
+                    </li>
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-print" class="checkbox-input" id="print2"
+                [(ngModel)]="printService.contentEditable1[2]" (click)="printService.select()" />
+              <span class="checkbox-parts">COMBINE 変位量</span>
+            </label>
+                    </li>
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-print" class="checkbox-input" id="print3"
+                [(ngModel)]="printService.contentEditable1[3]" (click)="printService.select()" />
+              <span class="checkbox-parts">PICKUP 変位量</span>
+            </label>
+                    </li>
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-print" class="checkbox-input" id="print4"
+                [(ngModel)]="printService.contentEditable1[4]" (click)="printService.select()" />
+              <span class="checkbox-parts">反力</span>
+            </label>
+                    </li>
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-print" class="checkbox-input" id="print5"
+                [(ngModel)]="printService.contentEditable1[5]" (click)="printService.select()" />
+              <span class="checkbox-parts">COMBINE 反力</span>
+            </label>
+                    </li>
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-print" class="checkbox-input" id="print6"
+                [(ngModel)]="printService.contentEditable1[6]" (click)="printService.select()" />
+              <span class="checkbox-parts">PICKUP 反力</span>
+            </label>
+                    </li>
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-print" class="checkbox-input" id="print7"
+                [(ngModel)]="printService.contentEditable1[7]" (click)="printService.select()" />
+              <span class="checkbox-parts">断面力</span>
+            </label>
+                    </li>
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-result" class="checkbox-input" id="print8"
+                [(ngModel)]="printService.contentEditable1[8]" (click)="printService.select()" />
+              <span class="checkbox-parts">COMBINE 断面力</span>
+            </label>
+                    </li>
+                    <li>
+                        <label style="width: 100%">
+              <input type="checkbox" name="checkbox-result" class="checkbox-input" id="print9"
+                [(ngModel)]="printService.contentEditable1[9]" (click)="printService.select()" />
+              <span class="checkbox-parts">PICKUP 断面力</span>
+            </label>
+                    </li>
+                </ng-container>
+                <li>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-result" class="checkbox-input" id="print10"
+              [(ngModel)]="printService.contentEditable1[10]" (click)="printService.select()" />
+            <span class="checkbox-parts">画面印刷</span>
+          </label>
+                </li>
+            </ul>
+        </div>
+
+        <div class="print-ing">
+            <button (click)="onPrintInvoice()">印刷する</button>
+        </div>
+    </div>
+    <!-- <div class="print-custom"> -->
     <ng-container *ngIf="ResultData.isCalculated">
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-print"
-            class="checkbox-input"
-            id="print1"
-            [(ngModel)]="printService.contentEditable1[1]"
-          />
-          <span class="checkbox-parts">変位量</span>
-        </label>
-      </li>
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-print"
-            class="checkbox-input"
-            id="print2"
-            [(ngModel)]="printService.contentEditable1[2]"
-          />
-          <span class="checkbox-parts">COMBINE 変位量</span>
-        </label>
-      </li>
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-print"
-            class="checkbox-input"
-            id="print3"
-            [(ngModel)]="printService.contentEditable1[3]"
-          />
-          <span class="checkbox-parts">PICKUP 変位量</span>
-        </label>
-      </li>
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-print"
-            class="checkbox-input"
-            id="print4"
-            [(ngModel)]="printService.contentEditable1[4]"
-          />
-          <span class="checkbox-parts">反力</span>
-        </label>
-      </li>
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-print"
-            class="checkbox-input"
-            id="print5"
-            [(ngModel)]="printService.contentEditable1[5]"
-          />
-          <span class="checkbox-parts">COMBINE 反力</span>
-        </label>
-      </li>
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-print"
-            class="checkbox-input"
-            id="print6"
-            [(ngModel)]="printService.contentEditable1[6]"
-          />
-          <span class="checkbox-parts">PICKUP 反力</span>
-        </label>
-      </li>
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-print"
-            class="checkbox-input"
-            id="print7"
-            [(ngModel)]="printService.contentEditable1[7]"
-          />
-          <span class="checkbox-parts">断面力</span>
-        </label>
-      </li>
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-result"
-            class="checkbox-input"
-            id="print8"
-            [(ngModel)]="printService.contentEditable1[8]"
-          />
-          <span class="checkbox-parts">COMBINE 断面力</span>
-        </label>
-      </li>
-      <li>
-        <label style="width: 100%">
-          <input
-            type="checkbox"
-            name="checkbox-result"
-            class="checkbox-input"
-            id="print9"
-            [(ngModel)]="printService.contentEditable1[9]"
-          />
-          <span class="checkbox-parts">PICKUP 断面力</span>
-        </label>
-      </li>
+        <app-print-custom>
+        </app-print-custom>
     </ng-container>
-    <li>
-      <label style="width: 100%">
-        <input
-          type="checkbox"
-          name="checkbox-result"
-          class="checkbox-input"
-          id="print10"
-          [(ngModel)]="printService.contentEditable1[10]"
-        />
-        <span class="checkbox-parts">画面印刷</span>
-      </label>
-    </li>
-  </ul>
-</div>
-
-<div class="print-ing">
-  <button (click)="onPrintInvoice()">印刷する</button>
+    <ng-container *ngIf="!ResultData.isCalculated">
+        <div></div>
+    </ng-container>
+    <!-- </div> -->
 </div>

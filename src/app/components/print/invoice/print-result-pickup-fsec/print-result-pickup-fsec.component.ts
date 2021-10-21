@@ -8,6 +8,7 @@ import { newArray } from "@angular/compiler/src/util";
 import { ArrayCamera } from "three";
 import { ResultCombineFsecService } from "src/app/components/result/result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { PrintCustomPickFsecService } from "../../custom/print-custom-pick-fsec/print-custom-pick-fsec.service";
 
 @Component({
   selector: "app-print-result-pickup-fsec",
@@ -37,13 +38,18 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
   public judge: boolean;
 
+  private kk = 0;
+  private flg: boolean = false;
+
   constructor(
     private InputData: InputDataService,
     private ResultData: ResultDataService,
     private countArea: DataCountService,
     private combFsec: ResultCombineFsecService,
-    private helper: DataHelperModule ) {
-      this.dimension = this.helper.dimension;
+    private custom: PrintCustomPickFsecService,
+    private helper: DataHelperModule
+  ) {
+    this.dimension = this.helper.dimension;
     this.judge = false;
     this.clear();
   }
@@ -59,7 +65,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     const resultjson: any = this.ResultData.pickfsec.fsecPickup;
     const keys: string[] = Object.keys(resultjson);
     if (keys.length > 0) {
-      const tables = this.printPickForce(resultjson);
+      const jud = this.custom.dataset;
+      const tables = this.printPickForce(resultjson, jud);
       this.pickFsec_dataset = tables.table;
       this.pickFsec_title = tables.titleSum;
       this.pickFsec_case_break = tables.break_after_case;
@@ -72,7 +79,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {}
 
-  private printPickForce(json): any {
+  private printPickForce(json, jud): any {
     const titleSum: any = [];
     const body: any[] = new Array();
     const typeSum: any = [];
@@ -107,9 +114,15 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     let typeAll: any = [];
     this.row = 0;
 
+    for (let i = 0; i < jud.length; i++) {
+      if (jud[i].check === true) {
+        this.flg = true;
+        continue;
+      }
+    }
+
     for (const index of keys) {
       const elist = json[index]; // 1テーブル分のデータを取り出す
-
       // 荷重名称
       const title: any = [];
       let loadName: string = "";
@@ -130,8 +143,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
         const key = KEYS[i];
         const title2 = TITLES[i];
         const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if(!(key in elieli)) continue;
-
+        if (!(key in elieli)) continue;
 
         typeName.push(title2);
 
@@ -142,30 +154,34 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
         } else {
           this.row = 7;
         }
+        this.kk = 0;
 
         for (const k of Object.keys(elist)) {
           const item = elist[k];
-          // 印刷する1行分のリストを作る
-          const line = ["", "", "", "", "", "", "", "", "", ""];
-          line[0] = item.m.toString();
-          line[1] = item.n.toString();
-          line[2] = item.l.toFixed(3);
-          line[3] = item.fx.toFixed(2);
-          line[4] = item.fy.toFixed(2);
-          line[5] = item.fz.toFixed(2);
-          line[6] = item.mx.toFixed(2);
-          line[7] = item.my.toFixed(2);
-          line[8] = item.mz.toFixed(2);
-          line[9] = item.comb + ':' + item.case;
+          this.kk = item.m === "" ? this.kk : Number(item.m) - 1;
+          if (jud[this.kk].check === true || this.flg === false) {
+            // 印刷する1行分のリストを作る
+            const line = ["", "", "", "", "", "", "", "", "", ""];
+            line[0] = item.m.toString();
+            line[1] = item.n.toString();
+            line[2] = item.l.toFixed(3);
+            line[3] = item.fx.toFixed(2);
+            line[4] = item.fy.toFixed(2);
+            line[5] = item.fz.toFixed(2);
+            line[6] = item.mx.toFixed(2);
+            line[7] = item.my.toFixed(2);
+            line[8] = item.mz.toFixed(2);
+            line[9] = item.comb + ":" + item.case;
 
-          body.push(line);
-          this.row++;
+            body.push(line);
+            this.row++;
 
-          //１テーブルでthis.bottomCell行以上データがあるならば
-          if (this.row > this.bottomCell) {
-            table.push(body);
-            body = [];
-            this.row = 3;
+            //１テーブルでthis.bottomCell行以上データがあるならば
+            if (this.row > this.bottomCell) {
+              table.push(body);
+              body = [];
+              this.row = 3;
+            }
           }
         }
         if (body.length > 0) {
@@ -195,7 +211,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       for (let i = 0; i < KEYS.length; i++) {
         const key = KEYS[i];
         const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if(!(key in elieli)) continue;
+        if (!(key in elieli)) continue;
 
         const elist = elieli[key]; // 1行分のnodeデータを取り出す.
         for (const k of Object.keys(elist)) {
@@ -218,8 +234,9 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     for (const index of Object.keys(json)) {
       const elieli = json[index]; // 1行分のnodeデータを取り出す
       for (let i = 0; i < KEYS.length; i++) {
+        // if (jud[i].check === true) {
         const key: string = KEYS[i];
-        if(!(key in elieli)) continue;
+        if (!(key in elieli)) continue;
 
         const elist = elieli[key]; // 1行分のnodeデータを取り出す.
 
@@ -239,11 +256,14 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
             break_after_type.push(true);
             ROW_type = 0;
           }
-          let countHead_break = Math.floor((countCell_type / this.bottomCell) * 3 + 2);
+          let countHead_break = Math.floor(
+            (countCell_type / this.bottomCell) * 3 + 2
+          );
           ROW_type += countCell_type + countHead_break;
           ROW_type = ROW_type % this.bottomCell;
           ROW_type += 5;
         }
+        // }
       }
 
       //荷重タイプごとに分割するかどうか
@@ -258,7 +278,9 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
         } else {
           break_after_case.push(true);
         }
-        let countHead_breakLoad = Math.floor((countCell_type / this.bottomCell) * 3 + 5);
+        let countHead_breakLoad = Math.floor(
+          (countCell_type / this.bottomCell) * 3 + 5
+        );
         ROW_case += countCell_type + countHead_breakLoad;
         ROW_case = ROW_type % this.bottomCell;
         ROW_case += 7;
@@ -267,6 +289,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
     //最後のページの行数だけ取得している
     let lastArrayCount: number = countTotal % this.bottomCell;
+
+    this.flg = false;
 
     return {
       titleSum,
