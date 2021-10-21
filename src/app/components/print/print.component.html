@@ -90,8 +90,13 @@
             <button (click)="onPrintInvoice()">印刷する</button>
         </div>
     </div>
+    <!-- <div class="print-custom"> -->
     <ng-container *ngIf="ResultData.isCalculated">
         <app-print-custom>
         </app-print-custom>
     </ng-container>
+    <ng-container *ngIf="!ResultData.isCalculated">
+        <div></div>
+    </ng-container>
+    <!-- </div> -->
 </div>

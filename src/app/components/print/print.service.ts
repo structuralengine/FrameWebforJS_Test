@@ -117,15 +117,16 @@ export class PrintService {
     // const id = this.contentEditable1;
     let n = 0;
     this.printOption = new Array();
+    this.flg = -1;
     setTimeout(() => {
       for (let i = 0; i < this.contentEditable1.length; i++) {
-        if (this.contentEditable1[i] === true) {
+        if (this.contentEditable1[i] === true && (i === 9 || i === 10)) {
           this.printOption[n] = this.optionList[String(i)];
           n += 1;
         }
       }
-      this.flg = Number(this.printOption[n - 1].id);
-      console.timeLog("S");
+      this.flg = Number(this.printOption[0].id);
+      this.selectedIndex = String(this.flg);
     }, 50);
   }
 }

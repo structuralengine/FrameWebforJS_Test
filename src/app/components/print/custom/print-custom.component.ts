@@ -4,7 +4,7 @@ import { PrintService } from "../print.service";
 @Component({
   selector: "app-print-custom",
   templateUrl: "./print-custom.component.html",
-  styleUrls: ["./print-custom.component.scss"],
+  styleUrls: ["./print-custom.component.scss", "../print.component.scss"],
 })
 export class PrintCustomComponent implements OnInit {
   // public flg: number;
