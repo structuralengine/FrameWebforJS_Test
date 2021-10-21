@@ -35,6 +35,7 @@ export class PrintService {
       false, // 3-PICKUP 変位量
       false, // 4-反力
       false, // 5-COMBINE 反力
+
       false, // 6-PICKUP 反力
       false, // 7-断面力
       false, // 8-COMBINE 断面力
