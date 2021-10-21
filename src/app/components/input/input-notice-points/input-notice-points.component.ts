@@ -1,37 +1,55 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { InputMembersService } from '../input-members/input-members.service';
-import { InputNoticePointsService } from './input-notice-points.service';
-import { DataHelperModule } from '../../../providers/data-helper.module';
-import { ThreeService } from '../../three/three.service';
-import { SheetComponent } from '../sheet/sheet.component';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { InputMembersService } from "../input-members/input-members.service";
+import { InputNoticePointsService } from "./input-notice-points.service";
+import { DataHelperModule } from "../../../providers/data-helper.module";
+import { ThreeService } from "../../three/three.service";
+import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 
 @Component({
-  selector: 'app-input-notice-points',
-  templateUrl: './input-notice-points.component.html',
-  styleUrls: ['./input-notice-points.component.scss', '../../../app.component.scss']
+  selector: "app-input-notice-points",
+  templateUrl: "./input-notice-points.component.html",
+  styleUrls: [
+    "./input-notice-points.component.scss",
+    "../../../app.component.scss",
+  ],
 })
-
 export class InputNoticePointsComponent implements OnInit {
-
-  @ViewChild('grid') grid: SheetComponent;
+  @ViewChild("grid") grid: SheetComponent;
 
   private dataset = [];
-  private columnHeaders: any =[
-    { title: "部材No", dataType: "string", dataIndx: "m", sortable: false, minwidth: 10, width: 10 },
-    { title: "部材長\n(m)", dataType: "float",  format: "#.000", dataIndx: "len", sortable: false, width: 80, editable: false, style: { "background": "#dae6f0" } },
-    { title: 'i-端 からの距離(m)', colModel: [] }
+  private columnHeaders: any = [
+    {
+      title: "部材No",
+      dataType: "string",
+      dataIndx: "m",
+      sortable: false,
+      minwidth: 10,
+      width: 10,
+    },
+    {
+      title: "部材長\n(m)",
+      dataType: "float",
+      format: "#.000",
+      dataIndx: "len",
+      sortable: false,
+      width: 80,
+      editable: false,
+      style: { background: "#dae6f0" },
+    },
+    { title: "i-端 からの距離(m)", colModel: [] },
   ];
 
   private ROWS_COUNT = 15;
 
-  constructor(private data: InputNoticePointsService,
-              private member: InputMembersService,
-              private helper: DataHelperModule,
-              private app: AppComponent,
-              private three: ThreeService) {
-
+  constructor(
+    private data: InputNoticePointsService,
+    private member: InputMembersService,
+    private helper: DataHelperModule,
+    private app: AppComponent,
+    private three: ThreeService
+  ) {
     for (let i = 1; i <= this.data.NOTICE_POINTS_COUNT; i++) {
       const id = "L" + i;
       this.columnHeaders[2].colModel.push({
@@ -40,7 +58,7 @@ export class InputNoticePointsComponent implements OnInit {
         format: "#.000",
         dataIndx: id,
         sortable: false,
-        width: 80
+        width: 80,
       });
     }
   }
@@ -48,17 +66,17 @@ export class InputNoticePointsComponent implements OnInit {
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
     // three.js にモードの変更を通知する
-    this.three.ChangeMode('notice_points');
+    this.three.ChangeMode("notice_points");
   }
 
   // 指定行row 以降のデータを読み取る
   private loadData(row: number): void {
     for (let i = this.dataset.length + 1; i <= row; i++) {
       const notice_points = this.data.getNoticePointsColumns(i);
-      const m: string = notice_points['m'];
-      if (m !== '') {
+      const m: string = notice_points["m"];
+      if (m !== "") {
         const l: number = this.member.getMemberLength(m);
-        notice_points['len'] = (l != null) ? l.toFixed(3) : '';
+        notice_points["len"] = l != null ? l.toFixed(3) : "";
       }
       this.dataset.push(notice_points);
     }
@@ -81,22 +99,22 @@ export class InputNoticePointsComponent implements OnInit {
     reactive: true,
     sortable: false,
     scrollModel: {
-      horizontal: true
+      horizontal: true,
     },
     locale: "jp",
     height: this.tableHeight(),
     numberCell: {
-      show: false // 行番号
+      show: false, // 行番号
     },
     colModel: this.columnHeaders,
     dataModel: {
-      data: this.dataset
+      data: this.dataset,
     },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;
       const dataV = this.dataset.length;
       if (ui.initV == null) {
-          return;
+        return;
       }
       if (finalV >= dataV - 1) {
         this.loadData(dataV + this.ROWS_COUNT);
@@ -107,26 +125,26 @@ export class InputNoticePointsComponent implements OnInit {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = range[0].c1;
-      this.three.selectChange('notice-points', row, column);
+      this.three.selectChange("notice-points", row, column);
     },
     change: (evt, ui) => {
       const changes = ui.updateList;
       for (const target of changes) {
         const row: number = target.rowIndx;
-        if (!('m' in target.newRow)) {
+        if (!("m" in target.newRow)) {
           continue;
         }
-        const m: string = target.newRow['m'];
-        if ( m === null){
-          this.dataset[row]['len'] = null;
+        const m: string = target.newRow["m"];
+        if (m === void 0) {
+          this.dataset[row]["m"] = "";
+          this.dataset[row]["len"] = "";
         } else {
           const l: number = this.member.getMemberLength(m);
-          this.dataset[row]['len'] = (l != null) ? l : null;
+          this.dataset[row]["len"] = l != null ? l : null;
         }
         this.grid.refreshDataAndView();
       }
-      this.three.changeData('notice-points');
-    }
+      this.three.changeData("notice-points");
+    },
   };
-
 }
