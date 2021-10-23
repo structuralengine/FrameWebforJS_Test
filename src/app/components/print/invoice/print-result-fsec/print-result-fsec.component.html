@@ -1,74 +1,78 @@
-<div *ngIf="isEnable"  class="invoicetTable fsec">
-  <div *ngIf="judge" class="pagerBreak"></div>
+<div *ngIf="isEnable" class="invoicetTable fsec">
+    <div *ngIf="judge" class="pagerBreak"></div>
     <h2>断面力</h2>
     <div *ngFor="let title of fsec_typeNum; index as i">
-        <div *ngIf="fsec_break[i]" class="pagerBreak space"></div>
         <h3>{{title}}</h3>
-        <div *ngFor="let dataset of fsec_table[i] index as j">
-            <div *ngIf="j > 0" class="pagerBreak space"></div>
             <table class="print-md">
                 <div *ngIf="dimension===3">
-                    <tr>
-                        <th>部材</th>
-                        <th>節点</th>
-                        <th></th>
-                        <th>FX</th>
-                        <th>FY</th>
-                        <th>FZ</th>
-                        <th>MX</th>
-                        <th>MY</th>
-                        <th>MZ</th>
-                    </tr>
-                    <tr>
-                        <th>No.</th>
-                        <th>No.</th>
-                        <th>DIST</th>
-                        <th>(kN)</th>
-                        <th>(kN)</th>
-                        <th>(kN)</th>
-                        <th>(kN・m)</th>
-                        <th>(kN・m)</th>
-                        <th>(kN・m)</th>
-                    </tr>
-                    <tr *ngFor="let data of dataset">
-                        <td>{{data[0]}}</td>
-                        <td>{{data[1]}}</td>
-                        <td>{{data[2]}}</td>
-                        <td>{{data[3]}}</td>
-                        <td>{{data[4]}}</td>
-                        <td>{{data[5]}}</td>
-                        <td>{{data[6]}}</td>
-                        <td>{{data[7]}}</td>
-                        <td>{{data[8]}}</td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>部材</th>
+                            <th>節点</th>
+                            <th></th>
+                            <th>FX</th>
+                            <th>FY</th>
+                            <th>FZ</th>
+                            <th>MX</th>
+                            <th>MY</th>
+                            <th>MZ</th>
+                        </tr>
+                        <tr>
+                            <th>No.</th>
+                            <th>No.</th>
+                            <th>DIST</th>
+                            <th>(kN)</th>
+                            <th>(kN)</th>
+                            <th>(kN)</th>
+                            <th>(kN・m)</th>
+                            <th>(kN・m)</th>
+                            <th>(kN・m)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of fsec_table[i] ">
+                            <td>{{dataset[0]}}</td>
+                            <td>{{dataset[1]}}</td>
+                            <td>{{dataset[2]}}</td>
+                            <td>{{dataset[3]}}</td>
+                            <td>{{dataset[4]}}</td>
+                            <td>{{dataset[5]}}</td>
+                            <td>{{dataset[6]}}</td>
+                            <td>{{dataset[7]}}</td>
+                            <td>{{dataset[8]}}</td>
+                        </tr>
+                    </tbody>
                 </div>
                 <div *ngIf="dimension===2">
-                    <tr>
-                        <th>部材</th>
-                        <th>節点</th>
-                        <th></th>
-                        <th>N</th>
-                        <th>S</th>
-                        <th>M</th>
-                    </tr>
-                    <tr>
-                        <th>No.</th>
-                        <th>No.</th>
-                        <th>DIST</th>
-                        <th>(kN)</th>
-                        <th>(kN)</th>
-                        <th>(kN・m)</th>
-                    </tr>
-                    <tr *ngFor="let data of dataset">
-                        <td>{{data[0]}}</td>
-                        <td>{{data[1]}}</td>
-                        <td>{{data[2]}}</td>
-                        <td>{{data[3]}}</td>
-                        <td>{{data[4]}}</td>
-                        <td>{{data[8]}}</td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>部材</th>
+                            <th>節点</th>
+                            <th></th>
+                            <th>N</th>
+                            <th>S</th>
+                            <th>M</th>
+                        </tr>
+                        <tr>
+                            <th>No.</th>
+                            <th>No.</th>
+                            <th>DIST</th>
+                            <th>(kN)</th>
+                            <th>(kN)</th>
+                            <th>(kN・m)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of fsec_table[i] ">
+                            <td>{{dataset[0]}}</td>
+                            <td>{{dataset[1]}}</td>
+                            <td>{{dataset[2]}}</td>
+                            <td>{{dataset[3]}}</td>
+                            <td>{{dataset[4]}}</td>
+                            <td>{{dataset[8]}}</td>
+                        </tr>
+                    </tbody>
                 </div>
             </table>
-        </div>
     </div>
 </div>

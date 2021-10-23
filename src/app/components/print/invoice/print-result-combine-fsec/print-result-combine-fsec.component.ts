@@ -5,6 +5,7 @@ import { AfterViewInit } from "@angular/core";
 import { DataCountService } from "../dataCount.service";
 import { ResultCombineFsecService } from "src/app/components/result/result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-custom-fsec.service";
 
 @Component({
   selector: "app-print-result-combine-fsec",
@@ -30,20 +31,25 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
 
   public judge: boolean;
 
+  private kk = 0;
+  private flg: boolean = false;
+
   constructor(
     private InputData: InputDataService,
     private ResultData: ResultDataService,
     private countArea: DataCountService,
     private combFsec: ResultCombineFsecService,
-    private helper: DataHelperModule ) {
+    private custom: PrintCustomFsecService,
+    private helper: DataHelperModule
+    ) {
     this.dimension = this.helper.dimension;
     this.judge = false;
     this.clear();
   }
 
   public clear(): void {
-    this.combFsec_dataset    = new Array();
-    this.combFsec_title      = new Array();
+    this.combFsec_dataset = new Array();
+    this.combFsec_title = new Array();
     this.combFsec_case_break = new Array();
     this.combFsec_type_break = new Array();
   }
@@ -53,7 +59,9 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
     const resultjson: any = this.ResultData.combfsec.fsecCombine;
     const keys: string[] = Object.keys(resultjson);
     if (keys.length > 0) {
-      const tables = this.printCombForce(resultjson);
+      this.custom.clear();
+      const jud = this.custom.dataset;
+      const tables = this.printCombForce(resultjson, jud);
       this.combFsec_dataset = tables.table;
       this.combFsec_title = tables.titleSum;
       this.combFsec_case_break = tables.break_after_case;
@@ -64,16 +72,16 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   // 変位量データを印刷する
-  private printCombForce(json): any {
+  private printCombForce(json, jud): any {
     const titleSum: any[] = new Array();
     const body: any[] = new Array();
-    const typeSum: any [] = new Array();
+    const typeSum: any[] = new Array();
 
-    const KEYS = this.combFsec.fsecKeys; 
-    const TITLES = this.combFsec.titles; 
+    const KEYS = this.combFsec.fsecKeys;
+    const TITLES = this.combFsec.titles;
 
     // [
     //   "fx_max",
@@ -93,20 +101,25 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
     //  'ねじりモーメント 最大', 'ねじりモーメント 最小', 'y軸回りの曲げモーメント 最大', 'y軸回りの曲げモーメント力 最小', 'z軸回りの曲げモーメント 最大', 'z軸回りの曲げモーメント 最小'];
 
     const keys: string[] = Object.keys(json);
-    
+
     //　テーブル
-    const splid:  any[] = new Array();
-    let typeData: any = [];
-    let typeName:  any = [];
+    const splid: any[] = new Array();
+    let typeName: any = [];
     let typeDefinition: any = [];
     let typeAll: any = [];
     this.row = 0;
 
+    for (let i = 0; i < jud.length; i++) {
+      if (jud[i].check === true) {
+        this.flg = true;
+        continue;
+      }
+    }
+
     for (const index of keys) {
       const elist = json[index]; // 1テーブル分のデータを取り出す
-
-      // 荷重名称
-      const title: any [] = new Array();
+// 荷重名称
+      const title: any[] = new Array();
       let loadName: string = "";
       const combineJson: any = this.InputData.combine.getCombineJson();
       if (index in combineJson) {
@@ -119,13 +132,11 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
       }
       titleSum.push(title);
 
-      let table: any[] = new Array();
-      let type:  any[] = new Array();
       for (let i = 0; i < KEYS.length; i++) {
         const key = KEYS[i];
         const title2 = TITLES[i];
         const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if(!(key in elieli)){ continue; }
+        if (!(key in elieli)) { continue; }
 
         typeName.push(title2);
 
@@ -136,44 +147,35 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
         } else {
           this.row = 7;
         }
+        this.kk = 0;
 
         for (const k of Object.keys(elist)) {
           const item = elist[k];
-          // 印刷する1行分のリストを作る
-          const line = ["", "", "", "", "", "", "", "", "", ""];
-          line[0] = item.m.toString();
-          line[1] = item.n.toString();
-          line[2] = item.l.toFixed(3);
-          line[3] = item.fx.toFixed(2);
-          line[4] = item.fy.toFixed(2);
-          line[5] = item.fz.toFixed(2);
-          line[6] = item.mx.toFixed(2);
-          line[7] = item.my.toFixed(2);
-          line[8] = item.mz.toFixed(2);
-          line[9] = item.case;
+          this.kk = item.m === "" ? this.kk : Number(item.m) - 1;
+          if (jud[this.kk].check === true || this.flg === false) {
+            // 印刷する1行分のリストを作る
+            const line = ["", "", "", "", "", "", "", "", "", ""];
+            line[0] = item.m.toString();
+            line[1] = item.n.toString();
+            line[2] = item.l.toFixed(3);
+            line[3] = item.fx.toFixed(2);
+            line[4] = item.fy.toFixed(2);
+            line[5] = item.fz.toFixed(2);
+            line[6] = item.mx.toFixed(2);
+            line[7] = item.my.toFixed(2);
+            line[8] = item.mz.toFixed(2);
+            line[9] = item.case;
 
-          body.push(line);
-          this.row++;
+            body.push(line);
+            this.row++;
 
-          //１テーブルでthis.bottomCell行以上データがあるならば
-          if (this.row > this.bottomCell) {
-            table.push(body);
-            body = [];
-            this.row = 3;
           }
         }
-        if (body.length > 0) {
-          table.push(body);
-        }
 
-        if (table.length > 0) {
-          typeData.push(table);
-          table = [];
-        }
-        typeDefinition.push(typeName, typeData);
+        typeDefinition.push(typeName, body);
         typeAll.push(typeDefinition);
         typeName = [];
-        typeData = [];
+        body = [];
         typeDefinition = [];
       }
       splid.push(typeAll);
@@ -189,7 +191,7 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
       for (let i = 0; i < KEYS.length; i++) {
         const key = KEYS[i];
         const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if(!(key in elieli)){ continue; }
+        if (!(key in elieli)) { continue; }
         const elist = elieli[key]; // 1行分のnodeデータを取り出す.
         for (const k of Object.keys(elist)) {
           countCell += Object.keys(elist).length;
@@ -212,57 +214,57 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
       const elieli = json[index]; // 1行分のnodeデータを取り出す
       for (let i = 0; i < KEYS.length; i++) {
         const key: string = KEYS[i];
-        if(!(key in elieli)){ continue; }
+        if (!(key in elieli)) { continue; }
         const elist = elieli[key]; // 1行分のnodeデータを取り出す.
 
-      // x方向Max,minなどのタイプでの分割
-      countCell_type = Object.keys(elist).length;
+        // x方向Max,minなどのタイプでの分割
+        countCell_type = Object.keys(elist).length;
 
-      ROW_type += countCell_type;
-      ROW_case += countCell_type;
+        ROW_type += countCell_type;
+        ROW_case += countCell_type;
 
-      if (ROW_type < this.bottomCell) {
-        break_after_type.push(false);
-        ROW_type += 5;
-      } else {
-        if (i === 0) {
+        if (ROW_type < this.bottomCell) {
           break_after_type.push(false);
+          ROW_type += 5;
         } else {
-          break_after_type.push(true);
-          ROW_type = 0;
+          if (i === 0) {
+            break_after_type.push(false);
+          } else {
+            break_after_type.push(true);
+            ROW_type = 0;
+          }
+          let countHead_break = Math.floor((countCell_type / this.bottomCell) * 3 + 2);
+          ROW_type += countCell_type + countHead_break;
+          ROW_type = ROW_type % this.bottomCell;
+          ROW_type += 5;
         }
-        let countHead_break = Math.floor((countCell_type / this.bottomCell) * 3 + 2);
-        ROW_type += countCell_type + countHead_break;
-        ROW_type = ROW_type % this.bottomCell;
-        ROW_type += 5;
       }
-    }
 
-    //荷重タイプごとに分割するかどうか
-    countCell_case += Object.keys(elieli).length;
-    ROW_case += countCell_case;
-    if (ROW_case < this.bottomCell) {
-      break_after_case.push(false);
-      ROW_case += 7;
-    } else {
-      if (index === "1") {
+      //荷重タイプごとに分割するかどうか
+      countCell_case += Object.keys(elieli).length;
+      ROW_case += countCell_case;
+      if (ROW_case < this.bottomCell) {
         break_after_case.push(false);
+        ROW_case += 7;
       } else {
-        break_after_case.push(true);
+        if (index === "1") {
+          break_after_case.push(false);
+        } else {
+          break_after_case.push(true);
+        }
+        let countHead_breakLoad = Math.floor((countCell_type / this.bottomCell) * 3 + 5);
+        ROW_case += countCell_type + countHead_breakLoad;
+        ROW_case = ROW_type % this.bottomCell;
+        ROW_case += 7;
       }
-      let countHead_breakLoad = Math.floor((countCell_type / this.bottomCell) * 3 + 5);
-      ROW_case += countCell_type + countHead_breakLoad;
-      ROW_case = ROW_type % this.bottomCell;
-      ROW_case += 7;
     }
-  }
 
     //最後のページの行数だけ取得している
     let lastArrayCount: number = countTotal % this.bottomCell;
 
     return {
       titleSum,
-      table:splid,
+      table: splid,
       typeSum,
       break_after_case,
       break_after_type,

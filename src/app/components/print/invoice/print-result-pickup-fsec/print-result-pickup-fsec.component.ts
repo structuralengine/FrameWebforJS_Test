@@ -2,22 +2,15 @@ import { Component, OnInit } from "@angular/core";
 import { InputDataService } from "../../../../providers/input-data.service";
 import { ResultDataService } from "../../../../providers/result-data.service";
 import { AfterViewInit } from "@angular/core";
-import { JsonpClientBackend } from "@angular/common/http";
 import { DataCountService } from "../dataCount.service";
-import { newArray } from "@angular/compiler/src/util";
-import { ArrayCamera } from "three";
 import { ResultCombineFsecService } from "src/app/components/result/result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
-import { PrintCustomPickFsecService } from "../../custom/print-custom-pick-fsec/print-custom-pick-fsec.service";
+import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-custom-fsec.service";
 
 @Component({
   selector: "app-print-result-pickup-fsec",
   templateUrl: "./print-result-pickup-fsec.component.html",
-  styleUrls: [
-    "./print-result-pickup-fsec.component.scss",
-    "../../../../app.component.scss",
-    "../invoice.component.scss",
-  ],
+  styleUrls: ["./print-result-pickup-fsec.component.scss","../../../../app.component.scss","../invoice.component.scss",],
 })
 export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
   isEnable = true;
@@ -46,7 +39,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     private ResultData: ResultDataService,
     private countArea: DataCountService,
     private combFsec: ResultCombineFsecService,
-    private custom: PrintCustomPickFsecService,
+    private custom: PrintCustomFsecService,
     private helper: DataHelperModule
   ) {
     this.dimension = this.helper.dimension;
@@ -62,9 +55,11 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    
     const resultjson: any = this.ResultData.pickfsec.fsecPickup;
     const keys: string[] = Object.keys(resultjson);
     if (keys.length > 0) {
+      this.custom.clear();
       const jud = this.custom.dataset;
       const tables = this.printPickForce(resultjson, jud);
       this.pickFsec_dataset = tables.table;
@@ -77,7 +72,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   private printPickForce(json, jud): any {
     const titleSum: any = [];
@@ -104,11 +99,11 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     //const TITLES = ['軸方向力 最大', '軸方向力 最小', 'y方向のせん断力 最大', 'y方向のせん断力 最小', 'z方向のせん断力 最大', 'z方向のせん断力 最小',
     //  'ねじりモーメント 最大', 'ねじりモーメント 最小', 'y軸回りの曲げモーメント 最大', 'y軸回りの曲げモーメント力 最小', 'z軸回りの曲げモーメント 最大', 'z軸回りの曲げモーメント 最小'];
 
+
     const keys: string[] = Object.keys(json);
 
     //　テーブル
     const splid: any = [];
-    let typeData: any = [];
     let typeDefinition: any = [];
     let typeName: any = [];
     let typeAll: any = [];
@@ -137,8 +132,6 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       }
       titleSum.push(title);
 
-      let table: any = [];
-      let type: any = [];
       for (let i = 0; i < KEYS.length; i++) {
         const key = KEYS[i];
         const title2 = TITLES[i];
@@ -195,7 +188,6 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
         typeDefinition.push(typeName, body);
         typeAll.push(typeDefinition);
         typeName = [];
-        typeData = [];
         body = [];
         typeDefinition = [];
       }

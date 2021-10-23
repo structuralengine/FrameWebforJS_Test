@@ -21,7 +21,7 @@ export class PrintService {
 
   public print_target: any; // Three.js 印刷 の図のデータ
 
-  public printOption = [{ id: "0", name: "入力データ" }];
+  public printOption = [];
 
   constructor(
     private router: Router,
@@ -39,9 +39,9 @@ export class PrintService {
       false, // 6-PICKUP 反力
       false, // 7-断面力
       false, // 8-COMBINE 断面力
-      false, // 9-PICKUP 断面力
-      false, // 10-Three.js 印刷
     ];
+
+    this.printOption = new Array();
   }
 
   public optionList: any[] = [
@@ -72,18 +72,35 @@ export class PrintService {
       name: "断面力",
     },
     {
+      id: "7",
+      name: "断面力",
+    },
+    {
+      id: "7",
+      name: "断面力",
+    },
+    {
       id: "8",
-      name: "COMBINE　断面力",
-    },
-    {
-      id: "9",
-      name: "PICKUP　断面力",
-    },
-    {
-      id: "10",
       name: "画面印刷",
     },
   ];
+
+  public clear(){
+    this.contentEditable1 = [
+      false, // 0-入力データ
+      false, // 1-変位量
+      false, // 2-COMBINE 変位量
+      false, // 3-PICKUP 変位量
+      false, // 4-反力
+      false, // 5-COMBINE 反力
+
+      false, // 6-PICKUP 反力
+      false, // 7-断面力
+      false, // 8-COMBINE 断面力
+      false,
+      false
+    ];
+  }
 
   public setprintDocument() {
     // 入力データを取得する
@@ -121,11 +138,18 @@ export class PrintService {
     this.flg = -1;
     setTimeout(() => {
       for (let i = 0; i < this.contentEditable1.length; i++) {
-        if (this.contentEditable1[i] === true && (i === 9 || i === 10)) {
+        if (this.contentEditable1[i] === true && ( i == 7 || i === 8 || i === 9 || i === 10)) {
           this.printOption[n] = this.optionList[String(i)];
           n += 1;
         }
       }
+
+      this.printOption = this.printOption.filter((element, index, self) => 
+                            self.findIndex(e => 
+                                           e.id === element.id 
+                                          ) === index
+                            );
+
       this.flg = Number(this.printOption[0].id);
       this.selectedIndex = String(this.flg);
     }, 50);

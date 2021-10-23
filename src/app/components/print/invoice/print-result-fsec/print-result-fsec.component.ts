@@ -5,6 +5,7 @@ import { AfterViewInit } from "@angular/core";
 import { JsonpClientBackend } from "@angular/common/http";
 import { DataCountService } from "../dataCount.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-custom-fsec.service";
 
 @Component({
   selector: "app-print-result-fsec",
@@ -34,10 +35,14 @@ export class PrintResultFsecComponent implements OnInit, AfterViewInit {
 
   public judge: boolean;
 
+  private kk = 0;
+  private flg: boolean = false;
+
   constructor(
     private InputData: InputDataService,
     private ResultData: ResultDataService,
     private countArea: DataCountService,
+    private custom:PrintCustomFsecService,
     private helper: DataHelperModule ) {
     this.dimension = this.helper.dimension;
     this.clear();
@@ -51,8 +56,9 @@ export class PrintResultFsecComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     // const json: {} = this.ResultData.fsec.getDisgJson();
+    const jud = this.custom.dataset;
     const resultjson: any = this.ResultData.fsec.getFsecJson();
-    const tables = this.printForce(resultjson);
+    const tables = this.printForce(resultjson,jud);
     this.fsec_table = tables.table;
     this.fsec_break = tables.break_after;
     this.fsec_typeNum = tables.title;
@@ -62,8 +68,15 @@ export class PrintResultFsecComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {}
 
   // 断面力データを印刷する
-  private printForce(json): any {
+  private printForce(json,jud): any {
     const keys: string[] = Object.keys(json);
+
+    for (let i = 0; i < jud.length; i++) {
+      if (jud[i].check === true) {
+        this.flg = true;
+        continue;
+      }
+    }
 
     // テーブル
     const splid: any[] = new Array();
@@ -92,7 +105,8 @@ export class PrintResultFsecComponent implements OnInit, AfterViewInit {
 
       for (const key of Object.keys(elist)) {
         const item = elist[key];
-
+        this.kk = item.m === "" ? this.kk : Number(item.m) - 1;
+        if (jud[this.kk].check === true || this.flg === false) {
         const line = ["", "", "", "", "", "", "", ""];
         line[0] = item.m;
         line[1] = item.n;
@@ -106,18 +120,20 @@ export class PrintResultFsecComponent implements OnInit, AfterViewInit {
         body.push(line);
         row++;
 
-        //１テーブルでthis.bottomCell行以上データがあるならば
-        if (row > this.bottomCell) {
-          table.push(body);
-          body = [];
-          row = 3;
+        // //１テーブルでthis.bottomCell行以上データがあるならば
+        // if (row > this.bottomCell) {
+        //   table.push(body);
+        //   body = [];
+        //   row = 3;
+        // }
         }
       }
 
-      if (body.length > 0) {
-        table.push(body);
-      }
-      splid.push(table);
+      // if (body.length > 0) {
+      //   table.push(body);
+      // }
+      splid.push(body);
+      body = [];
     }
 
     // 全体の高さを計算する
