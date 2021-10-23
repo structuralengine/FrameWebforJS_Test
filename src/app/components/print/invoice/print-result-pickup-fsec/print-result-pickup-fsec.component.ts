@@ -177,25 +177,26 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
             this.row++;
 
             //１テーブルでthis.bottomCell行以上データがあるならば
-            if (this.row > this.bottomCell) {
-              table.push(body);
-              body = [];
-              this.row = 3;
-            }
+            // if (this.row > this.bottomCell) {
+            //   table.push(body);
+            //   body = [];
+            //   this.row = 3;
+            // }
           }
         }
-        if (body.length > 0) {
-          table.push(body);
-        }
+        // if (body.length > 0) {
+        //   table.push(body);
+        // }
 
-        if (table.length > 0) {
-          typeData.push(table);
-          table = [];
-        }
-        typeDefinition.push(typeName, typeData);
+        // if (table.length > 0) {
+        //   typeData.push(table);
+        //   table = [];
+        // }
+        typeDefinition.push(typeName, body);
         typeAll.push(typeDefinition);
         typeName = [];
         typeData = [];
+        body = [];
         typeDefinition = [];
       }
       splid.push(typeAll);

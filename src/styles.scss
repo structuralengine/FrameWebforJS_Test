@@ -15,7 +15,7 @@ html, body {
   }
 }
 
-@page { size: A4 portrait; }
+@page { size: A4 ; }
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
