@@ -202,6 +202,20 @@ export class ThreeSectionForceService {
     this.gui = null;
   }
 
+  public changeRadioButtons(key1:string){
+    
+    for (const key of this.radioButtons) {
+      if(key === key1){
+        this.params[key] = true;
+      } else {
+        this.params[key] = false;
+      }
+    }
+    this.changeMesh();
+    this.onResize();
+    this.scene.render();
+  }
+
   // gui 選択されたチェックボックス以外をOFFにする
   private setGuiRadio(target: string): void {
     for (const key of this.radioButtons) {

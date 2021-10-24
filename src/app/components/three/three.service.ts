@@ -41,7 +41,8 @@ export class ThreeService {
     private fsec: ThreeSectionForceService,
     private helper: DataHelperModule,
     private printService: PrintService,
-    private InputData: InputDataService
+    private InputData: InputDataService,
+    private secForce:ThreeSectionForceService,
   ) {}
 
   //////////////////////////////////////////////////////
@@ -550,6 +551,19 @@ export class ThreeService {
             continue;
           }
           this.ChangePage(number);
+
+          if(this.mode === "13"){
+            // for(){
+            this.secForce.changeRadioButtons("1")
+            // }
+          }
+
+          // ここで three-section-force.service の
+          // this.radioButtons を変更して
+          //         this.changeMesh();
+          //         this.onResize();
+          //         this.scene.render();
+          // 以上で表示切りkwる
 
           // title3 に タイトルがあれば使う
           let name = key;
