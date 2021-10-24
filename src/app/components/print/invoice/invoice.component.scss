@@ -16,19 +16,13 @@ $height_content: 16px;
     }
     @page {
         size: A4;
+        margin: 80px 0;
     }
-}
-
-@page {
-    size: A4;
 }
 
 .pagerBreak {
     size: A4;
-    page-break-before: always;
-    &.space {
-        margin-top: 64px;
-    }
+    page-break-after: always;
 }
 
 .show {
@@ -42,7 +36,8 @@ $height_content: 16px;
     h2 {
         display: block;
         height: $height_header;
-        padding: 80px 0 32px 0;
+        // margin-top: 80px;
+        padding: 0 0 32px 0;
         line-height: 32px;
         font-size: 16px;
         font-weight: 400;
@@ -60,10 +55,21 @@ $height_content: 16px;
         font-family: "ＭＳ 明朝";
         font-size: 16px;
         margin-bottom: 16px;
+        thead {
+         display: table-header-group;
+        //     // break-after: avoid;
+        //     // tr { page-break-inside: avoid; }
+        }
+
+        tbody{
+            margin-bottom: 32px;
+        }
+      
+        // tr { page-break-inside: auto; }
         // page-break-after: auto;
         th {
-            height: $height_content;
-            // padding: 4px 8px;
+            // height: $height_content;
+            padding: 4px 8px;
             text-align: center;
             font-size: 16px;
             font-weight: 400;
@@ -71,8 +77,8 @@ $height_content: 16px;
             // page-break-after:auto;
         }
         td {
-            height: $height_content;
-            // padding: 4px 8px;
+            // height: $height_content;
+            padding: 4px 8px;
             font-size: 16px;
             text-align: right;
             // page-break-inside: avoid;

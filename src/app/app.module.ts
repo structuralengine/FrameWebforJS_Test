@@ -100,7 +100,7 @@ import { DataCountService } from "./components/print/invoice/dataCount.service";
 
 import { PagerComponent } from "./components/input/pager/pager.component";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
-import { PrintCustomPickFsecComponent } from "./components/print/custom/print-custom-pick-fsec/print-custom-pick-fsec.component";
+import { PrintCustomFsecComponent } from "./components/print/custom/print-custom-fsec/print-custom-fsec.component";
 import { PrintCustomThreeComponent } from "./components/print/custom/print-custom-three/print-custom-three.component";
 import { PrintCustomComponent } from "./components/print/custom/print-custom.component";
 
@@ -178,7 +178,7 @@ import { PrintCustomComponent } from "./components/print/custom/print-custom.com
     SheetComponent,
     PrintInputLoadNameComponent,
     PrintThreeComponent,
-    PrintCustomPickFsecComponent,
+    PrintCustomFsecComponent,
     PrintCustomThreeComponent,
     PrintCustomComponent,
   ],

@@ -5,14 +5,14 @@ import { AppComponent } from "src/app/app.component";
 import { PrintService } from "../../print.service";
 import { InputMembersService } from "src/app/components/input/input-members/input-members.service";
 import { InputElementsService } from "src/app/components/input/input-elements/input-elements.service";
-import { PrintCustomPickFsecService } from "./print-custom-pick-fsec.service";
+import { PrintCustomFsecService } from "./print-custom-fsec.service";
 
 @Component({
-  selector: "app-print-custom-pick-fsec",
-  templateUrl: "./print-custom-pick-fsec.component.html",
-  styleUrls: ["./print-custom-pick-fsec.component.scss"],
+  selector: "app-print-custom-fsec",
+  templateUrl: "./print-custom-fsec.component.html",
+  styleUrls: ["./print-custom-fsec.component.scss"],
 })
-export class PrintCustomPickFsecComponent implements OnInit {
+export class PrintCustomFsecComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
 
   private columnHeaders: any = [
@@ -61,34 +61,35 @@ export class PrintCustomPickFsecComponent implements OnInit {
 
   constructor(
     private app: AppComponent,
-    private data: PrintCustomPickFsecService,
+    private data: PrintCustomFsecService,
     private member: InputMembersService,
     private element: InputElementsService
   ) {
     // for (let i = 0; i < this.member.member.length; i++) {
     //   this.judgeArr.push(false);
     // }
+    
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.data.loadData();
   }
 
-  // 指定行row 以降のデータを読み取る
-  private loadData(): void {
-    for (let i = 1; i <= this.member.member.length; i++) {
-      const member = this.member.getMemberColumns(i);
-      const m: string = member["id"];
-      const e = member.e;
-      if (m !== "") {
-        const l: any = this.member.getMemberLength(m);
-        member["L"] = l != null ? l.toFixed(3) : l;
-        const name = this.element.getElementName(e);
-        member["n"] = name != null ? name : "";
-      }
-      this.data.dataset.push(member);
-    }
-  }
+  // // 指定行row 以降のデータを読み取る
+  // private loadData(): void {
+  //   for (let i = 1; i <= this.member.member.length; i++) {
+  //     const member = this.member.getMemberColumns(i);
+  //     const m: string = member["id"];
+  //     const e = member.e;
+  //     if (m !== "") {
+  //       const l: any = this.member.getMemberLength(m);
+  //       member["L"] = l != null ? l.toFixed(3) : l;
+  //       const name = this.element.getElementName(e);
+  //       member["n"] = name != null ? name : "";
+  //     }
+  //     this.data.dataset.push(member);
+  //   }
+  // }
 
   // 表の高さを計算する
   private tableHeight(): string {

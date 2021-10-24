@@ -1,13 +1,13 @@
-<div *ngIf="isEnable"  class="invoicetTable fsec">
-  <div *ngIf="judge" class="pagerBreak"></div>
+<div *ngIf="isEnable" class="invoicetTable fsec">
+    <div *ngIf="judge" class="pagerBreak"></div>
     <h2>断面力</h2>
     <div *ngFor="let title of fsec_typeNum; index as i">
-        <div *ngIf="fsec_break[i]" class="pagerBreak space"></div>
-        <h3>{{title}}</h3>
-        <div *ngFor="let dataset of fsec_table[i] index as j">
-            <div *ngIf="j > 0" class="pagerBreak space"></div>
-            <table class="print-md">
-                <div *ngIf="dimension===3">
+        <table class="print-md">
+            <div *ngIf="dimension===3">
+                <thead>
+                    <tr>
+                        <th colspan="8" style="text-align: left;">{{title}}</th>
+                    </tr>
                     <tr>
                         <th>部材</th>
                         <th>節点</th>
@@ -30,19 +30,26 @@
                         <th>(kN・m)</th>
                         <th>(kN・m)</th>
                     </tr>
-                    <tr *ngFor="let data of dataset">
-                        <td>{{data[0]}}</td>
-                        <td>{{data[1]}}</td>
-                        <td>{{data[2]}}</td>
-                        <td>{{data[3]}}</td>
-                        <td>{{data[4]}}</td>
-                        <td>{{data[5]}}</td>
-                        <td>{{data[6]}}</td>
-                        <td>{{data[7]}}</td>
-                        <td>{{data[8]}}</td>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let dataset of fsec_table[i] ">
+                        <td>{{dataset[0]}}</td>
+                        <td>{{dataset[1]}}</td>
+                        <td>{{dataset[2]}}</td>
+                        <td>{{dataset[3]}}</td>
+                        <td>{{dataset[4]}}</td>
+                        <td>{{dataset[5]}}</td>
+                        <td>{{dataset[6]}}</td>
+                        <td>{{dataset[7]}}</td>
+                        <td>{{dataset[8]}}</td>
                     </tr>
-                </div>
-                <div *ngIf="dimension===2">
+                </tbody>
+            </div>
+            <div *ngIf="dimension===2">
+                <thead>
+                    <tr>
+                        <th colspan="6">{{title}}</th>
+                    </tr>
                     <tr>
                         <th>部材</th>
                         <th>節点</th>
@@ -59,16 +66,19 @@
                         <th>(kN)</th>
                         <th>(kN・m)</th>
                     </tr>
-                    <tr *ngFor="let data of dataset">
-                        <td>{{data[0]}}</td>
-                        <td>{{data[1]}}</td>
-                        <td>{{data[2]}}</td>
-                        <td>{{data[3]}}</td>
-                        <td>{{data[4]}}</td>
-                        <td>{{data[8]}}</td>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let dataset of fsec_table[i] ">
+                        <td>{{dataset[0]}}</td>
+                        <td>{{dataset[1]}}</td>
+                        <td>{{dataset[2]}}</td>
+                        <td>{{dataset[3]}}</td>
+                        <td>{{dataset[4]}}</td>
+                        <td>{{dataset[8]}}</td>
                     </tr>
-                </div>
-            </table>
-        </div>
+                </tbody>
+            </div>
+        </table>
+        <div *ngIf="(((i+1) % break_after) == 0) && i+1 !== fsec_typeNum.length" class="pagerBreak"></div>
     </div>
 </div>

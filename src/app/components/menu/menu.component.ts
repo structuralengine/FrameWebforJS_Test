@@ -21,6 +21,7 @@ import { SceneService } from '../three/scene.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { UserInfoService } from 'src/app/providers/user-info.service';
 import { environment } from 'src/environments/environment';
+import { PrintCustomFsecService } from '../print/custom/print-custom-fsec/print-custom-fsec.service';
 
 @Component({
   selector: 'app-menu',
@@ -39,6 +40,8 @@ export class MenuComponent implements OnInit {
     private helper: DataHelperModule,
     private InputData: InputDataService,
     public ResultData: ResultDataService,
+    private PrintData:PrintService,
+    private CustomFsecData:PrintCustomFsecService,
     private http: HttpClient,
     private three: ThreeService,
     public printService: PrintService,
@@ -60,6 +63,8 @@ export class MenuComponent implements OnInit {
     this.app.dialogClose(); // 現在表示中の画面を閉じる
     this.InputData.clear();
     this.ResultData.clear();
+    this.PrintData.clear();
+    this.CustomFsecData.clear();
     this.three.ClearData();
     this.fileName = "立体骨組構造解析ソフトver1.7.3"
   }
@@ -69,6 +74,8 @@ export class MenuComponent implements OnInit {
     this.app.dialogClose(); // 現在表示中の画面を閉じる
     this.InputData.clear();
     this.ResultData.clear();
+    this.PrintData.clear();
+    this.CustomFsecData.clear();
     this.three.ClearData();
     this.countArea.clear();
     const modalRef = this.modalService.open(WaitDialogComponent);
@@ -277,6 +284,10 @@ export class MenuComponent implements OnInit {
   public contentsDailogShow(id): void {
     this.deactiveButtons();
     document.getElementById(id).classList.add('active');
+    if(id === 13){
+      this.printService.clear();
+      this.CustomFsecData.clear();
+    }
     this.helper.isContentsDailogShow = true;
   }
 
