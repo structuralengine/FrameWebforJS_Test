@@ -179,7 +179,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
     if (splid.length > 0) {
       const splidlength = -(splid[0][0][1].length / this.splen);
-      this.break_after = (Math.floor(splidlength + 5) > 0) ? Math.floor(splidlength + 5) : 0;
+      this.break_after = (Math.floor(splidlength + 5) > 0) ? Math.floor(splidlength + 5) : 1;
     }
 
     this.flg = false;
