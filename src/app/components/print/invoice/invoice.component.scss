@@ -22,7 +22,7 @@ $height_content: 16px;
 
 .pagerBreak {
     size: A4;
-    page-break-before: always;
+    page-break-after: always;
 }
 
 .show {
@@ -55,14 +55,17 @@ $height_content: 16px;
         font-family: "ＭＳ 明朝";
         font-size: 16px;
         margin-bottom: 16px;
-        thead {page-break-before :always;
+        thead {
          display: table-header-group;
-         page-break-inside: avoid;
         //     // break-after: avoid;
         //     // tr { page-break-inside: avoid; }
         }
+
+        tbody{
+            margin-bottom: 32px;
+        }
       
-        tr { page-break-inside: auto; }
+        // tr { page-break-inside: auto; }
         // page-break-after: auto;
         th {
             // height: $height_content;

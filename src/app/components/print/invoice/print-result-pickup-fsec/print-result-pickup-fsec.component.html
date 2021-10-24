@@ -3,19 +3,22 @@
     <h2>PICKUP 断面力</h2>
     <!--pickFsec_titileからtitleごとにデータを取り出す-->
     <div *ngFor="let title of pickFsec_title; index as i">
-        <div *ngIf="pickFsec_case_break[i]" class="pagerBreak"></div>
+        <div *ngIf="i !== 0" class="pagerBreak"></div>
         <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
         <!--pickFsec_datasetからfxmaxなどを取り出す-->
         <div *ngFor="let dataset of pickFsec_dataset[i]; index as j">
-            <div *ngIf="pickFsec_type_break[j]" class="pagerBreak space"></div>
-            <h3>{{ title }}</h3>
-            <h3>{{ dataset[0] }}</h3>
             <div *ngFor="let datas of dataset; index as k">
                 <!--fxmaxなどからcase[0]が名称のため飛ばす-->
                 <div *ngIf="k > 0">
                     <table class="print-sm">
                         <div *ngIf="dimension===3">
                             <thead>
+                                <tr>
+                                    <th colspan="9" style="text-align: left;">{{title}}</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="9" style="text-align: left;">{{ dataset[0] }}</th>
+                                </tr>
                                 <tr>
                                     <th>部材</th>
                                     <th>節点</th>
@@ -58,6 +61,12 @@
                         <div *ngIf="dimension===2">
                             <thead>
                                 <tr>
+                                    <th colspan="6" style="text-align: left;">{{title}}</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="6" style="text-align: left;">{{ dataset[0] }}</th>
+                                </tr>
+                                <tr>
                                     <th>部材</th>
                                     <th>節点</th>
                                     <th></th>
@@ -88,6 +97,8 @@
                             </tbody>
                         </div>
                     </table>
+                    <div *ngIf="((((j+1) % break_after) == 0) &&(j+1!== pickFsec_dataset[0].length)) "
+                    class="pagerBreak"></div>
                 </div>
             </div>
         </div>
