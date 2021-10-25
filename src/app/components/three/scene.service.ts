@@ -84,7 +84,7 @@ export class SceneService {
       this.GridHelper.visible = value;
       this.render();
     });
-    this.gui.add( this.params, 'ReDraw' );
+    // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
     this.gui.open();
   }
 

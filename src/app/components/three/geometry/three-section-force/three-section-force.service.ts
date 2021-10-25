@@ -168,15 +168,14 @@ export class ThreeSectionForceService {
         this.scene.render();
       })
     };
-    // if(this.helper.dimension === 2){
-      this.gui['textCount'] = this.scene.gui.add(this.params, 'textCount', 0, 100).step(10).onFinishChange((value) => {
-        // guiによる設定
-        this.textCount = value;
-        this.changeMesh();
-        this.onResize();
-        this.scene.render();
-      });
-    // }
+
+    // this.gui['textCount'] = this.scene.gui.add(this.params, 'textCount', 0, 100).step(10).onFinishChange((value) => {
+    //   // guiによる設定
+    //   this.textCount = value;
+    //   this.changeMesh();
+    //   this.onResize();
+    //   this.scene.render();
+    // });
     
     for (const key of this.radioButtons) {
       this.gui[key] = this.scene.gui.add(this.params, key, this.params[key]).listen().onChange((value) => {
@@ -238,7 +237,7 @@ export class ThreeSectionForceService {
     this.max_values['pik_fsec'] = max_values;
   }
 
-  private changeMesh(){
+  private async changeMesh(): Promise<void>{
 
     if(this.currentIndex === undefined){
       return;
@@ -279,7 +278,7 @@ export class ThreeSectionForceService {
       key2 = 'y';
     } else {
       this.params[this.currentRadio] = true;
-      this.changeMesh();
+      await this.changeMesh();
       return;
     }
 
@@ -385,7 +384,6 @@ export class ThreeSectionForceService {
     const targetList = Array.from(new Set(Upper));
 
     // 文字を追加する
-    let a1 = 0, a2 = 0; // 呼び出しと処理数が一致したら scene.render() する。
     for( let i = 0; i < ThreeObjects.length; i++){
       const ThreeObject = ThreeObjects[i];
       if(ThreeObject.visible === false){
@@ -401,14 +399,7 @@ export class ThreeSectionForceService {
         if(targetList.find(v=>v===mesh['P2'])!==undefined){
           f2 = true;
         }
-
-        a1++;
-        this.mesh.setText(mesh, f1, f2).finally(()=>{
-          a2++;
-          if(a1 === a2){ 
-            this.scene.render();
-          }
-        });
+        await this.mesh.setText(mesh, f1, f2);
       }
     }
 
@@ -416,11 +407,11 @@ export class ThreeSectionForceService {
 
   // データが変更された時に呼び出される
   // 変数 this.targetData に値をセットする
-  public changeData(index: number, ModeName: string): void {
+  public async changeData(index: number, ModeName: string): Promise<void> {
 
     this.currentIndex = index.toString();
     this.currentMode = ModeName;
-    this.changeMesh();
+    await this.changeMesh();
     this.onResize();
 
   }
