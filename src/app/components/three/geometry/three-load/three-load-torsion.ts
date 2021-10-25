@@ -360,7 +360,11 @@ export class ThreeLoadTorsion {
     const direction = group.direction;
     for(let i=0; i<2; i++){
       const key = 'P' + (i+1);
-      const textString: string = group[key].toFixed(2) + " kN･m";
+      const value = Math.round(group[key]*100) / 100;
+      if(value === 0){
+        continue;
+      }
+      const textString: string = value.toFixed(2) + " kN･m";
       const text = this.text.create(textString, pos[i], 0.1);
       const height = Math.abs(text.geometry.boundingBox.max.y - text.geometry.boundingBox.min.y);
       const width = Math.abs(text.geometry.boundingBox.max.x - text.geometry.boundingBox.min.x);

@@ -146,12 +146,14 @@ export class PrintService {
 
       this.printOption = this.printOption.filter((element, index, self) => 
                             self.findIndex(e => 
-                                           e.id === element.id 
+                                            e.id === element.id 
                                           ) === index
                             );
 
-      this.flg = Number(this.printOption[0].id);
-      this.selectedIndex = String(this.flg);
+      if(this.printOption.length > 0 && 'id' in this.printOption[0]){
+        this.flg = Number(this.printOption[0].id);
+        this.selectedIndex = String(this.flg);
+      } 
     }, 50);
   }
 }

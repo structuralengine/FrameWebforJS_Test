@@ -61,49 +61,28 @@ export class PrintCustomFsecComponent implements OnInit {
 
   constructor(
     private app: AppComponent,
-    private data: PrintCustomFsecService,
-    private member: InputMembersService,
-    private element: InputElementsService
-  ) {
-    // for (let i = 0; i < this.member.member.length; i++) {
-    //   this.judgeArr.push(false);
-    // }
-    
-  }
+    private data: PrintCustomFsecService) {  }
 
   ngOnInit(): void {
     this.data.loadData();
   }
 
-  // // 指定行row 以降のデータを読み取る
-  // private loadData(): void {
-  //   for (let i = 1; i <= this.member.member.length; i++) {
-  //     const member = this.member.getMemberColumns(i);
-  //     const m: string = member["id"];
-  //     const e = member.e;
-  //     if (m !== "") {
-  //       const l: any = this.member.getMemberLength(m);
-  //       member["L"] = l != null ? l.toFixed(3) : l;
-  //       const name = this.element.getElementName(e);
-  //       member["n"] = name != null ? name : "";
-  //     }
-  //     this.data.dataset.push(member);
-  //   }
-  // }
-
+ 
   // 表の高さを計算する
   private tableHeight(): string {
-    const containerHeight = this.app.getDialogHeight();
+    const containerHeight = this.app.getDialogHeight() - 100;
     return containerHeight.toString();
   }
 
-  // グリッドの設定
+  // グリッドの設定this.flg = Number(this.printOption[0].id);
   options: pq.gridT.options = {
     showTop: false,
     reactive: true,
     sortable: false,
     locale: "jp",
     height: this.tableHeight(),
+    rowBorders: true,
+    columnBorders: false,
     numberCell: {
       show: true, // 行番号
       width: 45,
@@ -127,56 +106,7 @@ export class PrintCustomFsecComponent implements OnInit {
     colModel: this.columnHeaders,
     dataModel: {
       data: this.data.dataset,
-    },
-    // beforeTableView: (evt, ui) => {
-    //   const finalV = ui.finalV;
-    //   const dataV = this.data.dataset.length;
-    //   if (ui.initV == null) {
-    //     return;
-    //   }
-    //   if (finalV >= dataV - 1) {
-    //     this.loadData(dataV + this.ROWS_COUNT);
-    //     this.grid.refreshDataAndView();
-    //   }
-    // },
-    // selectEnd: (evt, ui) => {
-    //   const range = ui.selection.iCells.ranges;
-    //   const row = range[0].r1 + 1;
-    //   const column = range[0].c1;
-    // },
-    // change: (evt, ui) => {
-    //   const changes = ui.updateList;
-    //   for (const target of changes) {
-    //     const row: number = target.rowIndx;
-    //     const exist = target.rowData.L;
-    //     if (exist === "") {
-    //       continue;
-    //     }
-    //     //const new_value = target.rowData;
-    //     // const printBool: {} = this.data.dataset[row];
-    //     // const pri: string = printBool["check"];
-    //     // if (printBool === "") {
-    //     //   continue;
-    //     // }
-    //     // this.data.printJudge(row, pri);
-    //     // const l: number = this.data.getMemberLength(m);
-    //     // const column = this.dataset[row];
-    //     // if (l != null) {
-    //     //   column["L"] = l.toFixed(3);
-    //     //   // this.grid.refreshDataAndView();
-    //     // } else {
-    //     //   column["L"] = null;
-    //     // }
-    //     // const n: string =
-    //     //   target.rowData.e === undefined
-    //     //     ? ""
-    //     //     : this.element.getElementName(target.rowData.e);
-    //     // if (n != null) {
-    //     //   this.dataset[row]["n"] = n;
-    //     //   this.grid.refreshDataAndView();
-    //     // }
-    //   }
-    // },
+    }
   };
 
   width = 1000;
