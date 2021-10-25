@@ -18,6 +18,7 @@ import { ThreeSectionForceService } from "./geometry/three-section-force/three-s
 import { ThreeReactService } from "./geometry/three-react.service";
 import html2canvas from "html2canvas";
 import { PrintService } from "../print/print.service";
+import { PrintCustomThreeService } from "../print/custom/print-custom-three/print-custom-three.service";
 
 @Injectable({
   providedIn: "root",
@@ -42,7 +43,8 @@ export class ThreeService {
     private helper: DataHelperModule,
     private printService: PrintService,
     private InputData: InputDataService,
-    private secForce:ThreeSectionForceService,
+    private secForce: ThreeSectionForceService,
+    private customThree: PrintCustomThreeService
   ) {}
 
   //////////////////////////////////////////////////////
@@ -70,20 +72,17 @@ export class ThreeService {
     this.scene.render();
   }
 
-
   //////////////////////////////////////////////////////
   // データの変更通知を処理する
   public changeData(mode: string = "", index: number = 0): void {
     switch (mode) {
       case "nodes":
-        this.load.changeNode(
-          this.node.changeData());
+        this.load.changeNode(this.node.changeData());
         this.member.changeData();
         break;
 
       case "members":
-        this.load.changeMember(
-          this.member.changeData());
+        this.load.changeMember(this.member.changeData());
         break;
 
       case "elements":
@@ -137,11 +136,11 @@ export class ThreeService {
       case "nodes":
         this.node.selectChange(index);
         break;
-      
+
       case "members":
         this.member.selectChange(index);
         break;
-      
+
       case "elements":
         this.member.selectChange(index, mode);
         break;
@@ -163,9 +162,9 @@ export class ThreeService {
         break;
 
       case "load_names":
-        this.load.selectChange(-1, index_sub);// 選択を解除する
+        this.load.selectChange(-1, index_sub); // 選択を解除する
         break;
-  
+
       case "load_values":
         this.load.selectChange(index, index_sub);
         break;
@@ -219,12 +218,12 @@ export class ThreeService {
         break;
 
       case "load_names":
-        if('fixMemberPage' in option)
-          this.fixMember.changeData(option['fixMemberPage']);
-        if('fixNodePage' in option)
-          this.fixNode.changeData( option['fixNodePage']);
+        if ("fixMemberPage" in option)
+          this.fixMember.changeData(option["fixMemberPage"]);
+        if ("fixNodePage" in option)
+          this.fixNode.changeData(option["fixNodePage"]);
         this.load.changeCase(currentPage);
-        break; 
+        break;
 
       case "load_values":
         this.load.changeCase(currentPage);
@@ -277,7 +276,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "members" || ModeName === "elements") {
@@ -290,7 +289,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "notice_points") {
@@ -303,7 +302,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "joints") {
@@ -316,7 +315,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "panel") {
@@ -329,7 +328,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "fix_nodes") {
@@ -342,7 +341,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "fix_member") {
@@ -355,12 +354,11 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     // 荷重図
     if (ModeName === "load_names" || ModeName === "load_values") {
-
       // 荷重図の変更部分を書き直す
       this.load.reDrawNodeMember();
 
@@ -373,7 +371,7 @@ export class ThreeService {
         this.panel.visibleChange(true, 0.3);
         this.load.visibleChange(true, false);
       }
-  
+
       if (ModeName === "load_values") {
         this.node.visibleChange(true, true, false);
         this.member.visibleChange(true, true, false);
@@ -385,9 +383,8 @@ export class ThreeService {
       }
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
-
 
     if (ModeName === "disg") {
       this.node.visibleChange(true, true, false);
@@ -399,7 +396,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(true);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "comb_disg" || ModeName === "pik_disg") {
@@ -413,7 +410,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "reac") {
@@ -426,7 +423,7 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(true);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
     if (ModeName === "comb_reac" || ModeName === "pik_reac") {
@@ -440,12 +437,14 @@ export class ThreeService {
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
-      this.fsec.visibleChange('');
+      this.fsec.visibleChange("");
     }
 
-    if (ModeName === "fsec" ||
-        ModeName === "comb_fsec" ||
-        ModeName === "pik_fsec") {
+    if (
+      ModeName === "fsec" ||
+      ModeName === "comb_fsec" ||
+      ModeName === "pik_fsec"
+    ) {
       this.node.visibleChange(true, false, false);
       this.member.visibleChange(true, true, false);
       this.fixNode.visibleChange(false);
@@ -529,57 +528,92 @@ export class ThreeService {
       const result = [];
       const captureInfo = this.getCaptureCase();
       const captureCase: string[] = captureInfo.captureCase;
+
       const title1: string = captureInfo.title1;
       const title2: string = captureInfo.title2;
       const title3: string[] = captureInfo.title3;
 
-      if(captureCase.length===0){
-        html2canvas(this.canvasElement).then(canvas => {
+      if (captureCase.length === 0) {
+        html2canvas(this.canvasElement).then((canvas) => {
           result.push({
             title: title2,
-            src: canvas.toDataURL()
+            src: canvas.toDataURL(),
           });
-          resolve({result, title1});
+          resolve({ result, title1 });
         });
+      } else if (this.mode === "fsec") {
+        let counter = 0;
+        const title4: string[] = captureInfo.title4;
+        for (let i = 0; i < captureCase.length; i++) {
+          for (let j = 0; j < this.customThree.contentEditable2.length; j++) {
+            const key = captureCase[i];
+            if (this.customThree.contentEditable2[j] === true) {
+              // const captureFescTypeName: string[] = ;
+              const loadType = title4[j];
+              const number: number = this.helper.toNumber(key);
+              if (number === null) {
+                continue;
+              }
+              this.ChangePage(number);
+
+              this.secForce.changeRadioButtons(j);
+              //   // }
+
+              //   // ここで three-section-force.service の
+              //   // this.radioButtons を変更して
+              //   //         this.changeMesh();
+              //   //         this.onResize();
+              //   //         this.scene.render();
+              //   // 以上で表示切りkwる
+              // }
+
+              // title3 に タイトルがあれば使う
+              let name = key;
+              if (title3.length > i) {
+                name = title3[i];
+              }
+
+              html2canvas(this.canvasElement).then((canvas) => {
+                result.push({
+                  title: title2 + name,
+                  type: loadType,
+                  src: canvas.toDataURL(),
+                });
+                counter++;
+
+                if (counter === captureCase.length) {
+                  resolve({ result, title1 });
+                }
+              });
+            }
+          }
+        }
       } else {
         let counter = 0;
-        for( let i = 0; i < captureCase.length; i++){
+        for (let i = 0; i < captureCase.length; i++) {
           const key = captureCase[i];
 
           const number: number = this.helper.toNumber(key);
-          if(number===null){
+          if (number === null) {
             continue;
           }
           this.ChangePage(number);
 
-          if(this.mode === "13"){
-            // for(){
-            this.secForce.changeRadioButtons("1")
-            // }
-          }
-
-          // ここで three-section-force.service の
-          // this.radioButtons を変更して
-          //         this.changeMesh();
-          //         this.onResize();
-          //         this.scene.render();
-          // 以上で表示切りkwる
-
           // title3 に タイトルがあれば使う
           let name = key;
-          if(title3.length > i){
+          if (title3.length > i) {
             name = title3[i];
           }
 
-          html2canvas(this.canvasElement).then(canvas => {
+          html2canvas(this.canvasElement).then((canvas) => {
             result.push({
               title: title2 + name,
-              src: canvas.toDataURL()
+              src: canvas.toDataURL(),
             });
             counter++;
-  
-            if(counter === captureCase.length){
-              resolve({result, title1});
+
+            if (counter === captureCase.length) {
+              resolve({ result, title1 });
             }
           });
         }
@@ -587,110 +621,108 @@ export class ThreeService {
     });
   }
   // 印刷するケース数を返す
-  private getCaptureCase(): any{
-
+  private getCaptureCase(): any {
     let result: string[] = new Array();
-    let title1: string = '';
-    let title2: string = '';
+    let title1: string = "";
+    let title2: string = "";
     let title3: string[] = new Array();
+    let title4: string[] = new Array();
 
     switch (this.mode) {
-
       case "fix_member":
-        if('fix_member' in this.printService.inputJson){
+        if ("fix_member" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.fix_member);
         }
-        title1 = '部材バネ';
-        title2 = 'TYPE';
+        title1 = "部材バネ";
+        title2 = "TYPE";
         break;
 
       case "fix_nodes":
-        if('fix_node' in this.printService.inputJson){
+        if ("fix_node" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.fix_node);
         }
-        title1 = '支点';
-        title2 = 'TYPE';
+        title1 = "支点";
+        title2 = "TYPE";
         break;
 
       case "joints":
-        if('joint' in this.printService.inputJson){
+        if ("joint" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.joint);
         }
-        title1 = '結合';
-        title2 = 'TYPE';
+        title1 = "結合";
+        title2 = "TYPE";
         break;
-
 
       case "load_values":
       case "load_names":
-
-        if('load' in this.printService.inputJson){
+        if ("load" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.load);
           title3 = this.getLoadTitle();
         }
-        title1 = '荷重';
-        title2 = 'Case';
+        title1 = "荷重";
+        title2 = "Case";
         break;
       case "disg":
-        if('load' in this.printService.inputJson){
+        if ("load" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.load);
           title3 = this.getLoadTitle();
         }
-        title1 = '変位';
-        title2 = 'Case';
+        title1 = "変位";
+        title2 = "Case";
         break;
       case "fsec":
-        if('load' in this.printService.inputJson){
+        if ("load" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.load);
           title3 = this.getLoadTitle();
         }
-        title1 = '断面力';
-        title2 = 'Case';
+        title1 = "断面力";
+        title2 = "Case";
+        title4 = this.printService.fescIndex;
         break;
       case "reac":
-        if('load' in this.printService.inputJson){
+        if ("load" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.load);
           title3 = this.getLoadTitle();
         }
-        title1 = '反力';
-        title2 = 'Case';
+        title1 = "反力";
+        title2 = "Case";
         break;
 
       case "comb_disg":
         result = Object.keys(this.printService.combineJson);
-        title1 = '組み合わせ 変位量';
-        title2 = 'Comb';
+        title1 = "組み合わせ 変位量";
+        title2 = "Comb";
         title3 = this.getCombTitle();
         break;
       case "comb_fsec":
         result = Object.keys(this.printService.combineJson);
-        title1 = '組み合わせ 断面力';
-        title2 = 'Comb';
+        title1 = "組み合わせ 断面力";
+        title2 = "Comb";
         title3 = this.getCombTitle();
         break;
       case "comb_reac":
         result = Object.keys(this.printService.combineJson);
-        title1 = '組み合わせ 反力';
-        title2 = 'Comb';
+        title1 = "組み合わせ 反力";
+        title2 = "Comb";
         title3 = this.getCombTitle();
         break;
 
       case "pik_disg":
         result = Object.keys(this.printService.pickupJson);
-        title1 = 'ピックアップ 変位量';
-        title2 = 'PickUp';
+        title1 = "ピックアップ 変位量";
+        title2 = "PickUp";
         title3 = this.getPickupTitle();
         break;
       case "pik_fsec":
         result = Object.keys(this.printService.pickupJson);
-        title1 = 'ピックアップ 断面力';
-        title2 = 'PickUp';
+        title1 = "ピックアップ 断面力";
+        title2 = "PickUp";
         title3 = this.getPickupTitle();
         break;
       case "pik_reac":
         result = Object.keys(this.printService.pickupJson);
-        title1 = 'ピックアップ 反力';
-        title2 = 'PickUp';
+        title1 = "ピックアップ 反力";
+        title2 = "PickUp";
         title3 = this.getPickupTitle();
         break;
 
@@ -705,56 +737,48 @@ export class ThreeService {
       title1,
       title2,
       title3,
-      captureCase: result
+      title4,
+      captureCase: result,
     };
   }
 
-  private getLoadTitle(): string[]{
-
+  private getLoadTitle(): string[] {
     const title3: string[] = new Array();
 
     const load = this.printService.inputJson.load;
-    for( const key of Object.keys(load)){
+    for (const key of Object.keys(load)) {
       const current = load[key];
       let str: string = key;
-      if(current.symbol.trim().length > 0)
-        str += ' ' + current.symbol;
-      if(current.name.trim().length > 0)
-        str += ' ' + current.name;
+      if (current.symbol.trim().length > 0) str += " " + current.symbol;
+      if (current.name.trim().length > 0) str += " " + current.name;
       title3.push(str);
     }
     return title3;
   }
 
-  private getCombTitle(): string[]{
-
+  private getCombTitle(): string[] {
     const title3: string[] = new Array();
 
     const comb = this.InputData.combine.getCombineJson();
-    for( const key of Object.keys(this.printService.combineJson)){
+    for (const key of Object.keys(this.printService.combineJson)) {
       const current = comb[key];
       let str: string = key;
-      if(current.name.trim().length > 0)
-        str += ' ' + current.name;
+      if (current.name.trim().length > 0) str += " " + current.name;
       title3.push(str);
     }
     return title3;
   }
 
-  private getPickupTitle(): string[]{
-
+  private getPickupTitle(): string[] {
     const title3: string[] = new Array();
 
     const pik = this.InputData.pickup.getPickUpJson();
-    for( const key of Object.keys(this.printService.pickupJson)){
+    for (const key of Object.keys(this.printService.pickupJson)) {
       const current = pik[key];
       let str: string = key;
-      if(current.name.trim().length > 0)
-        str += ' ' + current.name;
+      if (current.name.trim().length > 0) str += " " + current.name;
       title3.push(str);
     }
     return title3;
   }
-
-
 }

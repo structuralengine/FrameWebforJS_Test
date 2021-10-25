@@ -2,5 +2,6 @@
 <ng-container *ngFor="let item of print_target ;index as i">
     <div *ngIf="item.judge" class="pagerBreak"></div>
     <h3>{{item.title}}</h3>
-    <img class="fit-picture" src={{item.src}} height="400">
+    <h3>{{item.type}}</h3>
+    <img class="fit-picture" src={{item.src}} height="340">
 </ng-container>
