@@ -97,10 +97,11 @@
                             </tbody>
                         </div>
                     </table>
-                   <div *ngIf="(((j+1) % break_after) == 0) " 
-                    class="pagerBreak"></div>
-                    <!-- <div *ngIf="((((j+1) % break_after) == 0) &&((j+1!== pickFsec_dataset[0].length)&&(i+1!== pickFsec_title.length))) "
-                    class="pagerBreak"></div> -->
+                    <div *ngIf="j+1 == pickFsec_dataset[0].length && i+1 == pickFsec_dataset.length;then pagerBl ;else pagerBr">
+                    </div>
+                    <ng-template #pagerBr>
+                        <div *ngIf="(((j+1) % break_after) == 0)" class="pagerBreak"></div>
+                    </ng-template>
                 </div>
             </div>
         </div>
