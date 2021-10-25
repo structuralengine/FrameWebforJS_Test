@@ -10,7 +10,11 @@ import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-cus
 @Component({
   selector: "app-print-result-pickup-fsec",
   templateUrl: "./print-result-pickup-fsec.component.html",
-  styleUrls: ["./print-result-pickup-fsec.component.scss", "../../../../app.component.scss", "../invoice.component.scss",],
+  styleUrls: [
+    "./print-result-pickup-fsec.component.scss",
+    "../../../../app.component.scss",
+    "../invoice.component.scss",
+  ],
 })
 export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
   isEnable = true;
@@ -36,6 +40,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
   private splen = 5;
   public break_after: number;
+  public pagerBl;
+  public pagerBr;
 
   constructor(
     private InputData: InputDataService,
@@ -58,7 +64,6 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-
     const resultjson: any = this.ResultData.pickfsec.fsecPickup;
     const keys: string[] = Object.keys(resultjson);
     if (keys.length > 0) {
@@ -73,7 +78,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   private printPickForce(json, jud): any {
     const titleSum: any = [];
@@ -179,7 +184,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
     if (splid.length > 0) {
       const splidlength = -(splid[0][0][1].length / this.splen);
-      this.break_after = (Math.floor(splidlength + 5) > 0) ? Math.floor(splidlength + 5) : 1;
+      this.break_after =
+        Math.floor(splidlength + 5) > 0 ? Math.floor(splidlength + 5) : 1;
     }
 
     this.flg = false;

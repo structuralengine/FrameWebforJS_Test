@@ -25,6 +25,11 @@ $height_content: 16px;
     page-break-after: always;
 }
 
+.pagerBreakB {
+    size: A4;
+    page-break-before: always;
+}
+
 .show {
     display: none;
 }
@@ -56,15 +61,13 @@ $height_content: 16px;
         font-size: 16px;
         margin-bottom: 16px;
         thead {
-         display: table-header-group;
-        //     // break-after: avoid;
-        //     // tr { page-break-inside: avoid; }
+            display: table-header-group;
+            //     // break-after: avoid;
+            //     // tr { page-break-inside: avoid; }
         }
-
-        tbody{
+        tbody {
             margin-bottom: 32px;
         }
-      
         // tr { page-break-inside: auto; }
         // page-break-after: auto;
         th {
@@ -84,7 +87,6 @@ $height_content: 16px;
             // page-break-inside: avoid;
             //page-break-after:auto;
         }
-
         //印刷結果表示のtableのpadding
         &.print-sm {
             th,
@@ -111,7 +113,6 @@ $height_content: 16px;
                 padding: 4px 20px;
             }
         }
-
         //荷重名称が長い場合の改行指定
         td {
             &.word {
@@ -121,7 +122,6 @@ $height_content: 16px;
                 text-align: left;
             }
         }
-
         th,
         td {
             &.y1 {
