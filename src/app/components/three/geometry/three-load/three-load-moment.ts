@@ -76,6 +76,9 @@ export class ThreeLoadMoment {
         arrow_mat = this.arrow_mat_Blue;
         line_mat = this.line_mat_Blue;
       }
+    } else {
+      arrow_mat = new THREE.MeshBasicMaterial({ color });
+      line_mat = new THREE.LineBasicMaterial({ color });
     }
 
     const child = new THREE.Group();
