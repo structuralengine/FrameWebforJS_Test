@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AfterViewInit } from "@angular/core";
 import { DataCountService } from "../dataCount.service";
 import { PrintService } from "../../print.service";
+import { InputDefineService } from "src/app/components/input/input-define/input-define.service";
 
 @Component({
   selector: "app-print-input-define",
@@ -31,7 +32,8 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
 
   constructor(
     private printService: PrintService,
-    private countArea: DataCountService
+    private countArea: DataCountService,
+    private define: InputDefineService
   ) {
     this.judge = false;
     this.clear();
@@ -42,7 +44,7 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    const defineJson: any = this.printService.defineJson;
+    const defineJson: any = this.define.getDefineJson();
     if (Object.keys(defineJson).length > 0) {
       const tables = this.printDefine(defineJson);
       this.define_dataset = tables.splid;

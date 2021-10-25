@@ -1,32 +1,31 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-import { InputCombineService } from '../components/input/input-combine/input-combine.service';
-import { InputDefineService } from '../components/input/input-define/input-define.service';
-import { InputLoadService } from '../components/input/input-load/input-load.service';
-import { InputPickupService } from '../components/input/input-pickup/input-pickup.service';
+import { InputCombineService } from "../components/input/input-combine/input-combine.service";
+import { InputDefineService } from "../components/input/input-define/input-define.service";
+import { InputLoadService } from "../components/input/input-load/input-load.service";
+import { InputPickupService } from "../components/input/input-pickup/input-pickup.service";
 
-import { ResultDisgService } from '../components/result/result-disg/result-disg.service';
-import { ResultReacService } from '../components/result/result-reac/result-reac.service';
-import { ResultFsecService } from '../components/result/result-fsec/result-fsec.service';
-import { ResultCombineDisgService } from '../components/result/result-combine-disg/result-combine-disg.service';
-import { ResultCombineReacService } from '../components/result/result-combine-reac/result-combine-reac.service';
-import { ResultCombineFsecService } from '../components/result/result-combine-fsec/result-combine-fsec.service';
-import { ResultPickupDisgService } from '../components/result/result-pickup-disg/result-pickup-disg.service';
-import { ResultPickupReacService } from '../components/result/result-pickup-reac/result-pickup-reac.service';
-import { ResultPickupFsecService } from '../components/result/result-pickup-fsec/result-pickup-fsec.service';
+import { ResultDisgService } from "../components/result/result-disg/result-disg.service";
+import { ResultReacService } from "../components/result/result-reac/result-reac.service";
+import { ResultFsecService } from "../components/result/result-fsec/result-fsec.service";
+import { ResultCombineDisgService } from "../components/result/result-combine-disg/result-combine-disg.service";
+import { ResultCombineReacService } from "../components/result/result-combine-reac/result-combine-reac.service";
+import { ResultCombineFsecService } from "../components/result/result-combine-fsec/result-combine-fsec.service";
+import { ResultPickupDisgService } from "../components/result/result-pickup-disg/result-pickup-disg.service";
+import { ResultPickupReacService } from "../components/result/result-pickup-reac/result-pickup-reac.service";
+import { ResultPickupFsecService } from "../components/result/result-pickup-fsec/result-pickup-fsec.service";
 
-import { ThreeSectionForceService } from '../components/three/geometry/three-section-force/three-section-force.service';
-import { ThreeReactService } from '../components/three/geometry/three-react.service';
-import { ThreeDisplacementService } from '../components/three/geometry/three-displacement.service';
+import { ThreeSectionForceService } from "../components/three/geometry/three-section-force/three-section-force.service";
+import { ThreeReactService } from "../components/three/geometry/three-react.service";
+import { ThreeDisplacementService } from "../components/three/geometry/three-displacement.service";
 
-import { DataHelperModule } from './data-helper.module';
-import { InputDataService } from './input-data.service';
+import { DataHelperModule } from "./data-helper.module";
+import { InputDataService } from "./input-data.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ResultDataService {
-
   public isCalculated: boolean;
 
   private defList: any = null;
@@ -54,14 +53,15 @@ export class ResultDataService {
     private three_reac: ThreeReactService,
     private three_disg: ThreeDisplacementService,
 
-    private helper: DataHelperModule) {
+    private helper: DataHelperModule
+  ) {
     this.clear();
   }
 
   // データをクリアする ///////////////////////////////////////////////////////////////
   public clear(): void {
     this.isCalculated = false;
-    
+
     this.disg.clear();
     this.reac.clear();
     this.fsec.clear();
@@ -78,10 +78,8 @@ export class ResultDataService {
     this.three_disg.ClearData();
   }
 
-
   // 計算結果を読み込む
   public loadResultData(jsonData: object): void {
-
     // 組み合わせケースを集計する
     this.setCombinePickup();
 
@@ -91,9 +89,7 @@ export class ResultDataService {
     this.fsec.setFsecJson(jsonData, this.defList, this.combList, this.pickList);
   }
 
-
   private setCombinePickup(): void {
-
     const load = this.load.getLoadNameJson(1);
     const define = this.define.getDefineJson();
     const combine = this.combine.getCombineJson();
@@ -107,7 +103,7 @@ export class ResultDataService {
         const d: object = define[defNo];
         const defines = new Array();
         for (const dKey of Object.keys(d)) {
-          if( dKey === 'row'){
+          if (dKey === "row") {
             continue;
           }
           defines.push(d[dKey]);
@@ -118,7 +114,7 @@ export class ResultDataService {
       // define データがない時は基本ケース＝defineケースとなる
       for (const caseNo of Object.keys(load)) {
         const n: number = this.helper.toNumber(caseNo);
-        this.defList[caseNo] = (n === null) ? [] : [n];
+        this.defList[caseNo] = n === null ? [] : [n];
       }
     }
 
@@ -128,19 +124,19 @@ export class ResultDataService {
       const c: object = combine[combNo];
       const defines = new Array();
       for (const cKey of Object.keys(c)) {
-        if( cKey === 'row'){
+        if (cKey === "row") {
           continue;
         }
-        const caseNo: string = cKey.replace('C', '').replace('D', '');
+        const caseNo: string = cKey.replace("C", "").replace("D", "");
         const coef: number = this.helper.toNumber(c[cKey]);
         if (!(caseNo in this.defList) || coef === null) {
           continue; // なければ飛ばす
         }
-        if('C'+caseNo === cKey || 'D'+caseNo === cKey ){
-          defines.push({caseNo, coef});
+        if ("C" + caseNo === cKey || "D" + caseNo === cKey) {
+          defines.push({ caseNo, coef });
         }
       }
-      if(defines.length > 0 ){
+      if (defines.length > 0) {
         this.combList[combNo] = defines;
       }
     }
@@ -151,45 +147,42 @@ export class ResultDataService {
       const p: object = pickup[pickNo];
       const combines = new Array();
       for (const pKey of Object.keys(p)) {
-        const caseNo: string = pKey.replace('C', '').replace('D', '');
+        const caseNo: string = pKey.replace("C", "").replace("D", "");
         const comNo: number = this.helper.toNumber(p[pKey]);
-        if (!(caseNo in this.combList)|| comNo === null) {
+        if (!(caseNo in this.combList) || comNo === null) {
           continue; // なければ飛ばす
         }
-        if('C'+caseNo === pKey || 'D'+caseNo === pKey ){
+        if ("C" + caseNo === pKey || "D" + caseNo === pKey) {
           combines.push(comNo);
         }
       }
-      if(combines.length > 0 ){
+      if (combines.length > 0) {
         this.pickList[pickNo] = combines;
       }
     }
-
   }
 
   // ピックアップファイル出力
   public GetPicUpText(): string {
-
     const p = this.pickfsec.fsecPickup;
 
-    let result: string = 'PickUpNo,着目断面力,部材No,最大CaseNo,最小CaseNo,着目点,着目点距離';
-    result += ',最大Fx,最大Fy,最大Fz,最大Mx,最大My,最大Mz';
-    result += ',最小Fx,最小Fy,最小Fz,最小Mx,最小My,最小Mz';
-    result += '\n';
+    let result: string =
+      "PickUpNo,着目断面力,部材No,最大CaseNo,最小CaseNo,着目点,着目点距離";
+    result += ",最大Fx,最大Fy,最大Fz,最大Mx,最大My,最大Mz";
+    result += ",最小Fx,最小Fy,最小Fz,最小Mx,最小My,最小Mz";
+    result += "\n";
 
     for (let No = 1; No <= Object.keys(p).length; No++) {
-
       const c = p[No.toString()];
-      const rows: number = Object.keys(c['fx_max']).length;
+      const rows: number = Object.keys(c["fx_max"]).length;
 
-      for (const symbol of ['fx', 'fy', 'fz', 'mx', 'my', 'mz']) {
-
-        const maxList = c[symbol + '_max'];
-        const minList = c[symbol + '_min'];
+      for (const symbol of ["fx", "fy", "fz", "mx", "my", "mz"]) {
+        const maxList = c[symbol + "_max"];
+        const minList = c[symbol + "_min"];
 
         let mNo: string;
         let point_counter: number = 0;
-        let point_name: string = '';
+        let point_name: string = "";
 
         for (let row = 0; row < rows; row++) {
           // const r: string = row.toString();
@@ -210,10 +203,10 @@ export class ResultDataService {
           // 着目点名を設定する
           const nn: number = this.helper.toNumber(maxFsec.n);
           if (nn != null) {
-            if ( point_counter === 0 ) {
+            if (point_counter === 0) {
               point_name = "ITAN";
               point_counter += 1;
-            }else {
+            } else {
               point_name = "JTAN";
               point_counter = 0;
             }
@@ -222,50 +215,49 @@ export class ResultDataService {
             point_counter += 1;
           }
 
-
           result += No.toString();
-          result += ',';
+          result += ",";
           result += symbol;
-          result += ',';
+          result += ",";
           result += mNo;
-          result += ',';
+          result += ",";
           result += maxFsec.comb;
-          result += ',';
+          result += ",";
           result += minFsec.comb;
-          result += ',';
+          result += ",";
           result += point_name;
-          result += ',';
+          result += ",";
           result += maxFsec.l;
-          result += ',';
+          result += ",";
 
           result += maxFsec.fx;
-          result += ',';
+          result += ",";
           result += maxFsec.fy;
-          result += ',';
+          result += ",";
           result += maxFsec.fz;
-          result += ',';
+          result += ",";
 
           result += maxFsec.mx;
-          result += ',';
+          result += ",";
           result += maxFsec.my;
-          result += ',';
+          result += ",";
           result += maxFsec.mz;
-          result += ',';
+          result += ",";
 
           result += minFsec.fx;
-          result += ',';
+          result += ",";
           result += minFsec.fy;
-          result += ',';
+          result += ",";
           result += minFsec.fz;
-          result += ',';
+          result += ",";
 
           result += minFsec.mx;
-          result += ',';
+          result += ",";
           result += minFsec.my;
-          result += ',';
+          result += ",";
           result += minFsec.mz;
 
-          result += '\n';
+          result += "\n";
         }
       }
     }
@@ -275,34 +267,32 @@ export class ResultDataService {
 
   // ピックアップファイル出力
   public GetPicUpText2D(): string {
-
     const p = this.pickfsec.fsecPickup;
 
-    let result: string = 'PickUpNo,着目力,部材No,最大CaseNo,最小CaseNo,着目点,着目点距離';
-    result += ',最大Md,最大Vd,最大Nd';
-    result += ',最小Md,最小Vd,最小Nd';
-    result += '\n';
+    let result: string =
+      "PickUpNo,着目力,部材No,最大CaseNo,最小CaseNo,着目点,着目点距離";
+    result += ",最大Md,最大Vd,最大Nd";
+    result += ",最小Md,最小Vd,最小Nd";
+    result += "\n";
 
     for (let No = 1; No <= Object.keys(p).length; No++) {
-
       const c = p[No.toString()];
-      const rows: number = Object.keys(c['fx_max']).length;
-      
-      const key = ['M', 'S', 'N'];
-      const symbol = ['mz', 'fy', 'fx'];
+      const rows: number = Object.keys(c["fx_max"]).length;
+
+      const key = ["M", "S", "N"];
+      const symbol = ["mz", "fy", "fx"];
 
       for (let i = 0; i < symbol.length; i++) {
-
-        const maxList = c[symbol[i] + '_max'];
-        const minList = c[symbol[i] + '_min'];
+        const maxList = c[symbol[i] + "_max"];
+        const minList = c[symbol[i] + "_min"];
 
         let mNo: string;
         let point_counter: number = 0;
-        let point_name: string = '';
+        let point_name: string = "";
 
         for (let row = 0; row < rows; row++) {
           const r: string = row.toString();
-          if ( !(r in maxList) ){
+          if (!(r in maxList)) {
             continue;
           }
           const maxFsec = maxList[row.toString()];
@@ -319,10 +309,10 @@ export class ResultDataService {
           // 着目点名を設定する
           const nn: number = this.helper.toNumber(maxFsec.n);
           if (nn != null) {
-            if ( point_counter === 0 ) {
+            if (point_counter === 0) {
               point_name = "ITAN";
               point_counter += 1;
-            }else {
+            } else {
               point_name = "JTAN";
               point_counter = 0;
             }
@@ -331,8 +321,7 @@ export class ResultDataService {
             point_counter += 1;
           }
 
-
-          result += this.spacePadding(No.toString(),5);
+          result += this.spacePadding(No.toString(), 5);
           result += this.spacePadding(key[i], 5);
           result += this.spacePadding(mNo, 5);
           result += this.spacePadding(maxFsec.comb, 5);
@@ -348,7 +337,7 @@ export class ResultDataService {
           result += this.spacePadding(minFsec.fy.toFixed(2), 10);
           result += this.spacePadding(minFsec.fx.toFixed(2), 10);
 
-          result += '\n';
+          result += "\n";
         }
       }
     }
@@ -356,32 +345,32 @@ export class ResultDataService {
     return result;
   }
 
-  private spacePadding(val, len){
-    for(var i = 0; i < len; i++){
-        val = " " + val;
+  private spacePadding(val, len) {
+    for (var i = 0; i < len; i++) {
+      val = " " + val;
     }
-    return val.slice((-1)*len);
+    return val.slice(-1 * len);
   }
 
-  public getPickUpJson(){
-    if(this.pickList == null){
-      return this.InputData.define.getDefineJson();
+  public getPickUpJson() {
+    if (this.pickList == null) {
+      // return this.InputData.define.getDefineJson();
+      return this.InputData.pickup.getPickUpJson();
     }
     return this.pickList;
   }
 
-  public getDefineJson(){
-    if(this.defList == null){
+  public getDefineJson() {
+    if (this.defList == null) {
       return this.InputData.define.getDefineJson();
     }
     return this.defList;
   }
 
-  public getCombineJson(){
-    if(this.combList == null){
+  public getCombineJson() {
+    if (this.combList == null) {
       return this.InputData.combine.getCombineJson();
     }
     return this.combList;
   }
-
 }
