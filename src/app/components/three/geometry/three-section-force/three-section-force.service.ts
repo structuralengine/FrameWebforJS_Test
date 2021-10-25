@@ -25,12 +25,12 @@ export class ThreeSectionForceService {
   private textCount: number; // 文字を出力する数
   private params: any; // GUIの表示制御
   private radioButtons3D = [
-    "軸方向力",
-    "y軸方向のせん断力",
-    "z軸方向のせん断力",
-    "ねじりモーメント",
-    "y軸回りの曲げモーメント",
-    "z軸回りの曲げモーメント",
+    "axialForce",
+    "shearForceY",
+    "shearForceZ",
+    "torsionalMoment",
+    "momentY",
+    "momentZ",
   ];
   private radioButtons2D = ["axialForce", "shearForceY", "momentZ"];
   private radioButtons = this.radioButtons3D || this.radioButtons2D;

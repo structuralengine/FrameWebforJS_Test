@@ -86,12 +86,21 @@ export class PrintService {
   ];
 
   public fescIndex = [
+    "axialForce",
+    "shearForceY",
+    "shearForceZ",
+    "torsionalMoment",
+    "momentY",
+    "momentZ",
+  ];
+
+  public fescIndexJa = [
     "軸方向力",
     "y軸方向のせん断力",
     "z軸方向のせん断力",
     "ねじりモーメント",
-    "y軸回りのモーメント",
-    "z軸周りのモーメント",
+    "y軸方向のモーメント",
+    "z軸方向のモーメント",
   ];
 
   public clear() {

@@ -11,7 +11,15 @@ h2 {
 
 h3 {
     // height: $height_semiHeader;
-    padding: 16px 0;
+    padding: 8px 0;
+    // line-height: 32px;
+    font-size: 16px;
+    font-family: "ＭＳ 明朝";
+}
+
+h4 {
+    // height: $height_semiHeader;
+    padding-bottom: 8px;
     // line-height: 32px;
     font-size: 16px;
     font-family: "ＭＳ 明朝";

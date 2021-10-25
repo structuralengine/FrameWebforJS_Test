@@ -544,19 +544,21 @@ export class ThreeService {
       } else if (this.mode === "fsec") {
         let counter = 0;
         const title4: string[] = captureInfo.title4;
+        const title5: string[] = captureInfo.title5;
         for (let i = 0; i < captureCase.length; i++) {
           for (let j = 0; j < this.customThree.contentEditable2.length; j++) {
             const key = captureCase[i];
             if (this.customThree.contentEditable2[j] === true) {
               // const captureFescTypeName: string[] = ;
               const loadType = title4[j];
+              const loadTypeJa = title5[j];
               const number: number = this.helper.toNumber(key);
               if (number === null) {
                 continue;
               }
               this.ChangePage(number);
 
-              this.secForce.changeRadioButtons(j);
+              this.secForce.changeRadioButtons(loadType);
               //   // }
 
               //   // ここで three-section-force.service の
@@ -576,7 +578,7 @@ export class ThreeService {
               html2canvas(this.canvasElement).then((canvas) => {
                 result.push({
                   title: title2 + name,
-                  type: loadType,
+                  type: loadTypeJa,
                   src: canvas.toDataURL(),
                 });
                 counter++;
@@ -627,6 +629,7 @@ export class ThreeService {
     let title2: string = "";
     let title3: string[] = new Array();
     let title4: string[] = new Array();
+    let title5: string[] = new Array();
 
     switch (this.mode) {
       case "fix_member":
@@ -673,11 +676,26 @@ export class ThreeService {
       case "fsec":
         if ("load" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.load);
+          let caseCount: number;
+          for (let i = 0; i < this.customThree.contentEditable2.length; i++) {
+            if (this.customThree.contentEditable2[i] === true) {
+              caseCount++;
+            }
+          }
+          for (
+            let i = Object.keys(this.printService.inputJson.load).length + 1;
+            i <=
+            Object.keys(this.printService.inputJson.load).length * caseCount;
+            i++
+          ) {
+            result.push(String(i));
+          }
           title3 = this.getLoadTitle();
         }
         title1 = "断面力";
         title2 = "Case";
         title4 = this.printService.fescIndex;
+        title5 = this.printService.fescIndexJa;
         break;
       case "reac":
         if ("load" in this.printService.inputJson) {
@@ -738,6 +756,7 @@ export class ThreeService {
       title2,
       title3,
       title4,
+      title5,
       captureCase: result,
     };
   }

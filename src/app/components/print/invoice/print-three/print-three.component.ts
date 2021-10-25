@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from "@angular/core";
+import { PrintCustomThreeService } from "../../custom/print-custom-three/print-custom-three.service";
 import { PrintService } from "../../print.service";
 
 @Component({
@@ -19,14 +20,17 @@ import { PrintService } from "../../print.service";
 export class PrintThreeComponent implements OnInit {
   public title1: string;
   public print_target: any[];
-  public three_break:any[];
+  public three_break: any[];
   // @ViewChild('img') img: ElementRef;
-  constructor(public printService: PrintService) {
-  }
+  constructor(
+    public printService: PrintService,
+    public customThree: PrintCustomThreeService
+  ) {}
 
   ngOnInit(): void {
     this.print_target = this.printService.print_target.result;
-    for (let i = 0; i < this.print_target.length; i++) {
+    let caseCount = this.customThree.contentEditable2.length;
+    for (let i = 0; i < this.print_target.length * caseCount; i++) {
       if (i === 0) {
         const target = this.print_target[0];
         target["judge"] = false;
