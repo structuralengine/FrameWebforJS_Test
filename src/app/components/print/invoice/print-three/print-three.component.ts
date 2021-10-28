@@ -14,7 +14,7 @@ import { PrintService } from "../../print.service";
   styleUrls: [
     "./print-three.component.scss",
     "../../../../app.component.scss",
-    // "../invoice.component.scss",
+    "../invoice.component.scss",
   ],
 })
 export class PrintThreeComponent implements OnInit {

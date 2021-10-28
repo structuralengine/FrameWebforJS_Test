@@ -559,15 +559,6 @@ export class ThreeService {
               this.ChangePage(number);
 
               this.secForce.changeRadioButtons(loadType);
-              //   // }
-
-              //   // ここで three-section-force.service の
-              //   // this.radioButtons を変更して
-              //   //         this.changeMesh();
-              //   //         this.onResize();
-              //   //         this.scene.render();
-              //   // 以上で表示切りkwる
-              // }
 
               // title3 に タイトルがあれば使う
               let name = key;
