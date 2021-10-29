@@ -10,6 +10,8 @@ import { PrintService } from "./print.service";
   styleUrls: ["./print.component.scss", "../../app.component.scss"],
 })
 export class PrintComponent implements OnInit {
+  public contentEditable2;
+
   constructor(
     public printService: PrintService,
     public ResultData: ResultDataService,

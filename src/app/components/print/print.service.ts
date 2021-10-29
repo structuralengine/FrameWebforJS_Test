@@ -85,7 +85,25 @@ export class PrintService {
     },
   ];
 
-  public clear(){
+  public fescIndex = [
+    "axialForce",
+    "shearForceY",
+    "shearForceZ",
+    "torsionalMoment",
+    "momentY",
+    "momentZ",
+  ];
+
+  public fescIndexJa = [
+    "軸方向力",
+    "y軸方向のせん断力",
+    "z軸方向のせん断力",
+    "ねじりモーメント",
+    "y軸方向のモーメント",
+    "z軸方向のモーメント",
+  ];
+
+  public clear() {
     this.contentEditable1 = [
       false, // 0-入力データ
       false, // 1-変位量
@@ -98,7 +116,7 @@ export class PrintService {
       false, // 7-断面力
       false, // 8-COMBINE 断面力
       false,
-      false
+      false,
     ];
   }
 
@@ -138,17 +156,19 @@ export class PrintService {
     this.flg = -1;
     setTimeout(() => {
       for (let i = 0; i < this.contentEditable1.length; i++) {
-        if (this.contentEditable1[i] === true && ( i == 7 || i === 8 || i === 9 || i === 10)) {
+        if (
+          this.contentEditable1[i] === true &&
+          (i == 7 || i === 8 || i === 9 || i === 10)
+        ) {
           this.printOption[n] = this.optionList[String(i)];
           n += 1;
         }
       }
 
-      this.printOption = this.printOption.filter((element, index, self) => 
-                            self.findIndex(e => 
-                                            e.id === element.id 
-                                          ) === index
-                            );
+      this.printOption = this.printOption.filter(
+        (element, index, self) =>
+          self.findIndex((e) => e.id === element.id) === index
+      );
 
       if(this.printOption.length > 0 && 'id' in this.printOption[0]){
         this.flg = Number(this.printOption[0].id);
