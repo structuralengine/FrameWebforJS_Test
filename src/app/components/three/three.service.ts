@@ -560,27 +560,27 @@ export class ThreeService {
               if (number === null) {
                 continue;
               }
-              this.ChangePage(number);
+              this.ChangePage(number).finally(() => {
+                this.secForce.changeRadioButtons(loadType);
 
-              this.secForce.changeRadioButtons(loadType);
-
-              // title3 に タイトルがあれば使う
-              let name = key;
-              if (title3.length > i) {
-                name = title3[i];
-              }
-
-              html2canvas(this.canvasElement).then((canvas) => {
-                result.push({
-                  title: title2 + name,
-                  type: loadTypeJa,
-                  src: canvas.toDataURL(),
-                });
-                counter++;
-
-                if (counter === captureCase.length * this.selectedNumber) {
-                  resolve({ result, title1 });
+                // title3 に タイトルがあれば使う
+                let name = key;
+                if (title3.length > i) {
+                  name = title3[i];
                 }
+
+                html2canvas(this.canvasElement).then((canvas) => {
+                  result.push({
+                    title: title2 + name,
+                    type: loadTypeJa,
+                    src: canvas.toDataURL(),
+                  });
+                  counter++;
+
+                  if (counter === captureCase.length * this.selectedNumber) {
+                    resolve({ result, title1 });
+                  }
+                });
               });
             }
           }
@@ -594,23 +594,23 @@ export class ThreeService {
           if (number === null) {
             continue;
           }
-          
-          this.ChangePage(number).finally(()=>{
+
+          this.ChangePage(number).finally(() => {
             // title3 に タイトルがあれば使う
             let name = key;
-            if(title3.length > i){
+            if (title3.length > i) {
               name = title3[i];
             }
 
-            html2canvas(this.canvasElement).then(canvas => {
+            html2canvas(this.canvasElement).then((canvas) => {
               result.push({
                 title: title2 + name,
-                src: canvas.toDataURL()
+                src: canvas.toDataURL(),
               });
               counter++;
-    
-              if(counter === captureCase.length){
-                resolve({result, title1});
+
+              if (counter === captureCase.length) {
+                resolve({ result, title1 });
               }
             });
           });
