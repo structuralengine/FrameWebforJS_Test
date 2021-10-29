@@ -1,4 +1,4 @@
-<div *ngIf="printService.flg == 7 || printService.flg == 8" class="print-custom">
+<!-- <div *ngIf="printService.flg == 7 || printService.flg == 8" class="print-custom">
     <form>
         <select [(ngModel)]="printService.selectedIndex" (change)="onSelectChange($event.target.value)" name="first">
       <option *ngFor="let item of printService.printOption" [value]="item.id" [selected]="1">
@@ -6,7 +6,7 @@
       </option>
     </select>
     </form>
-</div>
+</div> -->
 
 <div *ngIf="printService.flg == 7" class="print-custom-fsec">
     <app-print-custom-fsec>

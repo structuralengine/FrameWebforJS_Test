@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AfterViewInit } from "@angular/core";
 import { DataCountService } from "../dataCount.service";
 import { PrintService } from "../../print.service";
+import { InputCombineService } from "src/app/components/input/input-combine/input-combine.service";
 
 @Component({
   selector: "app-print-input-combine",
@@ -33,7 +34,8 @@ export class PrintInputCombineComponent implements OnInit, AfterViewInit {
 
   constructor(
     private printService: PrintService,
-    private countArea: DataCountService
+    private countArea: DataCountService,
+    private combine: InputCombineService
   ) {
     this.judge = false;
     this.clear();
@@ -47,8 +49,8 @@ export class PrintInputCombineComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.comb_tables = [];
+    const combineJson: any = this.combine.getCombineJson();
 
-    const combineJson: any = this.printService.combineJson;
     if (Object.keys(combineJson).length > 0) {
       const tables = this.printCombine(combineJson);
       this.comb_dataset = tables.splid;

@@ -194,7 +194,7 @@ export class ThreeService {
 
   //////////////////////////////////////////////////////
   // 編集ページの変更通知を処理する
-  public ChangePage(currentPage: number, option = {}): void {
+  public async ChangePage(currentPage: number, option = {}): Promise<void> {
     if (this.currentIndex === currentPage) {
       return;
     }
@@ -252,7 +252,7 @@ export class ThreeService {
       case "fsec":
       case "comb_fsec":
       case "pik_fsec":
-        this.fsec.changeData(currentPage, this.mode);
+        await this.fsec.changeData(currentPage, this.mode);
         break;
     }
     this.currentIndex = currentPage;
@@ -594,24 +594,25 @@ export class ThreeService {
           if (number === null) {
             continue;
           }
-          this.ChangePage(number);
-
-          // title3 に タイトルがあれば使う
-          let name = key;
-          if (title3.length > i) {
-            name = title3[i];
-          }
-
-          html2canvas(this.canvasElement).then((canvas) => {
-            result.push({
-              title: title2 + name,
-              src: canvas.toDataURL(),
-            });
-            counter++;
-
-            if (counter === captureCase.length) {
-              resolve({ result, title1 });
+          
+          this.ChangePage(number).finally(()=>{
+            // title3 に タイトルがあれば使う
+            let name = key;
+            if(title3.length > i){
+              name = title3[i];
             }
+
+            html2canvas(this.canvasElement).then(canvas => {
+              result.push({
+                title: title2 + name,
+                src: canvas.toDataURL()
+              });
+              counter++;
+    
+              if(counter === captureCase.length){
+                resolve({result, title1});
+              }
+            });
           });
         }
       }

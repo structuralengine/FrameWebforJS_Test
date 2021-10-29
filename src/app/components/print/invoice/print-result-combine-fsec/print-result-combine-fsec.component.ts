@@ -36,6 +36,8 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
 
   private splen = 5;
   public break_after: number;
+  public pagerBl;
+  public pagerBr;
 
   constructor(
     private InputData: InputDataService,
@@ -73,7 +75,7 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   // 変位量データを印刷する
   private printCombForce(json, jud): any {
@@ -119,7 +121,9 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
         const key = KEYS[i];
         const title2 = TITLES[i];
         const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if (!(key in elieli)) { continue; }
+        if (!(key in elieli)) {
+          continue;
+        }
 
         typeName.push(title2);
 
@@ -151,7 +155,6 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
 
             body.push(line);
             this.row++;
-
           }
         }
 
@@ -171,7 +174,8 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
     // }
     if (splid.length > 0) {
       const splidlength = -(splid[0][0][1].length / this.splen);
-      this.break_after = (Math.floor(splidlength + 5) > 0) ? Math.floor(splidlength + 5) : 0;
+      this.break_after =
+        Math.floor(splidlength + 5) > 0 ? Math.floor(splidlength + 5) : 1;
     }
 
     return {
