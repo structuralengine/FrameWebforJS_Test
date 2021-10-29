@@ -24,9 +24,11 @@ import { PrintCustomThreeService } from "../print/custom/print-custom-three/prin
   providedIn: "root",
 })
 export class ThreeService {
-  private mode: string;
+  public mode: string;
   private currentIndex: number;
   public canvasElement: HTMLCanvasElement;
+
+  public selectedNumber: number;
 
   constructor(
     public scene: SceneService,
@@ -546,9 +548,11 @@ export class ThreeService {
         const title4: string[] = captureInfo.title4;
         const title5: string[] = captureInfo.title5;
         for (let i = 0; i < captureCase.length; i++) {
+          this.selectedNumber = 0;
           for (let j = 0; j < this.customThree.contentEditable2.length; j++) {
-            const key = captureCase[i];
             if (this.customThree.contentEditable2[j] === true) {
+              this.selectedNumber += 1;
+              const key = captureCase[i];
               // const captureFescTypeName: string[] = ;
               const loadType = title4[j];
               const loadTypeJa = title5[j];
@@ -574,7 +578,7 @@ export class ThreeService {
                 });
                 counter++;
 
-                if (counter === captureCase.length) {
+                if (counter === captureCase.length * this.selectedNumber) {
                   resolve({ result, title1 });
                 }
               });
