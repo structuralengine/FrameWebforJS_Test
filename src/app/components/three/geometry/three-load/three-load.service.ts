@@ -1159,6 +1159,13 @@ export class ThreeLoadService {
                 let judgeX = this.self_raycaster(vertice_points, hit_points, "x");
                 let judgeY = this.self_raycaster(vertice_points, hit_points, "y");
 
+                if (judgeX === "Hit") {
+                  const i = this.self_raycaster(vertice_points, hit_points, "x");
+                }
+                if (judgeY === "Hit" || judgeY === "Touch") {
+                  const j = this.self_raycaster(vertice_points, hit_points, "y");
+                }
+
                 if (judgeX === "Hit" && (judgeY === "Hit" || judgeY === "Touch")) {
                   // オフセットする
                   if (item.value > 0) {
@@ -1314,17 +1321,17 @@ export class ThreeLoadService {
         } else if (points[9] === area[1]) {
           judge = "Touch";  //荷重の右下が既存面と同じ高さにある状態
         } else {
-          if (points[3] > area[1] && (points[3] <= area[3] || points[3] <= area[7])) {
+          if (points[3] > area[1] && (points[3] < area[3] || points[3] < area[7])) {
             judge = "Hit";  //荷重の左上が既存面の内部にある状態
           } else if (points[3] === area[1]) {
             judge = "Touch";
-          } else if (points[7] > area[1] && (points[7] <= area[3] || points[7] <= area[7])) {
+          } else if (points[7] > area[1] && (points[7] < area[3] || points[7] < area[7])) {
             judge = "Hit";  //荷重の右上が既存面の内部にある状態
           } else if (points[7] === area[1]) {
             judge = "Touch";
-          } else if (points[3] <= area[1] && (points[7] >= area[3] || points[7] >= area[7])) {
+          } else if (points[3] <= area[1] && (points[7] > area[3] || points[7] > area[7])) {
             judge = "Hit";  //荷重の左上が既存面の下側，右上が既存面の上側にある状態
-          } else if (points[7] <= area[1] && (points[3] >= area[3] || points[3] >= area[7])) {
+          } else if (points[7] <= area[1] && (points[3] > area[3] || points[3] > area[7])) {
             judge = "Hit";  //荷重の右上が既存面の下側，左上が既存面の上側にある状態
           } else {
             judge = "NotHit"
