@@ -120,7 +120,7 @@ export class PrintResultReacComponent implements OnInit, AfterViewInit {
       // if (body.length > 0) {
       //   table.push(body);
       // }
-      splid.push(table);
+      splid.push(body);
       body = [];
     }
 
@@ -166,7 +166,7 @@ export class PrintResultReacComponent implements OnInit, AfterViewInit {
 
     if (splid.length > 0) {
       const splidlength = -(splid[0].length / this.splen);
-      this.break_after = (Math.floor(splidlength + 4) > 0) ? Math.floor(splidlength + 4) : 1;
+      this.break_after = (Math.floor(splidlength + 6) > 0) ? Math.floor(splidlength + 6) : 1;
     }
 
     //最後のページにどれだけデータが残っているかを求める
