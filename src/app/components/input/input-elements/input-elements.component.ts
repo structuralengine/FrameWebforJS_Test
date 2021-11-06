@@ -76,7 +76,7 @@ export class InputElementsComponent implements OnInit {
         {
           title: "J(m4)",
           dataType: "float",
-          format: "#.0000",
+          format: "#.000000",
           dataIndx: "J",
           sortable: false,
           width: 100,
