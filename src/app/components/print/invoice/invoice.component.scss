@@ -84,6 +84,9 @@ $height_content: 16px;
             padding: 4px 8px;
             font-size: 16px;
             text-align: right;
+            &.name{
+                text-align: left;
+            }
             // page-break-inside: avoid;
             //page-break-after:auto;
         }
