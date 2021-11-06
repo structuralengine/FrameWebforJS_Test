@@ -19,6 +19,7 @@ import { ThreeReactService } from "./geometry/three-react.service";
 import html2canvas from "html2canvas";
 import { PrintService } from "../print/print.service";
 import { PrintCustomThreeService } from "../print/custom/print-custom-three/print-custom-three.service";
+import { ResultCombineFsecService } from "../result/result-combine-fsec/result-combine-fsec.service";
 
 @Injectable({
   providedIn: "root",
@@ -46,7 +47,8 @@ export class ThreeService {
     private printService: PrintService,
     private InputData: InputDataService,
     private secForce: ThreeSectionForceService,
-    private customThree: PrintCustomThreeService
+    private customThree: PrintCustomThreeService,
+    private resultFsec: ResultCombineFsecService
   ) {}
 
   //////////////////////////////////////////////////////
@@ -543,7 +545,11 @@ export class ThreeService {
           });
           resolve({ result, title1 });
         });
-      } else if (this.mode === "fsec") {
+      } else if (
+        this.mode === "fsec"||
+        this.mode === "comb_fsec" ||
+        this.mode === "pik_fsec"
+      ) {
         let counter = 0;
         const title4: string[] = captureInfo.title4;
         const title5: string[] = captureInfo.title5;
@@ -560,28 +566,29 @@ export class ThreeService {
               if (number === null) {
                 continue;
               }
-              this.ChangePage(number).finally(() => {
+
+              // title3 に タイトルがあれば使う
+              let name = key;
+              if (title3.length > i) {
+                name = title3[i];
+              }
+              this.ChangePage(number);
+              
+              // this.ChangePage(number,this.mode).finally(() => {
                 this.secForce.changeRadioButtons(loadType);
+                  html2canvas(this.canvasElement).then((canvas) => {
+                    result.push({
+                      title: title2 + name,
+                      type: loadTypeJa,
+                      src: canvas.toDataURL(),
+                    });
+                    counter++;
 
-                // title3 に タイトルがあれば使う
-                let name = key;
-                if (title3.length > i) {
-                  name = title3[i];
-                }
-
-                html2canvas(this.canvasElement).then((canvas) => {
-                  result.push({
-                    title: title2 + name,
-                    type: loadTypeJa,
-                    src: canvas.toDataURL(),
+                    if (counter === captureCase.length * this.selectedNumber) {
+                      resolve({ result, title1 });
+                    }
                   });
-                  counter++;
-
-                  if (counter === captureCase.length * this.selectedNumber) {
-                    resolve({ result, title1 });
-                  }
-                });
-              });
+                // });
             }
           }
         }
@@ -626,6 +633,7 @@ export class ThreeService {
     let title3: string[] = new Array();
     let title4: string[] = new Array();
     let title5: string[] = new Array();
+    let title6: string[] = new Array();
 
     switch (this.mode) {
       case "fix_member":
@@ -672,20 +680,6 @@ export class ThreeService {
       case "fsec":
         if ("load" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.load);
-          let caseCount: number;
-          for (let i = 0; i < this.customThree.contentEditable2.length; i++) {
-            if (this.customThree.contentEditable2[i] === true) {
-              caseCount++;
-            }
-          }
-          for (
-            let i = Object.keys(this.printService.inputJson.load).length + 1;
-            i <=
-            Object.keys(this.printService.inputJson.load).length * caseCount;
-            i++
-          ) {
-            result.push(String(i));
-          }
           title3 = this.getLoadTitle();
         }
         title1 = "断面力";
@@ -713,6 +707,8 @@ export class ThreeService {
         title1 = "組み合わせ 断面力";
         title2 = "Comb";
         title3 = this.getCombTitle();
+        title4 = this.printService.fescIndex;
+        title5 = this.printService.fescIndexJa;
         break;
       case "comb_reac":
         result = Object.keys(this.printService.combineJson);
@@ -732,6 +728,8 @@ export class ThreeService {
         title1 = "ピックアップ 断面力";
         title2 = "PickUp";
         title3 = this.getPickupTitle();
+        title4 = this.printService.fescIndex;
+        title5 = this.printService.fescIndexJa;
         break;
       case "pik_reac":
         result = Object.keys(this.printService.pickupJson);
