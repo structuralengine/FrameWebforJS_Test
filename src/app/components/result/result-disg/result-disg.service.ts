@@ -31,6 +31,11 @@ export class ResultDisgService {
     return (key in this.columns) ? this.columns[key] : new Array();
   }
 
+    // three-section-force.service から呼ばれる
+    public getDisgJson(): object {
+      return this.disg;
+    }
+
   public setDisgJson(jsonData: {}, defList: any, combList: any, pickList: any): void {
 
     const startTime = performance.now(); // 開始時間
