@@ -23,6 +23,8 @@ export class PrintService {
 
   public printOption = [];
 
+  public 
+
   constructor(
     private router: Router,
     public InputData: InputDataService,

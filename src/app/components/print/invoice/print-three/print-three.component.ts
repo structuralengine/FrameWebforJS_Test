@@ -40,7 +40,7 @@ export class PrintThreeComponent implements OnInit {
         target["judge"] = false;
       } else {
         const target = this.print_target[i];
-        if (mode === "fsec") {
+        if (mode === "fsec" || mode === "comb_fsec" || mode === "pick_fsec") {
           if (selectCount < 3) {
             target["judge"] = i % selectCount === 0 ? true : false;
           } else {
