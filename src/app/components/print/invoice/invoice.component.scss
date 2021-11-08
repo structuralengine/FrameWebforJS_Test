@@ -37,99 +37,120 @@ $height_content: 16px;
 //h2が3行、h3が2行、th/tdが1行
 .invoicetTable {
     display: block;
-    // margin-top:96px;
-    h2 {
-        display: block;
-        height: $height_header;
-        // margin-top: 80px;
-        padding: 0 0 32px 0;
-        line-height: 32px;
+    text-align: left;
+}
+// margin-top:96px;
+h2 {
+    display: block;
+    height: $height_header;
+    // margin-top: 80px;
+    padding: 0 0 32px 0;
+    line-height: 32px;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "ＭＳ Ｐゴシック";
+}
+h3 {
+    // height: $height_semiHeader;
+    display: block;
+    // padding-top: 32px;
+    line-height: 32px;
+    font-size: 16px;
+    font-family: "ＭＳ 明朝";
+}
+table {
+    font-family: "ＭＳ 明朝";
+    font-size: 16px;
+    margin-bottom: 16px;
+    text-align: left;
+    break-inside: auto;
+    thead {
+        display: table-header-group;
+        // break-inside: avoid;
+        //     // break-after: avoid;
+        //  tr { page-break-inside: avoid; }
+    }
+    tbody {
+        margin-bottom: 32px;
+    }
+
+    th {
+        padding: 4px 8px;
+        text-align: center;
         font-size: 16px;
         font-weight: 400;
-        font-family: "ＭＳ Ｐゴシック";
+        &.title {
+            text-align: left;
+            font-weight: bold;
+            font-family: "ＭＳ Ｐゴシック";
+        }
+
+        &.type{
+            text-align: left;
+        }
     }
-    h3 {
-        // height: $height_semiHeader;
-        display: block;
-        // padding-top: 32px;
-        line-height: 32px;
+    td {
+        padding: 4px 8px;
         font-size: 16px;
-        font-family: "ＭＳ 明朝";
+        text-align: right;
+        &.name {
+            text-align: left;
+        }
     }
-    table {
-        font-family: "ＭＳ 明朝";
-        font-size: 16px;
-        margin-bottom: 16px;
-        thead {
-            display: table-header-group;
-            //     // break-after: avoid;
-            //     // tr { page-break-inside: avoid; }
+
+    //荷重名称が長い場合の改行指定
+    td {
+        &.word {
+            max-width: 400px;
+            min-width: 200px;
+            word-wrap: break-word;
+            text-align: left;
         }
-        tbody {
-            margin-bottom: 32px;
-        }
-        // tr { page-break-inside: auto; }
-        // page-break-after: auto;
-        th {
-            // height: $height_content;
-            padding: 4px 8px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 400;
-            // page-break-inside: avoid;
-            // page-break-after:auto;
-        }
-        td {
-            // height: $height_content;
-            padding: 4px 8px;
-            font-size: 16px;
-            text-align: right;
-            &.name{
-                text-align: left;
-            }
-            // page-break-inside: avoid;
-            //page-break-after:auto;
-        }
-        //印刷結果表示のtableのpadding
-        &.print-sm {
-            th,
-            td {
-                padding: 4px 16px;
-            }
-        }
-        &.print-md {
-            th,
-            td {
-                padding: 4px 24px;
-            }
-        }
-        &.print-lg {
-            th,
-            td {
-                padding: 4px 28px;
-            }
-        }
-        //input-load
-        &.print-load {
-            th,
-            td {
-                padding: 4px 20px;
-            }
-        }
-        //荷重名称が長い場合の改行指定
-        td {
-            &.word {
-                max-width: 400px;
-                min-width: 200px;
-                word-wrap: break-word;
-                text-align: left;
-            }
-        }
-        th,
-        td {
-            &.y1 {
-                padding: 4px 12px;
-            }
+    }
+    th,
+    td {
+        &.y1 {
+            padding: 4px 12px;
         }
     }
 }
+//印刷結果表示のtableのpadding
+.print-sm {
+    break-inside: avoid;
+    th,
+    td {
+        padding: 4px 16px;
+    }
+}
+.print-md {
+    break-inside: avoid;
+    th,
+    td {
+        padding: 4px 24px;
+    }
+}
+.print-lg {
+    break-inside: avoid;
+    th,
+    td {
+        padding: 4px 28px;
+    }
+}
+//input-load
+.print-load {
+    th,
+    td {
+        padding: 4px 20px;
+    }
+}
+
+table,
+tr,
+td,
+th,
+tbody,
+thead,
+tfoot {
+    page-break-inside: avoid !important;
+}
+
