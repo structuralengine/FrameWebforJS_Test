@@ -17,8 +17,8 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
 export class PrintInputMembersComponent implements OnInit, AfterViewInit {
   isEnable = true;
   load_name: string;
-  countCell: number  = 0;
-  countHead: number  = 0;
+  countCell: number = 0;
+  countHead: number = 0;
   countTotal: number = 0;
   btnPickup: string;
   tableHeight: number;
@@ -73,27 +73,27 @@ export class PrintInputMembersComponent implements OnInit, AfterViewInit {
 
     let break_flg = true;
 
-      for (let i = 0; i <Object.keys(json).length; i++) {
+    for (let i = 0; i < Object.keys(json).length; i++) {
 
-        const line = ["", "", "", "", "", "", ""];
-        let index: string = keys[i];
+      const line = ["", "", "", "", "", "", ""];
+      let index: string = keys[i];
 
-        const item = json[index]; // 1行分のnodeデータを取り出す
+      const item = json[index]; // 1行分のnodeデータを取り出す
 
-        const len: number = this.InputData.member.getMemberLength(index); // 部材長さ
-        const name: string = this.InputData.element.getElementName(item.e); // 材料名称
+      const len: number = this.InputData.member.getMemberLength(index); // 部材長さ
+      const name: string = this.InputData.element.getElementName(item.e); // 材料名称
 
-        line[0] = index;
-        line[1] = item.ni.toString();
-        line[2] = item.nj.toString();
-        line[3] = len.toFixed(3);
-        line[4] = item.e.toString();
-        line[5] = item.cg.toString();
-        line[6] = name;
+      line[0] = index;
+      line[1] = item.ni.toString();
+      line[2] = item.nj.toString();
+      line[3] = len.toFixed(3);
+      line[4] = item.e.toString();
+      line[5] = item.cg.toString();
+      line[6] = name;
 
-        body.push(line);
-      }
-    
+      body.push(line);
+    }
+
 
     // //最後のページの行数だけ取得している
     // const lastArray = splid.slice(-1)[0];
