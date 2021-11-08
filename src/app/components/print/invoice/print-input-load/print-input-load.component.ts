@@ -110,7 +110,11 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
 
       // 部材荷重と節点荷重の有無
       if ("load_member" in elist) {
-        mloadCount = elist.load_member.length;
+        if (elist["load_member"][0]["m1"] !== void 0) {
+          mloadCount = elist.load_member.length;
+        }else{
+          mloadCount=0;
+        }
       } else {
         mloadCount = 0;
       }
@@ -178,6 +182,9 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
         this.pload.push(0);
       }
       splidDataTotal[Number(index) - 1].push(this.mload, this.pload);
+      if (Number(index) === 16) {
+        console.log("A")
+      }
     }
 
 
