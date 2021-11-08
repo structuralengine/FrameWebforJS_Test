@@ -53,9 +53,9 @@ export class PrintInputMembersComponent implements OnInit, AfterViewInit {
 
     if ("member" in inputJson) {
       const tables = this.printMember(inputJson);
-      this.member_dataset = tables.splid;
-      this.member_page = tables.page;
-      this.judge = this.countArea.setCurrentY(tables.this, tables.last);
+      this.member_dataset = tables;
+      // this.member_page = tables.page;
+      // this.judge = this.countArea.setCurrentY(tables.this, tables.last);
     } else {
       this.isEnable = false;
     }
@@ -67,36 +67,21 @@ export class PrintInputMembersComponent implements OnInit, AfterViewInit {
   private printMember(inputJson): any {
     let body: any[] = new Array();
     const splid: any[] = new Array();
-    let page: number = 0;
+    // let page: number = 0;
     const json: {} = inputJson["member"]; // inputJsonからnodeだけを取り出す
     const keys: string[] = Object.keys(json);
 
     let break_flg = true;
 
-    while (break_flg) {
-
-      for (let i = 0; i < this.bottomCell; i++) {
-        const j = page * this.bottomCell + i;
-
-        if(keys.length <= j){
-          break_flg = false;
-          break;
-        }
+      for (let i = 0; i <Object.keys(json).length; i++) {
 
         const line = ["", "", "", "", "", "", ""];
-        let index: string = keys[j];
+        let index: string = keys[i];
 
         const item = json[index]; // 1行分のnodeデータを取り出す
 
         const len: number = this.InputData.member.getMemberLength(index); // 部材長さ
         const name: string = this.InputData.element.getElementName(item.e); // 材料名称
-        const s = j + 1;
-
-        if (s > keys.length) {
-          break_flg = false;
-          this.countHead = (page + 1) * 3;
-          break;
-        }
 
         line[0] = index;
         line[1] = item.ni.toString();
@@ -108,22 +93,16 @@ export class PrintInputMembersComponent implements OnInit, AfterViewInit {
 
         body.push(line);
       }
+    
 
-      if (body.length === 0) {
-        break;
-      }
-      splid.push(body);
-      body = [];
-      page++;
-    }
+    // //最後のページの行数だけ取得している
+    // const lastArray = splid.slice(-1)[0];
+    // const lastArrayCount = lastArray.length + 2;
 
-    //最後のページの行数だけ取得している
-    const lastArray = splid.slice(-1)[0];
-    const lastArrayCount = lastArray.length + 2;
+    // //全部の行数を取得している。
+    // this.countTotal = keys.length + this.countHead + 3;
 
-    //全部の行数を取得している。
-    this.countTotal = keys.length + this.countHead + 3;
-
-    return { page, splid, this: this.countTotal, last: lastArrayCount };
+    // return { page, splid, this: this.countTotal, last: lastArrayCount };
+    return body;
   }
 }
