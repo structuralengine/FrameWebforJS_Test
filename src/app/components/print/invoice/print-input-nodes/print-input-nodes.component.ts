@@ -25,6 +25,9 @@ export class PrintInputNodesComponent implements OnInit, AfterViewInit {
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
   bottomCell: number = 50;
+  table: HTMLTableElement;
+  private thead: HTMLTableElement;
+  private tbody: HTMLTableElement;
 
   public node_dataset = [];
   public node_page = [];
@@ -69,6 +72,8 @@ export class PrintInputNodesComponent implements OnInit, AfterViewInit {
 
   // 格子点データ node を印刷する
   private printNode(inputJson): any {
+    // var hrow = <HTMLTableRowElement> this.table.tHead;
+    
     // const minCount: number = 52; // これ以上なら２行書きとする
     let body: any[] = new Array();
     const splid: any[] = new Array();
