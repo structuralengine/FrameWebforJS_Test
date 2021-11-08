@@ -17,8 +17,8 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
   isEnable = true;
   page: number;
   load_name: string;
-  countCell: number  = 0;
-  countHead: number  = 0;
+  countCell: number = 0;
+  countHead: number = 0;
   countTotal: number = 0;
   btnPickup: string;
   tableHeight: number;
@@ -82,96 +82,22 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   // 実荷重データ load 部材荷重 を印刷する
   private printLoad(json): any {
     const keys: string[] = Object.keys(json);
 
-    // 各タイプの前に改ページ（break_after）が必要かどうか判定する
-    const break_after: boolean[] = new Array();
-    let ROW_mn = 3; //member+nodeによる改ページ判定
-    let ROW_m: number; //member全部の行数
-    let ROW_n: number; //node全部の行数
-    let page_over_member: number = 0; //memberが1ケース何ページ使うかを調べる
-    let page_over_node: number = 0; //nodeが1ケース何ページ使うかを調べる
-    let countCell_member: number = 0;
-    let countCell_node: number = 0;
-
-    let lenlenMember: number = 0;
-    let lenlenNode: number = 0;
-
-    for (const index of keys) {
-      const elist = json[index]; // 1テーブル分のデータを取り出す
-      ROW_mn += 2;
-      if ("load_member" in elist) {
-        countCell_member = elist.load_member.length;
-        if (countCell_member > this.bottomCell) {
-          page_over_member = Math.floor(countCell_member / this.bottomCell);
-          ROW_m = countCell_member +  page_over_member * 4 + 2;
-        } else {
-          ROW_m = countCell_member + 4;
-        }
-      } else {
-        ROW_m = 0;
-      }
-
-      if ("load_node" in elist) {
-        countCell_node = elist.load_node.length;
-        if (countCell_node > this.bottomCell) {
-          page_over_node = Math.floor(countCell_node / this.bottomCell);
-          ROW_n = countCell_node + page_over_node * 3 + 2;
-        } else {
-          ROW_n = countCell_node + 3;
-        }
-      } else {
-        ROW_n = 0;
-      }
-
-      ROW_mn += ROW_m + ROW_n;
-
-      if (ROW_mn < this.bottomCell) {
-        break_after.push(false);
-        ROW_mn = ROW_mn;
-        ROW_m = 0;
-        ROW_n = 0;
-      } else if (ROW_mn === this.bottomCell) {
-        break_after.push(false);
-        ROW_mn = this.bottomCell;
-        ROW_m = 0;
-        ROW_n = 0;
-      } else {
-        if (index === "1") {
-          break_after.push(false);
-        } else {
-          break_after.push(true);
-        }
-        ROW_mn = 0;
-        let reROW = ROW_m + ROW_n;
-        ROW_mn = reROW % this.bottomCell;
-      }
-    }
-
-    this.remainCount = ROW_mn;
-
     // 実際のデータを作成する
-    let TotalDataCount: number = 0;
     let mloadCount: number = 0;
     let ploadCount: number = 0;
-    let splidTypeCount: number = 0;
 
     const splidDataTotal: any[] = new Array();
 
-    lenlenMember = 0;
-
     for (const index of keys) {
-      const splidData_member: any[] = new Array();
       const splidData_node: any[] = new Array();
-      const splidData_part: any[] = new Array();
       const memberTable: any[] = new Array();
       const nodeTable: any[] = new Array();
-      let splidDataCount_member: number = 0;
-      let splidDataCount_node: number = 0;
 
       let row: number;
       if (index === "1") {
@@ -182,7 +108,7 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
 
       const elist = json[index]; // 1テーブル分のデータを取り出す
 
-      // 全体の高さを計算する
+      // 部材荷重と節点荷重の有無
       if ("load_member" in elist) {
         mloadCount = elist.load_member.length;
       } else {
@@ -195,18 +121,14 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
         ploadCount = 0;
       }
 
-      TotalDataCount += mloadCount + ploadCount + 2;
-
       // タイトルを表示させる。
       if (mloadCount > 0 || ploadCount > 0) {
-        splidData_part.push(["Case " + index, elist.name]);
+        splidDataTotal.push(["Case " + index + ":" + elist.name]);
       }
 
-      // テーブル
-
       // 部材荷重
+      this.mload = [];
       if (mloadCount > 0) {
-        this.mload = [];
         for (const item of elist.load_member) {
           const line = ["", "", "", "", "", "", "", ""];
           line[0] = item.m1;
@@ -218,29 +140,14 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
           line[6] = item.P1 === null ? "" : item.P1.toFixed(2);
           line[7] = item.P2 === null ? "" : item.P2.toFixed(2);
           this.mload.push(line);
-          // flg.push(0);
-          row++;
-          //１テーブルでthis.bottomCell行以上データがあるならば
-          if (row > this.bottomCell) {
-            splidData_member.push(this.mload);
-            this.mload = [];
-            row = 4;
-          }
         }
-        if (this.mload.length > 0) {
-          splidData_member.push(this.mload);
-          row = 0;
-          lenlenMember = splidData_member.slice(-1)[0].length + 3;
-          row = lenlenMember;
-        }
-        splidDataCount_member += splidData_member.length;
-        memberTable.push(splidData_member);
+      } else {
+        this.mload.push(0);
       }
-      row += 2;
 
       // 節点荷重
+      this.pload = [];
       if (ploadCount > 0) {
-        this.pload = [];
         for (const item of elist.load_node) {
           let tx = this.helper.toNumber(item.tx) !== null ? item.tx : 0;
           let ty = this.helper.toNumber(item.ty) !== null ? item.ty : 0;
@@ -266,49 +173,16 @@ export class PrintInputLoadComponent implements OnInit, AfterViewInit {
           line[6] = ry.toFixed(2);
           line[7] = rz.toFixed(2);
           this.pload.push(line);
-          row++;
-
-          //１テーブルでthis.bottomCell行以上データがあるならば
-          if (row > this.bottomCell) {
-            splidData_node.push(this.pload);
-            this.pload = [];
-            row = 4;
-          }
         }
-
-        if (this.pload.length > 0) {
-          splidData_node.push(this.pload);
-          lenlenNode = splidData_node.slice(-1)[0] + 2;
-        }
-        splidDataCount_node += splidData_node.length;
-        nodeTable.push(splidData_node);
-        console.log(nodeTable);
+      } else {
+        this.pload.push(0);
       }
-      // タイトル、member、nodeをそれぞれの配列として格納する
-      splidData_part.push(memberTable, nodeTable);
-
-      //splidData_partに格納したデータをcaseごとに包含する
-      splidDataTotal.push(splidData_part);
-
-      if (mloadCount === 0 && ploadCount === 0) {
-        continue;
-      }
-
-      splidTypeCount += splidDataCount_member * 3 + splidDataCount_node * 2;
+      splidDataTotal[Number(index) - 1].push(this.mload, this.pload);
     }
 
-    let countHead = keys.length * 3;
-    const countTotal =
-      TotalDataCount + countHead + splidTypeCount + 3;
-
-    //最後のページにどれだけデータが残っているかを求める
-    let lastArrayCount: number = this.remainCount;
 
     return {
       tableData: splidDataTotal, // [タイプ１のテーブルリスト[], タイプ２のテーブルリスト[], ...]
-      this: countTotal, // 全体の高さ
-      last: lastArrayCount, //最後のページのcurrentYの行数
-      break_after: break_after, // 各タイプの前に改ページ（break_after）が必要かどうか判定
     };
   }
 }
