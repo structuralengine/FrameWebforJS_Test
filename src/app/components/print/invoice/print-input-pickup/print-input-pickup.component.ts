@@ -45,12 +45,10 @@ export class PrintInputPickupComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // const pickupJson: any = this.printService.pickupJson;
     const pickupJson: any = this.pickup.getPickUpJson();
     if (Object.keys(pickupJson).length > 0) {
       const tables = this.printPickup(pickupJson);
-      this.pickup_dataset = tables.table;
-      this.judge = this.countArea.setCurrentY(tables.this, tables.last);
+      this.pickup_dataset = tables;
     } else {
       this.isEnable = false;
     }
@@ -60,24 +58,16 @@ export class PrintInputPickupComponent implements OnInit, AfterViewInit {
 
   // PICKUEデータ  を印刷する
   private printPickup(json): any {
-    // あらかじめテーブルの高さを計算する
-    const dataCount: number = Object.keys(json).length;
     const keys: string[] = Object.keys(json);
     let body: any[] = new Array();
     const splid: any[] = new Array();
     let row: number;
 
     for (const index of keys) {
-      if (index === "1") {
-        row = 5;
-      } else {
-        row = 2;
-      }
-
       const item = json[index]; // 1行分のnodeデータを取り出す
 
       // 印刷する1行分のリストを作る
-      let line: any[] = new Array();
+      let line: string[] = new Array();
       line.push(index); // PickUpNo
       if ("name" in item) {
         line.push(item.name); // 荷重名称
@@ -104,26 +94,10 @@ export class PrintInputPickupComponent implements OnInit, AfterViewInit {
       if (counter > 0) {
         body.push(line); // 表の1行 登録
       }
-
-      //１テーブルでthis.bottomCell行以上  になったら
-      if (row > this.bottomCell) {
-        splid.push(body);
-        body = [];
-        row = 2;
-      }
-
-      row++;
     }
     if (body.length > 0) {
       splid.push(body);
     }
-
-    this.countTotal = keys.length * 2;
-
-    //最後のページの行数だけ取得している
-    const lastArray = splid.slice(-1)[0];
-    const lastArrayCount = lastArray.length;
-
-    return { table: splid, this: this.countTotal, last: lastArrayCount };
+    return splid;
   }
 }

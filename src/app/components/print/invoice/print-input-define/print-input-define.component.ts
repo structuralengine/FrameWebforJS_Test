@@ -30,11 +30,7 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
 
   public judge: boolean;
 
-  constructor(
-    private printService: PrintService,
-    private countArea: DataCountService,
-    private define: InputDefineService
-  ) {
+  constructor(private define: InputDefineService) {
     this.judge = false;
     this.clear();
   }
@@ -47,8 +43,7 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
     const defineJson: any = this.define.getDefineJson();
     if (Object.keys(defineJson).length > 0) {
       const tables = this.printDefine(defineJson);
-      this.define_dataset = tables.splid;
-      this.judge = this.countArea.setCurrentY(tables.this, tables.last);
+      this.define_dataset = tables;
     } else {
       this.isEnable = false;
     }
@@ -58,18 +53,10 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
 
   // DEFINEデータ  を印刷する
   private printDefine(json): any {
-    //let printAfterInfo: any;
-
-    let row: number;
     let body: any[] = new Array();
 
     const splid: any[] = new Array();
     for (const index of Object.keys(json)) {
-      if (index === "1") {
-        row = 5;
-      } else {
-        row = 2;
-      }
       const item = json[index]; // 1行分のnodeデータを取り出す
 
       // 印刷する1行分のリストを作る
@@ -91,37 +78,16 @@ export class PrintInputDefineComponent implements OnInit, AfterViewInit {
           counter = 0;
           line = new Array();
           line.push(""); // DefineNo
-          row++;
         }
       }
       if (counter > 0) {
         body.push(line); // 表の1行 登録
       }
-      //１テーブルでthis.bottomCell行以上  になったら
-      if (row > this.bottomCell) {
-        splid.push(body);
-        body = [];
-        row = 2;
-      }
-      row++;
     }
     if (body.length > 0) {
       splid.push(body);
     }
 
-    // 全部の行数を取得している
-    let countCell = 0;
-    countCell = Object.keys(json).length;
-    if (countCell === 0) {
-      this.countHead = 0;
-    } else if (countCell > 0) {
-      this.countHead = Math.floor((countCell / this.bottomCell) * 2) + 2;
-    }
-    this.countTotal = countCell + this.countHead + 3;
-
-    //最後のページの行数だけ取得している
-    const lastArrayCount = this.countTotal % this.bottomCell;
-
-    return { splid, this: this.countTotal, last: lastArrayCount };
+    return splid;
   }
 }
