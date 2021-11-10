@@ -1,75 +1,74 @@
 <div *ngIf="isEnable" class="invoicetTable disg">
-  <div *ngIf="judge" class="pagerBreak"></div>
-  <h2>変位量</h2>
-  <div *ngFor="let title of disg_typeNum; index as i">
-    <table class="print-lg">
-      <div *ngIf="dimension === 3">
-        <thead>
-          <tr>
-            <th colspan="7" style="text-align: left">{{ title }}</th>
-          </tr>
-          <tr>
-            <th>節点</th>
-            <th>X-Disp</th>
-            <th>Y-Disp</th>
-            <th>Z-disp</th>
-            <th>X-Rotation</th>
-            <th>Y-Rotation</th>
-            <th>Z-Rotation</th>
-          </tr>
-          <tr>
-            <th>No.</th>
-            <th>(mm)</th>
-            <th>(mm)</th>
-            <th>(mm)</th>
-            <th>(mmrad)</th>
-            <th>(mmrad)</th>
-            <th>(mmrad)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let dataset of disg_table[i]">
-            <td>{{ dataset[0] }}</td>
-            <td>{{ dataset[1] }}</td>
-            <td>{{ dataset[2] }}</td>
-            <td>{{ dataset[3] }}</td>
-            <td>{{ dataset[4] }}</td>
-            <td>{{ dataset[5] }}</td>
-            <td>{{ dataset[6] }}</td>
-          </tr>
-        </tbody>
-      </div>
-      <div *ngIf="dimension === 2">
-        <thead>
-          <tr>
-            <th colspan="4" style="text-align: left">{{ title }}</th>
-          </tr>
-          <tr>
-            <th>節点</th>
-            <th>X-Disp</th>
-            <th>Y-Disp</th>
-            <th>Rotation</th>
-          </tr>
-          <tr>
-            <th>No.</th>
-            <th>(mm)</th>
-            <th>(mm)</th>
-            <th>(mmrad)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let dataset of disg_table[i]">
-            <td>{{ dataset[0] }}</td>
-            <td>{{ dataset[1] }}</td>
-            <td>{{ dataset[2] }}</td>
-            <td>{{ dataset[6] }}</td>
-          </tr>
-        </tbody>
-      </div>
-    </table>
-    <div
-      *ngIf="(i + 1) % break_after == 0 && i + 1 !== disg_typeNum.length"
-      class="pagerBreak"
-    ></div>
-  </div>
+    <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
+    <div class="print-sm">
+        <table>
+            <h2>変位量</h2>
+            <div *ngFor="let title of disg_typeNum; index as i">
+                <div *ngIf="dimension === 3">
+                    <thead>
+                        <tr>
+                            <th colspan="7" style="text-align: left">{{ title }}</th>
+                        </tr>
+                        <tr>
+                            <th>節点</th>
+                            <th>X-Disp</th>
+                            <th>Y-Disp</th>
+                            <th>Z-disp</th>
+                            <th>X-Rotation</th>
+                            <th>Y-Rotation</th>
+                            <th>Z-Rotation</th>
+                        </tr>
+                        <tr>
+                            <th>No.</th>
+                            <th>(mm)</th>
+                            <th>(mm)</th>
+                            <th>(mm)</th>
+                            <th>(mmrad)</th>
+                            <th>(mmrad)</th>
+                            <th>(mmrad)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of disg_table[i]">
+                            <td>{{ dataset[0] }}</td>
+                            <td>{{ dataset[1] }}</td>
+                            <td>{{ dataset[2] }}</td>
+                            <td>{{ dataset[3] }}</td>
+                            <td>{{ dataset[4] }}</td>
+                            <td>{{ dataset[5] }}</td>
+                            <td>{{ dataset[6] }}</td>
+                        </tr>
+                    </tbody>
+                </div>
+                <div *ngIf="dimension === 2">
+                    <thead>
+                        <tr>
+                            <th colspan="4" style="text-align: left">{{ title }}</th>
+                        </tr>
+                        <tr>
+                            <th>節点</th>
+                            <th>X-Disp</th>
+                            <th>Y-Disp</th>
+                            <th>Rotation</th>
+                        </tr>
+                        <tr>
+                            <th>No.</th>
+                            <th>(mm)</th>
+                            <th>(mm)</th>
+                            <th>(mmrad)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of disg_table[i]">
+                            <td>{{ dataset[0] }}</td>
+                            <td>{{ dataset[1] }}</td>
+                            <td>{{ dataset[2] }}</td>
+                            <td>{{ dataset[6] }}</td>
+                        </tr>
+                    </tbody>
+                </div>
+                <div *ngIf="(i + 1) % break_after == 0 && i + 1 !== disg_typeNum.length" class="pagerBreak"></div>
+            </div>
+        </table>
+    </div>
 </div>

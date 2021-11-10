@@ -1,37 +1,37 @@
 <div *ngIf="isEnable" class="invoicetTable elements">
-  <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
-  <div class="print-sm">
-    <h2>材料データ</h2>
-    <div *ngFor="let title of elements_typeNum; index as i">
-      <table>
-        <div *ngIf="dimension === 3">
-        <thead>
-          <tr>
-            <th colspan="7" style="text-align: left">タイプ{{title}}</th>
-          </tr>
-          <tr>
-            <th class="id">No</th>
-            <th>名称</th>
-            <th class="A">A</th>
-            <th class="E">E</th>
-            <th class="G">G</th>
-            <th class="ESP">ESP</th>
-            <th class="I" colspan="2">断面二次モーメント</th>
-            <th class="twist" colspan="1">ねじり<br>剛性</th>
-          </tr>
-          <tr>
-            <th class="id"></th>
-            <th></th>
-            <th class="A">(㎡)</th>
-            <th class="E">(kN/㎡)</th>
-            <th class="G">(kN/㎡)</th>
-            <th class="ESP"></th>
-            <th class="y1">y軸周り</th>
-            <th class="I">z軸周り</th>
-            <th class="twist"></th>
-          </tr>
-        </thead>
-        <!-- <tbody>
+    <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
+    <div class="print-sm">
+        <table>
+            <h2>材料データ</h2>
+            <div *ngFor="let title of elements_typeNum; index as i">
+                <div *ngIf="dimension === 3">
+                    <thead>
+                        <tr>
+                            <th colspan="7" style="text-align: left">タイプ{{title}}</th>
+                        </tr>
+                        <tr>
+                            <th class="id">No</th>
+                            <th>名称</th>
+                            <th class="A">A</th>
+                            <th class="E">E</th>
+                            <th class="G">G</th>
+                            <th class="ESP">ESP</th>
+                            <th class="I" colspan="2">断面二次モーメント</th>
+                            <th class="twist" colspan="1">ねじり<br>剛性</th>
+                        </tr>
+                        <tr>
+                            <th class="id"></th>
+                            <th></th>
+                            <th class="A">(㎡)</th>
+                            <th class="E">(kN/㎡)</th>
+                            <th class="G">(kN/㎡)</th>
+                            <th class="ESP"></th>
+                            <th class="y1">y軸周り</th>
+                            <th class="I">z軸周り</th>
+                            <th class="twist"></th>
+                        </tr>
+                    </thead>
+                    <!-- <tbody>
           <tr>
             <td class="id" rowspan="2">{{ dataset[0] }}</td>
             <td class="N" colspan="7" class="name">{{ dataset[8] }}</td>
@@ -46,55 +46,55 @@
             <td class="twist">{{ dataset[7] }}</td>
           </tr>
         </tbody> -->
-        <tbody style="page-break-inside:avoid">
-          <tr *ngFor="let dataset of elements_table[i]">
-            <td class="id">{{ dataset[0] }}</td>
-            <td class="N">{{ dataset[8] }}</td>
-            <td class="A">{{ dataset[1] }}</td>
-            <td class="E">{{ dataset[2] }}</td>
-            <td class="G">{{ dataset[3] }}</td>
-            <td class="ESP">{{ dataset[4] }}</td>
-            <td class="y1">{{ dataset[5] }}</td>
-            <td class="I">{{ dataset[6] }}</td>
-            <td class="twist">{{ dataset[7] }}</td>
-          </tr>
-        </tbody>
-      </div>
-      <div *ngIf="dimension === 2">
-        <thead>
-          <tr>
-            <th colspan="6" style="text-align: left;" class="type">タイプ{{title}}</th>
-          </tr>
-          <tr>
-            <th class="id">No</th>
-            <th >名称</th>
-            <th class="A">A</th>
-            <th class="E">E</th>
-            <th class="ESP">ESP</th>
-            <th class="I" colspan="1">断面二次モーメント</th>
-          </tr>
-          <tr>
-            <th class="id"></th>
-            <th></th>
-            <th class="A">(㎡)</th>
-            <th class="E">(kN/㎡)</th>
-            <th class="ESP"></th>
-            <th class="I">z軸周り</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let dataset of elements_table[i]">
-            <td class="id">{{ dataset[0] }}</td>
-            <td class="N">{{ dataset[8] }}</td>
-            <td class="A">{{ dataset[1] }}</td>
-            <td class="E">{{ dataset[2] }}</td>
-            <td class="ESP">{{ dataset[4] }}</td>
-            <td class="I">{{ dataset[6] }}</td>
-          </tr>
-        </tbody>
-      </div>
-      </table>
+                    <tbody style="page-break-inside:avoid">
+                        <tr *ngFor="let dataset of elements_table[i]">
+                            <td class="id">{{ dataset[0] }}</td>
+                            <td class="N">{{ dataset[8] }}</td>
+                            <td class="A">{{ dataset[1] }}</td>
+                            <td class="E">{{ dataset[2] }}</td>
+                            <td class="G">{{ dataset[3] }}</td>
+                            <td class="ESP">{{ dataset[4] }}</td>
+                            <td class="y1">{{ dataset[5] }}</td>
+                            <td class="I">{{ dataset[6] }}</td>
+                            <td class="twist">{{ dataset[7] }}</td>
+                        </tr>
+                    </tbody>
+                </div>
+                <div *ngIf="dimension === 2">
+                    <thead>
+                        <tr>
+                            <th colspan="6" style="text-align: left;" class="type">タイプ{{title}}</th>
+                        </tr>
+                        <tr>
+                            <th class="id">No</th>
+                            <th>名称</th>
+                            <th class="A">A</th>
+                            <th class="E">E</th>
+                            <th class="ESP">ESP</th>
+                            <th class="I" colspan="1">断面二次モーメント</th>
+                        </tr>
+                        <tr>
+                            <th class="id"></th>
+                            <th></th>
+                            <th class="A">(㎡)</th>
+                            <th class="E">(kN/㎡)</th>
+                            <th class="ESP"></th>
+                            <th class="I">z軸周り</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of elements_table[i]">
+                            <td class="id">{{ dataset[0] }}</td>
+                            <td class="N">{{ dataset[8] }}</td>
+                            <td class="A">{{ dataset[1] }}</td>
+                            <td class="E">{{ dataset[2] }}</td>
+                            <td class="ESP">{{ dataset[4] }}</td>
+                            <td class="I">{{ dataset[6] }}</td>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
+        </table>
     </div>
-  </div>
     <!-- <div *ngIf="(((i+1) % break_after) == 0) && i+1 !== elements_typeNum.length" class="pagerBreak"></div> -->
 </div>

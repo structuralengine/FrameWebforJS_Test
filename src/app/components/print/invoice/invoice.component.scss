@@ -39,6 +39,7 @@ $height_content: 16px;
     display: block;
     text-align: left;
 }
+
 // margin-top:96px;
 h2 {
     display: block;
@@ -50,6 +51,7 @@ h2 {
     font-weight: 400;
     font-family: "ＭＳ Ｐゴシック";
 }
+
 h3 {
     // height: $height_semiHeader;
     display: block;
@@ -58,6 +60,7 @@ h3 {
     font-size: 16px;
     font-family: "ＭＳ 明朝";
 }
+
 table {
     font-family: "ＭＳ 明朝";
     font-size: 16px;
@@ -73,7 +76,6 @@ table {
     tbody {
         margin-bottom: 32px;
     }
-
     th {
         padding: 4px 8px;
         text-align: center;
@@ -84,8 +86,7 @@ table {
             font-weight: bold;
             font-family: "ＭＳ Ｐゴシック";
         }
-
-        &.type{
+        &.type {
             text-align: left;
         }
     }
@@ -96,13 +97,14 @@ table {
         &.name {
             text-align: left;
         }
-    }
-
-    //荷重名称が長い場合の改行指定
-    td {
         &.word {
             max-width: 400px;
             min-width: 200px;
+            word-wrap: break-word;
+            text-align: left;
+        }
+        &.comb {
+            max-width: 150px;
             word-wrap: break-word;
             text-align: left;
         }
@@ -114,6 +116,7 @@ table {
         }
     }
 }
+
 //印刷結果表示のtableのpadding
 .print-sm {
     break-inside: avoid;
@@ -122,6 +125,7 @@ table {
         padding: 4px 16px;
     }
 }
+
 .print-md {
     break-inside: avoid;
     th,
@@ -129,6 +133,7 @@ table {
         padding: 4px 24px;
     }
 }
+
 .print-lg {
     break-inside: avoid;
     th,
@@ -136,6 +141,7 @@ table {
         padding: 4px 28px;
     }
 }
+
 //input-load
 .print-load {
     th,
@@ -153,4 +159,3 @@ thead,
 tfoot {
     page-break-inside: avoid !important;
 }
-
