@@ -259,6 +259,34 @@ $border-color: #428bca; // ボーダーライン
     }
 }
 
+.move_case {
+    display: flex;
+    align-items: center;
+
+    .circle {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #f5f5f5;
+    }
+
+    li {
+        margin: 0 4px;
+        a {
+            &:hover {
+                cursor: pointer;
+                opacity: 0.7;
+                background-color: #333;
+            }
+            &.active {
+                background-color: #333;
+            }
+        }
+    }
+}
+
+
 //リセット
 
 /*! destyle.css v2.0.2 | MIT License | https://github.com/nicolas-cusan/destyle.css */

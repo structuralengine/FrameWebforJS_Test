@@ -31,6 +31,8 @@ export class ResultCombineFsecComponent implements OnInit {
 
   cal: number = 0;
 
+  circleBox = new Array();
+
   constructor(
     private data: ResultCombineFsecService,
     private app: AppComponent,
@@ -44,6 +46,9 @@ export class ResultCombineFsecComponent implements OnInit {
     this.dataset = new Array();
     this.KEYS = this.data.fsecKeys;
     this.TITLES = this.data.titles;
+    for (let i = 0;i<this.TITLES.length;i++) {
+      this.circleBox.push(i);
+    }
     this.dimension = this.helper.dimension;
   }
 
@@ -100,13 +105,23 @@ export class ResultCombineFsecComponent implements OnInit {
     }, 500);
   }
 
-  calcal(calpage: number) {
-    this.cal += calpage;
-    if (this.cal >= this.TITLES.length) {
-      this.cal = 0;
+  calcal(calpage: any) {
+    if (calpage === "-1" || calpage === "1") {
+      this.cal += Number(calpage);
+      if (this.cal >= this.TITLES.length) {
+        this.cal = 0;
+      }
+      if (this.cal < 0) {
+        this.cal = this.TITLES.length - 1;
+      }
+    } else {
+      this.cal = calpage;
     }
-    if (this.cal < 0) {
-      this.cal = this.TITLES.length - 1;
-    }
+    setTimeout(() => {
+      const circle = document.getElementById(String(this.cal+20));
+      if (circle !== null) {
+        circle.classList.add("active");
+      }
+    }, 10);
   }
 }

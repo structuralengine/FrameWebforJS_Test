@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild,AfterViewInit } from "@angular/core";
 import { ResultCombineDisgService } from "./result-combine-disg.service";
 import { InputCombineService } from "../../input/input-combine/input-combine.service";
 import { ThreeService } from "../../three/three.service";
@@ -29,6 +29,8 @@ export class ResultCombineDisgComponent implements OnInit {
   dimension: number;
   cal: number = 0;
 
+  circleBox = new Array();
+
   constructor(
     private data: ResultCombineDisgService,
     private comb: InputCombineService,
@@ -39,6 +41,9 @@ export class ResultCombineDisgComponent implements OnInit {
     this.dataset = new Array();
     this.KEYS = this.data.disgKeys;
     this.TITLES = this.data.titles;
+    for (let i = 0;i<this.TITLES.length;i++) {
+      this.circleBox.push(i);
+    }
     this.dimension = this.helper.dimension;
   }
 
@@ -77,13 +82,11 @@ export class ResultCombineDisgComponent implements OnInit {
     this.three.ChangePage(currentPage);
   }
 
-  calPage(calPage: number) {
+  calPage(calPage: any) {
     const carousel = document.getElementById("carousel");
-    if (carousel != null) {
+    if (carousel !== null) {
       carousel.classList.add("add");
     }
-    const time = this.TITLES.length;
-    let cal = this.cal;
     setTimeout(() => {
       this.calcal(calPage);
     }, 100);
@@ -94,13 +97,23 @@ export class ResultCombineDisgComponent implements OnInit {
     }, 500);
   }
 
-  calcal(calpage: number) {
-    this.cal += calpage;
-    if (this.cal >= this.TITLES.length) {
-      this.cal = 0;
+  calcal(calpage: any) {
+    if (calpage === "-1" || calpage === "1") {
+      this.cal += Number(calpage);
+      if (this.cal >= this.TITLES.length) {
+        this.cal = 0;
+      }
+      if (this.cal < 0) {
+        this.cal = this.TITLES.length - 1;
+      }
+    } else {
+      this.cal = calpage;
     }
-    if (this.cal < 0) {
-      this.cal = this.TITLES.length - 1;
-    }
+    setTimeout(() => {
+      const circle = document.getElementById(String(this.cal+20));
+      if (circle !== null) {
+        circle.classList.add("active");
+      }
+    }, 10);
   }
 }

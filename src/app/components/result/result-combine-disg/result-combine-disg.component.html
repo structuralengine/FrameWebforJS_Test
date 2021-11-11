@@ -20,11 +20,16 @@
                     <div class="card-header">
                         <p class="loadName">{{ load_name }}</p>
                         <div class="detailName">
-                            <a id="prev" link="130" (click)="calPage(-1)" class="move" aria-label="previous"><i
-                  class="fas fa-caret-left"></i></a>
+                            <a id="prev" link="130" (click)="calPage('-1')" class="move" aria-label="previous"><i
+                                    class="fas fa-caret-left"></i></a>
+                            <ul class="move_case">
+                                <li *ngFor="let i of circleBox">
+                                    <a class="circle" (click)="calPage(i)" [id] = "i + 20"></a>
+                                </li>
+                            </ul>
                             <p class="detailTitle">{{ TITLES[i] }}</p>
-                            <a id="next" link="136" (click)="calPage(1)" class="move" aria-label="Next"><i
-                  class="fas fa-caret-right"></i></a>
+                            <a id="next" link="136" (click)="calPage('1')" class="move" aria-label="Next"><i
+                                    class="fas fa-caret-right"></i></a>
                         </div>
                     </div>
                     <div class="card-body">
