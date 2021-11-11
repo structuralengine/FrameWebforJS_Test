@@ -1,61 +1,53 @@
-<div *ngIf="isEnable"  class="invoicetTable member">
- <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
-  <!-- <h2>部材データ</h2> -->
-  <!-- <div *ngFor="let dataset of member_dataset index as i"> -->
-    <!-- <div *ngIf="i > 0" class="pagerBreak space"></div> -->
-    <table class="print-md">
+<div *ngIf="isEnable" class="invoicetTable member">
+  <div class="print-md">
+    <table>
+      <h2>部材データ</h2>
       <div *ngIf="dimension===3">
         <thead>
           <tr>
-            <th colspan="7" class = "title">部材データ</th>
+            <th class="id">No</th>
+            <th class="I-TAN">I-TAN</th>
+            <th class="J-TAN">J-TAN</th>
+            <th class="L">L(m)</th>
+            <th class="number">材料番号</th>
+            <th class="code">コード<br>アングル</th>
+            <th class="N">材料名称</th>
           </tr>
-        <tr>
-          <th class="id">No</th>
-          <th class="I-TAN">I-TAN</th>
-          <th class="J-TAN">J-TAN</th>
-          <th class="L">L(m)</th>
-          <th class="number">材料番号</th>
-          <th class="code">コード<br>アングル</th>
-          <th class="N">材料名称</th>
-        </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let data of member_dataset">
-          <td class="id">{{data[0]}}</td>
-          <td class="I-TAN">{{data[1]}}</td>
-          <td class="J-TAN">{{data[2]}}</td>
-          <td class="L">{{data[3]}}</td>
-          <td class="number">{{data[4]}}</td>
-          <td class="code">{{data[5]}}</td>
-          <td class="N">{{data[6]}}</td>
-        </tr>
+          <tr *ngFor="let data of member_dataset">
+            <td class="id">{{data[0]}}</td>
+            <td class="I-TAN">{{data[1]}}</td>
+            <td class="J-TAN">{{data[2]}}</td>
+            <td class="L">{{data[3]}}</td>
+            <td class="number">{{data[4]}}</td>
+            <td class="code">{{data[5]}}</td>
+            <td class="N">{{data[6]}}</td>
+          </tr>
         </tbody>
       </div>
       <div *ngIf="dimension===2">
         <thead>
           <tr>
-            <th colspan="5" class = "title">部材データ</th>
+            <th class="id">No</th>
+            <th class="I-TAN">I-TAN</th>
+            <th class="J-TAN">J-TAN</th>
+            <th class="L">L(m)</th>
+            <th class="number">材料番号</th>
+            <th class="N">材料名称</th>
           </tr>
-        <tr>
-          <th class="id">No</th>
-          <th class="I-TAN">I-TAN</th>
-          <th class="J-TAN">J-TAN</th>
-          <th class="L">L(m)</th>
-          <th class="number">材料番号</th>
-          <th class="N">材料名称</th>
-        </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let data of member_dataset">
-          <td class="id">{{data[0]}}</td>
-          <td class="I-TAN">{{data[1]}}</td>
-          <td class="J-TAN">{{data[2]}}</td>
-          <td class="L">{{data[3]}}</td>
-          <td class="number">{{data[4]}}</td>
-          <td class="N">{{data[6]}}</td>
-        </tr>
+          <tr *ngFor="let data of member_dataset">
+            <td class="id">{{data[0]}}</td>
+            <td class="I-TAN">{{data[1]}}</td>
+            <td class="J-TAN">{{data[2]}}</td>
+            <td class="L">{{data[3]}}</td>
+            <td class="number">{{data[4]}}</td>
+            <td class="N">{{data[6]}}</td>
+          </tr>
         </tbody>
       </div>
     </table>
-  <!-- </div> -->
+  </div>
 </div>

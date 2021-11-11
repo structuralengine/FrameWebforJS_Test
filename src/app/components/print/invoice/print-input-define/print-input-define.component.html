@@ -3,11 +3,9 @@
         <div *ngFor="let dataset of define_dataset index as i">
             <table>
                 <thead>
-                    <tr>
-                        <th colspan="8" class="title">
-                            DEFINEデータ
-                        </th>
-                    </tr>
+                    <div *ngIf="i==0">
+                        <h2>DEFINEデータ</h2>
+                    </div>
                     <tr>
                         <th class="id">DefineNo.</th>
                         <th class="k">C1</th>

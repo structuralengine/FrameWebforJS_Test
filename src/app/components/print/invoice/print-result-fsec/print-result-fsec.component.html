@@ -1,10 +1,10 @@
 <div *ngIf="isEnable" class="invoicetTable fsec">
     <div class="print-md">
-        <table>
-            <h2>断面力</h2>
-            <div *ngFor="let title of fsec_typeNum; index as i">
+        <div *ngFor="let title of fsec_typeNum; index as i">
+            <table>
                 <div *ngIf="dimension===3">
                     <thead>
+                        <h2>断面力</h2>
                         <tr>
                             <th colspan="8" style="text-align: left;">{{title}}</th>
                         </tr>
@@ -47,6 +47,7 @@
                 </div>
                 <div *ngIf="dimension===2">
                     <thead>
+                        <h2>断面力</h2>
                         <tr>
                             <th colspan="6" style="text-align: left">{{title}}</th>
                         </tr>
@@ -79,7 +80,7 @@
                     </tbody>
                 </div>
                 <div *ngIf="(((i+1) % break_after) == 0) && i+1 !== fsec_typeNum.length" class="pagerBreak"></div>
-            </div>
-        </table>
+            </table>
+        </div>
     </div>
 </div>

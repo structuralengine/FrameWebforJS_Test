@@ -1,16 +1,17 @@
 <div *ngIf="isEnable" class="invoicetTable loadBasic">
     <div class="print-sm">
-        <h2>実荷重データ</h2>
         <div *ngFor="let case of load_data; index as i">
             <div *ngIf="case[1][0] !== 0">
                 <table>
                     <thead>
+                        <div *ngIf="i==0">
+                            <h2>実荷重データ</h2>
+                        </div>
                         <tr>
                             <th colspan="8" class="type">{{case[0]}}</th>
                         </tr>
                         <tr>
-                            <th class="load" colspa>部材荷重</th>
-                            <th class="number" colspan="8">部材番号</th>
+                            <th class="load">部材荷重</th>
                         </tr>
                         <tr>
                             <th class="k">スタート</th>
@@ -36,10 +37,13 @@
                     </tbody>
                 </table>
             </div>
-            <div *ngIf="case[2][0] !== 0">
+            <div *ngIf="case[2][0] !== 0 ">
                 <table>
                     <div *ngIf="dimension===3">
                         <thead>
+                            <div *ngIf="case[1][0] == 0 && i == 0">
+                                <h2>実荷重データ</h2>
+                            </div>
                             <tr>
                                 <th colspan="8" class="type">{{case[0]}}</th>
                             </tr>

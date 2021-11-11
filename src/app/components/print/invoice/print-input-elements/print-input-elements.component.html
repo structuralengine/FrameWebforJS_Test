@@ -1,9 +1,10 @@
 <div *ngIf="isEnable" class="invoicetTable elements">
-    <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
     <div class="print-sm">
-        <table>
-            <h2>材料データ</h2>
-            <div *ngFor="let title of elements_typeNum; index as i">
+        <div *ngFor="let title of elements_typeNum; index as i">
+            <table>
+                <div *ngIf="i==0">
+                    <h2>材料データ</h2>
+                </div>
                 <div *ngIf="dimension === 3">
                     <thead>
                         <tr>
@@ -31,25 +32,10 @@
                             <th class="twist"></th>
                         </tr>
                     </thead>
-                    <!-- <tbody>
-          <tr>
-            <td class="id" rowspan="2">{{ dataset[0] }}</td>
-            <td class="N" colspan="7" class="name">{{ dataset[8] }}</td>
-          </tr>
-          <tr>
-            <td class="A">{{ dataset[1] }}</td>
-            <td class="E">{{ dataset[2] }}</td>
-            <td class="G">{{ dataset[3] }}</td>
-            <td class="ESP">{{ dataset[4] }}</td>
-            <td class="y1">{{ dataset[5] }}</td>
-            <td class="I">{{ dataset[6] }}</td>
-            <td class="twist">{{ dataset[7] }}</td>
-          </tr>
-        </tbody> -->
-                    <tbody style="page-break-inside:avoid">
+                    <tbody>
                         <tr *ngFor="let dataset of elements_table[i]">
                             <td class="id">{{ dataset[0] }}</td>
-                            <td class="N">{{ dataset[8] }}</td>
+                            <td class="comb">{{ dataset[8] }}</td>
                             <td class="A">{{ dataset[1] }}</td>
                             <td class="E">{{ dataset[2] }}</td>
                             <td class="G">{{ dataset[3] }}</td>
@@ -93,8 +79,8 @@
                         </tr>
                     </tbody>
                 </div>
-            </div>
-        </table>
+            </table>
+        </div>
     </div>
     <!-- <div *ngIf="(((i+1) % break_after) == 0) && i+1 !== elements_typeNum.length" class="pagerBreak"></div> -->
 </div>

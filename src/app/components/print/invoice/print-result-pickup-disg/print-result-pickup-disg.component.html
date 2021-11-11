@@ -1,15 +1,15 @@
 <div *ngIf="isEnable" class="invoicetTable pickDisg">
-    <!--pickDisg_titleからtitleごとにデータを取り出す-->
     <div class="print-sm">
-        <table>
-            <h2>PICKUP 変位量</h2>
-            <div *ngFor="let title of pickDisg_title; index as i">
-                <!--pickDisg_datasetからdxmaxなどを取り出す-->
-                <div *ngFor="let dataset of pickDisg_dataset[i]; index as j">
+        <div *ngFor="let title of pickDisg_title; index as i">
+            <div *ngFor="let dataset of pickDisg_dataset[i]; index as j">
+                <table>
                     <div *ngFor="let datas of dataset; index as k">
                         <div *ngIf="k > 0">
                             <div *ngIf="dimension === 3">
                                 <thead>
+                                    <tr>
+                                        <th colspan="8" class="title">PICKUP　変位量</th>
+                                    </tr>
                                     <tr>
                                         <th colspan="8" style="text-align: left">{{ title }}</th>
                                     </tr>
@@ -48,12 +48,15 @@
                                         <td>{{ data[4] }}</td>
                                         <td>{{ data[5] }}</td>
                                         <td>{{ data[6] }}</td>
-                                        <td>{{ data[7] }}</td>
+                                        <td class="comb">{{ data[7] }}</td>
                                     </tr>
                                 </tbody>
                             </div>
                             <div *ngIf="dimension === 2">
                                 <thead>
+                                    <tr>
+                                        <th colspan="5" class="title">PICKUP　変位量</th>
+                                    </tr>
                                     <tr>
                                         <th colspan="5" style="text-align: left">{{ title }}</th>
                                     </tr>
@@ -81,11 +84,11 @@
                                         <td>{{ data[1] }}</td>
                                         <td>{{ data[2] }}</td>
                                         <td>{{ data[6] }}</td>
-                                        <td>{{ data[7] }}</td>
+                                        <td class="comb">{{ data[7] }}</td>
                                     </tr>
                                 </tbody>
                             </div>
-                            <div *ngIf="
+                            <!-- <div *ngIf="
                             j + 1 == pickDisg_dataset[0].length &&
                             i + 1 == pickDisg_dataset.length;
                             then pagerBl;
@@ -93,11 +96,11 @@
                             "></div>
                             <ng-template #pagerBr>
                                 <div *ngIf="(j + 1) % break_after == 0" class="pagerBreak"></div>
-                            </ng-template>
+                            </ng-template> -->
                         </div>
                     </div>
-                </div>
+                </table>
             </div>
-        </table>
+        </div>
     </div>
 </div>

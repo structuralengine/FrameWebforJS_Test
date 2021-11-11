@@ -1,61 +1,58 @@
-<div *ngIf="isEnable"  class="invoicetTable node">
-  <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
-  <div *ngFor="let dataset of node_dataset index as i">
-    <table class="print-lg">
-      <div *ngIf="dimension===3">
-        <thead>
-          <tr>
-            <th colspan="7" class = "title">格点データ</th>
-          </tr>
-        <tr>
-          <th class="id">No</th>
-          <th class="x">X</th>
-          <th class="y">Y</th>
-          <th class="z">Z</th>
-          <th class="id">No</th>
-          <th class="x">X</th>
-          <th class="y">Y</th>
-          <th class="z">Z</th>
-        </tr>
-        </thead>
-        <tbody>
-                  <tr *ngFor="let data of dataset">
-          <td class="id">{{data[0]}}</td>
-          <td class="x">{{data[1]}}</td>
-          <td class="y">{{data[2]}}</td>
-          <td class="z">{{data[3]}}</td>
-          <td class="id">{{data[4]}}</td>
-          <td class="x">{{data[5]}}</td>
-          <td class="y">{{data[6]}}</td>
-          <td class="z">{{data[7]}}</td>
-        </tr>
-        </tbody>
-      </div>
-      <div *ngIf="dimension===2">
-        <thead>
-          <tr>
-            <th colspan="5" class = "title">格点データ</th>
-          </tr>
-        <tr>
-          <th class="id">No</th>
-          <th class="x">X</th>
-          <th class="y">Y</th>
-          <th class="id">No</th>
-          <th class="x">X</th>
-          <th class="y">Y</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let data of dataset">
-          <td class="id">{{data[0]}}</td>
-          <td class="x">{{data[1]}}</td>
-          <td class="y">{{data[2]}}</td>
-          <td class="id">{{data[4]}}</td>
-          <td class="x">{{data[5]}}</td>
-          <td class="y">{{data[6]}}</td>
-        </tr>
-        </tbody>
-      </div>
-    </table>
+<div *ngIf="isEnable" class="invoicetTable node">
+  <div class=" print-lg">
+    <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
+    <div *ngFor="let dataset of node_dataset index as i">
+      <table>
+        <div *ngIf="dimension===3">
+          <h2>格点データ</h2>
+          <thead>
+            <tr>
+              <th class="id">No</th>
+              <th class="x">X</th>
+              <th class="y">Y</th>
+              <th class="z">Z</th>
+              <th class="id">No</th>
+              <th class="x">X</th>
+              <th class="y">Y</th>
+              <th class="z">Z</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of dataset">
+              <td class="id">{{data[0]}}</td>
+              <td class="x">{{data[1]}}</td>
+              <td class="y">{{data[2]}}</td>
+              <td class="z">{{data[3]}}</td>
+              <td class="id">{{data[4]}}</td>
+              <td class="x">{{data[5]}}</td>
+              <td class="y">{{data[6]}}</td>
+              <td class="z">{{data[7]}}</td>
+            </tr>
+          </tbody>
+        </div>
+        <div *ngIf="dimension===2">
+          <thead>
+            <tr>
+              <th class="id">No</th>
+              <th class="x">X</th>
+              <th class="y">Y</th>
+              <th class="id">No</th>
+              <th class="x">X</th>
+              <th class="y">Y</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of dataset">
+              <td class="id">{{data[0]}}</td>
+              <td class="x">{{data[1]}}</td>
+              <td class="y">{{data[2]}}</td>
+              <td class="id">{{data[4]}}</td>
+              <td class="x">{{data[5]}}</td>
+              <td class="y">{{data[6]}}</td>
+            </tr>
+          </tbody>
+        </div>
+      </table>
+    </div>
   </div>
 </div>

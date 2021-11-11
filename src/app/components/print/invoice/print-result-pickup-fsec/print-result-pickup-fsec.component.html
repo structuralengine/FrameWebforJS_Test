@@ -1,17 +1,19 @@
 <div *ngIf="isEnable" class="invoicetTable pickfsec">
     <div class="print-sm">
-        <table>
-            <h2>PICKUP 断面力</h2>
-            <!--pickFsec_titileからtitleごとにデータを取り出す-->
-            <div *ngFor="let title of pickFsec_title; index as i">
-                <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
-                <!--pickFsec_datasetからfxmaxなどを取り出す-->
-                <div *ngFor="let dataset of pickFsec_dataset[i]; index as j">
+        <!--pickFsec_titileからtitleごとにデータを取り出す-->
+        <div *ngFor="let title of pickFsec_title; index as i">
+            <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
+            <!--pickFsec_datasetからfxmaxなどを取り出す-->
+            <div *ngFor="let dataset of pickFsec_dataset[i]; index as j">
+                <table>
                     <div *ngFor="let datas of dataset; index as k">
                         <!--fxmaxなどからcase[0]が名称のため飛ばす-->
                         <div *ngIf="k > 0">
                             <div *ngIf="dimension===3">
                                 <thead>
+                                    <tr>
+                                        <th colspan="9" class="title">PICKUP　断面力</th>
+                                    </tr>
                                     <tr>
                                         <th colspan="9" style="text-align: left;">{{title}}</th>
                                     </tr>
@@ -60,6 +62,9 @@
                             <div *ngIf="dimension===2">
                                 <thead>
                                     <tr>
+                                        <th colspan="6" class="title">PICKUP　断面力</th>
+                                    </tr>
+                                    <tr>
                                         <th colspan="6" style="text-align: left;">{{title}}</th>
                                     </tr>
                                     <tr>
@@ -91,7 +96,7 @@
                                         <td>{{data[3]}}</td>
                                         <td>{{data[4]}}</td>
                                         <td>{{data[8]}}</td>
-                                        <td>{{data[9]}}</td>
+                                        <td class="comb">{{data[9]}}</td>
                                     </tr>
                                 </tbody>
                             </div>
@@ -102,8 +107,8 @@
                             </ng-template> -->
                         </div>
                     </div>
-                </div>
+                </table>
             </div>
-        </table>
+        </div>
     </div>
 </div>

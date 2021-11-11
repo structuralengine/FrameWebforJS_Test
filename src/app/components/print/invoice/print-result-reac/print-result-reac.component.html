@@ -1,10 +1,10 @@
 <div *ngIf="isEnable" class="invoicetTable reac">
     <div class="print-md">
-        <table>
-            <h2>反力</h2>
-            <div *ngFor="let title of reac_typeNum; index as i">
+        <div *ngFor="let title of reac_typeNum; index as i">
+            <table>
                 <div *ngIf="dimension === 3">
                     <thead>
+                        <h2>反力</h2>
                         <tr>
                             <th colspan="7" style="text-align: left">{{ title }}</th>
                         </tr>
@@ -32,6 +32,7 @@
                 </div>
                 <div *ngIf="dimension === 2">
                     <thead>
+                        <h2>反力</h2>
                         <tr>
                             <th colspan="4" style="text-align: left">{{ title }}</th>
                         </tr>
@@ -53,7 +54,7 @@
                     </tbody>
                 </div>
                 <!-- <div *ngIf="(((i+1) % break_after) == 0) && i+1 !== reac_typeNum.length" class="pagerBreak"></div> -->
-            </div>
-        </table>
+            </table>
+        </div>
     </div>
 </div>

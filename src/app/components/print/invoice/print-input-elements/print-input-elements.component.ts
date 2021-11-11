@@ -97,7 +97,7 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
         line[4] = item.Xp.toExponential(2);
         line[5] = item.Iy.toFixed(6);
         line[6] = item.Iz.toFixed(6);
-        line[7] = item.J.toFixed(4);
+        line[7] = item.J.toFixed(6);
         line[8] = item.n;
         body.push(line);
         row++;
@@ -105,11 +105,6 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
       
       splid.push(body);
       body = [];
-    }
-
-    if (splid.length > 0) {
-      const splidlength = -(splid[0].length / this.splen);
-      this.break_after = (Math.floor(splidlength + 5) > 0) ? Math.floor(splidlength + 5) : 1;
     }
 
     return {

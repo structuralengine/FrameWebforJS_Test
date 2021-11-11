@@ -3,9 +3,9 @@
         <div *ngFor="let dataset of pickup_dataset index as i">
             <table>
                 <thead>
-                    <tr>
-                        <th colspan="8" class="title">PICKUPデータ</th>
-                    </tr>
+                    <div *ngIf="i==0">
+                        <h2>PICKUPデータ</h2>
+                    </div>
                     <tr>
                         <th class="id">No.</th>
                         <th class="sign">荷重名称</th>
@@ -24,7 +24,7 @@
                 <tbody>
                     <tr *ngFor="let data of dataset">
                         <td class="id">{{data[0]}}</td>
-                        <td class="word">{{data[1]}}</td>
+                        <td class="comb">{{data[1]}}</td>
                         <td class="name">{{data[2]}}</td>
                         <td class="name">{{data[3]}}</td>
                         <td class="node">{{data[4]}}</td>

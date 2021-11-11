@@ -1,12 +1,14 @@
 <div *ngIf="isEnable" class="invoicetTable fixNode">
     <div class="print-lg">
-        <h2>支点データ</h2>
         <div *ngFor="let title of fixNode_typeNum; index as i">
             <table>
+                <div *ngIf="i==0">
+                    <h2>支点データ</h2>
+                </div>
                 <div *ngIf="dimension===3">
                     <thead>
                         <tr>
-                            <th colspan="7" class="type" >タイプ{{title}}</th>
+                            <th colspan="7" class="type">タイプ{{title}}</th>
                         </tr>
                         <tr>
                             <th class="id">格点No</th>

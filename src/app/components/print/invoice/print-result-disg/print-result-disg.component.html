@@ -1,11 +1,11 @@
 <div *ngIf="isEnable" class="invoicetTable disg">
     <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
     <div class="print-sm">
-        <table>
-            <h2>変位量</h2>
-            <div *ngFor="let title of disg_typeNum; index as i">
+        <div *ngFor="let title of disg_typeNum; index as i">
+            <table>
                 <div *ngIf="dimension === 3">
                     <thead>
+                        <h2>変位量</h2>
                         <tr>
                             <th colspan="7" style="text-align: left">{{ title }}</th>
                         </tr>
@@ -42,6 +42,7 @@
                 </div>
                 <div *ngIf="dimension === 2">
                     <thead>
+                        <h2>変位量</h2>
                         <tr>
                             <th colspan="4" style="text-align: left">{{ title }}</th>
                         </tr>
@@ -68,7 +69,7 @@
                     </tbody>
                 </div>
                 <div *ngIf="(i + 1) % break_after == 0 && i + 1 !== disg_typeNum.length" class="pagerBreak"></div>
-            </div>
-        </table>
+            </table>
+        </div>
     </div>
 </div>

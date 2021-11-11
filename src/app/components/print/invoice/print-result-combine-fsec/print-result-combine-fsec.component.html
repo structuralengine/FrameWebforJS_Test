@@ -6,12 +6,14 @@
             <!--combFsec_datasetからfxmaxなどを取り出す-->
             <div *ngFor="let dataset of combFsec_dataset[i]; index as j">
                 <table>
-                    <h2>COMBINE 断面力</h2>
                     <div *ngFor="let datas of dataset; index as k">
                         <!--fxmaxなどからcase[0]が名称のため飛ばす-->
                         <div *ngIf="k > 0">
                             <div *ngIf="dimension === 3">
                                 <thead>
+                                    <tr>
+                                        <th colspan="10" class="title">COMBINE　断面力</th>
+                                    </tr>
                                     <tr>
                                         <th colspan="10" style="text-align: left">{{ title }}</th>
                                     </tr>
@@ -62,6 +64,9 @@
                             </div>
                             <div *ngIf="dimension === 2">
                                 <thead>
+                                    <tr>
+                                        <th colspan="7" class="title">COMBINE　断面力</th>
+                                    </tr>
                                     <tr>
                                         <th colspan="7" style="text-align: left">{{ title }}</th>
                                     </tr>
