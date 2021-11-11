@@ -108,15 +108,6 @@ export class PrintInputNoticePointsComponent implements OnInit, AfterViewInit {
       if (counter > 0) {
         body.push(line); // 表の1行 登録
       }
-
-      //１テーブルでthis.bottomCell行以上  になったら
-      if (row > this.bottomCell) {
-        splid.push(body);
-        body = [];
-        row = 3;
-      }
-
-      row++;
     }
 
     if (body.length > 0) {

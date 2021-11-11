@@ -126,7 +126,7 @@ export class InputElementsService {
           J == null &&
           Iy == null &&
           Iz == null &&
-          n == ""
+          n == void 0
         ) {
           continue;
         }
@@ -140,7 +140,7 @@ export class InputElementsService {
           J: J == null ? empty : J,
           Iy: Iy == null ? empty : Iy,
           Iz: Iz == null ? empty : Iz,
-          n: n == null ? empty : n,
+          n: n == void 0 ? "" : n,
         };
         if (empty === null) {
           // 計算以外では、名前を保存

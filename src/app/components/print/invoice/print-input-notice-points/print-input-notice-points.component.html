@@ -1,11 +1,11 @@
 <div *ngIf="isEnable" class="invoicetTable">
-    <!-- <div *ngIf="judge" class="pagerBreak"></div> -->
     <div class="print-sm">
         <div *ngFor="let dataset of notice_dataset index as i">
-            <!-- <div *ngIf="i > 0" class="pagerBreak space"></div> -->
             <table>
                 <thead>
-                    <h2>着目点</h2>
+                    <div *ngIf="i==0">
+                        <h2>着目点</h2>
+                    </div>
                     <tr>
                         <th class="id">部材No</th>
                         <th class="long">部材長</th>
@@ -40,4 +40,4 @@
             </table>
         </div>
     </div>
-    </div>
+</div>

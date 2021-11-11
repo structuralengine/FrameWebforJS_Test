@@ -1,58 +1,60 @@
 <div *ngIf="isEnable" class="invoicetTable reac">
-  <div *ngIf="judge" class="pagerBreak"></div>
-  <h2>反力</h2>
-  <div *ngFor="let title of reac_typeNum; index as i">
-    <table class="print-md">
-      <div *ngIf="dimension === 3">
-        <thead>
-          <tr>
-            <th colspan="7" style="text-align: left">{{ title }}</th>
-          </tr>
-          <tr>
-            <th>SUPPORT</th>
-            <th>TX</th>
-            <th>TY</th>
-            <th>TZ</th>
-            <th>MX</th>
-            <th>MY</th>
-            <th>MZ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let dataset of reac_table[i]">
-            <td>{{ dataset[0] }}</td>
-            <td>{{ dataset[1] }}</td>
-            <td>{{ dataset[2] }}</td>
-            <td>{{ dataset[3] }}</td>
-            <td>{{ dataset[4] }}</td>
-            <td>{{ dataset[5] }}</td>
-            <td>{{ dataset[6] }}</td>
-          </tr>
-        </tbody>
-      </div>
-      <div *ngIf="dimension === 2">
-        <thead>
-          <tr>
-            <th colspan="4" style="text-align: left">{{ title }}</th>
-          </tr>
+    <div class="print-md">
+        <div *ngFor="let title of reac_typeNum; index as i">
+            <table>
+                <div *ngIf="dimension === 3">
+                    <thead>
+                        <h2>反力</h2>
+                        <tr>
+                            <th colspan="7" style="text-align: left">{{ title }}</th>
+                        </tr>
+                        <tr>
+                            <th>SUPPORT</th>
+                            <th>TX</th>
+                            <th>TY</th>
+                            <th>TZ</th>
+                            <th>MX</th>
+                            <th>MY</th>
+                            <th>MZ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of reac_table[i]">
+                            <td>{{ dataset[0] }}</td>
+                            <td>{{ dataset[1] }}</td>
+                            <td>{{ dataset[2] }}</td>
+                            <td>{{ dataset[3] }}</td>
+                            <td>{{ dataset[4] }}</td>
+                            <td>{{ dataset[5] }}</td>
+                            <td>{{ dataset[6] }}</td>
+                        </tr>
+                    </tbody>
+                </div>
+                <div *ngIf="dimension === 2">
+                    <thead>
+                        <h2>反力</h2>
+                        <tr>
+                            <th colspan="4" style="text-align: left">{{ title }}</th>
+                        </tr>
 
-          <tr>
-            <th>SUPPORT</th>
-            <th>H</th>
-            <th>N</th>
-            <th>M</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let dataset of reac_table[i]">
-            <td>{{ dataset[0] }}</td>
-            <td>{{ dataset[1] }}</td>
-            <td>{{ dataset[2] }}</td>
-            <td>{{ dataset[6] }}</td>
-          </tr>
-        </tbody>
-      </div>
-    </table>
-    <div *ngIf="(((i+1) % break_after) == 0) && i+1 !== reac_typeNum.length" class="pagerBreak"></div>
-  </div>
+                        <tr>
+                            <th>SUPPORT</th>
+                            <th>H</th>
+                            <th>N</th>
+                            <th>M</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of reac_table[i]">
+                            <td>{{ dataset[0] }}</td>
+                            <td>{{ dataset[1] }}</td>
+                            <td>{{ dataset[2] }}</td>
+                            <td>{{ dataset[6] }}</td>
+                        </tr>
+                    </tbody>
+                </div>
+                <!-- <div *ngIf="(((i+1) % break_after) == 0) && i+1 !== reac_typeNum.length" class="pagerBreak"></div> -->
+            </table>
+        </div>
+    </div>
 </div>

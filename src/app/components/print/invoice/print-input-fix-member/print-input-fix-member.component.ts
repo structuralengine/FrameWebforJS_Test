@@ -77,7 +77,7 @@ export class PrintInputFixMemberComponent implements OnInit, AfterViewInit {
     // テーブル
     const splid: any[] = new Array();
     const title: string[] = new Array();
-    let row: number = 8;
+
     for (const index of keys) {
       const elist = json[index]; // 1テーブル分のデータを取り出す
       const table: any[] = new Array(); // この時点でリセット、再定義 一旦空にする
@@ -95,72 +95,14 @@ export class PrintInputFixMemberComponent implements OnInit, AfterViewInit {
         line[3] = item.tz.toString();
         line[4] = item.tr.toString();
         body.push(line);
-        row++;
-
-        //１テーブルでthis.bottomCell行以上データがあるならば
-        if (row > this.bottomCell) {
-          table.push(body);
-          body = [];
-          row = 3;
-        }
       }
-
-      if (body.length > 0) {
-        table.push(body);
-      }
-      splid.push(table);
-      row = 5;
+      splid.push(body);
+      body = [];
     }
-
-    // 全体の高さを計算する
-    let countCell = 0;
-    for (const index of keys) {
-      const elist = json[index]; // 1テーブル分のデータを取り出す
-      countCell += Object.keys(elist).length + 1;
-    }
-    const countHead = keys.length * 3;
-    const countSemiHead = splid.length * 2 ;
-    const countTotal = countCell + countHead + countSemiHead + 3;
-
-    // 各タイプの前に改ページ（break_after）が必要かどうか判定する
-    const break_after: boolean[] = new Array();
-    let ROW = 8;
-    for (const index of keys) {
-      this.reROW = 0;
-      const elist = json[index]; // 1テーブル分のデータを取り出す
-      let countCell = Object.keys(elist).length;
-      ROW += countCell;
-
-      if (ROW < this.bottomCell) {
-        break_after.push(false);
-        this.reROW = ROW + 5;
-        ROW = ROW + 5;
-      } else {
-        if (index === "1") {
-          break_after.push(false);
-        } else {
-          break_after.push(true);
-          ROW = 0;
-        }
-        let countHead_break = Math.floor((countCell / this.bottomCell) *3 + 2);
-        ROW += countHead_break + countCell;
-        ROW = ROW % this.bottomCell;
-        this.reROW = ROW % (this.bottomCell+1);
-        ROW += 5;
-      }
-    }
-
-    this.remainCount = this.reROW;
-   
-    //最後のページにどれだけデータが残っているかを求める
-    let lastArrayCount: number = this.remainCount;
 
     return {
       table: splid, // [タイプ１のテーブルリスト[], タイプ２のテーブルリスト[], ...]
       title: title, // [タイプ１のタイトル, タイプ２のタイトル, ... ]
-      this: countTotal, // 全体の高さ
-      last: lastArrayCount, // 最後のページの高さ
-      break_after: break_after, // 各タイプの前に改ページ（break_after）が必要かどうか判定
     };
   }
 }

@@ -131,6 +131,9 @@ $border-color: #428bca; // ボーダーライン
     border-bottom: #0e036e;
     border-bottom-style: solid;
     border-bottom-width: thin;
+    word-wrap: break-word;
+    /* IEやFirefox対応用 */
+    overflow-wrap: break-word;
 }
 
 .three-container {

@@ -1,16 +1,17 @@
 <div *ngIf="isEnable" class="invoicetTable loadBasic">
     <div class="print-sm">
-        <h2>実荷重データ</h2>
         <div *ngFor="let case of load_data; index as i">
             <div *ngIf="case[1][0] !== 0">
                 <table>
                     <thead>
+                        <div *ngIf="i==0">
+                            <h2>実荷重データ</h2>
+                        </div>
                         <tr>
                             <th colspan="8" class="type">{{case[0]}}</th>
                         </tr>
                         <tr>
-                            <th class="load" colspa>部材荷重</th>
-                            <th class="number" colspan="8">部材番号</th>
+                            <th class="load">部材荷重</th>
                         </tr>
                         <tr>
                             <th class="k">スタート</th>
@@ -32,39 +33,43 @@
                             <td class="node"> {{data_member[4]}}</td>
                             <td class="section"> {{data_member[5]}}</td>
                             <td class="spring"> {{data_member[6]}}</td>
-                            <td class="conection">{{data_member[7]}} </tbody>
+                            <td class="conection">{{data_member[7]}}
+                    </tbody>
                 </table>
             </div>
-            <div *ngIf="case[2][0] !== 0">
-                <table> 
+            <div *ngIf="case[2][0] !== 0 ">
+                <table>
                     <div *ngIf="dimension===3">
-                    <thead>
-                        <tr>
-                            <th colspan="8" class="type">{{case[0]}}</th>
-                        </tr>
-                        <tr>
-                            <th class="id">節点荷重</th>
-                            <th class="k">節点番号</th>
-                            <th class="sign">Fx</th>
-                            <th class="name">Fy</th>
-                            <th class="node">Fz</th>
-                            <th class="section">Mx</th>
-                            <th class="spring">My</th>
-                            <th class="conection">Mz</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let data_node of case[2]">
-                            <td class="id"> {{data_node[0]}}</td>
-                            <td class="k"> {{data_node[1]}}</td>
-                            <td class="sign">{{data_node[2]}}</td>
-                            <td class="name">{{data_node[3]}}</td>
-                            <td class="node">{{data_node[4]}}</td>
-                            <td class="section">{{data_node[5]}}</td>
-                            <td class="spring"> {{data_node[6]}}</td>
-                            <td class="spring"> {{data_node[7]}}</td>
-                        </tr>
-                    </tbody>
+                        <thead>
+                            <div *ngIf="case[1][0] == 0 && i == 0">
+                                <h2>実荷重データ</h2>
+                            </div>
+                            <tr>
+                                <th colspan="8" class="type">{{case[0]}}</th>
+                            </tr>
+                            <tr>
+                                <th class="id">節点荷重</th>
+                                <th class="k">節点番号</th>
+                                <th class="sign">Fx</th>
+                                <th class="name">Fy</th>
+                                <th class="node">Fz</th>
+                                <th class="section">Mx</th>
+                                <th class="spring">My</th>
+                                <th class="conection">Mz</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data_node of case[2]">
+                                <td class="id"> {{data_node[0]}}</td>
+                                <td class="k"> {{data_node[1]}}</td>
+                                <td class="sign">{{data_node[2]}}</td>
+                                <td class="name">{{data_node[3]}}</td>
+                                <td class="node">{{data_node[4]}}</td>
+                                <td class="section">{{data_node[5]}}</td>
+                                <td class="spring"> {{data_node[6]}}</td>
+                                <td class="spring"> {{data_node[7]}}</td>
+                            </tr>
+                        </tbody>
                     </div>
                     <div *ngIf="dimension===2">
                         <tr>
