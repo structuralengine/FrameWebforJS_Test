@@ -602,13 +602,15 @@ export class ThreeService {
             continue;
           }
 
-          this.ChangePage(number).finally(() => {
+          // .finally(() => {
             // title3 に タイトルがあれば使う
             let name = key;
             if (title3.length > i) {
               name = title3[i];
             }
-
+            
+            this.ChangePage(number);
+            
             html2canvas(this.canvasElement).then((canvas) => {
               result.push({
                 title: title2 + name,
@@ -620,7 +622,7 @@ export class ThreeService {
                 resolve({ result, title1 });
               }
             });
-          });
+          // });
         }
       }
     });
