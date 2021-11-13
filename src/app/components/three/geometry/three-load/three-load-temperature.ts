@@ -37,11 +37,10 @@ export class ThreeLoadTemperature {
 
     this.arrow_mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 
-    this.matLine = new LineMaterial({
+    this.matLine = new THREE.LineBasicMaterial({
       color: 0xff0000,
       linewidth: 0.001, // in pixels
       vertexColors: true,
-      dashed: false
     });
   }
   public create(

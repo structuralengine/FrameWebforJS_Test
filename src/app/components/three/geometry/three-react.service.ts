@@ -306,7 +306,7 @@ export class ThreeReactService {
     const matLine: LineMaterial = new LineMaterial({
       color,
       linewidth,
-      vertexColors: THREE.VertexColors,
+      // vertexColors: THREE.VertexColors,
       dashed: false
     });
     const line: Line2 = new Line2(geometry, matLine);

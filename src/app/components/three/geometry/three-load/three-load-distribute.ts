@@ -231,12 +231,14 @@ export class ThreeLoadDistribute {
     } else {
       face_mat = this.face_mat_Blue;
     }
-    const face_geo = new THREE.Geometry();
-    face_geo.vertices = points;
 
-    face_geo.faces.push(new THREE.Face3(0, 1, 2));
-    face_geo.faces.push(new THREE.Face3(2, 3, 4));
-    face_geo.faces.push(new THREE.Face3(0, 2, 4));
+    const face_geo = new THREE.BufferGeometry().setFromPoints( points )
+    // const face_geo = new THREE.Geometry();
+    // face_geo.vertices = points;
+
+    // face_geo.faces.push(new THREE.Face3(0, 1, 2));
+    // face_geo.faces.push(new THREE.Face3(2, 3, 4));
+    // face_geo.faces.push(new THREE.Face3(0, 2, 4));
 
     const mesh = new THREE.Mesh(face_geo, face_mat);
     mesh.name = "face";

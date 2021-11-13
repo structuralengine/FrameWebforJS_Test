@@ -140,12 +140,12 @@ export class ThreeLoadMoment {
     }
 
     //中心点を作成
-    const point_geo = new THREE.Geometry();
-    point_geo.vertices.push(new THREE.Vector3(0, 0, 0));
-    const point_mesh = new THREE.Points(point_geo, this.point_mat);
-    point_mesh.name = 'points_center';
-    point_mesh.visible = false;
-    group0.add(point_mesh);
+    // const point_geo = new THREE.Geometry();
+    // point_geo.vertices.push(new THREE.Vector3(0, 0, 0));
+    // const point_mesh = new THREE.Points(point_geo, this.point_mat);
+    // point_mesh.name = 'points_center';
+    // point_mesh.visible = false;
+    // group0.add(point_mesh);
 
     group0.add(child);
     group0.name = "group";

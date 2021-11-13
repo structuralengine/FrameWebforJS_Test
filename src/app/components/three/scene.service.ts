@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { ThreeComponent } from './three.component';
 import { GUI } from './libs/dat.gui.module.js';
 import { OrbitControls } from './libs/OrbitControls.js';
+import { OrbitControlsGizmo } from  "./libs/OrbitControlsGizmo.js";
 import { CSS2DRenderer, CSS2DObject } from './libs/CSS2DRenderer.js';
 import { SafeHtml } from '@angular/platform-browser';
 import { DataHelperModule } from '../../providers/data-helper.module';
@@ -108,6 +109,10 @@ export class SceneService {
     controls.damping = 0.2;
     controls.addEventListener('change', this.render);
     controls.enableRotate = (this.helper.dimension === 3) ? true : false; // 2次元モードの場合はカメラの回転を無効にする
+    // Add the Obit Controls Gizmo
+    const controlsGizmo = new OrbitControlsGizmo(controls, { size:  100, padding:  8 });
+    // Add the Gizmo domElement to the dom 
+    document.body.appendChild(controlsGizmo.domElement);
   }
 
    // 物体とマウスの交差判定に用いるレイキャスト

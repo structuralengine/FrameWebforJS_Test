@@ -1142,9 +1142,9 @@ export class ThreeLoadService {
             //以降は当たり判定に用いる部分
             const vertice_points = [];
             //当たり判定のエリアを登録
-            for (let num of item.children[0].children[0].children[0].geometry.vertices) {
-              vertice_points.push(num.x)
-              vertice_points.push(num.y)
+            const targ = item.children[0].children[0].children[0].geometry;
+            for (let num of targ.attributes.position.array) {
+              vertice_points.push(num)
             }
             if (Xarea1.length === 0) {
               editor.setOffset(item, 0);

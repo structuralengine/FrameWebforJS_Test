@@ -153,12 +153,14 @@ export class ThreeSectionForceMeshService {
   // 面
   private getFace(points: THREE.Vector3[]): THREE.Mesh {
 
-    const face_geo = new THREE.Geometry();
-    face_geo.vertices = points;
+    const face_geo = new THREE.BufferGeometry().setFromPoints( points )
 
-    face_geo.faces.push(new THREE.Face3(0, 1, 2));
-    face_geo.faces.push(new THREE.Face3(2, 3, 4));
-    face_geo.faces.push(new THREE.Face3(0, 2, 4));
+    // const face_geo = new THREE.Geometry();
+    // face_geo.vertices = points;
+    
+    // face_geo.faces.push(new THREE.Face3(0, 1, 2));
+    // face_geo.faces.push(new THREE.Face3(2, 3, 4));
+    // face_geo.faces.push(new THREE.Face3(0, 2, 4));
 
     const mesh = new THREE.Mesh(face_geo, this.face_mat);
     mesh.name = "face";
@@ -317,13 +319,11 @@ export class ThreeSectionForceMeshService {
 
     // 面
     const mesh = child.getObjectByName("face");
-    const geo: THREE.Geometry = mesh["geometry"];
-    for(let i= 0; i < geo.vertices.length; i++){
-      geo.vertices[i].x = points[i].x;
-      geo.vertices[i].y = points[i].y;
-      geo.vertices[i].z = points[i].z;
+    const geo: THREE.BufferGeometry = mesh["geometry"];
+    for(let i= 0; i < geo.attributes.position.count; i++){
+      geo.attributes.position.setXYZ(i, points[i].x, points[i].y, points[i].z);
     }
-    geo.verticesNeedUpdate = true;
+    geo.attributes.position.needsUpdate = true;
 
      // 線
     const line: any = child.getObjectByName("line");

@@ -29,18 +29,16 @@ export class ThreeLoadAxial {
     this.text = text;
     this.dim = new ThreeLoadDimension(text);
     
-    this.matLine = new LineMaterial({
+    this.matLine = new THREE.LineBasicMaterial({
       //color: 0xffffff,  //65行目付近のcolor.pushと同時に削除
       color: 0xff0000,
       linewidth: 0.001, // in pixels
       vertexColors: true,
-      dashed: false
     });
-    this.matLine_Pick  = new LineMaterial({
+    this.matLine_Pick  = new THREE.LineBasicMaterial({
       color: 0x00ffff,
       linewidth: 0.001, // in pixels
       vertexColors: true,
-      dashed: false
     });
 
     this.arrow_mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });

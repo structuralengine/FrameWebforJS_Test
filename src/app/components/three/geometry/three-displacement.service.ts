@@ -328,7 +328,7 @@ export class ThreeDisplacementService {
         const matLine: LineMaterial = new LineMaterial({
           color: 0xFF0000,
           linewidth: 0.001,
-          vertexColors: THREE.VertexColors,
+          // vertexColors: THREE.VertexColors,
           dashed: false
         });
         const line: Line2 = new Line2(geometry, matLine);
