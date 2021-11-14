@@ -20,6 +20,9 @@ export class SceneService {
   private renderer: THREE.WebGLRenderer = null;
   private labelRenderer: CSS2DRenderer = null;
 
+  // ギズモ
+  private controlsGizmo: HTMLCanvasElement = null;
+
   // カメラ
   private camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
   private aspectRatio: number;
@@ -109,10 +112,14 @@ export class SceneService {
     controls.damping = 0.2;
     controls.addEventListener('change', this.render);
     controls.enableRotate = (this.helper.dimension === 3) ? true : false; // 2次元モードの場合はカメラの回転を無効にする
+    if(this.controlsGizmo !== null){
+      document.body.removeChild(this.controlsGizmo);
+    }
     // Add the Obit Controls Gizmo
     const controlsGizmo = new OrbitControlsGizmo(controls, { size:  100, padding:  8 });
-    // Add the Gizmo domElement to the dom 
-    document.body.appendChild(controlsGizmo.domElement);
+    // Add the Gizmo domElement to the dom
+    this.controlsGizmo = controlsGizmo.domElement;
+    document.body.appendChild(this.controlsGizmo);
   }
 
    // 物体とマウスの交差判定に用いるレイキャスト
