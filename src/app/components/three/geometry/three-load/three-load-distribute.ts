@@ -211,7 +211,13 @@ export class ThreeLoadDistribute {
         new THREE.Vector3(x1, y0, 0),
         new THREE.Vector3(x1, y1, 0),
         new THREE.Vector3(x2, y2, 0),
+
+        new THREE.Vector3(x2, y2, 0),
         new THREE.Vector3(x3, y3, 0),
+        new THREE.Vector3(x3, y0, 0),
+
+        new THREE.Vector3(x1, y0, 0),
+        new THREE.Vector3(x2, y2, 0),
         new THREE.Vector3(x3, y0, 0),
       ],
       L1,
@@ -231,12 +237,14 @@ export class ThreeLoadDistribute {
     } else {
       face_mat = this.face_mat_Blue;
     }
-    const face_geo = new THREE.Geometry();
-    face_geo.vertices = points;
 
-    face_geo.faces.push(new THREE.Face3(0, 1, 2));
-    face_geo.faces.push(new THREE.Face3(2, 3, 4));
-    face_geo.faces.push(new THREE.Face3(0, 2, 4));
+    const face_geo = new THREE.BufferGeometry().setFromPoints( points )
+    // const face_geo = new THREE.Geometry();
+    // face_geo.vertices = points;
+
+    // face_geo.faces.push(new THREE.Face3(0, 1, 2));
+    // face_geo.faces.push(new THREE.Face3(2, 3, 4));
+    // face_geo.faces.push(new THREE.Face3(0, 2, 4));
 
     const mesh = new THREE.Mesh(face_geo, face_mat);
     mesh.name = "face";
@@ -254,8 +262,13 @@ export class ThreeLoadDistribute {
       line_mat = this.line_mat_Blue;
     }
     // const line_mat = new THREE.LineBasicMaterial({ color: my_color });
-
-    const line_geo = new THREE.BufferGeometry().setFromPoints(points);
+    const line_point = [
+      points[0],
+      points[1],
+      points[4],
+      points[5]
+    ]
+    const line_geo = new THREE.BufferGeometry().setFromPoints(line_point);
     const line = new THREE.Line(line_geo, line_mat);
     line.name = "line";
 

@@ -51,7 +51,7 @@
     "pqgrid": "^7.5.0",
     "rxjs": "~6.6.2",
     "rxjs-compat": "^6.5.3",
-    "three": "^0.120.1",
+    "three": "^0.128.0",
     "troika-three-text": "^0.42.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
@@ -65,7 +65,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
-    "@types/three": "^0.103.2",
+    "@types/three": "^0.128.0",
     "bootstrap": "^4.3.1",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.6.0",

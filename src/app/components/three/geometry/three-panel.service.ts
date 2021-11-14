@@ -158,14 +158,21 @@ export class ThreePanelService {
   // 通常のgeometry(buffergeometryではない)
   private createPanel(vertexlist, row): void {
 
-    const geometry = new THREE.Geometry();
-
+    const points = []
     for(const p of vertexlist){
-      geometry.vertices.push(new THREE.Vector3(p[0], p[1], p[2]))
+      points.push(new THREE.Vector3(p[0], p[1], p[2]))
     }
-    for (let length = 0; length < geometry.vertices.length - 2; length++){
-      geometry.faces.push( new THREE.Face3( 0, length + 1, length + 2 ) );
-    }
+    const geometry = new THREE.BufferGeometry().setFromPoints( points )
+
+    // const geometry = new THREE.Geometry();
+
+    // for(const p of vertexlist){
+    //   geometry.vertices.push(new THREE.Vector3(p[0], p[1], p[2]))
+    // }
+    // for (let length = 0; length < geometry.vertices.length - 2; length++){
+    //   geometry.faces.push( new THREE.Face3( 0, length + 1, length + 2 ) );
+    // }
+    
     const material = new THREE.MeshBasicMaterial({
       transparent: true,
       side: THREE.DoubleSide,
