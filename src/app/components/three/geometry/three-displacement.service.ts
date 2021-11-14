@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import * as THREE from 'three';
-import { Line2 } from '../libs/Line2.js';
-import { LineMaterial } from '../libs/LineMaterial.js';
-import { LineGeometry } from '../libs/LineGeometry.js';
-
 import { SceneService } from '../scene.service';
 
 import { DataHelperModule } from '../../../providers/data-helper.module';
@@ -310,28 +306,23 @@ export class ThreeDisplacementService {
         const yk = (1 - n) * yi + n * yj + yhg * scale;
         const zk = (1 - n) * zi + n * zj + zhg * scale;
 
-        positions.push(xk, yk, zk);
+        positions.push(new THREE.Vector3(xk, yk, zk));
         colors.push(threeColor.r, threeColor.g, threeColor.b);
       }
 
       if (this.lineList.length > i) {
         const line = this.lineList[i];
         // line を修正するコード
-        const geometry: LineGeometry = line.geometry;
-        geometry.setPositions(positions);
+        const geometry: THREE.BufferGeometry = line.geometry;
+        geometry.setFromPoints(positions);
 
       } else {
-        const geometry: LineGeometry = new LineGeometry();
-        geometry.setPositions(positions);
-        geometry.setColors(colors);
-
-        const matLine: LineMaterial = new LineMaterial({
+        const geometry = new THREE.BufferGeometry().setFromPoints( positions );
+        const matLine = new THREE.LineBasicMaterial({
           color: 0xFF0000,
           linewidth: 0.001,
-          // vertexColors: THREE.VertexColors,
-          dashed: false
         });
-        const line: Line2 = new Line2(geometry, matLine);
+        const line = new THREE.Line(geometry, matLine);
         line.computeLineDistances();
 
         line.scale.set(1, 1, 1);

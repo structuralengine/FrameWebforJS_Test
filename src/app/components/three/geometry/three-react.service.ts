@@ -2,10 +2,6 @@ import { Injectable } from '@angular/core';
 
 import * as THREE from 'three';
 
-import { Line2 } from '../libs/Line2.js';
-import { LineMaterial } from '../libs/LineMaterial.js';
-import { LineGeometry } from '../libs/LineGeometry.js';
-
 import { SceneService } from '../scene.service';
 
 import { DataHelperModule } from '../../../providers/data-helper.module';
@@ -143,19 +139,19 @@ export class ThreeReactService {
         continue;
       }
       // x方向の集中荷重
-      const xArrow: Line2 = this.setPointReact(reac.tx, pMax, node, 'px');
+      const xArrow: THREE.Line = this.setPointReact(reac.tx, pMax, node, 'px');
       if (xArrow !== null) {
         this.pointLoadList.push(xArrow);
         this.scene.add(xArrow);
       }
       // y方向の集中荷重
-      const yArrow: Line2 = this.setPointReact(reac.ty, pMax, node, 'py');
+      const yArrow: THREE.Line = this.setPointReact(reac.ty, pMax, node, 'py');
       if (yArrow !== null) {
         this.pointLoadList.push(yArrow);
         this.scene.add(yArrow);
       }
       // z方向の集中荷重
-      const zArrow: Line2 = this.setPointReact(reac.tz, pMax, node, 'pz');
+      const zArrow: THREE.Line = this.setPointReact(reac.tz, pMax, node, 'pz');
       if (zArrow !== null) {
         this.pointLoadList.push(zArrow);
         this.scene.add(zArrow);
@@ -244,7 +240,7 @@ export class ThreeReactService {
 
   // 節点荷重の矢印を作成する
   private setPointReact(value: number, pMax: number,
-    node: any, name: string): Line2 {
+    node: any, name: string): THREE.Line {
 
     if (value === 0) {
       return null;
@@ -256,21 +252,21 @@ export class ThreeReactService {
     const linewidth: number = Math.abs(length) / 5000;
 
     let color: number;
-    const positions = [];
+    const positions: THREE.Vector3[] = [];
 
 
-    positions.push(node.x, node.y, node.z);
+    positions.push(new THREE.Vector3(node.x, node.y, node.z));
     switch (name) {
       case 'px':
-        positions.push(node.x - length, node.y, node.z);
+        positions.push(new THREE.Vector3(node.x - length, node.y, node.z));
         color = 0xFF0000;
         break;
       case 'py':
-        positions.push(node.x, node.y - length, node.z);
+        positions.push(new THREE.Vector3(node.x, node.y - length, node.z));
         color = 0x00FF00;
         break;
       case 'pz':
-        positions.push(node.x, node.y, node.z - length);
+        positions.push(new THREE.Vector3(node.x, node.y, node.z - length));
         color = 0x0000FF;
         break;
     }
@@ -299,17 +295,12 @@ export class ThreeReactService {
     colors.push(threeColor.r, threeColor.g, threeColor.b);
     colors.push(threeColor.r, threeColor.g, threeColor.b);
 
-    const geometry: LineGeometry = new LineGeometry();
-    geometry.setPositions(positions);
-    geometry.setColors(colors);
-
-    const matLine: LineMaterial = new LineMaterial({
+    const geometry = new THREE.BufferGeometry().setFromPoints( positions );
+    const matLine = new THREE.LineBasicMaterial({
       color,
       linewidth,
-      // vertexColors: THREE.VertexColors,
-      dashed: false
     });
-    const line: Line2 = new Line2(geometry, matLine);
+    const line = new THREE.Line(geometry, matLine);
     line.computeLineDistances();
     line.add(cone);
 

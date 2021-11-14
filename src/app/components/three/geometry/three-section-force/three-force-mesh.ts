@@ -137,11 +137,17 @@ export class ThreeSectionForceMeshService {
 
     return {
       points:[
-        new THREE.Vector3(x1, 0, 0),
-        new THREE.Vector3(x1, y1, 0),
-        new THREE.Vector3(x2, y2, 0),
-        new THREE.Vector3(x3, y3, 0),
-        new THREE.Vector3(x3, 0, 0),
+        new THREE.Vector3(x1, 0, 0),  // 0
+        new THREE.Vector3(x1, y1, 0), // 1
+        new THREE.Vector3(x2, y2, 0), // 2
+
+        new THREE.Vector3(x2, y2, 0), // 2
+        new THREE.Vector3(x3, y3, 0), // 3
+        new THREE.Vector3(x3, 0, 0),  // 4
+
+        new THREE.Vector3(x1, 0, 0),  // 0
+        new THREE.Vector3(x2, y2, 0), // 2
+        new THREE.Vector3(x3, 0, 0),  // 4
       ],
       L1,
       L,
@@ -171,7 +177,16 @@ export class ThreeSectionForceMeshService {
   // 枠線
   private getLine(points: THREE.Vector3[]): THREE.Line {
 
-    const line_geo = new THREE.BufferGeometry().setFromPoints(points);
+    const line_point = [
+      points[0],
+      points[1],
+      points[2],
+      points[3],
+      points[4],
+      points[5]
+    ]
+
+    const line_geo = new THREE.BufferGeometry().setFromPoints(line_point);
     const line = new THREE.Line(line_geo, this.line_mat);
     line.name = "line";
 

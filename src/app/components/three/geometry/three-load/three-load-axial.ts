@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as THREE from "three";
 import { Points, Vector2, Vector3 } from 'three';
-import { Line2 } from '../../libs/Line2.js';
-import { LineMaterial } from '../../libs/LineMaterial';
-import { LineGeometry } from '../../libs/LineGeometry';
 import { ThreeLoadText } from './three-load-text';
 import { ThreeLoadDimension } from './three-load-dimension';
 
@@ -16,8 +13,8 @@ export class ThreeLoadAxial {
   public id = ThreeLoadAxial.id;
 
   
-  private matLine: LineMaterial;
-  private matLine_Pick: LineMaterial;
+  private matLine: THREE.LineBasicMaterial;
+  private matLine_Pick: THREE.LineBasicMaterial;
   private arrow_mat: THREE.MeshBasicMaterial;
   private arrow_mat_Pick: THREE.MeshBasicMaterial;
 
@@ -30,7 +27,6 @@ export class ThreeLoadAxial {
     this.dim = new ThreeLoadDimension(text);
     
     this.matLine = new THREE.LineBasicMaterial({
-      //color: 0xffffff,  //65行目付近のcolor.pushと同時に削除
       color: 0xff0000,
       linewidth: 0.001, // in pixels
       vertexColors: true,
@@ -58,16 +54,12 @@ export class ThreeLoadAxial {
     const value = P1;
 
     // 線を描く
-    const points = [];
-    points.push(0, 0, 0);
-    points.push(L, 0, 0);
-    const colors = [1, 1, 1, 1, 1, 1];
+    const points: THREE.Vector3[] = [];
+    points.push(new THREE.Vector3(0, 0, 0));
+    points.push(new THREE.Vector3(L, 0, 0));
 
-    const geometry = new LineGeometry();
-    geometry.setPositions(points);
-    geometry.setColors(colors);
-
-    const line2 = new Line2(geometry, this.matLine);
+    const geometry = new THREE.BufferGeometry().setFromPoints( points );
+    const line2 = new THREE.Line(geometry, this.matLine);
     line2.computeLineDistances();
     line2.position.x = L1;
     line2.name = 'line2';
@@ -154,7 +146,7 @@ export class ThreeLoadAxial {
     const group0 = group.getObjectByName('group');
 
     function change(
-      matLine: LineMaterial, 
+      matLine: THREE.LineBasicMaterial, 
       matArrow: THREE.MeshBasicMaterial, 
       textVisible: boolean) {
 
