@@ -183,16 +183,39 @@ export class ThreeMembersService {
       return
     }
 
+    const axisKey_list = [];
+
     //全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
     for (let item of this.memberList.children){
       item['material']['color'].setHex(0X000000);
       if( mode === "elements"){
         if (item['element'] === 'element' + index.toString()){
           item['material']['color'].setHex(0XFF0000);
+          // ハイライトした部材の名称を保存しておく
+          axisKey_list.push(item.name + 'axis'); 
         }
       } else {
         if (item.name === 'member' + index.toString()){
           item['material']['color'].setHex(0XFF0000);
+        }
+      }
+    }
+
+    // axisを全て非表示にし、選択行の部材のaxisのみを表示する
+    for (let axis of this.axisList) {
+      axis.visible = false;
+      if ( mode === "elements") {
+        // ハイライトした部材に対応するaxisを探す。
+        const targetAxis = axisKey_list.find(function(element){
+          return element === axis.name;
+        });
+        // 部材に対応するaxisがあれば、そのaxisを表示する。
+        if ( targetAxis !== undefined ) {
+          axis.visible = true;
+        }
+      } else {
+        if (axis.name === 'member' + index.toString() + 'axis') {
+          axis.visible = true;
         }
       }
     }
