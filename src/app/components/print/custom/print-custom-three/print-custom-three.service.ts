@@ -18,4 +18,8 @@ export class PrintCustomThreeService {
       false, // 5-z軸周りのモーメント
     ];
   }
+
+  // clear(){
+  //   this.contentEditable2 = [];
+  // }
 }

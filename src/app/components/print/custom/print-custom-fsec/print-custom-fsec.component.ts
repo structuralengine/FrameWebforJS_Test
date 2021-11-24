@@ -64,7 +64,7 @@ export class PrintCustomFsecComponent implements OnInit {
     private data: PrintCustomFsecService) {  }
 
   ngOnInit(): void {
-    this.data.loadData();
+    this.data.clear();
   }
 
  
