@@ -49,7 +49,7 @@ export class ThreeService {
     private secForce: ThreeSectionForceService,
     private customThree: PrintCustomThreeService,
     private resultFsec: ResultCombineFsecService
-  ) {}
+  ) { }
 
   //////////////////////////////////////////////////////
   // 初期化
@@ -546,7 +546,7 @@ export class ThreeService {
           resolve({ result, title1 });
         });
       } else if (
-        this.mode === "fsec"||
+        this.mode === "fsec" ||
         this.mode === "comb_fsec" ||
         this.mode === "pik_fsec"
       ) {
@@ -573,22 +573,22 @@ export class ThreeService {
                 name = title3[i];
               }
               this.ChangePage(number);
-              
-              // this.ChangePage(number,this.mode).finally(() => {
-                this.secForce.changeRadioButtons(loadType);
-                  html2canvas(this.canvasElement).then((canvas) => {
-                    result.push({
-                      title: title2 + name,
-                      type: loadTypeJa,
-                      src: canvas.toDataURL(),
-                    });
-                    counter++;
 
-                    if (counter === captureCase.length * this.selectedNumber) {
-                      resolve({ result, title1 });
-                    }
-                  });
-                // });
+              // this.ChangePage(number,this.mode).finally(() => {
+              this.secForce.changeRadioButtons(loadType);
+              html2canvas(this.canvasElement).then((canvas) => {
+                result.push({
+                  title: title2 + name,
+                  type: loadTypeJa,
+                  src: canvas.toDataURL(),
+                });
+                counter++;
+
+                if (counter === captureCase.length * this.selectedNumber) {
+                  resolve({ result, title1 });
+                }
+              });
+              // });
             }
           }
         }
@@ -603,25 +603,25 @@ export class ThreeService {
           }
 
           // .finally(() => {
-            // title3 に タイトルがあれば使う
-            let name = key;
-            if (title3.length > i) {
-              name = title3[i];
-            }
-            
-            this.ChangePage(number);
-            
-            html2canvas(this.canvasElement).then((canvas) => {
-              result.push({
-                title: title2 + name,
-                src: canvas.toDataURL(),
-              });
-              counter++;
+          // title3 に タイトルがあれば使う
+          let name = key;
+          if (title3.length > i) {
+            name = title3[i];
+          }
 
-              if (counter === captureCase.length) {
-                resolve({ result, title1 });
-              }
+          this.ChangePage(number);
+
+          html2canvas(this.canvasElement).then((canvas) => {
+            result.push({
+              title: title2 + name,
+              src: canvas.toDataURL(),
             });
+            counter++;
+
+            if (counter === captureCase.length) {
+              resolve({ result, title1 });
+            }
+          });
           // });
         }
       }
@@ -778,7 +778,11 @@ export class ThreeService {
     for (const key of Object.keys(this.printService.combineJson)) {
       const current = comb[key];
       let str: string = key;
-      if (current.name.trim().length > 0) str += " " + current.name;
+      if (current.name in current) {
+        str += current.name.trim().length > 0 ? " " + current.name : "";
+      } else {
+        str += ""
+      }
       title3.push(str);
     }
     return title3;
@@ -791,7 +795,11 @@ export class ThreeService {
     for (const key of Object.keys(this.printService.pickupJson)) {
       const current = pik[key];
       let str: string = key;
-      if (current.name.trim().length > 0) str += " " + current.name;
+      if (current.name in current) {
+        str += current.name.trim().length > 0 ? " " + current.name : "";
+      } else {
+        str += ""
+      }
       title3.push(str);
     }
     return title3;
