@@ -61,7 +61,8 @@ export class PrintCustomFsecComponent implements OnInit {
 
   constructor(
     private app: AppComponent,
-    private data: PrintCustomFsecService) {  }
+    private data: PrintCustomFsecService,
+    public printService: PrintService) {  }
 
   ngOnInit(): void {
     this.data.clear();
@@ -80,7 +81,7 @@ export class PrintCustomFsecComponent implements OnInit {
     reactive: true,
     sortable: false,
     locale: "jp",
-    height: this.tableHeight(),
+    height: 420,
     rowBorders: true,
     columnBorders: false,
     numberCell: {

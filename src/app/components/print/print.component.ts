@@ -4,6 +4,8 @@ import { ResultDataService } from "src/app/providers/result-data.service";
 import { ThreeService } from "../three/three.service";
 import { PrintService } from "./print.service";
 
+
+
 @Component({
   selector: "app-print",
   templateUrl: "./print.component.html",
@@ -18,7 +20,10 @@ export class PrintComponent implements OnInit {
     private three: ThreeService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(){
+    this.printService.selectRadio(-1);
+    this.printService.flg = -1;
+  }
 
   public onPrintInvoice() {
     this.printService.setprintDocument();
