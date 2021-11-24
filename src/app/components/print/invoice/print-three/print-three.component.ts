@@ -33,6 +33,9 @@ export class PrintThreeComponent implements OnInit {
     this.print_target = this.printService.print_target.result;
     // let caseCount = this.three.selectedNumber
     let selectCount = this.three.selectedNumber;
+    if(selectCount==0){
+      selectCount = 6;
+    }
     let mode = this.three.mode;
     for (let i = 0; i < this.print_target.length; i++) {
       if (i === 0) {
@@ -41,14 +44,16 @@ export class PrintThreeComponent implements OnInit {
       } else {
         const target = this.print_target[i];
         if (mode === "fsec" || mode === "comb_fsec" || mode === "pik_fsec") {
-          if (selectCount < 3) {
+          if (selectCount ==1) {
+            target["judge"] = i % 3 === 0 ? true : false;
+          }else if(selectCount == 2) {
             target["judge"] = i % selectCount === 0 ? true : false;
-          } else {
+          }
+          else {
             target["judge"] =
               i % selectCount === 0 || (i - 3) % selectCount === 0
                 ? true
                 : false;
-            console.log("2");
           }
         } else {
           target["judge"] = i % 3 === 0 ? true : false;

@@ -94,8 +94,9 @@ export class InputCombineService {
   public getCombineJson() {
 
     const jsonData = {};
-    for (const row of this.combine) {
+    for (let i = 0;i<this.combine.length;i++) {
       const data = {};
+      const row = this.combine[i];
       const id = row['row'];
       let flg = false;
       for (let key in row) {
@@ -104,7 +105,7 @@ export class InputCombineService {
         } else if (key.charAt(0) === 'C'){
           const value = row[key];
           const num = this.helper.toNumber(value);
-          if (num != null) {
+          if (num !== null) {
             flg = true;
             data[key] = value;
           }
