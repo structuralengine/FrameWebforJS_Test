@@ -23,7 +23,8 @@ export class AppComponent implements OnInit {
               public helper: DataHelperModule,
               public fsec: ResultFsecService,
               public disg: ResultDisgService,
-              public reac: ResultReacService) { 
+              public reac: ResultReacService,
+              public print:PrintService) { 
   }
 
   ngOnInit() {
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit {
     this.deactiveButtons();
     document.getElementById(id).classList.add('active');
     this.changePosition();
+    this.print.mode = id;
     this.helper.isContentsDailogShow = true;
   }
   

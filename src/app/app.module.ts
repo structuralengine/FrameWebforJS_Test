@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {MatRadioModule} from '@angular/material/radio';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -116,6 +117,7 @@ import { PrintCustomComponent } from "./components/print/custom/print-custom.com
     NgbModule,
     DataHelperModule,
     MatInputModule,
+    MatRadioModule,
     AngularFireModule.initializeApp(environment.firebase),
   ],
   declarations: [

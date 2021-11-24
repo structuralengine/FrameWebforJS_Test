@@ -10,20 +10,22 @@ export class PrintService {
   public isPrinting = false;
   public contentEditable1: boolean[];
 
-  public selectedIndex = "1";
+  public mode:number;
+
+  public selectedIndex :string;
 
   public inputJson: any;
   public combineJson: any;
   public defineJson: any;
   public pickupJson: any;
 
-  public flg: number;
+  public flg: number = -1;
 
   public print_target: any; // Three.js 印刷 の図のデータ
 
   public printOption = [];
 
-  public 
+  public printRadio: any;
 
   constructor(
     private router: Router,
@@ -41,6 +43,8 @@ export class PrintService {
       false, // 6-PICKUP 反力
       false, // 7-断面力
       false, // 8-COMBINE 断面力
+      false,
+      false
     ];
 
     this.printOption = new Array();
@@ -74,15 +78,15 @@ export class PrintService {
       name: "断面力",
     },
     {
-      id: "7",
-      name: "断面力",
-    },
-    {
-      id: "7",
-      name: "断面力",
-    },
-    {
       id: "8",
+      name: "COMBINE 断面力",
+    },
+    {
+      id: "9",
+      name: "PICKUP 断面力",
+    },
+    {
+      id: "10",
       name: "画面印刷",
     },
   ];
@@ -114,7 +118,7 @@ export class PrintService {
       false, // 4-反力
       false, // 5-COMBINE 反力
 
-      false, // 6-PICKUP 反力
+      false, // 6-PICKUP 反力a
       false, // 7-断面力
       false, // 8-COMBINE 断面力
       false,
@@ -172,10 +176,24 @@ export class PrintService {
           self.findIndex((e) => e.id === element.id) === index
       );
 
-      if(this.printOption.length > 0 && 'id' in this.printOption[0]){
+      if (this.printOption.length > 0 && 'id' in this.printOption[0]) {
         this.flg = Number(this.printOption[0].id);
         this.selectedIndex = String(this.flg);
-      } 
+      }
     }, 50);
   }
+
+  public selectRadio(id: number) {
+    this.printOption = new Array();
+    for (let i = 0; i < this.contentEditable1.length; i++) {
+      this.contentEditable1[i] = false;
+      if (i == id) {
+        this.contentEditable1[i] = true;
+        this.flg = i;
+        this.selectedIndex = String(i);
+      }
+    }
+  }
+
+  
 }
