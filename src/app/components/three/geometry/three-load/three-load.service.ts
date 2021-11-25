@@ -1126,10 +1126,10 @@ export class ThreeLoadService {
       // 分布荷重（部材軸座標方向）
       ["y", "z"].forEach(k => {
         let offset1 = offset0;
-        let offset2 = offset0;
+        let offset2 = offset0 * (-1);
         let offset3 = offset0;
-        let offset4 = offset0;
-        
+        let offset4 = offset0 * (-1);
+
         const Xarea1 = [];
         list[k].forEach(item => {
 
@@ -1145,28 +1145,26 @@ export class ThreeLoadService {
             const target_geo = item.children[0].children[0].children[0].geometry;
             const pos_arr = target_geo.attributes.position.array;
             for(let i =0; i < pos_arr.length; i+=3) {
+              const scale = this.helper.getScale(Math.abs(item.value), loadList.wMax)
               vertice_points.push(pos_arr[i]);    // x
-              vertice_points.push(pos_arr[i+1]);  // y
+              vertice_points.push(pos_arr[i+1] * scale);  // y
             }
             if (Xarea1.length === 0) {
-              editor.setOffset(item, 0);
+              if (item.value > 0) {
+                editor.setOffset(item, offset3);
+              } else {
+                editor.setOffset(item, offset4);
+              }
             }
 
             all_check: //次のforループの名称 -> breakで使用
             for (let hit_points of Xarea1) {
               const pre_scale: number = this.helper.getScale(Math.abs(hit_points[10]), loadList.wMax);
-              for (let num2 = 0; num2 < 5; num2++) {
+              //for (let num2 = 0; num2 < 5; num2++) {
 
                 //接触判定
                 let judgeX = this.self_raycaster(vertice_points, hit_points, "x");
                 let judgeY = this.self_raycaster(vertice_points, hit_points, "y");
-
-                if (judgeX === "Hit") {
-                  const i = this.self_raycaster(vertice_points, hit_points, "x");
-                }
-                if (judgeY === "Hit" || judgeY === "Touch") {
-                  const j = this.self_raycaster(vertice_points, hit_points, "y");
-                }
 
                 if (judgeX === "Hit" && (judgeY === "Hit" || judgeY === "Touch")) {
                   // オフセットする
@@ -1178,6 +1176,10 @@ export class ThreeLoadService {
                     vertice_points[5] += offset1;
                     vertice_points[7] += offset1;
                     vertice_points[9] += offset1;
+                    vertice_points[11] += offset1;
+                    vertice_points[13] += offset1;
+                    vertice_points[15] += offset1;
+                    vertice_points[17] += offset1;
                   } else {
                     offset2 -= (pre_scale * 1.0); // オフセット距離に高さを加算する
                     editor.setOffset(item, offset2);
@@ -1186,6 +1188,10 @@ export class ThreeLoadService {
                     vertice_points[5] += offset2;
                     vertice_points[7] += offset2;
                     vertice_points[9] += offset2;
+                    vertice_points[11] += offset2;
+                    vertice_points[13] += offset2;
+                    vertice_points[15] += offset2;
+                    vertice_points[17] += offset2;
                   }
                 } else if (judgeX === "NotHit" || judgeY === "NotHit") {
                   //オフセットしない
@@ -1194,26 +1200,27 @@ export class ThreeLoadService {
                   } else {
                     editor.setOffset(item, offset2);
                   }
-                  break;
+                  continue;
                 } else {
                   //現状ケースを確認できていない
                   break all_check;
                 }
-              }
+              //}
             }
 
+            // ここでprescale分かける？
             Xarea1.push( [vertice_points[0], vertice_points[1],
               vertice_points[2], vertice_points[3],
               vertice_points[4], vertice_points[5],
-              vertice_points[6], vertice_points[7],
               vertice_points[8], vertice_points[9],
+              vertice_points[10], vertice_points[11],
               item.value]);  //メッシュの5点の2次元座標と，valueの値を保存する
 
             const pre_scale: number = 1 * Math.abs(item.value) / loadList.wMax;
             offset3 = offset1 + pre_scale;
             offset4 = offset2 - pre_scale;
             offset1 = offset0;
-            offset2 = offset0;
+            offset2 = offset0 * (-1);
 
 
           } else if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
@@ -1222,10 +1229,10 @@ export class ThreeLoadService {
             editor.setSize(item, scale);
             // オフセットする
             if (item.value > 0) {
-              editor.setOffset(item, offset3);
+              editor.setOffset(item, offset3 + offset0);
               offset3 += (scale * 1.0); // オフセット距離に高さを加算する
             } else {
-              editor.setOffset(item, offset4);
+              editor.setOffset(item, offset4 - offset0);
               offset4 -= (scale * 1.0); // オフセット距離に高さを加算する
             }
             offset1 = offset3;
@@ -1293,51 +1300,45 @@ export class ThreeLoadService {
 
   }
 
-  //当たり判定を行う
+  // 当たり判定を行う
   private self_raycaster(points, area, pattern: string) {
 
     const d = 0.001 //当たり判定の緩和値
 
-    //接触判定->結果はjudgeで返す
+    // 接触判定->結果はjudgeで返す
     let judge: string = "";
+    // newLoadは追加面。oldLoadは既存面。判定緩和で追加面を小さくする。全て矩形とみなす
+    const newLoad = { leftX: points[2], rightX: points[8],
+                      topY:    Math.max( points[1], points[3], points[9], points[17] ), 
+                      bottomY: Math.min( points[1], points[3], points[9], points[17] )};
+    const oldLoad = { leftX: area[2]  , rightX: area[6]  ,
+                      topY:    Math.max( area[1], area[3], area[7], area[9] ), 
+                      bottomY: Math.min( area[1], area[3], area[7], area[9] )};
+    // pointsは追加面、areaは既存面を示す。
     switch (pattern) {
       case ('x'):
-        if (points[2] - d > area[2] && points[2] + d < area[6]) {
+        // 追加面のサイズを調整し、当たり判定を緩和する。
+        if ( oldLoad.leftX < newLoad.leftX - d && newLoad.leftX + d < oldLoad.rightX ) {
           judge = "Hit";  //荷重の左側が既存面の内部にある状態
-        } else if (points[6] - d > area[2] && points[6] + d < area[6]) {
+        } else if ( oldLoad.leftX < newLoad.rightX - d && newLoad.rightX + d < oldLoad.rightX ) {
           judge = "Hit";  //荷重の右側が既存面の内部にある状態
-        } else if ((points[2] - d < area[2] && points[2] - d < area[6]) &&
-          (points[6] + d > area[2] && points[6] + d > area[6])) {
+        } else if (( newLoad.leftX  - d < oldLoad.leftX && newLoad.leftX  - d < oldLoad.rightX ) &&
+                   ( newLoad.rightX + d > oldLoad.leftX && newLoad.rightX + d > oldLoad.rightX )) {
           judge = "Hit";  //荷重の面が既存の面を全て含む状態
         } else {
           judge = "NotHit"
         }
         break;
       case ('y'):
-        if (points[1] > area[1] && (points[1] < area[3] || points[1] < area[7])) {
-          judge = "Hit";  //荷重の左下が既存面の内部にある状態
-        } else if (points[1] === area[1]) {
-          judge = "Touch";  //荷重の左下が既存面と同じ高さにある状態
-        } else if (points[9] > area[1] && (points[9] < area[3] || points[9] < area[7])) {
-          judge = "Hit";  //荷重の右下が既存面の内部にある状態
-        } else if (points[9] === area[1]) {
-          judge = "Touch";  //荷重の右下が既存面と同じ高さにある状態
+        if ( oldLoad.bottomY < newLoad.bottomY && newLoad.bottomY < oldLoad.topY ) {
+          judge = "Hit";  //荷重の下側が既存面の内部にある状態
+        } else if ( oldLoad.bottomY < newLoad.topY && newLoad.topY < oldLoad.topY ) {
+          judge = "Hit";  //荷重の上側が既存面の内部にある状態
+        } else if (( newLoad.bottomY <= oldLoad.bottomY && newLoad.bottomY <= oldLoad.topY ) &&
+                   ( newLoad.topY    >= oldLoad.bottomY && newLoad.topY    >= oldLoad.topY )) {
+          judge = "Hit";  //荷重の面が既存の面を全て含む状態
         } else {
-          if (points[3] > area[1] && (points[3] < area[3] || points[3] < area[7])) {
-            judge = "Hit";  //荷重の左上が既存面の内部にある状態
-          } else if (points[3] === area[1]) {
-            judge = "Touch";
-          } else if (points[7] > area[1] && (points[7] < area[3] || points[7] < area[7])) {
-            judge = "Hit";  //荷重の右上が既存面の内部にある状態
-          } else if (points[7] === area[1]) {
-            judge = "Touch";
-          } else if (points[3] <= area[1] && (points[7] > area[3] || points[7] > area[7])) {
-            judge = "Hit";  //荷重の左上が既存面の下側，右上が既存面の上側にある状態
-          } else if (points[7] <= area[1] && (points[3] > area[3] || points[3] > area[7])) {
-            judge = "Hit";  //荷重の右上が既存面の下側，左上が既存面の上側にある状態
-          } else {
-            judge = "NotHit"
-          }
+          judge = "NotHit"
         }
         break;
     }

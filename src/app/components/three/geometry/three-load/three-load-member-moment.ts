@@ -300,15 +300,20 @@ export class ThreeLoadMemberMoment {
   // 寸法線
   private setDim(group: any, status: string): void{
     
-    const point: THREE.Vector3[] = group.points;
+    let point: THREE.Vector3[] = group.points;
     const L1: number = group.L1;
     const L: number = group.L;
     const L2: number = group.L2;
+    const P1: number = group.P1;
+    const P2: number = group.P2;
+    if (L2 === 0 && P2 === 0) {
+      point[1].x = L
+    }
 
-    const points: THREE.Vector3[] = [ new Vector3(L1, 0, 0), 
+    const points: THREE.Vector3[] = [ new Vector3(point[0].x, 0, 0), 
                                       new Vector3(point[0].x, 0, 0),
                                       new Vector3(point[1].x, 0, 0),
-                                      new Vector3(L2, 0, 0) ];
+                                      new Vector3(point[1].x, 0, 0) ];
 
     // 一旦削除
     const text = group.getObjectByName('Dimension');
@@ -339,24 +344,24 @@ export class ThreeLoadMemberMoment {
         new THREE.Vector2(points[1].x, y4),
         new THREE.Vector2(points[1].x, points[1].y),
       ];
-      dim1 = this.dim.create(p, L1.toFixed(3))
+      dim1 = this.dim.create(p, point[0].x.toFixed(3))
       dim1.visible = true;
       dim1.name = "Dimension1";
       dim.add(dim1);
     }
 
-    if (L2 > 0) {
+    //if (L2 > 0) {
       const p = [
         new THREE.Vector2(points[1].x, points[1].y),
         new THREE.Vector2(points[1].x, y4),
         new THREE.Vector2(points[2].x, y4),
         new THREE.Vector2(points[2].x, points[2].y),
       ];
-      dim2 = this.dim.create(p, (L2 - L1).toFixed(3))
+      dim2 = this.dim.create(p, (point[1].x - point[0].x).toFixed(3))
       dim2.visible = true;
       dim2.name = "Dimension2";
       dim.add(dim2);
-    }
+    //}
 
     if(L2 > 0){
       const x4 = L;
@@ -366,7 +371,7 @@ export class ThreeLoadMemberMoment {
         new THREE.Vector2(x4, y4),
         new THREE.Vector2(x4, 0),
       ];
-      dim3 = this.dim.create(p, (L - L1 - L2).toFixed(3))
+      dim3 = this.dim.create(p, (L - point[1].x).toFixed(3))
       dim3.visible = true;
       dim3.name = "Dimension3";
       dim.add(dim3);
