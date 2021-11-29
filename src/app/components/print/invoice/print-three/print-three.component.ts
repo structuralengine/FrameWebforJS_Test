@@ -41,17 +41,17 @@ export class PrintThreeComponent implements OnInit {
       } else {
         const target = this.print_target[i];
         if (mode === "fsec" || mode === "comb_fsec" || mode === "pik_fsec") {
-          if (selectCount < 3) {
-            target["judge"] = i % selectCount === 0 ? true : false;
+          if (selectCount == 1) {
+            target["judge"] = i % 2 === 0 ? true : false;
           } else {
             target["judge"] =
-              i % selectCount === 0 || (i - 3) % selectCount === 0
+              (i + 1) % selectCount === 0 || i % selectCount === 0
                 ? true
                 : false;
             console.log("2");
           }
         } else {
-          target["judge"] = i % 3 === 0 ? true : false;
+          target["judge"] = i % 2 === 0 ? true : false;
         }
       }
     }
