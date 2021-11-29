@@ -1,17 +1,36 @@
-import { Injectable } from '@angular/core';
-import { InputElementsService } from 'src/app/components/input/input-elements/input-elements.service';
-import { InputMembersService } from 'src/app/components/input/input-members/input-members.service';
-import { ArrayCamera } from 'three';
+import { Injectable } from "@angular/core";
+import { InputElementsService } from "src/app/components/input/input-elements/input-elements.service";
+import { InputMembersService } from "src/app/components/input/input-members/input-members.service";
+import { ArrayCamera } from "three";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class PrintCustomFsecService {
-  public dataset : any[];
-  constructor(   private member: InputMembersService,
-    private element: InputElementsService) { }
+  public dataset: any[];
+  public contentEditable3: boolean[];
+  constructor(
+    private member: InputMembersService,
 
-  clear(){
+    private element: InputElementsService
+  ) {
+    this.contentEditable3 = [
+      false, // 0-軸方向力
+      false, // 1-y軸方向のせん断力
+      false, // 2-z軸方向のせん断力
+      false, // 3-ねじりモーメント
+      false, // 4-y軸回りのモーメント
+      false, // 5-z軸周りのモーメント
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ];
+  }
+
+  clear() {
     this.dataset = new Array();
     this.loadData();
   }

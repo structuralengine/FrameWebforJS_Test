@@ -6,7 +6,6 @@ import { DataCountService } from "../dataCount.service";
 import { ResultCombineFsecService } from "src/app/components/result/result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-custom-fsec.service";
-import { PrintCustomThreeService } from "../../custom/print-custom-three/print-custom-three.service";
 
 @Component({
   selector: "app-print-result-pickup-fsec",
@@ -51,7 +50,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     private combFsec: ResultCombineFsecService,
     private custom: PrintCustomFsecService,
     private helper: DataHelperModule,
-    private printCustomThree: PrintCustomThreeService,
+    private printCustomFsec: PrintCustomFsecService
   ) {
     this.dimension = this.helper.dimension;
     this.judge = false;
@@ -80,7 +79,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   private printPickForce(json, jud): any {
     const titleSum: any = [];
@@ -121,10 +120,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       }
       titleSum.push(title);
 
-      let n = 0;
-
       for (let i = 0; i < KEYS.length; i++) {
-        if (this.printCustomThree.contentEditable2[n] === true) {
+        if (this.printCustomFsec.contentEditable3[i] === true) {
           const key = KEYS[i];
           const title2 = TITLES[i];
           const elieli = json[index]; // 1行分のnodeデータを取り出す
@@ -183,7 +180,6 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
           body = [];
           typeDefinition = [];
         }
-        (i + 1) % 2 == 0 ? n += 1 : n;
       }
       splid.push(typeAll);
       typeAll = [];
