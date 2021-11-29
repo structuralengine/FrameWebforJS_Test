@@ -463,9 +463,9 @@ export class ThreeLoadDistribute {
     const size: number = 0.1; // 文字サイズ
 
     const y1a = Math.abs(points[1].y);
-    const y3a = Math.abs(points[3].y);
+    const y3a = Math.abs(points[4].y);
     const y4a = Math.max(y1a, y3a) + (size * 10);
-    const a = (y1a > y3a) ? Math.sign(points[1].y) : Math.sign(points[3].y);
+    const a = (y1a > y3a) ? Math.sign(points[1].y) : Math.sign(points[4].y);
     const y4 = a * y4a;
 
     if(L1 > 0){
@@ -485,8 +485,8 @@ export class ThreeLoadDistribute {
     const p = [
       new THREE.Vector2(points[1].x, points[1].y + offset),
       new THREE.Vector2(points[1].x, y4 + offset),
-      new THREE.Vector2(points[3].x, y4 + offset),
-      new THREE.Vector2(points[3].x, points[3].y + offset),
+      new THREE.Vector2(points[4].x, y4 + offset),
+      new THREE.Vector2(points[4].x, points[4].y + offset),
     ];
     dim2 = this.dim.create(p, L.toFixed(3))
     dim2.visible = true;
@@ -494,10 +494,10 @@ export class ThreeLoadDistribute {
     dim.add(dim2);
 
     if(L2 > 0){
-      const x4 = points[3].x + L2;
+      const x4 = points[4].x + L2;
       const p = [
-        new THREE.Vector2(points[3].x, points[3].y + offset),
-        new THREE.Vector2(points[3].x, y4 + offset),
+        new THREE.Vector2(points[4].x, points[4].y + offset),
+        new THREE.Vector2(points[4].x, y4 + offset),
         new THREE.Vector2(x4, y4 + offset),
         new THREE.Vector2(x4, 0 + offset),
       ];

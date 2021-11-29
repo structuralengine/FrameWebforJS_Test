@@ -1,2 +1,10 @@
-<p>断面力－印刷範囲の選択</p>
-<app-sheet #grid [options]="options"></app-sheet>
+<div class="fsecChoice">
+    <div>
+        <p>印刷範囲の選択</p>
+        <app-sheet #grid [options]="options"></app-sheet>
+    </div>
+    <div *ngIf="printService.flg == 8 ||printService.flg == 9">
+        <app-print-custom-three>
+        </app-print-custom-three>
+    </div>
+</div>

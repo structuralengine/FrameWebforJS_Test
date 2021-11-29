@@ -18,6 +18,12 @@ body {
 }
 
 @media print {
+    .obit-controls-gizmo {
+        display: none;
+    }
+}
+
+@media print {
     body {
         overflow-y: visible;
         overflow-x: visible;
@@ -29,19 +35,17 @@ body {
     size: A4;
 }
 
-
 /* Importing Bootstrap SCSS file. */
 
 @import "~bootstrap/scss/bootstrap";
 @media print {
-    .isPrinting>* {
+    .isPrinting > * {
         display: none;
     }
     .isPrinting app-print-layout {
         display: block;
     }
 }
-
 
 /* Add application styles & imports to this file! */
 

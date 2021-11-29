@@ -86,7 +86,7 @@ export class ResultPickupReacComponent implements OnInit {
     this.three.ChangePage(currentPage);
   }
 
-  calPage(calPage: number) {
+  calPage(calPage: any) {
     const carousel = document.getElementById("carousel");
     if (carousel != null) {
       carousel.classList.add("add");

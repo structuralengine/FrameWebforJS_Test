@@ -17,5 +17,7 @@ export class PrintCustomThreeComponent implements OnInit {
     public ResultData: ResultDataService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // this.printCustomThreeService.clear();
+  }
 }

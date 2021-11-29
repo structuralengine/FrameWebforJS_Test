@@ -8,11 +8,12 @@ import { PrintService } from "../print.service";
 })
 export class PrintCustomComponent implements OnInit {
   // public flg: number;
-
+  public flg = this.printService.flg;
+  
   constructor(public printService: PrintService) {}
 
   ngOnInit(): void {
-    this.onSelectChange("0");
+    this.onSelectChange(this.printService.flg);
   }
 
   public onSelectChange(value) {
