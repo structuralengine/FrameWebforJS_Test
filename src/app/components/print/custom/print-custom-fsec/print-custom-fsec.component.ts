@@ -61,14 +61,14 @@ export class PrintCustomFsecComponent implements OnInit {
 
   constructor(
     private app: AppComponent,
-    private data: PrintCustomFsecService,
-    public printService: PrintService) {  }
+    public printCustomFsecService: PrintCustomFsecService,
+    public printService: PrintService
+  ) {}
 
   ngOnInit(): void {
-    this.data.clear();
+    this.printCustomFsecService.clear();
   }
 
- 
   // 表の高さを計算する
   private tableHeight(): string {
     const containerHeight = this.app.getDialogHeight() - 100;
@@ -106,8 +106,8 @@ export class PrintCustomFsecComponent implements OnInit {
     },
     colModel: this.columnHeaders,
     dataModel: {
-      data: this.data.dataset,
-    }
+      data: this.printCustomFsecService.dataset,
+    },
   };
 
   width = 1000;

@@ -45,7 +45,8 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
     private countArea: DataCountService,
     private combFsec: ResultCombineFsecService,
     private custom: PrintCustomFsecService,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private printCustomFsec: PrintCustomFsecService
   ) {
     this.dimension = this.helper.dimension;
     this.judge = false;
@@ -118,51 +119,53 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
       titleSum.push(title);
 
       for (let i = 0; i < KEYS.length; i++) {
-        const key = KEYS[i];
-        const title2 = TITLES[i];
-        const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if (!(key in elieli)) {
-          continue;
-        }
-
-        typeName.push(title2);
-
-        const elist = elieli[key]; // 1行分のnodeデータを取り出す.
-        let body: any[] = new Array();
-        if (i === 0) {
-          this.row = 10;
-        } else {
-          this.row = 7;
-        }
-        this.kk = 0;
-
-        for (const k of Object.keys(elist)) {
-          const item = elist[k];
-          this.kk = item.m === "" ? this.kk : Number(item.m) - 1;
-          if (jud[this.kk].check === true || this.flg === false) {
-            // 印刷する1行分のリストを作る
-            const line = ["", "", "", "", "", "", "", "", "", ""];
-            line[0] = item.m.toString();
-            line[1] = item.n.toString();
-            line[2] = item.l.toFixed(3);
-            line[3] = item.fx.toFixed(2);
-            line[4] = item.fy.toFixed(2);
-            line[5] = item.fz.toFixed(2);
-            line[6] = item.mx.toFixed(2);
-            line[7] = item.my.toFixed(2);
-            line[8] = item.mz.toFixed(2);
-            line[9] = item.case;
-
-            body.push(line);
-            this.row++;
+        if (this.printCustomFsec.contentEditable3[i] === true) {
+          const key = KEYS[i];
+          const title2 = TITLES[i];
+          const elieli = json[index]; // 1行分のnodeデータを取り出す
+          if (!(key in elieli)) {
+            continue;
           }
-        }
 
-        typeDefinition.push(typeName, body);
-        typeAll.push(typeDefinition);
-        typeName = [];
-        body = [];
-        typeDefinition = [];
+          typeName.push(title2);
+
+          const elist = elieli[key]; // 1行分のnodeデータを取り出す.
+          let body: any[] = new Array();
+          if (i === 0) {
+            this.row = 10;
+          } else {
+            this.row = 7;
+          }
+          this.kk = 0;
+
+          for (const k of Object.keys(elist)) {
+            const item = elist[k];
+            this.kk = item.m === "" ? this.kk : Number(item.m) - 1;
+            if (jud[this.kk].check === true || this.flg === false) {
+              // 印刷する1行分のリストを作る
+              const line = ["", "", "", "", "", "", "", "", "", ""];
+              line[0] = item.m.toString();
+              line[1] = item.n.toString();
+              line[2] = item.l.toFixed(3);
+              line[3] = item.fx.toFixed(2);
+              line[4] = item.fy.toFixed(2);
+              line[5] = item.fz.toFixed(2);
+              line[6] = item.mx.toFixed(2);
+              line[7] = item.my.toFixed(2);
+              line[8] = item.mz.toFixed(2);
+              line[9] = item.case;
+
+              body.push(line);
+              this.row++;
+            }
+          }
+
+          typeDefinition.push(typeName, body);
+          typeAll.push(typeDefinition);
+          typeName = [];
+          body = [];
+          typeDefinition = [];
+        }
       }
       splid.push(typeAll);
       typeAll = [];
