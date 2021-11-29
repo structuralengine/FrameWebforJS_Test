@@ -37,6 +37,7 @@ export class PrintThreeComponent implements OnInit {
       selectCount = 6;
     }
     let mode = this.three.mode;
+    let count = 0;
     for (let i = 0; i < this.print_target.length; i++) {
       if (i === 0) {
         const target = this.print_target[0];
@@ -48,9 +49,10 @@ export class PrintThreeComponent implements OnInit {
             target["judge"] = i % 2 === 0 ? true : false;
           } else {
             target["judge"] =
-              (i + 1) % selectCount === 0 || i % selectCount === 0
+              (count + 1) % selectCount === 0 || (count + 1) % 2 === 0
                 ? true
                 : false;
+            count = (count + 1) % selectCount === 0 ? 0 : count + 1;
           }
         } else {
           target["judge"] = i % 2 === 0 ? true : false;
