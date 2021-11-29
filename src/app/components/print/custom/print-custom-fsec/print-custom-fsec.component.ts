@@ -10,7 +10,10 @@ import { PrintCustomFsecService } from "./print-custom-fsec.service";
 @Component({
   selector: "app-print-custom-fsec",
   templateUrl: "./print-custom-fsec.component.html",
-  styleUrls: ["./print-custom-fsec.component.scss"],
+  styleUrls: [
+    "./print-custom-fsec.component.scss",
+    "../print-custom.component.scss",
+  ],
 })
 export class PrintCustomFsecComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;

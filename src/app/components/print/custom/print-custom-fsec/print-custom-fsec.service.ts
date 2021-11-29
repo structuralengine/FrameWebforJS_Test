@@ -8,19 +8,19 @@ import { ArrayCamera } from "three";
 })
 export class PrintCustomFsecService {
   public dataset: any[];
-  public contentEditable3: boolean[];
+  public fsecEditable: boolean[];
   constructor(
     private member: InputMembersService,
 
     private element: InputElementsService
   ) {
-    this.contentEditable3 = [
-      false, // 0-軸方向力
-      false, // 1-y軸方向のせん断力
-      false, // 2-z軸方向のせん断力
-      false, // 3-ねじりモーメント
-      false, // 4-y軸回りのモーメント
-      false, // 5-z軸周りのモーメント
+    this.fsecEditable = [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
       false,
       false,
       false,

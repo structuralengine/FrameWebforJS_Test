@@ -121,7 +121,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       titleSum.push(title);
 
       for (let i = 0; i < KEYS.length; i++) {
-        if (this.printCustomFsec.contentEditable3[i] === true) {
+        if (this.printCustomFsec.fsecEditable[i] === true) {
           const key = KEYS[i];
           const title2 = TITLES[i];
           const elieli = json[index]; // 1行分のnodeデータを取り出す

@@ -6,9 +6,9 @@ import { PrintCustomThreeService } from "./print-custom-three.service";
   selector: "app-print-custom-three",
   templateUrl: "./print-custom-three.component.html",
   styleUrls: [
-    "../../../print/print.component.scss",
     "../../../../app.component.scss",
     "./print-custom-three.component.scss",
+    "../print-custom.component.scss",
   ],
 })
 export class PrintCustomThreeComponent implements OnInit {
