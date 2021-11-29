@@ -49,7 +49,7 @@ export class ThreeService {
     private secForce: ThreeSectionForceService,
     private customThree: PrintCustomThreeService,
     private resultFsec: ResultCombineFsecService
-  ) { }
+  ) {}
 
   //////////////////////////////////////////////////////
   // 初期化
@@ -555,8 +555,8 @@ export class ThreeService {
         const title5: string[] = captureInfo.title5;
         for (let i = 0; i < captureCase.length; i++) {
           this.selectedNumber = 0;
-          for (let j = 0; j < this.customThree.contentEditable2.length; j++) {
-            if (this.customThree.contentEditable2[j] === true) {
+          for (let j = 0; j < this.customThree.threeEditable.length; j++) {
+            if (this.customThree.threeEditable[j] === true) {
               this.selectedNumber += 1;
               const key = captureCase[i];
               // const captureFescTypeName: string[] = ;
@@ -781,7 +781,7 @@ export class ThreeService {
       if (current.name in current) {
         str += current.name.trim().length > 0 ? " " + current.name : "";
       } else {
-        str += ""
+        str += "";
       }
       title3.push(str);
     }
@@ -798,7 +798,7 @@ export class ThreeService {
       if (current.name in current) {
         str += current.name.trim().length > 0 ? " " + current.name : "";
       } else {
-        str += ""
+        str += "";
       }
       title3.push(str);
     }
