@@ -22,6 +22,7 @@ import { ThreeLoadMemberPoint } from "./three-load-member-point";
 import { ThreeLoadMemberMoment } from "./three-load-member-moment";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
+import { withLatestFrom } from "rxjs-compat/operator/withLatestFrom";
 
 @Injectable({
   providedIn: "root",
@@ -477,10 +478,29 @@ export class ThreeLoadService {
       return; //要素がなければ 以降の処理は行わない
     }
 
-    // 要素荷重データを入手
-    const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex);
-    // 要素荷重を変更
-    this.changeMemberLode(row, memberLoadData);
+    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex);
+    if(this.currentIndex in tempMemberLoad){
+
+      // 要素荷重データを入手
+      const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex);
+      // 要素荷重を変更
+      this.changeMemberLode(row, memberLoadData);
+      row++;
+
+      // 対象行以下の行について
+      const memberLoads = tempMemberLoad[this.currentIndex];
+      let i = memberLoads.findIndex((e) => e.row === row);
+      while(i>=0){
+        const targetMemberLoad = memberLoads[i];
+        if(!targetMemberLoad.L1.includes('-')){
+          break;
+        }
+        // 要素荷重を変更
+        this.changeMemberLode(targetMemberLoad.row, memberLoadData);
+        row++;
+        i = memberLoads.findIndex((e) => e.row === row);
+      }
+    }
 
     // 重なりを調整する
     this.setOffset();
