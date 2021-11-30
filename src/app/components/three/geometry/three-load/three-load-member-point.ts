@@ -61,11 +61,18 @@ export class ThreeLoadMemberPoint {
       nodei, nodej, direction, pL1, pL2, P1, P2, height);
 
     const points: THREE.Vector3[] = p.points;
+    const length = nodei.distanceTo(nodej);
     const L1 = p.L1;
     const L2 = p.L2;
+    if (pL1 < 0 || length < pL1) {
+      P1 = 0;
+    }
+    if (pL2 < 0 || length < pL2) {
+      P2 = 0;
+    }
 
     // 矢印
-    for (const arrow of this.getArrow(direction, [P1, P2], [L1, L2])) {
+    for (const arrow of this.getArrow(direction, length,[P1, P2], [L1, L2])) {
       child.add(arrow);
     }
 
@@ -150,6 +157,14 @@ export class ThreeLoadMemberPoint {
   ): any {
 
     const len = nodei.distanceTo(nodej);
+    if (pL1 < 0 || len < pL1) {
+      pL1 = 0;
+      P1 = 0;
+    }
+    if (pL2 < 0 || len < pL2) {
+      pL2 = 0;
+      P2 = 0;
+    }
 
     let LL: number = len;
 
@@ -196,6 +211,7 @@ export class ThreeLoadMemberPoint {
   // 両端の矢印
   private getArrow(
     direction: string,
+    length: number,
     value: number[],
     points: number[]): THREE.Group[] {
 
@@ -292,7 +308,7 @@ export class ThreeLoadMemberPoint {
     const L2: number = group.L2;
     const P1: number = group.P1;
     const P2: number = group.P2;
-    if (L2 === 0 && P2 === 0) {
+    if (L2 === 0) {
       point[1].x = L
     }
 
