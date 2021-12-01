@@ -1,21 +1,30 @@
-<div class="datasheet_inner" [style.width.px]="width">
-  
-  <div class="boxContainer">
-    <div class="btn-group">
-      <nav>
-        <a routerLink="/input-load-name" routerLinkActive="selected-item" class="btn-change">荷重名称</a>
-        <a routerLink="/input-loads" routerLinkActive="selected-item" class="btn-change active">荷重強度</a>
-      </nav>
+<div class="datasheet_inner" [style.width.px]="LL_flg===false?width1:width2">
+
+    <div class="boxContainer">
+        <div class="btn-group">
+            <nav>
+                <a routerLink="/input-load-name" routerLinkActive="selected-item" class="btn-change">荷重名称</a>
+                <a routerLink="/input-loads" routerLinkActive="selected-item" class="btn-change active">荷重強度</a>
+            </nav>
+        </div>
+
+        <div class="pager">
+            <app-pager (event)="onReceiveEventFromChild($event)"></app-pager>
+        </div>
+
+        <div class="load-name">
+            <p>{{ load_name }}</p>
+        </div>
+
+        <div *ngIf="LL_flg === true">
+            <a (click)="LL_start()" class="btn-change active">連行荷重</a>
+        </div>
     </div>
 
-    <div class="pager">
-      <app-pager (event)="onReceiveEventFromChild($event)"></app-pager>
+    <div *ngIf="LL_flg === false">
+        <app-sheet #grid [options]="options1"></app-sheet>
     </div>
-    
-    <div class="load-name">
-      <p>{{ load_name }}</p>
+    <div *ngIf="LL_flg === true">
+        <app-sheet #grid [options]="options2"></app-sheet>
     </div>
-  </div>
-
-  <app-sheet #grid [options]="options"></app-sheet>
 </div>
