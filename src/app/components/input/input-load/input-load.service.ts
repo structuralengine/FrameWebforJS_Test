@@ -579,7 +579,7 @@ export class InputLoadService {
         m2 = m2 == null ? 0 : m2;
 
         direction = direction.trim();
-        const sL1: string = L1 == null ? "0" : row["L1"].toString();
+        let sL1: string = L1 == null ? "0" : row["L1"].toString();
         L2 = L2 == null ? 0 : L2;
         P1 = P1 == null ? 0 : P1;
         P2 = P2 == null ? 0 : P2;
@@ -703,7 +703,7 @@ export class InputLoadService {
     }
 
     // 荷重距離ゼロの行を削除する -------------------------------------
-    for (let i = load2.length - 1; i >= 0; i--) {
+    /* for (let i = load2.length - 1; i >= 0; i--) {
       const item = load2[i];
       const LL: number = Math.round(this.member.getMemberLength(item["m1"]) * 1000);
       const L1: number = Math.round(this.helper.toNumber(item["L1"]) * 1000);
@@ -713,8 +713,17 @@ export class InputLoadService {
           load2.splice(i, 1);
         }
       }
-    }
+    } */
 
+    // memberの外側に出ている荷重を破棄する
+    for (const key of load2.keys()) {
+      const load = load2[key]
+      const checked = this.member.checkIntoMember(load);
+      load2[key].L1 = checked[0];
+      load2[key].L2 = checked[1];
+      load2[key].P1 = checked[2];
+      load2[key].P2 = checked[3];
+    }
 
     return load2;
   }
@@ -749,6 +758,7 @@ export class InputLoadService {
     const sL1: string = targetLoad.L1.toString();
     if (sL1.includes("-")) {
       // 距離L1が加算モードで入力されている場合
+      // ->最初のL1が負のときも加算モードが適用されるため、負の方向に移動できなくなる（エラー）
       if (m1 <= curNo && curNo <= m2) {
         m1 = curNo;
         L1 = curPos + L1;
