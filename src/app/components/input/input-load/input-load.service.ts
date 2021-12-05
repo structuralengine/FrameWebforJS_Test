@@ -290,16 +290,23 @@ export class InputLoadService {
     }
 
     //
-    for (const load_id of Object.keys(load_member)) {
+    for (let load_id_1 of Object.keys(load_member)) {
       let jsonData = {};
+      const load_id = parseInt(load_id_1, 10);
       if (load_id in load_name) {
-        jsonData = load_name[load_id];
+        jsonData = JSON.parse(JSON.stringify(load_name[load_id]));
       } else {
-        jsonData = { fix_node: 1, fix_member: 1, element: 1, joint: 1 };
+        jsonData["fix_node"] = 1;
+        jsonData["fix_member"] = 1;
+        jsonData["element"] = 1;
+        jsonData["joint"] = 1;
       }
-      jsonData["load_member"] = load_member[load_id];
-      result[load_id] = jsonData;
-      delete load_member[load_id];
+      jsonData["load_member"] = JSON.parse(
+        JSON.stringify(load_member[load_id_1])
+      );
+      result[load_id_1] = jsonData;
+      // jsonData["load_member"] = load_member[load_id_1];
+      // delete load_member[load_id_1];
     }
 
     // 無効なデータを削除する
@@ -503,7 +510,7 @@ export class InputLoadService {
         continue;
       }
 
-      const tmp_member = new Array();
+      let tmp_member = new Array();
       if (empty === null) {
         for (let j = 0; j < load1.length; j++) {
           const row = load1[j];
@@ -547,7 +554,7 @@ export class InputLoadService {
         }
       } else {
         // 計算用のデータ作成
-        let LL1 = [null];
+        let LL1 = [0];
         if (this.load_name[Number(load_id) - 1].symbol == "LL") {
           LL1 = [0, 0.1, 0.2];
         }
@@ -579,6 +586,7 @@ export class InputLoadService {
           }
           if (tmp_member.length > 0) {
             load_member[this.load_id_LL] = tmp_member;
+            tmp_member = new Array();
           }
         }
       }
