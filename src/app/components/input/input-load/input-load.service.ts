@@ -542,34 +542,45 @@ export class InputLoadService {
             tmp_member.push(tmp);
           }
         }
+        if (tmp_member.length > 0) {
+          load_member[load_id] = tmp_member;
+        }
       } else {
         // 計算用のデータ作成
-
-        const load2: any[] = this.convertMemberLoads(load1);
-
-        for (let j = 0; j < load2.length; j++) {
-          const row = load2[j];
-
-          let direction: string = row["direction"];
-          direction = direction.trim().toLowerCase();
-
-          const tmp = {
-            m: row["m1"],
-            direction: direction,
-            mark: row["mark"],
-            L1: this.helper.toNumber(row["L1"], 3),
-            L2: this.helper.toNumber(row["L2"], 3),
-            P1: this.helper.toNumber(row["P1"], 2),
-            P2: this.helper.toNumber(row["P2"], 2),
-          };
-
-          tmp["row"] = row.row;
-
-          tmp_member.push(tmp);
+        let LL1 = [null];
+        if (this.load_name[Number(load_id) - 1].symbol == "LL") {
+          LL1 = [0, 0.1, 0.2];
         }
-      }
-      if (tmp_member.length > 0) {
-        load_member[load_id] = tmp_member;
+        for (let L1 of LL1) {
+          const load2: any[] = this.convertMemberLoads(load1);
+          let idd = Number(load_id);
+          this.load_id_LL = String(idd + L1);
+
+          for (let j = 0; j < load2.length; j++) {
+            const row = load2[j];
+
+            let direction: string = row["direction"];
+            direction = direction.trim().toLowerCase();
+
+            const tmp = {
+              m: row["m1"],
+              direction: direction,
+              mark: row["mark"],
+              // L1: this.helper.toNumber(row["L1"], 3),
+              L1: this.helper.toNumber(row["L1"], 3) + L1,
+              L2: this.helper.toNumber(row["L2"], 3),
+              P1: this.helper.toNumber(row["P1"], 2),
+              P2: this.helper.toNumber(row["P2"], 2),
+            };
+
+            tmp["row"] = row.row;
+
+            tmp_member.push(tmp);
+          }
+          if (tmp_member.length > 0) {
+            load_member[this.load_id_LL] = tmp_member;
+          }
+        }
       }
     }
     return load_member;
