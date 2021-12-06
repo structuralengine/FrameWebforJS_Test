@@ -10,9 +10,6 @@ export class InputLoadService {
   public load_name: any[];
   public load: {};
 
-  public load_id_LL: string;
-  public LL_id = [];
-
   constructor(
     private member: InputMembersService,
     private helper: DataHelperModule
@@ -554,14 +551,15 @@ export class InputLoadService {
         }
       } else {
         // 計算用のデータ作成
-        let LL1 = [0];
-        if (this.load_name[Number(load_id) - 1].symbol == "LL") {
-          LL1 = [0, 0.1, 0.2];
+        const symbol: string = this.getLoadName(Number(load_id), 'symbol');
+
+        let _L1 = [0];
+        if (symbol == "LL") {
+          _L1 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // 列車連行荷重の場合 L1に加算したケースを複数作る
         }
-        for (let L1 of LL1) {
+
+        for (let i=0; i<_L1.length; i++) {
           const load2: any[] = this.convertMemberLoads(load1);
-          let idd = Number(load_id);
-          this.load_id_LL = String(idd + L1);
 
           for (let j = 0; j < load2.length; j++) {
             const row = load2[j];
@@ -573,8 +571,7 @@ export class InputLoadService {
               m: row["m1"],
               direction: direction,
               mark: row["mark"],
-              // L1: this.helper.toNumber(row["L1"], 3),
-              L1: this.helper.toNumber(row["L1"], 3) + L1,
+              L1: this.helper.toNumber(row["L1"], 3) + _L1[i],
               L2: this.helper.toNumber(row["L2"], 3),
               P1: this.helper.toNumber(row["P1"], 2),
               P2: this.helper.toNumber(row["P2"], 2),
@@ -584,8 +581,14 @@ export class InputLoadService {
 
             tmp_member.push(tmp);
           }
+
           if (tmp_member.length > 0) {
-            load_member[this.load_id_LL] = tmp_member;
+            // ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
+            const index: number = Number(load_id);  // ケースid を数字として扱うため変換する
+            const digit: number = _L1.length.toString().length; // 桁数
+            const load_id_LL = String(index + i/(10*digit));
+
+            load_member[load_id_LL] = tmp_member;
             tmp_member = new Array();
           }
         }
@@ -752,21 +755,6 @@ export class InputLoadService {
         }
       }
     }
-
-    // 荷重距離ゼロの行を削除する -------------------------------------
-    /* for (let i = load2.length - 1; i >= 0; i--) {
-      const item = load2[i];
-      const LL: number = Math.round(
-        this.member.getMemberLength(item["m1"]) * 1000
-      );
-      const L1: number = Math.round(this.helper.toNumber(item["L1"]) * 1000);
-      const L2: number = Math.round(item["L2"] * 1000);
-      if (item.mark === 2) {
-        if (LL - (L1 + L2) <= 0) {
-          load2.splice(i, 1);
-        }
-      }
-    } */
 
     // memberの外側に出ている荷重を破棄する
     for (const key of load2.keys()) {

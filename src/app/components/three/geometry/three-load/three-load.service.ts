@@ -136,7 +136,8 @@ export class ThreeLoadService {
 
     // ファイルを開いたときの処理
     // 荷重を作成する
-    for (const id of Object.keys(this.load.load)) {
+    const loadData = this.load.getLoadJson(0);
+    for (const id of Object.keys(loadData)) {
       this.addCase(id);
     }
 
@@ -149,11 +150,23 @@ export class ThreeLoadService {
     if (Object.keys(this.nodeData).length <= 0) {
       return; // 格点がなければ 以降の処理は行わない
     }
-    // 節点荷重データを入手
-    const nodeLoadData = this.load.getNodeLoadJson(0);
 
+    // 節点荷重データを入手
+    // const nodeLoadData = this.load.getNodeLoadJson(0);
+    const nodeLoadData = {};
     // 要素荷重データを入手
-    const memberLoadData = this.load.getMemberLoadJson(0);
+    // const memberLoadData = this.load.getMemberLoadJson(0);
+    const memberLoadData = {};
+    for (const id of Object.keys(loadData)) {
+      const tmp = loadData[id];
+      if('load_member' in tmp && tmp.load_member.length > 0){
+        memberLoadData[id] = tmp.load_member;
+      }
+      if('load_node' in tmp && tmp.load_node.length > 0){
+        nodeLoadData[id] = tmp.load_node;
+      }
+    }
+
 
     // 荷重図を非表示のまま作成する
     for (const id of Object.keys(this.AllCaseLoadList)) {
@@ -210,7 +223,7 @@ export class ThreeLoadService {
       return;
     }
 
-    /* 連行荷重が完成したら 以下のアニメーションを有効にする
+    // 連行荷重が完成したら 以下のアニメーションを有効にする
     // 荷重名称を調べる
     const symbol: string = this.load.getLoadName(changeCase, 'symbol');
     if (symbol === "LL") {
@@ -226,7 +239,7 @@ export class ThreeLoadService {
       cancelAnimationFrame(this.animationObject);
       this.animationObject = null;
     }
-    */
+
     this.scene.render();
 
   }
