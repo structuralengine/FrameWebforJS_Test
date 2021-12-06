@@ -152,9 +152,9 @@ export class InputLoadNameComponent implements OnInit {
       const target = this.dataset[row];
       const fm = this.helper.toNumber(target["fix_member"]);
       const fn = this.helper.toNumber(target["fix_node"]);
-      const option ={
-        fixMemberPage: (fm !== null) ? fm : -1,
-        fixNodePage: (fn !== null) ? fn : -1
+      const option = {
+        fixMemberPage: fm !== null ? fm : -1,
+        fixNodePage: fn !== null ? fn : -1,
       };
       this.three.ChangePage(caseNo, option);
 
@@ -185,8 +185,8 @@ export class InputLoadNameComponent implements OnInit {
           this.setNewList(target.rowIndx + 1);
         }
       }
-      if( target !== null ){
-        this.three.changeData("load_names", target.rowIndx + 1 );
+      if (target !== null) {
+        this.three.changeData("load_names", target.rowIndx + 1);
       }
     },
   };
@@ -195,5 +195,4 @@ export class InputLoadNameComponent implements OnInit {
     this.data.partClear(index);
     this.threeload.removeCase(index);
   }
-
 }
