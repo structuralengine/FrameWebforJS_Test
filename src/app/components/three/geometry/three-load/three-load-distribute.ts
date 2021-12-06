@@ -119,7 +119,7 @@ export class ThreeLoadDistribute {
     this.setRotate(direction, group, localAxis);
 
     // 全体の位置を修正する
-    group.position.set(nodei.x, nodei.y, nodei.z);
+    this.setPosition(direction, group, nodei, nodej, P1, P2);
 
     // 例：DistributeLoad-3-y
     group.name = ThreeLoadDistribute.id + "-" + row.toString() + '-' + direction.toString(); 
@@ -148,41 +148,29 @@ export class ThreeLoadDistribute {
     P2: number,
     height: number
   ): any {
-    const len = nodei.distanceTo(nodej);
+    // 2点間の距離を定義
+    let len = nodei.distanceTo(nodej);
 
-    let LL: number = len;
-
-    // 絶対座標系荷重の距離変換を行う
+    // 絶対座標系荷重であれば距離変換を行う
     if (direction === "gx") {
-      LL = new THREE.Vector2(nodei.z, nodei.y).distanceTo(
+      len = new THREE.Vector2(nodei.z, nodei.y).distanceTo(
         new THREE.Vector2(nodej.z, nodej.y)
       );
     } else if (direction === "gy") {
-      LL = new THREE.Vector2(nodei.x, nodei.z).distanceTo(
+      len = new THREE.Vector2(nodei.x, nodei.z).distanceTo(
         new THREE.Vector2(nodej.x, nodej.z)
       );
     } else if (direction === "gz") {
-      LL = new THREE.Vector2(nodei.x, nodei.y).distanceTo(
+      len = new THREE.Vector2(nodei.x, nodei.y).distanceTo(
         new THREE.Vector2(nodej.x, nodej.y)
       );
     }
-    const L1 = (pL1 * len) / LL;
-    const L2 = (pL2 * len) / LL;
+    const L1: number = pL1;
+    const L2: number = pL2;
     const L: number = len - L1 - L2;
 
     // 荷重原点
     let y0 = 0;
-    // 絶対座標系における荷重原点
-    if (direction === "gx") {
-      const xHeight = Math.abs(nodei.x - nodej.x);
-      y0 = xHeight * (L / len) * (LL / len);
-    } else if (direction === "gy") {
-      const yHeight = Math.abs(nodei.y - nodej.y);
-      y0 = yHeight * (L / len) * (LL / len);
-    } else if (direction === "gz") {
-      const zHeight = Math.abs(nodei.z - nodej.z);
-      y0 = zHeight * (L / len) * (LL / len);
-    }
 
     // 荷重の各座標
     let x1 = L1;
@@ -299,10 +287,10 @@ export class ThreeLoadDistribute {
     offset: number,
     key: string
   ): void {
-    const k = key.replace("wg", "");
     for (const item of group.children) {
-      item.position[k] = offset;
+      item.position.y = offset;
     }
+    group['offset'] = offset;
   }
 
 
@@ -382,9 +370,71 @@ export class ThreeLoadDistribute {
       }
 
     } else if (direction === "gx") {
-      group.rotation.z = Math.asin(-Math.PI / 2);
+      group.rotateZ(Math.PI / 2);
+      group.rotation.x = (Math.atan( localAxis.x.z / localAxis.x.y ))
+    } else if (direction === "gy") {
+      group.rotateX(Math.PI);
+      group.rotation.y = (Math.atan( localAxis.x.z / localAxis.x.x ))
     } else if (direction === "gz") {
-      group.rotation.x = Math.asin(-Math.PI / 2);
+      group.rotateX(-Math.PI / 2);
+      group.rotation.y = (-Math.atan( localAxis.x.y / localAxis.x.x ))
+    }
+
+  }
+
+
+  // 
+  private setPosition(direction: string, group: any, 
+                      nodei: Vector3, nodej: Vector3, 
+                      P1: number, P2: number) {
+
+    if (!direction.includes('g')) {
+      group.position.set(nodei.x, nodei.y, nodei.z);
+    } else if (direction === 'gx') {
+      // nodeとPの関係によって、セットする位置(x座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.x >= nodej.x) {
+          group.position.set(nodej.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.x >= nodej.x) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodej.x, nodei.y, nodei.z);
+        }
+      }
+    } else if (direction === 'gy') {
+      // nodeとPの関係によって、セットする位置(y座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.y >= nodej.y) {
+          group.position.set(nodei.x, nodej.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.y >= nodej.y) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodej.y, nodei.z);
+        }
+      }
+    } else if (direction === 'gz') {
+      // nodeとPの関係によって、セットする位置(z座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.z >= nodej.z) {
+          group.position.set(nodei.x, nodei.y, nodej.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.z >= nodej.z) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodej.z);
+        }
+      }
     }
   }
 
@@ -407,7 +457,7 @@ export class ThreeLoadDistribute {
     const localAxis = group.localAxis;
     const points = group.points;
     const offset = group.offset;
-    const pos = [points[1], points[3]];
+    const pos = [points[1], points[4]];
     const vartical = ['bottom', 'top'];
     const direction = group.direction;
     for(let i=0; i<2; i++){
@@ -426,9 +476,12 @@ export class ThreeLoadDistribute {
         text.position.x -= 0.5 * height;
       }
       
-      this.setRotate(direction, text, localAxis);
-      if (direction === "z") text.rotateX(-Math.PI / 2);
-      if (localAxis.x.y !== 1 && localAxis.x.y !== -1) text.rotateZ(Math.PI/2);
+      // 独自の回転処理
+      text.rotateX(Math.PI)
+      text.rotateZ(Math.PI / 2)
+      //this.setRotate(direction, text, localAxis, true);
+      //if (direction === "z") text.rotateX(-Math.PI / 2);
+      //if (localAxis.x.y !== 1 && localAxis.x.y !== -1) text.rotateZ(Math.PI/2);
       text.name = key;
       group.add(text);
     }
@@ -459,6 +512,7 @@ export class ThreeLoadDistribute {
     let dim1: THREE.Group;
     let dim2: THREE.Group;
     let dim3: THREE.Group;
+    let dim4: THREE.Group;
 
     const size: number = 0.1; // 文字サイズ
 
