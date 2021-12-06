@@ -409,7 +409,7 @@ export class InputLoadService {
     return load_name;
   }
 
-  public getLoadName(currentPage: number): string {
+  public getLoadName(currentPage: number, target: string = "name"): string {
     if (currentPage < 1) {
       return "";
     }
@@ -421,8 +421,8 @@ export class InputLoadService {
     const tmp = this.load_name[i];
 
     let result = "";
-    if ("name" in tmp) {
-      result = tmp["name"];
+    if (target in tmp) {
+      result = tmp[target];
     }
     return result;
   }
