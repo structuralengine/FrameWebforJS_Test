@@ -124,8 +124,7 @@ export class ThreeLoadMemberPoint {
     height: number,
   ): any {
 
-<<<<<<< HEAD
-    const len = nodei.distanceTo(nodej);
+    let len = nodei.distanceTo(nodej);
     if (pL1 < 0 || len < pL1) {
       pL1 = 0;
       P1 = 0;
@@ -134,12 +133,6 @@ export class ThreeLoadMemberPoint {
       pL2 = 0;
       P2 = 0;
     }
-=======
-    let len = nodei.distanceTo(nodej);
->>>>>>> odagiri_#107
-=======
-    let len = nodei.distanceTo(nodej);
->>>>>>> odagiri_#107
 
     //let LL: number = len;
 
