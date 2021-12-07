@@ -137,6 +137,9 @@ export class ThreeLoadMemberPoint {
 =======
     let len = nodei.distanceTo(nodej);
 >>>>>>> odagiri_#107
+=======
+    let len = nodei.distanceTo(nodej);
+>>>>>>> odagiri_#107
 
     //let LL: number = len;
 
