@@ -82,7 +82,7 @@ export class ThreeLoadMemberPoint {
     group.add(group0);
     group["points"] = p.points;
     group["L1"] = p.L1;
-    group["L"] = p.LL;
+    group["L"] = p.len;
     group["L2"] = p.L2;
     group["P1"] = P1;
     group["P2"] = P2;
@@ -91,46 +91,14 @@ export class ThreeLoadMemberPoint {
     group["direction"] = direction;
     group["localAxis"] = localAxis;
     group["editor"] = this;
-    group['value'] = p.Pmax; // 大きい方の値を保存　
-
-    group.position.set(nodei.x, nodei.y, nodei.z);
+    group['value'] = p.Pmax; // 大きい方の値を保存
 
     // 全体の向きを修正する
-    if (!direction.includes('g')) {
-      const XY = new Vector2(localAxis.x.x, localAxis.x.y).normalize();
-      let A = Math.asin(XY.y);
+    this.setRotate(direction, group, localAxis);
 
-      if (XY.x < 0) {
-        A = Math.PI - A;
-      }
-      group.rotateZ(A);
+    // 全体の位置を修正する
+    this.setPosition(direction, group, nodei, nodej, P1, P2);
 
-      const lenXY = Math.sqrt(Math.pow(localAxis.x.x, 2) + Math.pow(localAxis.x.y, 2));
-      const XZ = new Vector2(lenXY, localAxis.x.z).normalize();
-      group.rotateY(-Math.asin(XZ.y));
-
-      if (localAxis.x.x === 0 && localAxis.x.y === 0) {
-        // 鉛直の部材
-        if (direction === "z") {
-          group.rotateX(-Math.PI);
-        } else if (direction === "y") {
-          group.rotateX(Math.PI / 2);
-        }
-      } else {
-        if (direction === "z") {
-          group.rotateX(-Math.PI / 2);
-        } else if (direction === "y") {
-          group.rotateX(Math.PI);
-        }
-      }
-
-    } else if (direction === "gx") {
-      group.rotation.z = Math.asin(-Math.PI / 2);
-
-    } else if (direction === "gz") {
-      group.rotation.x = Math.asin(-Math.PI / 2);
-
-    }
     group.name = ThreeLoadMemberPoint.id + "-" + row.toString() + '-' + direction.toString();
 
     return group;
@@ -149,20 +117,20 @@ export class ThreeLoadMemberPoint {
     height: number,
   ): any {
 
-    const len = nodei.distanceTo(nodej);
+    let len = nodei.distanceTo(nodej);
 
-    let LL: number = len;
+    //let LL: number = len;
 
     // 絶対座標系荷重の距離変換を行う
     if (direction === "gx") {
-      LL = new THREE.Vector2(nodei.z, nodei.y).distanceTo(new THREE.Vector2(nodej.z, nodej.y));
+      len = new THREE.Vector2(nodei.z, nodei.y).distanceTo(new THREE.Vector2(nodej.z, nodej.y));
     } else if (direction === "gy") {
-      LL = new THREE.Vector2(nodei.x, nodei.z).distanceTo(new THREE.Vector2(nodej.x, nodej.z));
+      len = new THREE.Vector2(nodei.x, nodei.z).distanceTo(new THREE.Vector2(nodej.x, nodej.z));
     } else if (direction === "gz") {
-      LL = new THREE.Vector2(nodei.x, nodei.y).distanceTo(new THREE.Vector2(nodej.x, nodej.y));
+      len = new THREE.Vector2(nodei.x, nodei.y).distanceTo(new THREE.Vector2(nodej.x, nodej.y));
     }
-    const L1 = pL1 * len / LL;
-    const L2 = pL2 * len / LL;
+    const L1 = pL1;
+    const L2 = pL2;
 
     // 荷重の各座標
     const x1 = L1;
@@ -187,7 +155,7 @@ export class ThreeLoadMemberPoint {
       ],
       L1,
       L2,
-      LL,
+      len,
       Pmax
     };
   }
@@ -216,12 +184,24 @@ export class ThreeLoadMemberPoint {
       }
 
       //6番目の代入値は不適切
-      const arrow_1 = this.point.create(pos1, 0, Px, 1, key, 0)
+      const arrow_1 = this.point.create(pos1, 0, Px, 1, key, 0);
 
       if (direction === 'y') {
         arrow_1.rotation.z += Math.PI;
       } else if (direction === 'z') {
         arrow_1.rotation.x += Math.PI / 2;
+      } else if (direction === "gx") {
+        const arrowhelper = arrow_1.getObjectByName('arrow');
+        // 仕様の位置に届かせるための微調整
+        arrowhelper.position.y += 1;
+      } else if (direction === "gy" || direction === "gz") {
+        const arrowhelper = arrow_1.getObjectByName('arrow');
+        // 仕様の位置に届かせるための微調整
+        if (value[i] > 0) {
+          arrowhelper.position.x += 1;
+        } else {
+          arrowhelper.position.x -= 1;
+        }
       }
       arrow_1.rotateX(Math.PI)
 
@@ -247,9 +227,10 @@ export class ThreeLoadMemberPoint {
   }
 
   public setGlobalOffset(group: THREE.Group, offset: number, key: string): void {
-    const k = key.replace('wg', '');
-    for (const item of group.children) {
-      item.position[k] = offset;
+    const group0 = group.getObjectByName("group");
+    const child = group0.getObjectByName("child");
+    for (const item of child.children) {
+      item.position.y = offset + 1;
     }
   }
 
@@ -280,6 +261,106 @@ export class ThreeLoadMemberPoint {
     // 寸法線
     this.setDim(group, status);
 
+  }
+
+  // 全体の向きを修正する
+  private setRotate( direction: string, group: any, 
+                     localAxis: { x:Vector3, y:Vector3, z:Vector3 }) {
+
+    if (!direction.includes('g')) {
+      const XY = new Vector2(localAxis.x.x, localAxis.x.y).normalize();
+      let A = Math.asin(XY.y);
+
+      if (XY.x < 0) {
+        A = Math.PI - A;
+      }
+      group.rotateZ(A);
+
+      const lenXY = Math.sqrt(Math.pow(localAxis.x.x, 2) + Math.pow(localAxis.x.y, 2));
+      const XZ = new Vector2(lenXY, localAxis.x.z).normalize();
+      group.rotateY(-Math.asin(XZ.y));
+
+      if (localAxis.x.x === 0 && localAxis.x.y === 0) {
+        // 鉛直の部材
+        if (direction === "z") {
+          group.rotateX(-Math.PI);
+        } else if (direction === "y") {
+          group.rotateX(Math.PI / 2);
+        }
+      } else {
+        if (direction === "z") {
+          group.rotateX(-Math.PI / 2);
+        } else if (direction === "y") {
+          group.rotateX(Math.PI);
+        }
+      }
+
+    } else if (direction === "gx") {
+      group.rotateZ(Math.PI / 2);
+      group.rotation.x = (Math.atan( localAxis.x.z / localAxis.x.y ))
+    } else if (direction === "gy") {
+      group.rotateX(Math.PI);
+      group.rotation.y = (Math.atan( localAxis.x.z / localAxis.x.x ))
+    } else if (direction === "gz") {
+      group.rotation.z = (Math.atan( localAxis.x.y / localAxis.x.x ))
+      group.rotateX(-Math.PI / 2);
+    }
+
+  }
+
+  // 
+  private setPosition(direction: string, group: any, 
+                      nodei: Vector3, nodej: Vector3, 
+                      P1: number, P2: number) {
+
+    if (!direction.includes('g')) {
+      group.position.set(nodei.x, nodei.y, nodei.z);
+    } else if (direction === 'gx') {
+      // nodeとPの関係によって、セットする位置(x座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.x >= nodej.x) {
+          group.position.set(nodej.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.x >= nodej.x) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodej.x, nodei.y, nodei.z);
+        }
+      }
+    } else if (direction === 'gy') {
+      // nodeとPの関係によって、セットする位置(y座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.y >= nodej.y) {
+          group.position.set(nodei.x, nodej.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.y >= nodej.y) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodej.y, nodei.z);
+        }
+      }
+    } else if (direction === 'gz') {
+      // nodeとPの関係によって、セットする位置(z座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.z >= nodej.z) {
+          group.position.set(nodei.x, nodei.y, nodej.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.z >= nodej.z) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodej.z);
+        }
+      }
+    }
   }
 
   // 寸法線
