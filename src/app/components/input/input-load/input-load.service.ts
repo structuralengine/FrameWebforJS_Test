@@ -557,6 +557,16 @@ export class InputLoadService {
         if (symbol == "LL") {
           _L1 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // 列車連行荷重の場合 L1に加算したケースを複数作る
         }
+        // load1のlistの順番をrow順に入れ替える
+        load1.sort((a, b) => {
+          if (a.row < b.row) {
+            return -1;
+          } else if (a.row > b.row) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
 
         for (let i=0; i<_L1.length; i++) {
           const load2: any[] = this.convertMemberLoads(load1);
@@ -807,6 +817,14 @@ export class InputLoadService {
         targetLoad.m1 = m1;
         targetLoad.L1 = (L1 / 1000).toString();
       }
+      // 最初の加算モードならば、そのまま負の状態にする
+      if (curNo < m1 && curNo < m2) {
+        targetLoad.m1 = m1;
+        //targetLoad.L1 = sL1;
+        L1 = Math.round(
+          this.helper.toNumber(targetLoad.L1) * 1000
+        )
+      }
     }
 
     for (let j = m1; j <= m2; j++) {
@@ -815,8 +833,12 @@ export class InputLoadService {
       );
       if (L1 > Lj) {
         L1 = L1 - Lj;
-        targetLoad.m1 = j + 1;
-        targetLoad.L1 = (L1 / 1000).toString();
+        if (j + 1 <= m2) {
+          targetLoad.m1 = j + 1;
+          targetLoad.L1 = (L1 / 1000).toString();
+        }/* else {
+
+        }*/
       } else {
         targetLoad.m1 = j;
         break;
@@ -882,8 +904,13 @@ export class InputLoadService {
             break;
           }
         }
-        curNo = Math.abs(targetLoad.m2);
-        curPos = L - Math.round(targetLoad.L2 * 1000);
+        if (curNo <= targetLoad.m2) {
+          curNo = Math.abs(targetLoad.m2);
+          curPos = L - Math.round(targetLoad.L2 * 1000);
+        } else {
+          L = 0
+          curPos = L - Math.round(targetLoad.L2 * 1000);
+        }
         break;
     }
 
@@ -911,7 +938,9 @@ export class InputLoadService {
     switch (targetLoad.mark) {
       case 1:
       case 11:
-        if (m1 === m2) {
+        const LL1 = this.helper.toNumber(targetLoad.L1);
+        const LL2 = targetLoad.L2;
+        if (m1 === m2 && LL1 * LL2 >= 0) {
           const newLoads = {};
           newLoads["direction"] = targetLoad.direction;
           newLoads["mark"] = targetLoad.mark;
@@ -1065,6 +1094,15 @@ export class InputLoadService {
         L1 = curPos + L1;
         targetLoad.m1 = m1;
         targetLoad.L1 = (L1 / 1000).toString();
+
+        // 最初の加算モードならば、そのまま負の状態にする
+        if (curNo < m1 && curNo < m2) {
+          targetLoad.m1 = m1;
+          //targetLoad.L1 = sL1;
+          L1 = Math.round(
+            this.helper.toNumber(targetLoad.L1) * 1000
+          )
+        }
       }
       curNo = targetLoad.m1;
       curPos = Math.round(this.helper.toNumber(targetLoad.L1) * 1000);
@@ -1072,7 +1110,7 @@ export class InputLoadService {
 
     if (targetLoad.L2 < 0) {
       // 連続部材の全長さLLを計算する
-      ll = 0;
+      /*ll = 0;
       for (let j = m1; j <= m2; j++) {
         ll = ll + Math.round(this.member.getMemberLength(j.toString()) * 1000);
       }
@@ -1082,9 +1120,9 @@ export class InputLoadService {
       // }
       targetLoad.m2 = Math.sign(targetLoad.m2) * m2;
       targetLoad.L2 = L2 / 1000;
-      L = Math.round(this.member.getMemberLength(m2.toString()) * 1000);
-      curNo = Math.abs(targetLoad.m2);
-      curPos = L - Math.round(targetLoad.L2 * 1000);
+      L = Math.round(this.member.getMemberLength(m2.toString()) * 1000);*/
+      curNo = -1;//Math.abs(targetLoad.m2);
+      curPos = Math.round(targetLoad.L2 * 1000);
     }
 
     if (curPos >= L) {
@@ -1092,6 +1130,9 @@ export class InputLoadService {
         curNo = curNo + 1;
         curPos = 0;
       }
+    }
+    if (targetLoad.L2 < 0) {
+      curNo = -1
     }
     _curPos = curPos / 1000;
     const result = { loads: targetLoad, curNo: curNo, curPos: _curPos };
@@ -1116,4 +1157,5 @@ export class InputLoadService {
     }
     return maxCase;
   }
+
 }

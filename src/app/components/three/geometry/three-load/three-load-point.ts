@@ -54,9 +54,9 @@ export class ThreeLoadPoint {
 
     //線の色を決める
     let line_color = 0xff0000;
-    if (direction === "ty") {
+    if (direction === "ty" || direction === "tgy") {
       line_color = 0x00ff00;
-    } else if (direction === "tz") {
+    } else if (direction === "tz" || direction === "tgz") {
       line_color = 0x0000ff;
     }
 
@@ -95,6 +95,8 @@ export class ThreeLoadPoint {
       group.rotateZ(Math.PI / 2);
     } else if (direction === "tz") {
       group.rotation.set(-Math.PI / 2, 0, -Math.PI / 2);
+    } else if (direction === "tgy" || direction === "tgz") {
+      group.rotateZ(-Math.PI / 2);
     }
 
     // 位置を修正する
