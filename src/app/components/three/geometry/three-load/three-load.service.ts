@@ -478,13 +478,13 @@ export class ThreeLoadService {
       return; //要素がなければ 以降の処理は行わない
     }
 
-    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex);
+    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex); // 簡易版
     if(this.currentIndex in tempMemberLoad){
 
       // 要素荷重データを入手
-      const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex);
+      const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex); //計算に使う版：直後に同じ関数を呼んでいる
       // 要素荷重を変更
-      this.changeMemberLode(row, memberLoadData);
+      this.changeMemberLode(row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
       row++;
 
       // 対象行以下の行について
@@ -499,7 +499,7 @@ export class ThreeLoadService {
           break;
         }
         // 要素荷重を変更
-        this.changeMemberLode(targetMemberLoad.row, memberLoadData);
+        this.changeMemberLode(targetMemberLoad.row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
         row++;
         i = memberLoads.findIndex((e) => e.row === row);
       }

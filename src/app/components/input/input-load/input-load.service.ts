@@ -553,13 +553,15 @@ export class InputLoadService {
           load_member[load_id] = tmp_member;
         }
       } else {
-        // 計算用のデータ作成
+        // 計算用のデータ作成 こっちに来ないと変換しない
         let LL1 = [0];
         if (this.load_name[Number(load_id) - 1].symbol == "LL") {
           LL1 = [0, 0.1, 0.2];
         }
+        // load1のlistの順番をrow順に入れ替える
+        const _load1 = this.sortRow(load1);
         for (let L1 of LL1) {
-          const load2: any[] = this.convertMemberLoads(load1);
+          const load2: any[] = this.convertMemberLoads(_load1);
           let idd = Number(load_id);
           this.load_id_LL = String(idd + L1);
 
@@ -819,6 +821,14 @@ export class InputLoadService {
         targetLoad.m1 = m1;
         targetLoad.L1 = (L1 / 1000).toString();
       }
+      // 最初の加算モードならば、そのまま負の状態にする
+      if (curNo < m1 && curNo < m2) {
+        targetLoad.m1 = m1;
+        //targetLoad.L1 = sL1;
+        L1 = Math.round(
+          this.helper.toNumber(targetLoad.L1) * 1000
+        )
+      }
     }
 
     for (let j = m1; j <= m2; j++) {
@@ -827,8 +837,12 @@ export class InputLoadService {
       );
       if (L1 > Lj) {
         L1 = L1 - Lj;
-        targetLoad.m1 = j + 1;
-        targetLoad.L1 = (L1 / 1000).toString();
+        if (j + 1 <= m2) {
+          targetLoad.m1 = j + 1;
+          targetLoad.L1 = (L1 / 1000).toString();
+        }/* else {
+
+        }*/
       } else {
         targetLoad.m1 = j;
         break;
@@ -894,8 +908,13 @@ export class InputLoadService {
             break;
           }
         }
-        curNo = Math.abs(targetLoad.m2);
-        curPos = L - Math.round(targetLoad.L2 * 1000);
+        if (curNo <= targetLoad.m2) {
+          curNo = Math.abs(targetLoad.m2);
+          curPos = L - Math.round(targetLoad.L2 * 1000);
+        } else {
+          L = 0
+          curPos = L - Math.round(targetLoad.L2 * 1000);
+        }
         break;
     }
 
@@ -923,7 +942,9 @@ export class InputLoadService {
     switch (targetLoad.mark) {
       case 1:
       case 11:
-        if (m1 === m2) {
+        const LL1 = this.helper.toNumber(targetLoad.L1);
+        const LL2 = targetLoad.L2;
+        if (m1 === m2 && LL1 * LL2 >= 0) {
           const newLoads = {};
           newLoads["direction"] = targetLoad.direction;
           newLoads["mark"] = targetLoad.mark;
@@ -1077,6 +1098,15 @@ export class InputLoadService {
         L1 = curPos + L1;
         targetLoad.m1 = m1;
         targetLoad.L1 = (L1 / 1000).toString();
+
+        // 最初の加算モードならば、そのまま負の状態にする
+        if (curNo < m1 && curNo < m2) {
+          targetLoad.m1 = m1;
+          //targetLoad.L1 = sL1;
+          L1 = Math.round(
+            this.helper.toNumber(targetLoad.L1) * 1000
+          )
+        }
       }
       curNo = targetLoad.m1;
       curPos = Math.round(this.helper.toNumber(targetLoad.L1) * 1000);
@@ -1084,7 +1114,7 @@ export class InputLoadService {
 
     if (targetLoad.L2 < 0) {
       // 連続部材の全長さLLを計算する
-      ll = 0;
+      /*ll = 0;
       for (let j = m1; j <= m2; j++) {
         ll = ll + Math.round(this.member.getMemberLength(j.toString()) * 1000);
       }
@@ -1094,9 +1124,9 @@ export class InputLoadService {
       // }
       targetLoad.m2 = Math.sign(targetLoad.m2) * m2;
       targetLoad.L2 = L2 / 1000;
-      L = Math.round(this.member.getMemberLength(m2.toString()) * 1000);
-      curNo = Math.abs(targetLoad.m2);
-      curPos = L - Math.round(targetLoad.L2 * 1000);
+      L = Math.round(this.member.getMemberLength(m2.toString()) * 1000);*/
+      curNo = -1;//Math.abs(targetLoad.m2);
+      curPos = Math.round(targetLoad.L2 * 1000);
     }
 
     if (curPos >= L) {
@@ -1104,6 +1134,9 @@ export class InputLoadService {
         curNo = curNo + 1;
         curPos = 0;
       }
+    }
+    if (targetLoad.L2 < 0) {
+      curNo = -1
     }
     _curPos = curPos / 1000;
     const result = { loads: targetLoad, curNo: curNo, curPos: _curPos };
@@ -1127,5 +1160,25 @@ export class InputLoadService {
       }
     }
     return maxCase;
+  }
+
+  // rowの順番に入れ替える
+  private sortRow (load: any) {
+    let load1 = [];//load;
+    const keyRow = {};  // 内部に、Row:{loadkey, Row}を配置する。
+    for (const Key of Object.keys(load)) {
+      const tar_load = load[Key];
+      const Row = tar_load.row;
+      keyRow[Row] = {loadKey: Key, Row: Row}
+    }
+    // 並び変える（kerRowでrowの昇順に並べ替え、上から順にload1に入れる。）
+    // iの最初の数は、状況によって変化するため、loadから呼び出す。
+    let i = this.helper.toNumber(Object.keys(load)[0]);
+    for (const keyRowKey of Object.keys(keyRow)) {
+      const loadKeynum = keyRow[keyRowKey].loadKey;
+      load1[i] = load[loadKeynum];
+      i++
+    }
+    return load1
   }
 }
