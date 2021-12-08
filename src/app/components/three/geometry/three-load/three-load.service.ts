@@ -230,7 +230,10 @@ export class ThreeLoadService {
       const LL_list = this.load.getMemberLoadJson(0, this.currentIndex)
       const LL_keys: string[] = Object.keys(LL_list);
       if(LL_keys.length > 0){
-        this.animation(LL_keys);
+        const keys = LL_keys.map((value) =>{
+          return Number(value)
+        })
+        this.animation(keys);
         return;
       }
     }
@@ -283,19 +286,23 @@ export class ThreeLoadService {
   }
 
   // 連行移動荷重のアニメーションを開始する
-  public animation(LL_keys: string[], i: number = 1){
+  public animation(keys: number[], k: number = 0){
 
-    let j = (i < LL_keys.length)? i + 1 : 1;
-    
+    const i: number = Math.floor(k / 10); // 10フレームに１回位置を更新する
+
+    const j = (i < keys.length)? k + 1 : 0; // 次のフレーム
+
     // 次のフレームを要求
-    this.animationObject = requestAnimationFrame(() => { this.animation(LL_keys, j); });
+    this.animationObject = requestAnimationFrame(() => {
+      this.animation(keys, j);
+    });
 
-    const id: string = LL_keys[i-1];
-    const changeCase: number = Number(id);
-    this.visibleCaseChange(changeCase);
+    const g = keys[i];
+    if(this.visibleCaseChange(g)){
+      // レンダリングする
+      this.scene.render();
+    }
 
-    // レンダリングする
-    this.scene.render();
   }
 
 
