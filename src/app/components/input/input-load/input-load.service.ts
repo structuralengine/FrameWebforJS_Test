@@ -558,10 +558,19 @@ export class InputLoadService {
           _L1 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // 列車連行荷重の場合 L1に加算したケースを複数作る
         }
         // load1のlistの順番をrow順に入れ替える
-        const _load1 = this.sortRow(load1);
+        load1.sort((a, b) => {
+          if (a.row < b.row) {
+            return -1;
+          } else if (a.row > b.row) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+
         for (let i=0; i<_L1.length; i++) {
-          const load2: any[] = this.convertMemberLoads(_load1);
-          
+          const load2: any[] = this.convertMemberLoads(load1);
+
           for (let j = 0; j < load2.length; j++) {
             const row = load2[j];
 
@@ -1149,23 +1158,4 @@ export class InputLoadService {
     return maxCase;
   }
 
-  // rowの順番に入れ替える
-  private sortRow (load: any) {
-    let load1 = [];//load;
-    const keyRow = {};  // 内部に、Row:{loadkey, Row}を配置する。
-    for (const Key of Object.keys(load)) {
-      const tar_load = load[Key];
-      const Row = tar_load.row;
-      keyRow[Row] = {loadKey: Key, Row: Row}
-    }
-    // 並び変える（kerRowでrowの昇順に並べ替え、上から順にload1に入れる。）
-    // iの最初の数は、状況によって変化するため、loadから呼び出す。
-    let i = this.helper.toNumber(Object.keys(load)[0]);
-    for (const keyRowKey of Object.keys(keyRow)) {
-      const loadKeynum = keyRow[keyRowKey].loadKey;
-      load1[i] = load[loadKeynum];
-      i++
-    }
-    return load1
-  }
 }
