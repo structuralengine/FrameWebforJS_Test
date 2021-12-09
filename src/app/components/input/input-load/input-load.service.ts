@@ -9,6 +9,8 @@ import { InputMembersService } from "../input-members/input-members.service";
 export class InputLoadService {
   public load_name: any[];
   public load: {};
+  public LL_length: number = 0.1;
+  public LL_pitch: number = 0.1;
 
   constructor(
     private member: InputMembersService,
@@ -552,11 +554,16 @@ export class InputLoadService {
         }
       } else {
         // 計算用のデータ作成
-        const symbol: string = this.getLoadName(Number(load_id), 'symbol');
+        const symbol: string = this.getLoadName(Number(load_id), "symbol");
 
-        let _L1 = [0];
+        let _L11 = [0];
         if (symbol == "LL") {
-          _L1 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // 列車連行荷重の場合 L1に加算したケースを複数作る
+          for (let i = 0; i <= this.LL_length; i += this.LL_pitch) {
+            if (i !== 0) {
+              _L11.push(Number(i.toFixed(3)));
+            }
+          }
+          // _L11 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // 列車連行荷重の場合 L1に加算したケースを複数作る
         }
         // load1のlistの順番をrow順に入れ替える
         load1.sort((a, b) => {
@@ -569,7 +576,7 @@ export class InputLoadService {
           }
         });
 
-        for (let i=0; i<_L1.length; i++) {
+        for (let i = 0; i < _L11.length; i++) {
           const load2: any[] = this.convertMemberLoads(load1);
 
           for (let j = 0; j < load2.length; j++) {
@@ -582,7 +589,7 @@ export class InputLoadService {
               m: row["m1"],
               direction: direction,
               mark: row["mark"],
-              L1: this.helper.toNumber(row["L1"], 3) + _L1[i],
+              L1: this.helper.toNumber(row["L1"], 3) + _L11[i],
               L2: this.helper.toNumber(row["L2"], 3),
               P1: this.helper.toNumber(row["P1"], 2),
               P2: this.helper.toNumber(row["P2"], 2),
@@ -595,9 +602,9 @@ export class InputLoadService {
 
           if (tmp_member.length > 0) {
             // ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
-            const index: number = Number(load_id);  // ケースid を数字として扱うため変換する
-            const digit: number = _L1.length.toString().length; // 桁数
-            const load_id_LL = String(index + i/(10*digit));
+            const index: number = Number(load_id); // ケースid を数字として扱うため変換する
+            const digit: number = _L11.length.toString().length; // 桁数
+            const load_id_LL = String(index + i / (10 * digit));
 
             load_member[load_id_LL] = tmp_member;
             tmp_member = new Array();
@@ -769,7 +776,7 @@ export class InputLoadService {
 
     // memberの外側に出ている荷重を破棄する
     for (const key of load2.keys()) {
-      const load = load2[key]
+      const load = load2[key];
       const checked = this.member.checkIntoMember(load);
       load2[key].L1 = checked[0];
       load2[key].L2 = checked[1];
@@ -822,9 +829,7 @@ export class InputLoadService {
       if (curNo < m1 && curNo < m2) {
         targetLoad.m1 = m1;
         //targetLoad.L1 = sL1;
-        L1 = Math.round(
-          this.helper.toNumber(targetLoad.L1) * 1000
-        )
+        L1 = Math.round(this.helper.toNumber(targetLoad.L1) * 1000);
       }
     }
 
@@ -837,7 +842,7 @@ export class InputLoadService {
         if (j + 1 <= m2) {
           targetLoad.m1 = j + 1;
           targetLoad.L1 = (L1 / 1000).toString();
-        }/* else {
+        } /* else {
 
         }*/
       } else {
@@ -909,7 +914,7 @@ export class InputLoadService {
           curNo = Math.abs(targetLoad.m2);
           curPos = L - Math.round(targetLoad.L2 * 1000);
         } else {
-          L = 0
+          L = 0;
           curPos = L - Math.round(targetLoad.L2 * 1000);
         }
         break;
@@ -1100,9 +1105,7 @@ export class InputLoadService {
         if (curNo < m1 && curNo < m2) {
           targetLoad.m1 = m1;
           //targetLoad.L1 = sL1;
-          L1 = Math.round(
-            this.helper.toNumber(targetLoad.L1) * 1000
-          )
+          L1 = Math.round(this.helper.toNumber(targetLoad.L1) * 1000);
         }
       }
       curNo = targetLoad.m1;
@@ -1122,7 +1125,7 @@ export class InputLoadService {
       targetLoad.m2 = Math.sign(targetLoad.m2) * m2;
       targetLoad.L2 = L2 / 1000;
       L = Math.round(this.member.getMemberLength(m2.toString()) * 1000);*/
-      curNo = -1;//Math.abs(targetLoad.m2);
+      curNo = -1; //Math.abs(targetLoad.m2);
       curPos = Math.round(targetLoad.L2 * 1000);
     }
 
@@ -1133,7 +1136,7 @@ export class InputLoadService {
       }
     }
     if (targetLoad.L2 < 0) {
-      curNo = -1
+      curNo = -1;
     }
     _curPos = curPos / 1000;
     const result = { loads: targetLoad, curNo: curNo, curPos: _curPos };
@@ -1158,5 +1161,4 @@ export class InputLoadService {
     }
     return maxCase;
   }
-
 }
