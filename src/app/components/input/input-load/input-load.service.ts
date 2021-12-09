@@ -393,6 +393,7 @@ export class InputLoadService {
         fix_member: fix_member == null ? empty : fix_member,
         element: element == null ? empty : element,
         joint: joint == null ? empty : joint,
+        symbol: symbol == null ? empty : symbol,
       };
 
       if (empty === null || isPrint === true) {
