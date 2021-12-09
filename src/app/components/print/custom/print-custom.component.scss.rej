@@ -1,0 +1,10 @@
+diff a/src/app/components/print/custom/print-custom.component.scss b/src/app/components/print/custom/print-custom.component.scss	(rejected hunks)
+@@ -53,7 +53,7 @@
+     line-height: 32px;
+     font-size: 16px;
+     font-weight: 400;
+-    font-family: "ＭＳ Ｐゴシック";
++    font-family: "MS UI Gothic";
+ }
+ 
+ h3 {
