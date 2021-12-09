@@ -6,6 +6,7 @@ import { DataCountService } from "../dataCount.service";
 import { ResultCombineFsecService } from "src/app/components/result/result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-custom-fsec.service";
+import { element } from "protractor";
 
 @Component({
   selector: "app-print-result-combine-fsec",
@@ -83,6 +84,7 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
     const titleSum: any[] = new Array();
     const body: any[] = new Array();
     const typeSum: any[] = new Array();
+    let target_flg = false;
 
     const KEYS = this.combFsec.fsecKeys;
     const TITLES = this.combFsec.titles;
@@ -99,6 +101,27 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
       if (jud[i].check === true) {
         this.flg = true;
         continue;
+      }
+    }
+
+    if (!this.printCustomFsec.fsecEditable.includes(true)) {
+      for (let i = 0; i < this.printCustomFsec.fsecEditable.length; i++) {
+        this.printCustomFsec.fsecEditable[i] = true;
+      }
+    }
+
+    for (let i = 0; i < jud.length; i++) {
+      if ("check" in jud[i]) {
+        if (jud[i].check === true) {
+          target_flg = true;
+          break;
+        }
+      }
+    }
+
+    if (target_flg === false) {
+      for (let i = 0; i < jud.length; i++) {
+        jud[i].check = true;
       }
     }
 
