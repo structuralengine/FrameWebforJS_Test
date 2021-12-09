@@ -54,6 +54,9 @@ export class ThreeLoadService {
   // 選択中のオブジェクト
   private selecteddObject: any; 
 
+  // アニメーションのオブジェクト
+  private animationObject: any;
+
   // 初期化
   constructor(
     private scene: SceneService,
@@ -62,7 +65,7 @@ export class ThreeLoadService {
     private node: InputNodesService,
     private member: InputMembersService,
     private load: InputLoadService,
-    private three_member: ThreeMembersService
+    private three_member: ThreeMembersService,
   ) {
 
     // 荷重の雛形をあらかじめ生成する
@@ -101,6 +104,9 @@ export class ThreeLoadService {
 
     // 選択中のオブジェクト
     this.selecteddObject = null;
+    
+    // アニメーションのオブジェクト
+    this.animationObject = null;
   }
 
   // 荷重を再設定する
@@ -130,7 +136,8 @@ export class ThreeLoadService {
 
     // ファイルを開いたときの処理
     // 荷重を作成する
-    for (const id of Object.keys(this.load.load)) {
+    const loadData = this.load.getLoadJson(0);
+    for (const id of Object.keys(loadData)) {
       this.addCase(id);
     }
 
@@ -143,11 +150,23 @@ export class ThreeLoadService {
     if (Object.keys(this.nodeData).length <= 0) {
       return; // 格点がなければ 以降の処理は行わない
     }
-    // 節点荷重データを入手
-    const nodeLoadData = this.load.getNodeLoadJson(0);
 
+    // 節点荷重データを入手
+    // const nodeLoadData = this.load.getNodeLoadJson(0);
+    const nodeLoadData = {};
     // 要素荷重データを入手
-    const memberLoadData = this.load.getMemberLoadJson(0);
+    // const memberLoadData = this.load.getMemberLoadJson(0);
+    const memberLoadData = {};
+    for (const id of Object.keys(loadData)) {
+      const tmp = loadData[id];
+      if('load_member' in tmp && tmp.load_member.length > 0){
+        memberLoadData[id] = tmp.load_member;
+      }
+      if('load_node' in tmp && tmp.load_node.length > 0){
+        nodeLoadData[id] = tmp.load_node;
+      }
+    }
+
 
     // 荷重図を非表示のまま作成する
     for (const id of Object.keys(this.AllCaseLoadList)) {
@@ -199,11 +218,41 @@ export class ThreeLoadService {
 
   // 表示ケースを変更する
   public changeCase(changeCase: number): void {
+   
+    if (!this.visibleCaseChange(changeCase)){
+      return;
+    }
+
+    // 連行荷重が完成したら 以下のアニメーションを有効にする
+    // 荷重名称を調べる
+    const symbol: string = this.load.getLoadName(changeCase, 'symbol');
+    if (symbol === "LL") {
+      const LL_list = this.load.getMemberLoadJson(0, this.currentIndex)
+      const LL_keys: string[] = Object.keys(LL_list);
+      if(LL_keys.length > 0){
+        const keys = LL_keys.map((value) =>{
+          return Number(value)
+        })
+        this.animation(keys);
+        return;
+      }
+    }
+
+    if(this.animationObject !== null){
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
+
+    this.scene.render();
+
+  }
+
+  private visibleCaseChange(changeCase: number): boolean{
     const id: string = changeCase.toString();
 
     if (this.currentIndex === id) {
       // 同じなら何もしない
-      return;
+      return false;
     }
 
     if (changeCase < 1) {
@@ -215,7 +264,7 @@ export class ThreeLoadService {
       }
       this.scene.render();
       this.currentIndex = id;
-      return;
+      return false;
     }
 
     // 初めての荷重ケースが呼び出された場合
@@ -233,8 +282,29 @@ export class ThreeLoadService {
     // カレントデータをセット
     this.currentIndex = id;
 
-    this.scene.render();
+    return true;
   }
+
+  // 連行移動荷重のアニメーションを開始する
+  public animation(keys: number[], k: number = 0){
+
+    const i: number = Math.floor(k / 10); // 10フレームに１回位置を更新する
+
+    const j = (i < keys.length)? k + 1 : 0; // 次のフレーム
+
+    // 次のフレームを要求
+    this.animationObject = requestAnimationFrame(() => {
+      this.animation(keys, j);
+    });
+
+    const g = keys[i];
+    if(this.visibleCaseChange(g)){
+      // レンダリングする
+      this.scene.render();
+    }
+
+  }
+
 
   // ケースを追加する
   private addCase(id: string): void {
@@ -478,13 +548,13 @@ export class ThreeLoadService {
       return; //要素がなければ 以降の処理は行わない
     }
 
-    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex);
+    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex); // 簡易版
     if(this.currentIndex in tempMemberLoad){
 
       // 要素荷重データを入手
-      const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex);
+      const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex); //計算に使う版：直後に同じ関数を呼んでいる
       // 要素荷重を変更
-      this.changeMemberLode(row, memberLoadData);
+      this.changeMemberLode(row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
       row++;
 
       // 対象行以下の行について
@@ -492,11 +562,14 @@ export class ThreeLoadService {
       let i = memberLoads.findIndex((e) => e.row === row);
       while(i>=0){
         const targetMemberLoad = memberLoads[i];
+        if(targetMemberLoad.L1 == null){
+          break;
+        }
         if(!targetMemberLoad.L1.includes('-')){
           break;
         }
         // 要素荷重を変更
-        this.changeMemberLode(targetMemberLoad.row, memberLoadData);
+        this.changeMemberLode(targetMemberLoad.row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
         row++;
         i = memberLoads.findIndex((e) => e.row === row);
       }
@@ -1279,10 +1352,10 @@ export class ThreeLoadService {
             // オフセットする
             if (item.value > 0) {
               editor.setGlobalOffset(item, offset1, k);
-              offset1 -= (scale * 1.0); // オフセット距離に高さを加算する
+              offset1 += (scale * 1.0); // オフセット距離に高さを加算する
             } else {
               editor.setGlobalOffset(item, offset2, k);
-              offset2 += (scale * 1.0); // オフセット距離に高さを加算する
+              offset2 -= (scale * 1.0); // オフセット距離に高さを加算する
             }
 
           } else if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
@@ -1292,10 +1365,10 @@ export class ThreeLoadService {
             // オフセットする
             if (item.value > 0) {
               editor.setGlobalOffset(item, offset1, k);
-              offset1 -= (scale * 1.0); // オフセット距離に高さを加算する
+              offset1 += (scale * 1.0); // オフセット距離に高さを加算する
             } else {
               editor.setGlobalOffset(item, offset2, k);
-              offset2 += (scale * 1.0); // オフセット距離に高さを加算する
+              offset2 -= (scale * 1.0); // オフセット距離に高さを加算する
             }
           }
 

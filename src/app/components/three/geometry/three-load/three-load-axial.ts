@@ -67,14 +67,15 @@ export class ThreeLoadAxial {
     child.add(line2);
 
     // 矢印を描く
-    const arrow_geo = new THREE.ConeBufferGeometry(0.05, 0.25, 3, 1, false);
+    const arrow_height = 0.25
+    const arrow_geo = new THREE.ConeBufferGeometry(0.05, arrow_height, 3, 1, false);
     const arrow = new THREE.Mesh(arrow_geo, this.arrow_mat);
     if (value > 0) {
       arrow.rotation.z = -Math.PI / 2;
-      arrow.position.x = L1 + L;
+      arrow.position.x = L1 + L - arrow_height / 2;
     } else {
       arrow.rotation.z = Math.PI / 2;
-      arrow.position.x = L1;
+      arrow.position.x = L1 + arrow_height / 2;
     }
     arrow.name = "arrow";
 
@@ -120,9 +121,6 @@ export class ThreeLoadAxial {
     const XZ = new Vector2(lenXY, localAxis.x.z).normalize();
     group.rotateY(-Math.asin(XZ.y));
     group.rotateX(Math.PI);
-    if (value < 0) {
-      group.rotation.y += Math.PI
-    }
     group.name = ThreeLoadAxial.id + "-" + row.toString() + "-x";
     return group;
   }
@@ -233,10 +231,10 @@ export class ThreeLoadAxial {
     const L1: number = group.L1;
     const L: number = group.L;
     const L2: number = group.L2
-    const points = [new Vector3(point[0] + L1, point[1], 0),
-                    new Vector3(point[0] + L1, child.position.y, 0),
-                    new Vector3(point[3] + L1, child.position.y, 0),
-                    new Vector3(point[3] + L1, point[4], 0)];
+    const points = [new Vector3(point[0].x + L1, point[0].y, 0),
+                    new Vector3(point[0].x + L1, child.position.y, 0),
+                    new Vector3(point[1].x + L1, child.position.y, 0),
+                    new Vector3(point[1].x + L1, point[1].y, 0)];
 
     // 一旦削除
     for(let i=0; i<2; i++){

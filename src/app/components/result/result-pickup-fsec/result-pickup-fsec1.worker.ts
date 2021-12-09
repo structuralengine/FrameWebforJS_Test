@@ -17,7 +17,11 @@ addEventListener('message', ({ data }) => {
     const combines: any[] = pickList[pickNo];
     let tmp: {} = null;
     for (const combNo of combines) {
-      const com = fsecCombine[combNo];
+      const com = JSON.parse(
+        JSON.stringify({
+          temp: fsecCombine[combNo]
+        })
+      ).temp;
       if (tmp == null) {
         tmp = com;
         for (const k of Object.keys(com)) { // 最大値を 集計する
@@ -66,6 +70,7 @@ addEventListener('message', ({ data }) => {
     }
     fsecPickup[pickNo] = tmp;
     max_values[pickNo] = max_value;
+    tmp = null;
   }
   postMessage({ fsecPickup, max_values });
 });
