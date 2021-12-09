@@ -19,29 +19,48 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
   ],
 })
 export class ResultFsecComponent implements OnInit {
+  public KEYS: string[];
+  public TITLES: string[];
   dataset: any[];
-  page: number;
+  page: number = 1;
   load_name: string;
   btnCombine: string;
   btnPickup: string;
   dimension: number;
+  LL_flg: boolean[];
+  LL_page: boolean;
+  cal: number = 0;
+
+  circleBox = new Array();
 
   constructor(
     private data: ResultFsecService,
     private app: AppComponent,
     private load: InputLoadService,
     private three: ThreeService,
-    private result: ResultDataService,
     private comb: ResultCombineFsecService,
     private pic: ResultPickupFsecService,
     private helper: DataHelperModule
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
+    this.KEYS = this.comb.fsecKeys;
+    this.TITLES = this.comb.titles;
+    for (let i = 0; i < this.TITLES.length; i++) {
+      this.circleBox.push(i);
+    }
   }
 
   ngOnInit() {
     this.loadPage(1);
+    setTimeout(() => {
+      const circle = document.getElementById(String(this.cal + 20));
+      if (circle !== null) {
+        circle.classList.add("active");
+      }
+    }, 10);
+
+    this.LL_flg = this.data.LL_flg;
 
     // コンバインデータがあればボタンを表示する
     if (this.comb.isCalculated === true) {
@@ -69,9 +88,50 @@ export class ResultFsecComponent implements OnInit {
     }
     this.dataset = this.data.getFsecColumns(this.page);
     this.load_name = this.load.getLoadName(currentPage);
+    this.page = this.page;
+    this.LL_page =
+      this.data.LL_flg[this.page - 1] === void 0
+        ? false
+        : this.data.LL_flg[this.page - 1];
 
     this.three.ChangeMode("fsec");
     this.three.ChangePage(currentPage);
   }
 
+  calPage(calPage: any) {
+    const carousel = document.getElementById("carousel");
+    if (carousel != null) {
+      carousel.classList.add("add");
+    }
+    const time = this.TITLES.length;
+    let cal = this.cal;
+    setTimeout(() => {
+      this.calcal(calPage);
+    }, 100);
+    setTimeout(function () {
+      if (carousel != null) {
+        carousel.classList.remove("add");
+      }
+    }, 500);
+  }
+
+  calcal(calpage: any) {
+    if (calpage === "-1" || calpage === "1") {
+      this.cal += Number(calpage);
+      if (this.cal >= this.TITLES.length) {
+        this.cal = 0;
+      }
+      if (this.cal < 0) {
+        this.cal = this.TITLES.length - 1;
+      }
+    } else {
+      this.cal = calpage;
+    }
+    setTimeout(() => {
+      const circle = document.getElementById(String(this.cal + 20));
+      if (circle !== null) {
+        circle.classList.add("active");
+      }
+    }, 10);
+  }
 }
