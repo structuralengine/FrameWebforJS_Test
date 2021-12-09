@@ -43,6 +43,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
   public pagerBl;
   public pagerBr;
 
+  public fsecEditable = [];
+
   constructor(
     private InputData: InputDataService,
     private ResultData: ResultDataService,
@@ -74,6 +76,9 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       this.pickFsec_dataset = tables.table;
       this.pickFsec_title = tables.titleSum;
       this.judge = this.countArea.setCurrentY(tables.this, tables.last);
+      setTimeout(() => {
+        this.printCustomFsec.fsecEditable = this.fsecEditable;
+      }, 1);
     } else {
       this.isEnable = false;
     }
@@ -108,7 +113,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
     if (!this.printCustomFsec.fsecEditable.includes(true)) {
       for (let i = 0; i < this.printCustomFsec.fsecEditable.length; i++) {
-        this.printCustomFsec.fsecEditable[i] = true;
+        this.fsecEditable.push(true);
       }
     }
 
@@ -144,7 +149,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       titleSum.push(title);
 
       for (let i = 0; i < KEYS.length; i++) {
-        if (this.printCustomFsec.fsecEditable[i] === true) {
+        if (this.fsecEditable[i] === true) {
           const key = KEYS[i];
           const title2 = TITLES[i];
           const elieli = json[index]; // 1行分のnodeデータを取り出す

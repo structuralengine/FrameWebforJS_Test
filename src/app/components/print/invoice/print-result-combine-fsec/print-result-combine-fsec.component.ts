@@ -40,6 +40,8 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
   public pagerBl;
   public pagerBr;
 
+  public fsecEditable = [];
+
   constructor(
     private InputData: InputDataService,
     private ResultData: ResultDataService,
@@ -72,6 +74,9 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
       this.combFsec_dataset = tables.table;
       this.combFsec_title = tables.titleSum;
       this.judge = this.countArea.setCurrentY(tables.this, tables.last);
+      setTimeout(() => {
+        this.printCustomFsec.fsecEditable = this.fsecEditable;
+      }, 1);
     } else {
       this.isEnable = false;
     }
@@ -101,6 +106,27 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
       if (jud[i].check === true) {
         this.flg = true;
         continue;
+      }
+    }
+
+    if (!this.printCustomFsec.fsecEditable.includes(true)) {
+      for (let i = 0; i < this.printCustomFsec.fsecEditable.length; i++) {
+        this.fsecEditable.push(true);
+      }
+    }
+
+    for (let i = 0; i < jud.length; i++) {
+      if ("check" in jud[i]) {
+        if (jud[i].check === true) {
+          target_flg = true;
+          break;
+        }
+      }
+    }
+
+    if (target_flg === false) {
+      for (let i = 0; i < jud.length; i++) {
+        jud[i].check = true;
       }
     }
 
@@ -142,7 +168,7 @@ export class PrintResultCombineFsecComponent implements OnInit, AfterViewInit {
       titleSum.push(title);
 
       for (let i = 0; i < KEYS.length; i++) {
-        if (this.printCustomFsec.fsecEditable[i] === true) {
+        if (this.fsecEditable[i] === true) {
           const key = KEYS[i];
           const title2 = TITLES[i];
           const elieli = json[index]; // 1行分のnodeデータを取り出す
