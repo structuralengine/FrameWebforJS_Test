@@ -97,10 +97,33 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     let typeAll: any = [];
     this.row = 0;
 
+    let target_flg = false;
+
     for (let i = 0; i < jud.length; i++) {
       if (jud[i].check === true) {
         this.flg = true;
         continue;
+      }
+    }
+
+    if (!this.printCustomFsec.fsecEditable.includes(true)) {
+      for (let i = 0; i < this.printCustomFsec.fsecEditable.length; i++) {
+        this.printCustomFsec.fsecEditable[i] = true;
+      }
+    }
+
+    for (let i = 0; i < jud.length; i++) {
+      if ("check" in jud[i]) {
+        if (jud[i].check === true) {
+          target_flg = true;
+          break;
+        }
+      }
+    }
+
+    if (target_flg === false) {
+      for (let i = 0; i < jud.length; i++) {
+        jud[i].check = true;
       }
     }
 
