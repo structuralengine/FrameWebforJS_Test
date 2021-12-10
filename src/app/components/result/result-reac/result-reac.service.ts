@@ -14,6 +14,8 @@ export class ResultReacService {
   private worker2: Worker;
   private columns: any; // 表示用
 
+  public LL_flg = [];
+
   constructor(
     private fixnode: InputFixNodeService,
     private load: InputLoadService,
@@ -54,7 +56,7 @@ export class ResultReacService {
     pickList: any
   ): void {
     const startTime = performance.now(); // 開始時間
-
+    this.LL_flg = new Array();
     // 入力にない反力情報は削除する
     // 2D モードの時 仮に支点を入力することがあった
     const fix_node = this.fixnode.getFixNodeJson(0);
@@ -69,6 +71,8 @@ export class ResultReacService {
         continue;
       }
       const caseLoad: any = load_name[parseInt(k1, 10)];
+      this.LL_flg.push(caseLoad.symbol == "LL" ? true : false);
+
       const fix_type: string = caseLoad.fix_node.toString();
       if (!(fix_type in fix_node)) {
         caseData.reac = {};
