@@ -6,6 +6,7 @@ import { ThreeLoadText } from "./three-load-text";
 import { ThreeLoadDimension } from "./three-load-dimension";
 import { ThreeLoadPoint } from './three-load-point';
 import { RouterLinkWithHref } from '@angular/router';
+import { DataHelperModule } from 'src/app/providers/data-helper.module';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class ThreeLoadMemberPoint {
   private text: ThreeLoadText;
   private dim: ThreeLoadDimension;
 
-  constructor(text: ThreeLoadText) {
+  constructor(text: ThreeLoadText,
+              private helper: DataHelperModule,) {
     
     this.text = text;
     this.dim = new ThreeLoadDimension(text);
@@ -429,7 +431,8 @@ export class ThreeLoadMemberPoint {
         new THREE.Vector2(points[1].x, y4),
         new THREE.Vector2(points[1].x, points[1].y),
       ];
-      dim1 = this.dim.create(p, point[0].x.toFixed(3))
+      const points0x = point[0].x.toString()
+      dim1 = this.dim.create(p, this.helper.toNumber(points0x).toFixed(3))
       dim1.visible = true;
       dim1.name = "Dimension1";
       dim.add(dim1);

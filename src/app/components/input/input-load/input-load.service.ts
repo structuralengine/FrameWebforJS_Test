@@ -502,7 +502,7 @@ export class InputLoadService {
         continue;
       }
 
-      const load1: any[] = this.load[load_id];
+      const load1: any[] = JSON.parse(JSON.stringify(this.load[load_id]));
       if (load1.length === 0) {
         continue;
       }
@@ -569,37 +569,26 @@ export class InputLoadService {
         });
 
         for (let i=0; i<_L1.length; i++) {
+
+          // 0.1ずつずらした荷重を描くための下準備. 最初のL1に0.1~0.5加える
+          const L1_type = typeof(load1[0].L1);
+          const L1st = this.helper.toNumber(load1[0].L1) + _L1[i]
+          load1[0].L1 = (L1_type === 'string') ? L1st.toString() : L1st;
+
           const load2: any[] = this.convertMemberLoads(load1);
 
           for (let j = 0; j < load2.length; j++) {
             const row = load2[j];
 
-            let direction: string = row["direction"];
-            direction = direction.trim().toLowerCase();
-
-            const tmp = {
-              m: row["m1"],
-              direction: direction,
-              mark: row["mark"],
-              L1: this.helper.toNumber(row["L1"], 3) + _L1[i],
-              L2: this.helper.toNumber(row["L2"], 3),
-              P1: this.helper.toNumber(row["P1"], 2),
-              P2: this.helper.toNumber(row["P2"], 2),
-            };
-
-            tmp["row"] = row.row;
-
-            tmp_member.push(tmp);
+            row['m'] = row['m1'];
           }
-
-          if (tmp_member.length > 0) {
+          if (load2.length > 0) {
             // ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
             const index: number = Number(load_id);  // ケースid を数字として扱うため変換する
             const digit: number = _L1.length.toString().length; // 桁数
             const load_id_LL = String(index + i/(10*digit));
 
-            load_member[load_id_LL] = tmp_member;
-            tmp_member = new Array();
+            load_member[load_id_LL] = load2;
           }
         }
       }
