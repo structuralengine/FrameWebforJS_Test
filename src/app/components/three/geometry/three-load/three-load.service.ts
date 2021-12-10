@@ -74,7 +74,7 @@ export class ThreeLoadService {
       const text = new ThreeLoadText(font);
       this.loadEditor[ThreeLoadAxial.id]        = new ThreeLoadAxial(text);           // 軸方向荷重のテンプレート
       this.loadEditor[ThreeLoadDistribute.id]   = new ThreeLoadDistribute(text);  // 分布荷重のテンプレート
-      this.loadEditor[ThreeLoadMemberPoint.id]  = new ThreeLoadMemberPoint(text, helper);     // 部材の途中にある節点荷重のテンプレート
+      this.loadEditor[ThreeLoadMemberPoint.id]  = new ThreeLoadMemberPoint(text);     // 部材の途中にある節点荷重のテンプレート
       this.loadEditor[ThreeLoadPoint.id]        = new ThreeLoadPoint(text);           // 節点荷重のテンプレート
       this.loadEditor[ThreeLoadMoment.id]       = new ThreeLoadMoment(text);          // 節点モーメントのテンプレート
       this.loadEditor[ThreeLoadMemberMoment.id] = new ThreeLoadMemberMoment(text);    // 部材の途中にある節点モーメントのテンプレート

@@ -165,7 +165,7 @@ export class ThreeLoadDistribute {
         new THREE.Vector2(nodej.x, nodej.y)
       );
     }
-    const L1: number = pL1;
+    const L1: number = Number(pL1);
     const L2: number = pL2;
     const L: number = len - L1 - L2;
 
