@@ -19,15 +19,15 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
   isEnable = true;
   page: number;
   load_name: string;
-  countCell: number  = 0;
-  countHead: number  = 0;
+  countCell: number = 0;
+  countHead: number = 0;
   countTotal: number = 0;
   btnPickup: string;
   tableHeight: number;
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
-  reROW : number = 0;
-  remainCount : number = 0;
+  reROW: number = 0;
+  remainCount: number = 0;
 
   public elements_table = [];
   public elements_break = [];
@@ -37,9 +37,10 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
   public dimension: number;
 
   private splen = 5;
-  public break_after:number;
+  public break_after: number;
 
-  constructor(private printService: PrintService,
+  constructor(
+    private printService: PrintService,
     private countArea: DataCountService,
     private helper: DataHelperModule
   ) {
@@ -68,7 +69,7 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   // 材料データ element を印刷する
   private printElement(inputJson): any {
@@ -88,21 +89,24 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
       let body: any[] = new Array();
       for (const key of Object.keys(elist)) {
         const item = elist[key];
+        let line1: any[] = new Array();
+        let line2: any[] = new Array();
 
-        const line = ["", "", "", "", "", "", "", ""];
-        line[0] = key;
-        line[1] = item.A.toFixed(4);
-        line[2] = item.E.toExponential(2);
-        line[3] = item.G.toExponential(2);
-        line[4] = item.Xp.toExponential(2);
-        line[5] = item.Iy.toFixed(6);
-        line[6] = item.Iz.toFixed(6);
-        line[7] = item.J.toFixed(6);
-        line[8] = item.n;
-        body.push(line);
+        // const line = ["", "", "", "", "", "", "", ""];
+        line1[0] = key;
+        line1[1] = item.n;
+        line2[0] = "";
+        line2[1] = item.A.toFixed(4);
+        line2[2] = item.E.toExponential(2);
+        line2[3] = item.G.toExponential(2);
+        line2[4] = item.Xp.toExponential(2);
+        line2[5] = item.Iy.toFixed(6);
+        line2[6] = item.Iz.toFixed(6);
+        line2[7] = item.J.toFixed(6);
+        body.push(line1, line2);
         row++;
       }
-      
+
       splid.push(body);
       body = [];
     }
@@ -111,6 +115,5 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
       table: splid, // [タイプ１のテーブルリスト[], タイプ２のテーブルリスト[], ...]
       title: title, // [タイプ１のタイトル, タイプ２のタイトル, ... ]
     };
-
   }
 }
