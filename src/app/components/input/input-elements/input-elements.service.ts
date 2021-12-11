@@ -125,8 +125,7 @@ export class InputElementsService {
           A == null &&
           J == null &&
           Iy == null &&
-          Iz == null &&
-          n == void 0
+          Iz == null
         ) {
           continue;
         }
