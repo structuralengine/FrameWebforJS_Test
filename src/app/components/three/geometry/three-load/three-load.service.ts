@@ -72,15 +72,16 @@ export class ThreeLoadService {
     const loader = new THREE.FontLoader();
     loader.load("./assets/fonts/helvetiker_regular.typeface.json", (font) => {
       const text = new ThreeLoadText(font);
-      this.loadEditor[ThreeLoadAxial.id]        = new ThreeLoadAxial(text);           // 軸方向荷重のテンプレート
-      this.loadEditor[ThreeLoadDistribute.id]   = new ThreeLoadDistribute(text);  // 分布荷重のテンプレート
-      this.loadEditor[ThreeLoadMemberPoint.id]  = new ThreeLoadMemberPoint(text);     // 部材の途中にある節点荷重のテンプレート
-      this.loadEditor[ThreeLoadPoint.id]        = new ThreeLoadPoint(text);           // 節点荷重のテンプレート
-      this.loadEditor[ThreeLoadMoment.id]       = new ThreeLoadMoment(text);          // 節点モーメントのテンプレート
-      this.loadEditor[ThreeLoadMemberMoment.id] = new ThreeLoadMemberMoment(text);    // 部材の途中にある節点モーメントのテンプレート
-      this.loadEditor[ThreeLoadTemperature.id]  = new ThreeLoadTemperature(text);     // 温度荷重のテンプレート
-      this.loadEditor[ThreeLoadTorsion.id]      = new ThreeLoadTorsion(text);         // ねじり分布荷重のテンプレート
-
+      this.loadEditor[ThreeLoadAxial.id] = new ThreeLoadAxial(text); // 軸方向荷重のテンプレート
+      this.loadEditor[ThreeLoadDistribute.id] = new ThreeLoadDistribute(text); // 分布荷重のテンプレート
+      this.loadEditor[ThreeLoadMemberPoint.id] = new ThreeLoadMemberPoint(text); // 部材の途中にある節点荷重のテンプレート
+      this.loadEditor[ThreeLoadPoint.id] = new ThreeLoadPoint(text); // 節点荷重のテンプレート
+      this.loadEditor[ThreeLoadMoment.id] = new ThreeLoadMoment(text); // 節点モーメントのテンプレート
+      this.loadEditor[ThreeLoadMemberMoment.id] = new ThreeLoadMemberMoment(
+        text
+      ); // 部材の途中にある節点モーメントのテンプレート
+      this.loadEditor[ThreeLoadTemperature.id] = new ThreeLoadTemperature(text); // 温度荷重のテンプレート
+      this.loadEditor[ThreeLoadTorsion.id] = new ThreeLoadTorsion(text); // ねじり分布荷重のテンプレート
     });
     // 全てのケースの荷重情報
     this.AllCaseLoadList = {};
@@ -220,18 +221,18 @@ export class ThreeLoadService {
 
     // 連行荷重が完成したら 以下のアニメーションを有効にする
     // 荷重名称を調べる
-    // const symbol: string = this.load.getLoadName(changeCase, "symbol");
-    // if (symbol === "LL") {
-    //   const LL_list = this.load.getMemberLoadJson(0, this.currentIndex);
-    //   const LL_keys: string[] = Object.keys(LL_list);
-    //   if (LL_keys.length > 0) {
-    //     const keys = LL_keys.map((value) => {
-    //       return Number(value);
-    //     });
-    //     this.animation(keys);
-    //     return;
-    //   }
-    // }
+    const symbol: string = this.load.getLoadName(changeCase, "symbol");
+    if (symbol === "LL") {
+      const LL_list = this.load.getMemberLoadJson(0, this.currentIndex);
+      const LL_keys: string[] = Object.keys(LL_list);
+      if (LL_keys.length > 0) {
+        const keys = LL_keys.map((value) => {
+          return Number(value);
+        });
+        this.animation(keys);
+        return;
+      }
+    }
 
     if (this.animationObject !== null) {
       cancelAnimationFrame(this.animationObject);
@@ -520,10 +521,9 @@ export class ThreeLoadService {
 
   // 荷重の入力が変更された場合
   public changeData(row: number): void {
-
     // this.currentIndexを'1.3'等から'1'に直す
-    if (this.currentIndex.includes('.')) {
-      this.currentIndex = this.currentIndex.slice(0, -2)
+    if (this.currentIndex.includes(".")) {
+      this.currentIndex = this.currentIndex.slice(0, -2);
     }
     // データになカレントデータがなければ
     if (!(this.currentIndex in this.load.load)) {
@@ -644,7 +644,6 @@ export class ThreeLoadService {
 
   // 要素荷重を変更
   private changeMemberLode(row: number, memberLoadData: any): void {
-
     for (const key of Object.keys(memberLoadData)) {
       const LoadList = this.AllCaseLoadList[key];
 
@@ -655,7 +654,9 @@ export class ThreeLoadService {
         this.setMaxMemberLoad(tempMemberLoad);
 
         // 対象行(row) に入力されている部材番号を調べる
-        const targetMemberLoad = tempMemberLoad.filter(load => load.row === row);
+        const targetMemberLoad = tempMemberLoad.filter(
+          (load) => load.row === row
+        );
         // 同じ行にあった荷重を一旦削除
         this.removeMemberLoadList(LoadList, row);
 
@@ -670,7 +671,16 @@ export class ThreeLoadService {
         // ケースが存在しなかった
         this.removeMemberLoadList(LoadList);
         for (const key of Object.keys(LoadList.memberLoadList)) {
-          LoadList.memberLoadList[key] = { gx: [], gy: [], gz: [], x: [], y: [], z: [], t: [], r: [] };
+          LoadList.memberLoadList[key] = {
+            gx: [],
+            gy: [],
+            gz: [],
+            x: [],
+            y: [],
+            z: [],
+            t: [],
+            r: [],
+          };
         }
       }
     }
@@ -1207,7 +1217,14 @@ export class ThreeLoadService {
       return;
     }
     // 節点荷重は通さなくていい？
-    for (const _id of [id, id + '.1', id + '.2', id + '.3', id + '.4', id + '.5']) {
+    for (const _id of [
+      id,
+      id + ".1",
+      id + ".2",
+      id + ".3",
+      id + ".4",
+      id + ".5",
+    ]) {
       const loadList = this.AllCaseLoadList[_id];
       if (loadList === undefined) {
         continue;
@@ -1222,7 +1239,7 @@ export class ThreeLoadService {
       for (const n of Object.keys(loadList.pointLoadList)) {
         const dict = loadList.pointLoadList[n];
         for (let k of Object.keys(dict)) {
-          for(const item of dict[k]) {
+          for (const item of dict[k]) {
             const editor = item.editor;
             editor.setScale(item, scale);
           }
@@ -1233,7 +1250,7 @@ export class ThreeLoadService {
       for (const m of Object.keys(loadList.memberLoadList)) {
         const dict = loadList.memberLoadList[m];
         for (const direction of ["gx", "gy", "gz", "r", "x", "y", "z"]) {
-          for(const item of dict[direction]) {
+          for (const item of dict[direction]) {
             const editor = item.editor;
             editor.setScale(item, scale);
           }

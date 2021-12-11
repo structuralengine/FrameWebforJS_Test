@@ -25,11 +25,11 @@
             <form [formGroup]="LL_Control">
                 <mat-form-field>
                     <label>対象長さ</label>
-                    <input type="number" min="1" step="1" matInput matType="number" formControlName="ll_len" class="pageNum" [(ngModel)]="LL_length">
+                    <input type="number" min="1" step="1" matInput matType="number" formControlName="LL_length" class="pageNum">
                 </mat-form-field>
                 <mat-form-field>
                     <label>ピッチ</label>
-                    <input type="number" min="1" step="1" matInput matType="number" formControlName="ll_pit" class="pageNum" [(ngModel)]="LL_pitch">
+                    <input type="number" min="1" step="1" matInput matType="number" formControlName="LL_pitch" class="pageNum">
                 </mat-form-field>
                 <button mat-raised-button (click)="click()" style="display: none;">click</button>
             </form>

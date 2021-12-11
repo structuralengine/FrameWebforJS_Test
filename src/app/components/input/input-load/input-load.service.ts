@@ -577,18 +577,17 @@ export class InputLoadService {
         });
 
         for (let i = 0; i < _L11.length; i++) {
-
           // 0.1ずつずらした荷重を描くための下準備. 最初のL1に0.1~0.5加える
-          const L1_type = typeof(load1[0].L1);
-          const L1st = this.helper.toNumber(load1[0].L1) + _L11[i]
-          load1[0].L1 = (L1_type === 'string') ? L1st.toString() : L1st;
+          const L1_type = typeof load1[0].L1;
+          const L1st = this.helper.toNumber(load1[0].L1) + _L11[i];
+          load1[0].L1 = L1_type === "string" ? L1st.toString() : L1st;
 
           const load2: any[] = this.convertMemberLoads(load1);
 
           for (let j = 0; j < load2.length; j++) {
             const row = load2[j];
 
-            row['m'] = row['m1'];
+            row["m"] = row["m1"];
           }
           if (load2.length > 0) {
             // ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
