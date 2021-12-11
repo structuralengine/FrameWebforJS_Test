@@ -706,8 +706,8 @@ export class InputLoadComponent implements OnInit {
     }
 
     this.LL_Control = new FormGroup({
-      ll_len: new FormControl(),
-      ll_pit: new FormControl(),
+      LL_length: new FormControl(0.1),
+      LL_pitch: new FormControl(0.1),
     });
 
     this.loadPage(1, this.ROWS_COUNT);
@@ -732,6 +732,10 @@ export class InputLoadComponent implements OnInit {
     this.loadPage(eventData, this.ROWS_COUNT);
     this.grid.refreshDataAndView();
     this.three.ChangePage(eventData);
+  }
+
+  onSubmit(): void {
+    console.log(this.LL_Control.value); // {first: 'Nancy', last: 'Drew'}
   }
 
   //
@@ -881,8 +885,8 @@ export class InputLoadComponent implements OnInit {
   }
 
   public click() {
-    this.data.LL_length = this.helper.toNumber(this.LL_Control.value.ll_len);
-    this.data.LL_pitch = this.helper.toNumber(this.LL_Control.value.ll_pit);
+    this.data.LL_length = this.helper.toNumber(this.LL_Control.value.LL_length);
+    this.data.LL_pitch = this.helper.toNumber(this.LL_Control.value.LL_pitch);
     this.LL_length = this.data.LL_length;
     this.LL_pitch = this.data.LL_pitch;
     this.data.getLoadJson(this.page);
