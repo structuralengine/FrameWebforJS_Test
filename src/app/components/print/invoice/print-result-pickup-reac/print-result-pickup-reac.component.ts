@@ -48,8 +48,9 @@ export class PrintResultPickupReacComponent implements OnInit {
     private ResultData: ResultDataService,
     private countArea: DataCountService,
     private combReac: ResultCombineReacService,
-    private helper: DataHelperModule ) {
-      this.dimension = this.helper.dimension;
+    private helper: DataHelperModule
+  ) {
+    this.dimension = this.helper.dimension;
     this.judge = false;
     this.clear();
   }
@@ -113,10 +114,10 @@ export class PrintResultPickupReacComponent implements OnInit {
       // 荷重名称
       const title: any = [];
       let loadName: string = "";
-      const combineJson: any = this.InputData.combine.getCombineJson();
-      if (index in combineJson) {
-        if ("name" in combineJson[index]) {
-          loadName = combineJson[index].name;
+      const pickupJson: any = this.InputData.pickup.getPickUpJson();
+      if (index in pickupJson) {
+        if ("name" in pickupJson[index]) {
+          loadName = pickupJson[index].name;
           title.push(["Case" + index, loadName]);
         } else {
           title.push(["Case" + index]);
@@ -130,7 +131,7 @@ export class PrintResultPickupReacComponent implements OnInit {
         const key = KEYS[i];
         const title2 = TITLES[i];
         const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if(!(key in elieli)) continue;
+        if (!(key in elieli)) continue;
 
         typeName.push(title2);
 
@@ -177,7 +178,7 @@ export class PrintResultPickupReacComponent implements OnInit {
 
     return {
       titleSum,
-      table:splid,
+      table: splid,
       typeSum,
     };
   }

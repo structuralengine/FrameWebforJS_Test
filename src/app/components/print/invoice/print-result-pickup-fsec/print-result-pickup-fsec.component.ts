@@ -3,7 +3,7 @@ import { InputDataService } from "../../../../providers/input-data.service";
 import { ResultDataService } from "../../../../providers/result-data.service";
 import { AfterViewInit } from "@angular/core";
 import { DataCountService } from "../dataCount.service";
-import { ResultPickupFsecService } from "src/app/components/result/result-pickup-fsec/result-pickup-fsec.service";
+import { ResultCombineFsecService } from "src/app/components/result/result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-custom-fsec.service";
 
@@ -47,7 +47,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     private InputData: InputDataService,
     private ResultData: ResultDataService,
     private countArea: DataCountService,
-    private pickFsec: ResultPickupFsecService,
+    private combFsec: ResultCombineFsecService,
     private custom: PrintCustomFsecService,
     private helper: DataHelperModule,
     private printCustomFsec: PrintCustomFsecService
@@ -86,8 +86,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     const body: any[] = new Array();
     const typeSum: any = [];
 
-    const KEYS = this.pickFsec.fsecKeys;
-    const TITLES = this.pickFsec.titles;
+    const KEYS = this.combFsec.fsecKeys;
+    const TITLES = this.combFsec.titles;
     const keys: string[] = Object.keys(json);
 
     //　テーブル
