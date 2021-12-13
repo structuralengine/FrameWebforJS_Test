@@ -3,7 +3,7 @@ import { InputDataService } from "../../../../providers/input-data.service";
 import { ResultDataService } from "../../../../providers/result-data.service";
 import { AfterViewInit } from "@angular/core";
 import { DataCountService } from "../dataCount.service";
-import { ResultCombineFsecService } from "src/app/components/result/result-combine-fsec/result-combine-fsec.service";
+import { ResultPickupFsecService } from "src/app/components/result/result-pickup-fsec/result-pickup-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-custom-fsec.service";
 
@@ -43,13 +43,11 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
   public pagerBl;
   public pagerBr;
 
-  public fsecEditable = [];
-
   constructor(
     private InputData: InputDataService,
     private ResultData: ResultDataService,
     private countArea: DataCountService,
-    private combFsec: ResultCombineFsecService,
+    private pickFsec: ResultPickupFsecService,
     private custom: PrintCustomFsecService,
     private helper: DataHelperModule,
     private printCustomFsec: PrintCustomFsecService
@@ -76,9 +74,6 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       this.pickFsec_dataset = tables.table;
       this.pickFsec_title = tables.titleSum;
       this.judge = this.countArea.setCurrentY(tables.this, tables.last);
-      setTimeout(() => {
-        this.printCustomFsec.fsecEditable = this.fsecEditable;
-      }, 1);
     } else {
       this.isEnable = false;
     }
@@ -91,8 +86,8 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     const body: any[] = new Array();
     const typeSum: any = [];
 
-    const KEYS = this.combFsec.fsecKeys;
-    const TITLES = this.combFsec.titles;
+    const KEYS = this.pickFsec.fsecKeys;
+    const TITLES = this.pickFsec.titles;
     const keys: string[] = Object.keys(json);
 
     //　テーブル
@@ -107,13 +102,13 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < jud.length; i++) {
       if (jud[i].check === true) {
         this.flg = true;
-        continue;
+        break;
       }
     }
 
     if (!this.printCustomFsec.fsecEditable.includes(true)) {
       for (let i = 0; i < this.printCustomFsec.fsecEditable.length; i++) {
-        this.fsecEditable.push(true);
+        this.printCustomFsec.fsecEditable[i] = true;
       }
     }
 
@@ -149,7 +144,7 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       titleSum.push(title);
 
       for (let i = 0; i < KEYS.length; i++) {
-        if (this.fsecEditable[i] === true) {
+        if (this.printCustomFsec.fsecEditable[i] === true) {
           const key = KEYS[i];
           const title2 = TITLES[i];
           const elieli = json[index]; // 1行分のnodeデータを取り出す
