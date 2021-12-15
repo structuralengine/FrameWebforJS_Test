@@ -214,22 +214,25 @@ export class ThreeLoadService {
   }
 
   // 表示ケースを変更する
-  public changeCase(changeCase: number, empty = null): void {
-    if (!this.visibleCaseChange(changeCase, empty)) {
+  public changeCase(changeCase: number, isLoad: boolean = false): void {
+    if (!this.visibleCaseChange(changeCase, isLoad)) {
       return;
     }
 
     // 連行荷重が完成したら 以下のアニメーションを有効にする
     // 荷重名称を調べる
-    const symbol: string = this.load.getLoadName(changeCase, "symbol");
-    if (symbol === "LL") {
+    if(isLoad===false){
+      const symbol: string = this.load.getLoadName(changeCase, "symbol");
+      isLoad = (symbol === "LL");
+    }
+    if (isLoad) {
       const LL_list = this.load.getMemberLoadJson(0, this.currentIndex);
       const LL_keys: string[] = Object.keys(LL_list);
       if (LL_keys.length > 0) {
         const keys = LL_keys.map((value) => {
           return Number(value);
         });
-        this.animation(keys);
+        this.animation(keys); //ループのきっかけ
         return;
       }
     }
@@ -242,13 +245,13 @@ export class ThreeLoadService {
     this.scene.render();
   }
 
-  private visibleCaseChange(changeCase: number, empty = null): boolean {
+  private visibleCaseChange(changeCase: number, isLoad = false): boolean {
     const id: string = changeCase.toString();
-    if (empty == 1) {
-      this.currentIndex = String(this.load.LL_length * this.load.LL_pitch);
-    }
+    // if (empty == 1) {
+    //   this.currentIndex = String(this.load.LL_length * this.load.LL_pitch);
+    // }
 
-    if (this.currentIndex === id) {
+    if (this.currentIndex === id && isLoad == false) {
       // 同じなら何もしない
       return false;
     }
@@ -1231,15 +1234,9 @@ export class ThreeLoadService {
     if (!(id in this.AllCaseLoadList)) {
       return;
     }
+    const _idList = Object.keys(this.AllCaseLoadList);
     // 節点荷重は通さなくていい？
-    for (const _id of [
-      id,
-      id + ".1",
-      id + ".2",
-      id + ".3",
-      id + ".4",
-      id + ".5",
-    ]) {
+    for (const _id of _idList) {
       const loadList = this.AllCaseLoadList[_id];
       if (loadList === undefined) {
         continue;
