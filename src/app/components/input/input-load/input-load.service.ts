@@ -558,7 +558,7 @@ export class InputLoadService {
 
         let _L11 = [0];
         if (symbol == "LL") {
-          for (let i = 0; i <= this.LL_length; i += this.LL_pitch) {
+          for (let i = 0; Math.round(i*10)/10 <= this.LL_length; i += this.LL_pitch) {
             if (i !== 0) {
               _L11.push(Number(i.toFixed(3)));
             }
@@ -576,10 +576,11 @@ export class InputLoadService {
           }
         });
 
+        const baseL1 = load1[0].L1;
         for (let i = 0; i < _L11.length; i++) {
           // 0.1ずつずらした荷重を描くための下準備. 最初のL1に0.1~0.5加える
-          const L1_type = typeof load1[0].L1;
-          const L1st = this.helper.toNumber(load1[0].L1) + _L11[i];
+          const L1_type = typeof baseL1;
+          const L1st = (this.helper.toNumber(baseL1) + _L11[i]).toFixed(3);
           load1[0].L1 = L1_type === "string" ? L1st.toString() : L1st;
 
           const load2: any[] = this.convertMemberLoads(load1);
@@ -592,8 +593,8 @@ export class InputLoadService {
           if (load2.length > 0) {
             // ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
             const index: number = Number(load_id); // ケースid を数字として扱うため変換する
-            const digit: number = _L11.length.toString().length; // 桁数
-            const load_id_LL = String(index + i / (10 * digit));
+            const digit: number = (_L11.length-1).toString().length; // 桁数
+            const load_id_LL = String(index + i / Math.pow(10, digit));
 
             load_member[load_id_LL] = load2;
           }

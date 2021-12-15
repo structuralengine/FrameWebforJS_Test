@@ -382,7 +382,7 @@ export class ThreeLoadService {
   }
 
   // ケースの荷重図を消去する
-  public removeCase(id: string): void {
+  public removeCase(id: string, option: boolean = true): void {
     if (!(id in this.AllCaseLoadList)) {
       return;
     }
@@ -396,7 +396,9 @@ export class ThreeLoadService {
 
     delete this.AllCaseLoadList[id];
 
-    this.scene.render();
+    if(option){
+      this.scene.render();
+    }
   }
 
   // 節点の入力が変更された場合 新しい入力データを保持しておく
@@ -522,8 +524,9 @@ export class ThreeLoadService {
   // 荷重の入力が変更された場合
   public changeData(row: number): void {
     // this.currentIndexを'1.3'等から'1'に直す
-    if (this.currentIndex.includes(".")) {
-      this.currentIndex = this.currentIndex.slice(0, -2);
+    const strNo = this.currentIndex.indexOf(".");
+    if (strNo >= 0) {
+      this.currentIndex = this.currentIndex.slice(0, strNo - this.currentIndex.length);
     }
     // データになカレントデータがなければ
     if (!(this.currentIndex in this.load.load)) {
@@ -556,6 +559,13 @@ export class ThreeLoadService {
     if (this.currentIndex in tempMemberLoad) {
       // 要素荷重データを入手
       const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex); //計算に使う版：直後に同じ関数を呼んでいる
+      // キーに小数点があるケース（連行荷重）を削除する
+      const keys = Object.keys(this.AllCaseLoadList);
+      for (const key of keys) {
+        if(key.includes('.')) {
+          this.removeCase(key, false);
+        }
+      }
       // 要素荷重を変更
       this.changeMemberLode(row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
       row++;
@@ -645,13 +655,18 @@ export class ThreeLoadService {
   // 要素荷重を変更
   private changeMemberLode(row: number, memberLoadData: any): void {
     for (const key of Object.keys(memberLoadData)) {
+
+      // "LL"（連行荷重）の時に発生する
+      if (this.AllCaseLoadList[key] === undefined) {
+        this.addCase(key)
+      }
       const LoadList = this.AllCaseLoadList[key];
 
       if (this.currentIndex in memberLoadData) {
         // 対象業(row) に入力されている部材番号を調べる
         const tempMemberLoad = memberLoadData[key];
         // 要素荷重の最大値を調べる
-        this.setMaxMemberLoad(tempMemberLoad);
+        this.setMaxMemberLoad(tempMemberLoad, key);
 
         // 対象行(row) に入力されている部材番号を調べる
         const targetMemberLoad = tempMemberLoad.filter(
@@ -899,17 +914,17 @@ export class ThreeLoadService {
   }
 
   // 要素荷重の最大値を調べる
-  private setMaxMemberLoad(targetMemberLoad = null): void {
+  private setMaxMemberLoad(targetMemberLoad = null, index: string = this.currentIndex): void {
     // スケールを決定する 最大の荷重を 1とする
-    const LoadList = this.AllCaseLoadList[this.currentIndex];
+    const LoadList = this.AllCaseLoadList[index];
     LoadList.wMax = 0;
     LoadList.rMax = 0;
     LoadList.qMax = 0;
 
     if (targetMemberLoad === null) {
-      const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex);
-      if (this.currentIndex in memberLoadData) {
-        targetMemberLoad = memberLoadData[this.currentIndex];
+      const memberLoadData = this.load.getMemberLoadJson(0, index);
+      if (index in memberLoadData) {
+        targetMemberLoad = memberLoadData[index];
       } else {
         return;
       }

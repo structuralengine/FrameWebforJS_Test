@@ -890,6 +890,7 @@ export class InputLoadComponent implements OnInit {
     this.LL_length = this.data.LL_length;
     this.LL_pitch = this.data.LL_pitch;
     this.data.getLoadJson(this.page);
+    this.threeLoad.changeData(1);
     this.threeLoad.changeCase(this.page, 1);
     this.scene.render();
   }
