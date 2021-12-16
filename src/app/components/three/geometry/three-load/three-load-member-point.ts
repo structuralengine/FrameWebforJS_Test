@@ -429,7 +429,8 @@ export class ThreeLoadMemberPoint {
         new THREE.Vector2(points[1].x, y4),
         new THREE.Vector2(points[1].x, points[1].y),
       ];
-      dim1 = this.dim.create(p, point[0].x.toFixed(3))
+      const points0x = point[0].x.toString()
+      dim1 = this.dim.create(p, Number(points0x).toFixed(3))
       dim1.visible = true;
       dim1.name = "Dimension1";
       dim.add(dim1);

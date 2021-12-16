@@ -5,6 +5,9 @@ import { ThreeService } from "../../three/three.service";
 import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { FormControl, FormGroup } from "@angular/forms";
+import { ThreeLoadService } from "../../three/geometry/three-load/three-load.service";
+import { SceneService } from "../../three/scene.service";
 
 @Component({
   selector: "app-input-load",
@@ -18,6 +21,11 @@ export class InputLoadComponent implements OnInit {
   public symbol: string;
   public LL_flg: boolean = false;
   public LL_btn: boolean = false;
+
+  public LL_length: number = 0.1;
+  public LL_pitch: number = 0.1;
+
+  public LL_Control: FormGroup;
 
   private dataset = [];
   private columnHeaders3D = [
@@ -681,7 +689,9 @@ export class InputLoadComponent implements OnInit {
     private data: InputLoadService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private three: ThreeService
+    private three: ThreeService,
+    private threeLoad: ThreeLoadService,
+    private scene: SceneService
   ) {}
 
   ngOnInit() {
@@ -694,6 +704,11 @@ export class InputLoadComponent implements OnInit {
     } else {
       this.LL_flg = false;
     }
+
+    this.LL_Control = new FormGroup({
+      LL_length: new FormControl(0.1),
+      LL_pitch: new FormControl(0.1),
+    });
 
     this.loadPage(1, this.ROWS_COUNT);
 
@@ -717,6 +732,10 @@ export class InputLoadComponent implements OnInit {
     this.loadPage(eventData, this.ROWS_COUNT);
     this.grid.refreshDataAndView();
     this.three.ChangePage(eventData);
+  }
+
+  onSubmit(): void {
+    console.log(this.LL_Control.value); // {first: 'Nancy', last: 'Drew'}
   }
 
   //
@@ -852,7 +871,7 @@ export class InputLoadComponent implements OnInit {
       }
     },
   };
-  width2 = this.helper.dimension === 3 ? 610 : 505;
+  width2 = this.helper.dimension === 3 ? 550 : 445;
 
   private formatL1(val): string {
     const num = this.helper.toNumber(val);
@@ -863,5 +882,16 @@ export class InputLoadComponent implements OnInit {
     } else {
       return num.toFixed(3);
     }
+  }
+
+  public click() {
+    this.data.LL_length = this.helper.toNumber(this.LL_Control.value.LL_length);
+    this.data.LL_pitch = this.helper.toNumber(this.LL_Control.value.LL_pitch);
+    this.LL_length = this.data.LL_length;
+    this.LL_pitch = this.data.LL_pitch;
+    this.data.getLoadJson(this.page);
+    this.threeLoad.changeData(1); //1行目の入力を変更したので、
+    this.threeLoad.changeCase(this.page, true);//, 1);
+    this.scene.render();
   }
 }
