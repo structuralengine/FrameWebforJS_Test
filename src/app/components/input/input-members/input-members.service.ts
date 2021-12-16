@@ -155,48 +155,6 @@ export class InputMembersService {
     return result
   }
 
-  public checkIntoMember(load) {
-    // loadの数値と型を保存しておく
-    const mark = {value: parseInt(load.mark), type: typeof(load.mark)};
-    const m1 = {value: parseInt(load.m1), type: typeof(load.m1)};
-    const m2 = {value: parseInt(load.m2), type: typeof(load.m2)};
-    const L1 = {value: parseFloat(load.L1), type: typeof(load.L1)};
-    const L2 = {value: parseFloat(load.L2), type: typeof(load.L2)};
-    const P1 = {value: parseFloat(load.P1), type: typeof(load.P1)};
-    const P2 = {value: parseFloat(load.P2), type: typeof(load.P2)};
-
-    // memberの範囲外に出ていないか確認
-    const len = this.getMemberLength(m1.value.toString())
-    if (mark.value === 1 || mark.value === 11) {
-      if (L1.value < 0 || L1.value > len) {
-        L1.value = 0;
-        P1.value = 0;
-      }
-      if (L2.value < 0 || L2.value > len) {
-        L2.value = 0;
-        P2.value = 0;
-      };
-    } else if (mark.value === 2 || mark.value === 9) {
-      if ( L1.value + L2.value > len) {
-        L1.value = 0;
-        L2.value = 0;
-        P1.value = 0;
-        P2.value = 0;
-      } else {
-        if (L2.value < 0 ) {
-          L2.value = 0;
-        }
-        if (L1.value < 0) {
-          L1.value = 0;
-        }    
-      }
-    }
-    // 数値をそのままに、元の型に戻す
-    const newL1 = (L1.type === 'number') ? L1.value : L1.value.toString();
-    const newL2 = (L2.type === 'number') ? L2.value : L2.value.toString();
-    const newP1 = (P1.type === 'number') ? P1.value : P1.value.toString();
-    const newP2 = (P2.type === 'number') ? P2.value : P2.value.toString();
-    return [newL1, newL2, newP1, newP2];
-  }
+ 
 
 }
