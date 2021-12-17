@@ -166,7 +166,7 @@ export class ThreeLoadService {
       }
     }
 
-    // 荷重図を非表示のまま作成する
+    // 荷重図を(非表示のまま)作成する
     for (const id of Object.keys(this.AllCaseLoadList)) {
       const LoadList = this.AllCaseLoadList[id];
       this.currentIndex = id; // カレントデータをセット

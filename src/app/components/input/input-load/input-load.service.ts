@@ -75,7 +75,7 @@ export class InputLoadService {
     });
 
     if (LL_btn === true) {
-      let _L1 = Number(result.L1);
+      let _L1 = parseInt(result.L1, 10);
       _L1 += LL;
       result.L1 = String(_L1);
     }
@@ -571,8 +571,10 @@ export class InputLoadService {
         let numL1: number = 0;  // 連行荷重のスタート位置
 
         let _L11: number[] = [0]; // L1に加算する距離で、 連行荷重(symbol == "LL")の時に特別な処理をする
+        
+        const load_num = parseInt(load_id, 10);
 
-        const symbol: string = this.getLoadName(Number(load_id), "symbol");
+        const symbol: string = this.getLoadName(load_num, "symbol");
         if (symbol == "LL") {
           // 列車連行荷重の場合
           // _L11 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // L1に加算したケースを複数作る
@@ -588,6 +590,7 @@ export class InputLoadService {
           }
 
         }
+        const digit: number = (_L11.length-1).toString().length; // 桁数
 
         // 連行荷重がある場合はループになる
         for (let i = 0; i < _L11.length; i++) {
@@ -604,8 +607,7 @@ export class InputLoadService {
 
             if( i > 0 ){
               // 連行荷重の場合の ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
-              const digit: number = (_L11.length-1).toString().length; // 桁数
-              new_load_id = (Number(load_id) + i / Math.pow(10, digit)).toFixed(digit);
+              new_load_id = (load_num + i / Math.pow(10, digit)).toFixed(digit);
             }
 
             load_member[new_load_id] = load2;
@@ -619,8 +621,13 @@ export class InputLoadService {
 
   // 要素荷重を サーバーで扱える形式に変換する
   private convertMemberLoads(load1: any[]): any {
-    // 有効な行を選別する
+
     let load2 = new Array();
+    let load3 = new Array();
+    let curNo = -1;
+    let curPos = 0;
+
+    // 有効な行を選別する
     for (const row of load1) {
 
       // const r = row["row"];
@@ -671,17 +678,17 @@ export class InputLoadService {
     }
 
     // 要素番号 m1, m2 に入力が無い場合 -------------------------------------
-    load2.forEach(row => {
+    for(const row of load2){
       if (row.m1 === 0) {
         row.m1 = row.m2;
       }
       if (row.m2 === 0) {
         row.m2 = row.m1;
       }
-    });
+    }
 
     // m1>m2 の場合 入れ替え
-    load2.forEach(row => {
+    for(const row of load2){
       if (Math.abs(row.m1) > Math.abs(row.m2)) {
         if (row.m2 < 0){
           // m2にマイナスがあって m1>m2 の場合 入れ替え
@@ -690,12 +697,12 @@ export class InputLoadService {
           [row.m1, row.m2] = [row.m2, row.m1]; // 入れ替え
         }
       }
-    });
+    }
 
     // 要素番号 m2 にマイナスが付いた場合の入力を分ける ------------------------
-    let curNo = -1;
-    let curPos = 0;
-    let load3 = new Array();
+    curNo = -1;
+    curPos = 0;
+    load3 = new Array();
     for(const row of load2){
       if (row.m2 < 0) {
         const res = this.getMemberGroupLoad(row, curNo, curPos); // ※ここで L1 のマイナスは消える
@@ -711,8 +718,8 @@ export class InputLoadService {
     load2 = new Array();
     for(const row of load3){
       if (row.m1 < row.m2) {
-        const newLoads = this.getMemberRepeatLoad(row);
-        load2 = load2.concat(newLoads);
+        const res = this.getMemberRepeatLoad(row);
+        load2 = load2.concat(res);
       } else {
         load2.push(row);
       }
@@ -721,33 +728,25 @@ export class InputLoadService {
     // 距離 L2にマイナスが付いた場合の入力を直す -------------------
     curNo = -1;
     curPos = 0;
-    for (let j = 0; j < load2.length; j++) {
-      const targetLoad = load2[j];
-      if (targetLoad.L2 < 0) {
-        const reLoadsInfo = this.setMemberLoadAddition(
-          targetLoad,
-          curNo,
-          curPos
-        );
-        const newLoads = reLoadsInfo["loads"];
-        curNo = reLoadsInfo["curNo"];
-        curPos = reLoadsInfo["curPos"];
-        for (let k = 0; k < newLoads.length; k++) {
-          load2.push(newLoads[k]);
-        }
+    load3 = new Array();
+    for(const row of load2){
+      if (row.L2 < 0) {
+        const res = this.setMemberLoadAddition(
+          row, curNo, curPos );
+        curNo = res["curNo"];
+        curPos = res["curPos"];
+        load3 = load3.concat(res["loads"]);
+      }else{
+        load3.push(row);
       }
     }
 
     // memberの外側に出ている荷重を破棄する
-    for (let i = load2.length - 1; i >= 0; i--) {
-      const checked = this.checkIntoMember(load2[i]);
-      if(checked.P1===0 && checked.P2 ===0){
-        load2.splice(i, 1);
-      } else{
-        load2[i].L1 = checked.L1;
-        load2[i].L2 = checked.L2;
-        load2[i].P1 = checked.P1;
-        load2[i].P2 = checked.P2;
+    load2 = new Array();
+    for(const row of load3){
+      const checked = this.checkIntoMember(row);
+      if(checked.P1 !==0 || checked.P2 !==0){
+        load2.push(checked);
       }
     }
 
@@ -783,7 +782,7 @@ export class InputLoadService {
     // L1の位置を確定する . . . . . . . . . . . . . . . . . . . . . .
     let m1: number = Math.abs(targetLoad.m1);
     let m2: number = Math.abs(targetLoad.m2);
-    let L1: number = Math.round(targetLoad.L1) * 1000;
+    let L1: number = Math.round(Math.abs(targetLoad.L1) * 1000);
 
     let P2: number;
     let Po: number;
@@ -807,12 +806,18 @@ export class InputLoadService {
       }
     }
 
+    // 距離L1 から 部材m1 を推定する
     for (let j = m1; j <= m2; j++) {
-      const Lj: number = Math.round(
-        this.member.getMemberLength(j.toString()) * 1000
-      );
-      if (L1 > Lj) {
-        L1 = L1 - Lj;
+      L= Math.round(this.member.getMemberLength(j.toString()) * 1000);
+      if (L1 > L) {
+        if (j + 1 > m2) {
+          // 全長より荷重の方が長い場合 なかったことにする
+          targetLoad.m1 = m2;
+          targetLoad.L1 = 0;
+          targetLoad.P1 = 0;
+          break;
+        }
+        L1 = L1 - L;
         if (j + 1 <= m2) {
           targetLoad.m1 = j + 1;
           targetLoad.L1 = L1 / 1000;
@@ -827,7 +832,6 @@ export class InputLoadService {
 
     // L2の位置を確定する . . . . . . . . . . . . . . . . . . . . . .
     m1 = Math.abs(targetLoad.m1);
-    m2 = Math.abs(targetLoad.m2);
     let L2: number = Math.round(Math.abs(targetLoad.L2) * 1000);
 
     switch (targetLoad.mark) {
@@ -840,8 +844,10 @@ export class InputLoadService {
           L = Math.round(this.member.getMemberLength(j.toString()) * 1000);
           if (L2 > L) {
             if (j + 1 > m2) {
-              // 全長より荷重の方が長い場合 カットする
-              targetLoad.L2 = L / 1000;
+              // 全長より荷重の方が長い場合 なかったことにする
+              targetLoad.m2 = m2;
+              targetLoad.L2 = 0;
+              targetLoad.P2 = 0;
               break;
             }
             L2 = L2 - L;
@@ -862,8 +868,7 @@ export class InputLoadService {
           // 連続部材の全長さLLを計算する
           ll = 0;
           for (let j = m1; j <= m2; j++) {
-            ll =
-              ll + Math.round(this.member.getMemberLength(j.toString()) * 1000);
+            ll += Math.round(this.member.getMemberLength(j.toString()) * 1000);
           }
           L2 = ll - (curPos + L2);
           if (L2 < 0) {
@@ -1125,7 +1130,7 @@ export class InputLoadService {
     let P2 = load.P2;
 
     // memberの範囲外に出ていないか確認
-    const len = Math.round(this.member.getMemberLength(m1)) * 1000;
+    const len = Math.round(this.member.getMemberLength(m1) * 1000);
 
     if (mark === 1 || mark === 11) {
       if (L1 < 0 || L1 > len) {
@@ -1152,11 +1157,11 @@ export class InputLoadService {
       }
     }
     // 数値をそのままに、元の型に戻す
-    return {
-      L1: L1 /1000,
-      L2: L2 /1000,
-      P1, P2
-    };
+    load.L1 = L1 / 1000;
+    load.L2 = L2 / 1000;
+    load.P1 = P1;
+    load.P2 = P2;
+    return load;
   }
 
   // 有効な 荷重ケース数を調べる
