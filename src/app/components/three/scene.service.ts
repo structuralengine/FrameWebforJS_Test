@@ -24,7 +24,9 @@ export class SceneService {
   private controlsGizmo: HTMLCanvasElement = null;
 
   // カメラ
-  private camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
+  private camera:THREE.PerspectiveCamera | THREE.OrthographicCamera;
+  private PerspectiveCamera:THREE.PerspectiveCamera;
+  private OrthographicCamera: THREE.OrthographicCamera;
   private aspectRatio: number;
   private Width: number;
   private Height: number;
@@ -50,6 +52,7 @@ export class SceneService {
     // gui
     this.params = {
       GridHelper: true,
+      OrthographicCamera: false,
       ReDraw: this.render
     };
   }
@@ -65,6 +68,18 @@ export class SceneService {
     this.aspectRatio = aspectRatio;
     this.Width = Width;
     this.Height = Height;
+    this.PerspectiveCamera = new THREE.PerspectiveCamera(
+      70,
+      aspectRatio,
+      0.1,
+      1000
+    );
+    this.OrthographicCamera = new THREE.OrthographicCamera(
+      -Width/10, Width/10,
+      Height/10, -Height/10,
+      0.1,
+      255
+    );
     this.createCamera(aspectRatio, Width, Height);
     // 環境光源
     this.add(new THREE.AmbientLight(0xf0f0f0));
@@ -88,8 +103,21 @@ export class SceneService {
       this.GridHelper.visible = value;
       this.render();
     });
+    this.gui.add( this.params, 'OrthographicCamera' ).onChange( ( value ) => {
+      // guiによる設定
+      this.params.Orthographic = value;
+      const pos = this.camera.position;
+      const rot = this.camera.rotation;
+      this.createCamera(aspectRatio, Width, Height/*, value*/);
+      this.scene.children[this.scene.children.length - 1]
+      this.camera.position.set(pos.x, pos.y, pos.z);
+      this.camera.rotation.set(rot.x, rot.y, rot.z);
+      this.addControls();
+      this.render();
+    });
     // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
     this.gui.open();
+    this.changeGui(this.helper.dimension);  //2Dモードで作成
   }
 
   // 床面を生成する
@@ -143,12 +171,25 @@ export class SceneService {
       this.scene.remove(this.camera);
     }
     if(this.helper.dimension === 3){
-      this.camera = new THREE.PerspectiveCamera(
-        70,
-        aspectRatio,
-        0.1,
-        1000
-      );
+      if (!this.params.Orthographic) {  //Orthographic === false
+        this.camera = this.PerspectiveCamera;
+        // this.PerspectiveCameraを作成したためコメントアウト
+        // this.camera = new THREE.PerspectiveCamera(
+        //   70,
+        //   aspectRatio,
+        //   0.1,
+        //   1000
+        // );
+      } else {  //Orthographic === true
+        this.camera = this.OrthographicCamera;
+        // this.OrthographicCameraを作成したためコメントアウト
+        /* this.camera = new THREE.OrthographicCamera(
+          -Width/10, Width/10,
+          Height/10, -Height/10,
+          0.1,
+          255
+        ); */
+      }
       this.camera.position.set(0, -50, 20);
       this.camera.name = 'camera';
       this.scene.add(this.camera);
@@ -271,6 +312,30 @@ export class SceneService {
           this.camera.position.set(x, y, z);
     }}}
 
+
+  }
+
+  public changeGui(dimension: number) {
+
+    if (this.gui === undefined) {
+      return
+    }
+
+    // カメラのGUIを取り出し、可変かどうかを設定する。
+    let camera: any = null;
+    for (const controller of this.gui.__controllers) {
+      if (controller.property === "OrthographicCamera") {
+        // カメラのGUIを取り出す
+        camera = controller;
+        // 2Dモードであれば、触れないようにする
+        if (dimension === 2) {
+          camera.__checkbox.hidden = true;
+        } else {
+          camera.__checkbox.hidden = false;
+        }
+        break;
+      }
+    }
 
   }
 
