@@ -578,9 +578,10 @@ export class InputLoadService {
           const LL_pitch: number = load_name["LL_pitch"];
 
           // 連行荷重のスタート位置を決定する
-          numL1 = 0; 
+          const LL_position = this.get_LL_position(load1);
+          numL1 = LL_position['L1']; 
           load1[0].L1 = numL1.toFixed(3);
-          const LL_length = 5.0;
+          const LL_length = LL_position['LL_length'];
 
           // 連行荷重の荷重の数を決定する
           const count = Math.round(LL_length / LL_pitch *10)/10; 
@@ -619,60 +620,45 @@ export class InputLoadService {
     return load_member;
   }
 
+  private get_LL_position(load1: any[]): object {
+
+    // 荷重の長さ(L1)を調べる
+    let L1: number = 0
+
+    for(let i = 0; i < load1.length; i++){
+      const targetLoad = load1[i];
+      const _L1 : number = this.helper.toNumber(targetLoad.L1);
+      if(_L1 <= 0){
+        L1 -= _L1;
+      }
+      if(targetLoad.L2 <= 0){
+        L1 -= targetLoad.L2;
+      }
+    }
+
+    // 載荷する部材の長さ(L2)を調べる
+    let L2 = 0
+
+    const m1: number = Math.abs(load1[0].m1);
+    const m2: number = Math.abs(load1[0].m2);
+    for (let j = m1; j <= m2; j++) {
+      L2 += Math.round(this.member.getMemberLength(j.toString()) * 1000);
+    }
+    L2 = L2 / 1000;
+
+    
+    return {
+      L1: -L1,      // スタート位置は -L1
+      LL_length: L2 // 最大長さは L2
+    };
+
+  }
+
   // 要素荷重を サーバーで扱える形式に変換する
   private convertMemberLoads(load1: any[]): any {
 
-    let load2 = new Array();
-    let load3 = new Array();
-    let curNo = -1;
-    let curPos = 0;
-
     // 有効な行を選別する
-    for (const row of load1) {
-
-      // const r = row["row"];
-      let m1 = this.helper.toNumber(row["m1"]);
-      let m2 = this.helper.toNumber(row["m2"]);
-      let direction: string = row["direction"];
-
-      if (direction === null || direction === undefined) {
-        direction = "";
-      }
-      direction = direction.trim().toLowerCase();
-
-      const mark = this.helper.toNumber(row["mark"]);
-      let L1 = this.helper.toNumber(row["L1"]);
-      let L2 = this.helper.toNumber(row["L2"]);
-      let P1 = this.helper.toNumber(row["P1"]);
-      let P2 = this.helper.toNumber(row["P2"]);
-
-      if (mark === 9) {
-        direction = "x";
-      }
-
-      if (
-        (m1 != null || m2 != null) &&
-        direction !== "" &&
-        mark != null &&
-        (L1 != null || L2 != null || P1 != null || P2 != null)
-      ) {
-        m1 = m1 == null ? 0 : m1;
-        m2 = m2 == null ? 0 : m2;
-
-        direction = direction.trim();
-        let sL1: string = L1 == null ? "0" : row["L1"].toString();
-        L1 = L1 == null ? 0 : L1;
-        L2 = L2 == null ? 0 : L2;
-        P1 = P1 == null ? 0 : P1;
-        P2 = P2 == null ? 0 : P2;
-
-        load2.push({
-          row: row["row"],
-          m1, m2, direction, mark,
-          sL1, L1, L2, P1, P2
-        });
-      }
-    }
+    let load2 = this.getEnableLoad(load1);
     if (load2.length === 0) {
       return new Array();
     }
@@ -700,10 +686,20 @@ export class InputLoadService {
     }
 
     // 要素番号 m2 にマイナスが付いた場合の入力を分ける ------------------------
-    curNo = -1;
-    curPos = 0;
-    load3 = new Array();
+    let curNo = -1;
+    let curPos = 0;
+    let load3 = new Array();
+  
+    let old_row: number = -1;
     for(const row of load2){
+
+      if(old_row + 1 < row['row']){
+        // 空白行があった場合 グループ化を解除
+        curNo = -1;
+        curPos = 0;
+      }
+      old_row = row['row']; //現在の行数を記録しておく
+
       if (row.m2 < 0) {
         const res = this.getMemberGroupLoad(row, curNo, curPos); // ※ここで L1 のマイナスは消える
         curNo = res["curNo"];
@@ -725,13 +721,13 @@ export class InputLoadService {
       }
     }
 
-    // 距離 L2にマイナスが付いた場合の入力を直す -------------------
+    // 距離 L2にマイナスが付いた場合の入力を直す （；いらない処理説 -------------------
+    load3 = load2; /*new Array();
     curNo = -1;
     curPos = 0;
-    load3 = new Array();
     for(const row of load2){
       if (row.L2 < 0) {
-        const res = this.setMemberLoadAddition(
+        const res = this.setMemberLoadAddition( 
           row, curNo, curPos );
         curNo = res["curNo"];
         curPos = res["curPos"];
@@ -739,7 +735,7 @@ export class InputLoadService {
       }else{
         load3.push(row);
       }
-    }
+    } */
 
     // memberの外側に出ている荷重を破棄する
     load2 = new Array();
@@ -1052,12 +1048,69 @@ export class InputLoadService {
     return result;
   }
 
-  // 距離 L2 にマイナスが付いた場合の入力を分ける
+    // 有効な行を選別する
+    private getEnableLoad(load1: any[]): any[] {
+
+      let load2 = new Array();
+
+      // 有効な行を選別する
+      for (const row of load1) {
+
+        // const r = row["row"];
+        let m1 = this.helper.toNumber(row["m1"]);
+        let m2 = this.helper.toNumber(row["m2"]);
+        let direction: string = row["direction"];
+  
+        if (direction === null || direction === undefined) {
+          direction = "";
+        }
+        direction = direction.trim().toLowerCase();
+  
+        const mark = this.helper.toNumber(row["mark"]);
+        let L1 = this.helper.toNumber(row["L1"]);
+        let L2 = this.helper.toNumber(row["L2"]);
+        let P1 = this.helper.toNumber(row["P1"]);
+        let P2 = this.helper.toNumber(row["P2"]);
+  
+        if (mark === 9) {
+          direction = "x";
+        }
+  
+        if (
+          (m1 != null || m2 != null) &&
+          direction !== "" &&
+          mark != null &&
+          (L1 != null || L2 != null || P1 != null || P2 != null)
+        ) {
+          m1 = m1 == null ? 0 : m1;
+          m2 = m2 == null ? 0 : m2;
+  
+          direction = direction.trim();
+          let sL1: string = L1 == null ? "0" : row["L1"].toString();
+          L1 = L1 == null ? 0 : L1;
+          L2 = L2 == null ? 0 : L2;
+          P1 = P1 == null ? 0 : P1;
+          P2 = P2 == null ? 0 : P2;
+  
+          load2.push({
+            row: row["row"],
+            m1, m2, direction, mark,
+            sL1, L1, L2, P1, P2
+          });
+        }
+      }
+
+      return load2;
+  }
+
+  // 距離 L2 にマイナスが付いた場合の入力を分ける（；使ってない説
   private setMemberLoadAddition(
     targetLoad: any,
     curNo: number,
     _curPos: number
   ): any {
+
+
     // ※この関数内では距離を 100倍した整数で処理する
     let curPos: number = Math.round(_curPos * 1000);
 
