@@ -22,17 +22,9 @@
     </div>
     <div *ngIf="LL_flg === true">
         <div class="LL_area">
-            <form [formGroup]="LL_Control">
-                <mat-form-field>
-                    <label>対象長さ</label>
-                    <input type="number" min="1" step="1" matInput matType="number" formControlName="LL_length" (change)="click()" class="pageNum">
-                </mat-form-field>
-                <mat-form-field>
-                    <label>ピッチ</label>
-                    <input type="number" min="1" step="1" matInput matType="number" formControlName="LL_pitch" (change)="click()" class="pageNum">
-                </mat-form-field>
-                <button mat-raised-button (click)="click()" style="display: none;">click</button>
-            </form>
+            <label class="label">ピッチ</label>
+            <input type="number" min="0.1" step="0.1" matInput matType="number" 
+                (change)="change_pich()" class="input"  [(ngModel)]="LL_pitch">
         </div>
         <app-sheet #grid [options]="options2"></app-sheet>
     </div>

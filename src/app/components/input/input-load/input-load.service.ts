@@ -9,8 +9,6 @@ import { InputMembersService } from "../input-members/input-members.service";
 export class InputLoadService {
   public load_name: any[];
   public load: {};
-  public LL_length: number = 5;
-  public LL_pitch: number = 0.1;
 
   constructor(
     private member: InputMembersService,
@@ -45,18 +43,20 @@ export class InputLoadService {
         fix_member: "",
         element: "",
         joint: "",
+        LL_pitch: 0.1
       };
       this.load_name.push(result);
+    } else{
+      // バージョンアップなどにより 足りない項目を追加
+      if(!("LL_pitch" in result)){
+        result["LL_pitch"] = 0.1;
+      }
     }
+
     return result;
   }
 
-  public getLoadColumns(
-    index: number,
-    row: number,
-    LL: number,
-    LL_btn: boolean
-  ): any {
+  public getLoadColumns( index: number, row: number): any {
     const typNo: string = index.toString();
 
     let target: any;
@@ -73,12 +73,6 @@ export class InputLoadService {
     result = target.find((tmp) => {
       return tmp.row === row;
     });
-
-    if (LL_btn === true) {
-      let _L1 = parseInt(result.L1, 10);
-      _L1 += LL;
-      result.L1 = String(_L1);
-    }
 
     // 対象行が無かった時に処理
     if (result === undefined) {
@@ -129,6 +123,7 @@ export class InputLoadService {
         "fix_member" in item1 ? item1["fix_member"] : "";
       const _element: string = "element" in item1 ? item1["element"] : "";
       const _joint: string = "joint" in item1 ? item1["joint"] : "";
+      const _LL_pitch: number =  "LL_pitch" in item1 ? item1["LL_pitch"] : 0.1;
 
       this.load_name.push({
         id: index,
@@ -139,6 +134,7 @@ export class InputLoadService {
         fix_member: _fix_member,
         element: _element,
         joint: _joint,
+        LL_pitch: _LL_pitch
       });
 
       if ("load_node" in item1) {
@@ -375,27 +371,23 @@ export class InputLoadService {
       let fix_member = this.helper.toNumber(tmp["fix_member"]);
       let element = this.helper.toNumber(tmp["element"]);
       let joint = this.helper.toNumber(tmp["joint"]);
+      let LL_pitch: number = ("LL_pitch" in tmp) ? this.helper.toNumber(tmp["LL_pitch"]) : 0.1;
 
-      if (
-        rate == null &&
-        symbol === "" &&
-        name === "" &&
-        fix_node == null &&
-        fix_member == null &&
-        element == null &&
-        joint == null
-      ) {
+      if ( rate == null && symbol === "" &&  name === "" &&
+          fix_node == null && fix_member == null && 
+          element == null && joint == null ) {
         continue;
       }
 
       const load_id = (i + 1).toString();
 
       const temp = {
-        fix_node: fix_node == null ? empty : fix_node,
-        fix_member: fix_member == null ? empty : fix_member,
-        element: element == null ? empty : element,
-        joint: joint == null ? empty : joint,
-        symbol: symbol == null ? empty : symbol,
+        fix_node: fix_node === null ? empty : fix_node,
+        fix_member: fix_member === null ? empty : fix_member,
+        element: element === null ? empty : element,
+        joint: joint === null ? empty : joint,
+        symbol: symbol === null ? empty : symbol,
+        LL_pitch: LL_pitch === null ? 0.1 : LL_pitch
       };
 
       if (empty === null || isPrint === true) {
@@ -409,7 +401,7 @@ export class InputLoadService {
     return load_name;
   }
 
-  public getLoadName(currentPage: number, target: string = "name"): string {
+  public getLoadName(currentPage: number, target: string = "name"): any {
     if (currentPage < 1) {
       return "";
     }
@@ -419,6 +411,10 @@ export class InputLoadService {
 
     const i = currentPage - 1;
     const tmp = this.load_name[i];
+
+    if(target===null){
+      return tmp; // ターゲットの指定が無い時は、全部入り
+    }
 
     let result = "";
     if (target in tmp) {
@@ -574,23 +570,27 @@ export class InputLoadService {
         
         const load_num = parseInt(load_id, 10);
 
-        const symbol: string = this.getLoadName(load_num, "symbol");
+        const load_name = this.getLoadName(load_num, null);
+        const symbol: string = load_name["symbol"];
         if (symbol == "LL") {
           // 列車連行荷重の場合
           // _L11 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // L1に加算したケースを複数作る
+          const LL_pitch: number = load_name["LL_pitch"];
 
           // 連行荷重のスタート位置を決定する
           numL1 = 0; 
           load1[0].L1 = numL1.toFixed(3);
+          const LL_length = 5.0;
+
           // 連行荷重の荷重の数を決定する
-          const count = Math.round(this.LL_length / this.LL_pitch *10)/10; 
+          const count = Math.round(LL_length / LL_pitch *10)/10; 
           for (let i = 1; i <= count; i++) {
-            const LL1: number = Math.round(i * this.LL_pitch * 1000) / 1000;
+            const LL1: number = Math.round(i * LL_pitch * 1000) / 1000;
             _L11.push(LL1);
           }
 
         }
-        const digit: number = (_L11.length-1).toString().length; // 桁数
+        const digit: number = Math.pow(10, (_L11.length-1).toString().length); // 桁数
 
         // 連行荷重がある場合はループになる
         for (let i = 0; i < _L11.length; i++) {
@@ -607,7 +607,7 @@ export class InputLoadService {
 
             if( i > 0 ){
               // 連行荷重の場合の ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
-              new_load_id = (load_num + i / Math.pow(10, digit)).toFixed(digit);
+              new_load_id = (Math.round((load_num + i / digit)*digit)/digit).toString();
             }
 
             load_member[new_load_id] = load2;
