@@ -112,7 +112,7 @@ export class SceneService {
       this.scene.children[this.scene.children.length - 1]
       this.camera.position.set(pos.x, pos.y, pos.z);
       this.camera.rotation.set(rot.x, rot.y, rot.z);
-      this.addControls();
+      // this.addControls(); ・・・・これが重くなる原因です！！
       this.render();
     });
     // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
