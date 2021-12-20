@@ -616,6 +616,7 @@ export class ThreeLoadService {
       return; //要素がなければ 以降の処理は行わない
     }
 
+    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex); //計算に使う版
     const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex); //計算に使う版
 
     if (this.currentIndex in memberLoadData) {
@@ -624,20 +625,19 @@ export class ThreeLoadService {
 
       // 対象行以下の行について
       row++;
-      const memberLoads = memberLoadData[this.currentIndex];
-      let i = memberLoads.findIndex((e) => e.row === row);
+      const tmLoad = tempMemberLoad[this.currentIndex];
+      let i = tmLoad.findIndex((e) => e.row === row);
       while (i >= 0) {
-        const targetMemberLoad = memberLoads[i];
-        if (targetMemberLoad.L1 == null) {
+        if (tmLoad[i].L1 == null) {
           break;
         }
-        if (!targetMemberLoad.L1.includes("-")) {
+        if (!tmLoad[i].L1.includes("-")) {
           break;
         }
         // 要素荷重を変更
-        this.changeMemberLode(targetMemberLoad.row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+        this.changeMemberLode(tmLoad[i].row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
         row++;
-        i = memberLoads.findIndex((e) => e.row === row);
+        i = tmLoad.findIndex((e) => e.row === row);
       }
     }
 
