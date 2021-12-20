@@ -390,7 +390,7 @@ export class InputLoadService {
         LL_pitch: LL_pitch === null ? 0.1 : LL_pitch
       };
 
-      if (empty === null || isPrint === true) {
+      if (empty !== 0 || isPrint === true) {
         temp["rate"] = rate == null ? empty : rate;
         temp["symbol"] = symbol;
         temp["name"] = name;

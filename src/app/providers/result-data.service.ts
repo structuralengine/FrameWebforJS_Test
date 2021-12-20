@@ -81,7 +81,7 @@ export class ResultDataService {
   // 計算結果を読み込む
   public loadResultData(jsonData: object): void {
     // 組み合わせケースを集計する
-    this.setCombinePickup();
+    this.setCombinePickup(Object.keys(jsonData));
 
     // 基本ケース の集計 -> 組み合わせの集計まで じゅずツナギ
     this.disg.setDisgJson(jsonData, this.defList, this.combList, this.pickList);
@@ -89,7 +89,7 @@ export class ResultDataService {
     this.fsec.setFsecJson(jsonData, this.defList, this.combList, this.pickList);
   }
 
-  private setCombinePickup(): void {
+  private setCombinePickup(load_keys: string[]): void {
     const load = this.load.getLoadNameJson(1);
     const define = this.define.getDefineJson();
     const combine = this.combine.getCombineJson();
@@ -116,6 +116,25 @@ export class ResultDataService {
         const n: number = this.helper.toNumber(caseNo);
         this.defList[caseNo] = n === null ? [] : [n];
       }
+    }
+
+    // 連行荷重がある場合は, define に連行荷重を追加する
+    for (const defNo of Object.keys(this.defList)) {
+      const defines = new Array();
+      for (const caseNo of this.defList[defNo]) {
+        defines.push(caseNo);
+        const symbol: string = load[caseNo].symbol;
+        if(symbol.includes('LL')){
+          // 連行荷重の場合
+          const target_LL_Keys: string[] = load_keys.filter(e =>{
+            return e.indexOf(caseNo + ".") === 0;
+          })
+          for(const k of target_LL_Keys){
+            defines.push(k);
+          }
+        }
+      }
+      this.defList[defNo] = defines;
     }
 
     // combine を集計
