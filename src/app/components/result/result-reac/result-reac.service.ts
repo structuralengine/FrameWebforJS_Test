@@ -56,11 +56,16 @@ export class ResultReacService {
     pickList: any
   ): void {
     const startTime = performance.now(); // 開始時間
-    this.LL_flg = new Array();
     // 入力にない反力情報は削除する
     // 2D モードの時 仮に支点を入力することがあった
     const fix_node = this.fixnode.getFixNodeJson(0);
     const load_name = this.load.getLoadNameJson(0);
+
+    this.LL_flg = new Array();
+    for (const k1 of Object.keys(load_name)) {
+      const caseLoad: any = load_name[k1];
+      this.LL_flg.push(caseLoad.symbol == "LL" ? true : false);
+    }
 
     for (const k1 of Object.keys(jsonData)) {
       const caseData: any = jsonData[k1];
@@ -71,8 +76,6 @@ export class ResultReacService {
         continue;
       }
       const caseLoad: any = load_name[parseInt(k1, 10)];
-      this.LL_flg.push(caseLoad.symbol == "LL" ? true : false);
-
       const fix_type: string = caseLoad.fix_node.toString();
       if (!(fix_type in fix_node)) {
         caseData.reac = {};

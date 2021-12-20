@@ -54,14 +54,17 @@ export class ResultDisgService {
     pickList: any
   ): void {
     const startTime = performance.now(); // 開始時間
+    
+    const load_name = this.load.getLoadNameJson(0);
+
     this.LL_flg = new Array();
+    for (const k1 of Object.keys(load_name)) {
+      const caseLoad: any = load_name[k1];
+      this.LL_flg.push(caseLoad.symbol == "LL" ? true : false);
+    }
+
     if (typeof Worker !== "undefined") {
       // Create a new
-      const load_name = this.load.getLoadNameJson(0);
-      for (const k1 of Object.keys(jsonData)) {
-        const caseLoad: any = load_name[parseInt(k1, 10)];
-        this.LL_flg.push(caseLoad.symbol == "LL" ? true : false);
-      }
 
       this.worker1.onmessage = ({ data }) => {
         if (data.error === null) {
