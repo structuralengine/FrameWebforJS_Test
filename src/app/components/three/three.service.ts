@@ -373,7 +373,7 @@ export class ThreeService {
         this.fixMember.visibleChange(true);
         this.joint.visibleChange(true);
         this.panel.visibleChange(true, 0.3);
-        this.load.visibleChange(true, false);
+        this.load.visibleChange(true, true);
       }
 
       if (ModeName === "load_values") {

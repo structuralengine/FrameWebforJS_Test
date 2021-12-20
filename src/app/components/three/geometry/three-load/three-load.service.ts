@@ -215,17 +215,23 @@ export class ThreeLoadService {
   // 表示ケースを変更する
   public changeCase(changeCase: number, isLL_Load: boolean = false): void {
 
-    if (!this.visibleCaseChange(changeCase.toString(), isLL_Load)) {
-      return;
-    }
-
-    // 連行荷重が完成したら 以下のアニメーションを有効にする
+        // 連行荷重が完成したら 以下のアニメーションを有効にする
     // 荷重名称を調べる
     if(isLL_Load===false){
       const symbol: string = this.load.getLoadName(changeCase, "symbol");
-      isLL_Load = (symbol === "LL");
+      isLL_Load = symbol.includes("LL");
     }
-    if (isLL_Load) {
+
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
+
+    this.currentIndex = changeCase.toString();
+    if (!isLL_Load) {
+      this.visibleCaseChange(this.currentIndex);
+      
+    } else {
       // 連行荷重の場合
       const LL_list = this.load.getMemberLoadJson(0, this.currentIndex);
       const LL_keys: string[] = Object.keys(LL_list);
@@ -235,20 +241,10 @@ export class ThreeLoadService {
       }
     }
 
-    if (this.animationObject !== null) {
-      cancelAnimationFrame(this.animationObject);
-      this.animationObject = null;
-    }
-
     this.scene.render();
   }
 
-  private visibleCaseChange(id: string, isLL_Load= false): boolean {
-
-    if (this.currentIndex === id && isLL_Load == false) {
-      // 同じなら何もしない
-      return false;
-    }
+  private visibleCaseChange(id: string, isLL_Load= false): void {
 
     if (id === null) {
       // 非表示にして終わる
@@ -259,7 +255,7 @@ export class ThreeLoadService {
       }
       this.scene.render();
       this.currentIndex = id;
-      return false;
+      return;
     }
 
     // 初めての荷重ケースが呼び出された場合
@@ -279,7 +275,6 @@ export class ThreeLoadService {
       this.currentIndex = id;
     }
 
-    return true;
   }
 
   // 連行移動荷重のアニメーションを開始する
@@ -299,10 +294,10 @@ export class ThreeLoadService {
       this.animation(keys, i);
     });
 
-    if (this.visibleCaseChange(keys[j], true)) {
-      // レンダリングする
-      this.scene.render();
-    }
+    this.visibleCaseChange(keys[j], true)
+    // レンダリングする
+    this.scene.render();
+ 
   }
 
   // ケースを追加する
@@ -715,23 +710,6 @@ export class ThreeLoadService {
         this.addCase(key) // 来ないと思う
       }
       const LoadList = this.AllCaseLoadList[key];
-
-      // if (!(this.currentIndex in memberLoadData)) {
-      //   // ケースが存在しなかった
-      //   this.removeMemberLoadList(LoadList);
-      //   for (const key of Object.keys(LoadList.memberLoadList)) {
-      //     LoadList.memberLoadList[key] = {
-      //       gx: [],
-      //       gy: [],
-      //       gz: [],
-      //       x: [],
-      //       y: [],
-      //       z: [],
-      //       t: [],
-      //       r: [],
-      //     };
-      //   }
-      // }
 
       // 対象業(row) に入力されている部材番号を調べる
       const tempMemberLoad = memberLoadData[key];

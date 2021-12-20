@@ -420,6 +420,13 @@ export class InputLoadService {
     if (target in tmp) {
       result = tmp[target];
     }
+    if(result === undefined){
+      result = "";
+    }
+    if(result === null){
+      result = "";
+    }
+
     return result;
   }
 
@@ -583,7 +590,7 @@ export class InputLoadService {
           load1[0].L1 = numL1.toFixed(3);
           let LL_length = LL_position['LL_length'];
           LL_length += Math.abs(numL1);
-          
+
           // 連行荷重の荷重の数を決定する
           const count = Math.round(LL_length / LL_pitch *10)/10; 
           for (let i = 1; i <= count; i++) {

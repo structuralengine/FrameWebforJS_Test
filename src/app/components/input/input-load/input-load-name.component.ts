@@ -166,7 +166,10 @@ export class InputLoadNameComponent implements OnInit {
         target = ui.updateList[i];
 
         const r = this.helper.toNumber(target.rowData["rate"]);
-        const s = this.helper.toNumber(target.rowData["symbol"]);
+        let s = target.rowData["symbol"];
+        if(s === undefined){
+          s = null;
+        }
         const fm = this.helper.toNumber(target.rowData["fix_member"]);
         const fn = this.helper.toNumber(target.rowData["fix_node"]);
         const e = this.helper.toNumber(target.rowData["element"]);
