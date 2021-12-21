@@ -76,22 +76,6 @@ export class ThreeSectionForceService {
     if (this.currentMode === ModeName) {
       return;
     }
-    if (ModeName === "fsec") {
-      this.ThreeObject1.visible = true;
-      this.ThreeObject2.visible = false;
-    } else if (ModeName === "comb_fsec") {
-      this.ThreeObject1.visible = true;
-      this.ThreeObject2.visible = true;
-    } else if (ModeName === "pik_fsec") {
-      this.ThreeObject1.visible = true;
-      this.ThreeObject2.visible = true;
-    } else {
-      this.ThreeObject1.visible = false;
-      this.ThreeObject2.visible = false;
-      this.guiDisable();
-      this.currentMode = ModeName;
-      return;
-    }
     this.currentMode = ModeName;
     this.changeMesh();
     this.guiEnable();
@@ -314,16 +298,23 @@ export class ThreeSectionForceService {
     }
 
     const fsecDatas = [];
-    if (this.currentMode === "fsec") {
-      fsecDatas.push(fsecList[this.currentIndex]);
-    } else {
-      const f = fsecList[this.currentIndex];
-      for (const k of [key1 + "_max", key1 + "_min"]) {
-        if (k in f) {
-          fsecDatas.push(f[k]);
-        }
+    const f = fsecList[this.currentIndex];
+    let flg = false;
+    for (const k of [key1 + "_max", key1 + "_min"]) {
+      if (k in f) {
+        fsecDatas.push(f[k]);
+        flg = true;
       }
     }
+    if(flg===false) {
+      fsecDatas.push(f);
+      this.ThreeObject1.visible = true;
+      this.ThreeObject2.visible = false;
+    } else {
+      this.ThreeObject1.visible = true;
+      this.ThreeObject2.visible = true;
+    }
+
     const ThreeObjects: THREE.Object3D[] = [
       this.ThreeObject1,
       this.ThreeObject2,

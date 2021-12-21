@@ -124,7 +124,7 @@
                                     </thead>
                                     <tbody>
                                         <div *ngIf="dimension===3">
-                                            <tr *ngFor="let resultData of dataset">
+                                            <tr *ngFor="let resultData of dataset[i]">
                                                 <td class="result-sm">{{ resultData.m }}</td>
                                                 <td class="result-sm">{{ resultData.n }}</td>
                                                 <td class="result-lg">{{ resultData.l }}</td>
@@ -137,7 +137,7 @@
                                             </tr>
                                         </div>
                                         <div *ngIf="dimension===2">
-                                            <tr *ngFor="let resultData of dataset">
+                                            <tr *ngFor="let resultData of dataset[i]">
                                                 <td class="result-sm">{{ resultData.m }}</td>
                                                 <td class="result-sm">{{ resultData.n }}</td>
                                                 <td class="result-lg">{{ resultData.l }}</td>

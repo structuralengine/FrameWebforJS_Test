@@ -86,13 +86,17 @@ export class ResultFsecComponent implements OnInit {
     if (currentPage !== this.page) {
       this.page = currentPage;
     }
-    this.dataset = this.data.getFsecColumns(this.page);
+
+
     this.load_name = this.load.getLoadName(currentPage);
+
     if(this.page <= this.data.LL_flg.length){
       this.LL_page =this.data.LL_flg[this.page - 1];
     } else {
       this.LL_page = false;
     }
+    
+    this.dataset = this.data.getFsecColumns(this.page);
 
     this.three.ChangeMode("fsec");
     this.three.ChangePage(currentPage);
