@@ -164,7 +164,8 @@ export class ResultReacService {
       const defList: any = {};
       const combList: any = {};
       const max_values: any = {};
-  
+      const three_reac: any = {};
+
       let flg = false;
   
       for (const caseNo of Object.keys(load_name)) {
@@ -184,6 +185,7 @@ export class ResultReacService {
           })
           const caseList: string[] = [caseNo]; 
           const tmp_max_values = org_max_values[caseNo];
+          const tmp_reac = (target_LL_Keys.length > 0) ? JSON.parse(JSON.stringify(reac[caseNo])) : reac[caseNo];
   
           for(const k of target_LL_Keys){
             // ケースを追加
@@ -196,16 +198,31 @@ export class ResultReacService {
                 tmp_max_values[kk] = target_max_values[kk];
               }
             }
+            // three.js 用を更新
+            const target_reac = reac[k];
+            for(let i = 0; i < tmp_reac.length; i++){
+              for(const kk of Object.keys(tmp_reac[i])){
+                if(kk==='id'){
+                  continue;
+                }
+                if(Math.abs(tmp_reac[i][kk]) < Math.abs(target_reac[i][kk])){
+                  tmp_reac[i][kk] = target_reac[i][kk];
+                }
+              }
+            }
+
+
           }
           defList[caseNo] = caseList;
           combList[caseNo] = [{ caseNo, coef: 1 }];
           max_values[caseNo] = tmp_max_values;
+          three_reac[caseNo] = tmp_reac;
         }
   
       }
-  
+
       // 集計が終わったら three.js に通知
-      this.three.setResultData(reac, max_values);
+      this.three.setResultData(three_reac, max_values);
   
       if(flg === false){
         this.isCalculated = true;
@@ -219,7 +236,7 @@ export class ResultReacService {
   
         this.worker4.onmessage = ({ data }) => {
           const LL_columns = data.result;
-  
+          const three_reac = JSON.parse(JSON.stringify(this.reac));
           for(const k of Object.keys(LL_columns)){
             this.columns[k] = LL_columns[k];
             this.reac[k] = reacCombine[k];
