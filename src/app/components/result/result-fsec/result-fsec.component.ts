@@ -87,7 +87,6 @@ export class ResultFsecComponent implements OnInit {
       this.page = currentPage;
     }
 
-
     this.load_name = this.load.getLoadName(currentPage);
 
     if(this.page <= this.data.LL_flg.length){

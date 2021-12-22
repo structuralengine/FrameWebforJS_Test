@@ -19,6 +19,7 @@ addEventListener('message', ({ data }) => {
 
   const jsonData = data.jsonData;
   const reac = {};
+  const max_value = {};
   let error: any = null;
 
   try {
@@ -37,6 +38,9 @@ addEventListener('message', ({ data }) => {
       if (json === null) {
         continue;
       }
+
+      let max_d = 0;
+      let max_r = 0;
 
       for (const n of Object.keys(json)) {
         const item: {} = json[n];
@@ -58,12 +62,27 @@ addEventListener('message', ({ data }) => {
           mz: (mz == null) ? 0 : -mz
         };
         target.push(result);
+            
+        // 最大値を記録する three.js で使う
+        for (const v of [tx, ty, tz]) {
+          if (Math.abs(max_d) < Math.abs(v)) {
+            max_d = v;
+          }
+        }
+        for (const v of [mx, my, mz]) {
+          if (Math.abs(max_r) < Math.abs(v)) {
+            max_r = v;
+          }
+        }
+
       }
-      reac[caseNo.replace('Case', '')] = target;
+      const No: string = caseNo.replace("Case", "");
+      reac[No] = target;
+      max_value[No] = Math.abs(max_d);
     }
   } catch (e) {
     error = e;
   }
 
-  postMessage({ reac, error  });
+  postMessage({ reac, error, max_value  });
 });

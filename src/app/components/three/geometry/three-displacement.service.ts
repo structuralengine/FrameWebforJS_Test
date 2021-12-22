@@ -34,6 +34,7 @@ export class ThreeDisplacementService {
   private membData: any
   private panelData: any
   private allDisgData: any;
+  private max_values: any;
 
   constructor(private scene: SceneService,
               private helper: DataHelperModule,
@@ -95,6 +96,7 @@ export class ThreeDisplacementService {
     this.membData = {};
     this.panelData = {};
     this.allDisgData = {};
+    this.max_values = {};
   }
 
   private guiEnable(): void {
@@ -119,7 +121,7 @@ export class ThreeDisplacementService {
   }
 
   // 解析結果をセットする
-  public setResultData(getDisgJson: any): void {
+  public setResultData(getDisgJson: any, max_values: any): void {
     this.nodeData = this.node.getNodeJson(0);
     this.membData = this.member.getMemberJson(0);
     /////// パネルの1辺を仮想の部材として登録
@@ -149,6 +151,7 @@ export class ThreeDisplacementService {
     }
     this.panelData = this.panel.getPanelJson(0);
     this.allDisgData = getDisgJson;
+    this.max_values = max_values;
     this.changeData(1);
   }
 
@@ -238,7 +241,7 @@ export class ThreeDisplacementService {
     let maxDistance: number;
     [minDistance, maxDistance] = this.getDistance();
 
-    const maxValue: number = this.allDisgData['max_value'+ targetKey];
+    const maxValue: number = this.max_values[targetKey];
     this.targetData['scale'] = minDistance / maxValue;
     this.gui_max_scale = maxDistance / minDistance;
 

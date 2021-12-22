@@ -85,13 +85,23 @@ export class ResultDisgComponent implements OnInit {
     if (currentPage !== this.page) {
       this.page = currentPage;
     }
-    this.dataset = this.data.getDisgColumns(this.page);
+
     this.load_name = this.load.getLoadName(currentPage);
-    this.page = this.page;
-    this.LL_page =
-      this.data.LL_flg[this.page - 1] === void 0
-        ? false
-        : this.data.LL_flg[this.page - 1];
+
+    if(this.page <= this.data.LL_flg.length){
+      this.LL_page =this.data.LL_flg[this.page - 1];
+    } else {
+      this.LL_page = false;
+    }
+
+    if(this.LL_page===true){
+      this.dataset = new Array();
+      for (const key of this.KEYS) {
+        this.dataset.push(this.data.getDisgColumns(this.page, key));
+      }
+    } else{
+      this.dataset = this.data.getDisgColumns(this.page);
+    }
 
     this.three.ChangeMode("disg");
     this.three.ChangePage(currentPage);

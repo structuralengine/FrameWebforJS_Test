@@ -77,8 +77,8 @@ export class ThreeSectionForceService {
       return;
     }
     this.currentMode = ModeName;
-    this.changeMesh();
     this.guiEnable();
+    this.changeMesh();
     this.onResize();
   }
 
@@ -229,6 +229,8 @@ export class ThreeSectionForceService {
     this.currentMode = "fsec";
     this.currentIndex = keys[0];
     this.changeMesh();
+    this.ThreeObject1.visible = false; // 呼び出されるまで非表示
+    this.ThreeObject2.visible = false; // 呼び出されるまで非表示
     this.currentMode = "";
   }
   // combine
@@ -241,7 +243,6 @@ export class ThreeSectionForceService {
     this.fsecData.pik_fsec = fsecJson;
     this.max_values.pik_fsec = max_values;
   }
-
 
   private async changeMesh(): Promise<void>{
 
@@ -292,6 +293,7 @@ export class ThreeSectionForceService {
     if (!(this.currentMode in this.fsecData)) {
       this.ThreeObject1.visible = false;
       this.ThreeObject2.visible = false;
+      this.guiDisable();
       return;
     }
 
@@ -299,6 +301,7 @@ export class ThreeSectionForceService {
     if (!(this.currentIndex in fsecList)) {
       this.ThreeObject1.visible = false;
       this.ThreeObject2.visible = false;
+      this.guiDisable();
       return;
     }
 
@@ -536,4 +539,5 @@ export class ThreeSectionForceService {
       });
     }
   }
+
 }

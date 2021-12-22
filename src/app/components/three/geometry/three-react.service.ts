@@ -71,7 +71,7 @@ export class ThreeReactService {
   }
 
   // 解析結果をセットする
-  public setResultData(getReacJson: any): void {
+  public setResultData(getReacJson: any, max_values: any): void {
     this.nodeData = this.node.getNodeJson(0);
     this.reacData = getReacJson;
   }
