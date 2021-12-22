@@ -290,10 +290,15 @@ export class ThreeSectionForceService {
 
     // 最初のケースを代表として描画する
     if (!(this.currentMode in this.fsecData)) {
+      this.ThreeObject1.visible = false;
+      this.ThreeObject2.visible = false;
       return;
     }
+    
     const fsecList = this.fsecData[this.currentMode];
     if (!(this.currentIndex in fsecList)) {
+      this.ThreeObject1.visible = false;
+      this.ThreeObject2.visible = false;
       return;
     }
 
