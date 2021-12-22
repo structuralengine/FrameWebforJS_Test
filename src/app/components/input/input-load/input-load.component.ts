@@ -18,14 +18,9 @@ export class InputLoadComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
 
   public load_name: string;
-  public symbol: string;
   public LL_flg: boolean = false;
-  public LL_btn: boolean = false;
 
-  public LL_length: number = 0.1;
-  public LL_pitch: number = 0.1;
-
-  public LL_Control: FormGroup;
+  public LL_pitch: number;
 
   private dataset = [];
   private columnHeaders3D = [
@@ -438,6 +433,7 @@ export class InputLoadComponent implements OnInit {
       ],
     },
   ];
+  // 3次元の連行荷重
   private columnHeaders3D_LL = [
     {
       title: "要素荷重",
@@ -560,6 +556,7 @@ export class InputLoadComponent implements OnInit {
       ],
     },
   ];
+  // 2次元の連行荷重
   private columnHeaders2D_LL = [
     {
       title: "要素荷重",
@@ -698,17 +695,7 @@ export class InputLoadComponent implements OnInit {
     this.ROWS_COUNT = this.rowsCount();
     const load_name = this.data.getLoadNameColumns(1);
     this.load_name = load_name.name;
-    this.symbol = load_name.symbol;
-    if (this.symbol === "LL") {
-      this.LL_flg = true;
-    } else {
-      this.LL_flg = false;
-    }
-
-    this.LL_Control = new FormGroup({
-      LL_length: new FormControl(0.1),
-      LL_pitch: new FormControl(0.1),
-    });
+    this.checkLL(load_name.symbol);
 
     this.loadPage(1, this.ROWS_COUNT);
 
@@ -721,30 +708,26 @@ export class InputLoadComponent implements OnInit {
     this.dataset.splice(0);
     const load_name = this.data.getLoadNameColumns(eventData);
     this.load_name = load_name.name;
-    this.symbol = load_name.symbol;
-    if (this.symbol === "LL") {
-      this.LL_flg = true;
-    } else {
-      this.LL_flg = false;
-      // this.show();
-    }
+    this.checkLL(load_name.symbol);
+
     this.page = eventData;
     this.loadPage(eventData, this.ROWS_COUNT);
     this.grid.refreshDataAndView();
     this.three.ChangePage(eventData);
   }
 
-  onSubmit(): void {
-    console.log(this.LL_Control.value); // {first: 'Nancy', last: 'Drew'}
-  }
-
   //
   loadPage(currentPage: number, row: number) {
     for (let i = this.dataset.length + 1; i <= row; i++) {
-      const load = this.data.getLoadColumns(currentPage, i, 0, false);
+      const load = this.data.getLoadColumns(currentPage, i);
       this.dataset.push(load);
     }
 
+    const load_name = this.data.getLoadNameColumns(currentPage);
+    this.checkLL(load_name.symbol);
+    if(this.LL_flg){
+      this.LL_pitch = load_name.LL_pitch;
+    }
     this.page = currentPage;
   }
 
@@ -757,18 +740,6 @@ export class InputLoadComponent implements OnInit {
   private rowsCount(): number {
     const containerHeight = this.app.getDialogHeight();
     return Math.round(containerHeight / 30);
-  }
-
-  public LL_start() {
-    this.LL_btn = true;
-    // for (let j = 1; j <= 2; j++) {
-    //   let k = j / 10;
-    const load = this.data.getLoadColumns(this.page, 1, 0.1, this.LL_btn);
-    this.dataset[0] = load;
-    // this.grid.refreshDataAndView();
-    this.three.changeData("load_values", 1);
-    // }
-    this.LL_btn = false;
   }
 
   // グリッドの設定
@@ -873,25 +844,25 @@ export class InputLoadComponent implements OnInit {
   };
   width2 = this.helper.dimension === 3 ? 550 : 445;
 
-  private formatL1(val): string {
-    const num = this.helper.toNumber(val);
-    if (num === null) return null;
-    const str = val.toString();
-    if (num === 0 && str.charAt(0) === "-") {
-      return "-0.000";
-    } else {
-      return num.toFixed(3);
+  // 連行荷重のピッチを変えた場合
+  public change_pich() {
+
+    if(this.LL_pitch < 0.1){
+      this.LL_pitch = 0.1;
+      return;
     }
+    // 入力情報をデータに反映する
+    const load_name = this.data.getLoadNameColumns(this.page);
+    load_name.LL_pitch = this.LL_pitch;
+
+    this.threeLoad.change_LL_Load(this.page.toString()); 
   }
 
-  public click() {
-    this.data.LL_length = this.helper.toNumber(this.LL_Control.value.LL_length);
-    this.data.LL_pitch = this.helper.toNumber(this.LL_Control.value.LL_pitch);
-    this.LL_length = this.data.LL_length;
-    this.LL_pitch = this.data.LL_pitch;
-    this.data.getLoadJson(this.page);
-    this.threeLoad.changeData(1); //1行目の入力を変更したので、
-    this.threeLoad.changeCase(this.page, true);//, 1);
-    this.scene.render();
+  private checkLL(symbol: string): void{
+    if (symbol.includes("LL")) {
+      this.LL_flg = true;
+    } else {
+      this.LL_flg = false;
+    }
   }
 }

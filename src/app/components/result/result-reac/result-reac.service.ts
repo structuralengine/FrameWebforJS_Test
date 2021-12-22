@@ -12,6 +12,8 @@ export class ResultReacService {
   public reac: any;
   private worker1: Worker;
   private worker2: Worker;
+  private worker3: Worker;
+  private worker4: Worker;  
   private columns: any; // 表示用
 
   public LL_flg = [];
@@ -31,6 +33,15 @@ export class ResultReacService {
       new URL("./result-reac2.worker", import.meta.url),
       { name: "result-reac2", type: "module" }
     );
+    // 連行荷重の集計
+    this.worker3 = new Worker(
+      new URL("../result-combine-reac/result-combine-reac1.worker", import.meta.url),
+      { name: "LL-reac1", type: "module" }
+    );
+    this.worker4 = new Worker(
+      new URL("../result-combine-reac/result-combine-reac2.worker", import.meta.url),
+      { name: "LL-reac2", type: "module" }
+    );    
   }
 
   public clear(): void {
@@ -38,9 +49,22 @@ export class ResultReacService {
     this.isCalculated = false;
   }
 
-  public getReacColumns(typNo: number): any {
+  public getReacColumns(typNo: number, mode: string = null): any {
+
     const key: string = typNo.toString();
-    return key in this.columns ? this.columns[key] : new Array();
+    if(!(key in this.columns)) {
+      return new Array(); 
+    }
+    const col = this.columns[key];
+    if(mode === null){
+      return col;
+    } else{
+      if(mode in col) {
+        return col[mode]; // 連行荷重の時は combine のようになる
+      }
+    }
+
+    return new Array();
   }
 
   // three-section-force.service から呼ばれる
@@ -56,7 +80,6 @@ export class ResultReacService {
     pickList: any
   ): void {
     const startTime = performance.now(); // 開始時間
-    this.LL_flg = new Array();
     // 入力にない反力情報は削除する
     // 2D モードの時 仮に支点を入力することがあった
     const fix_node = this.fixnode.getFixNodeJson(0);
@@ -71,8 +94,6 @@ export class ResultReacService {
         continue;
       }
       const caseLoad: any = load_name[parseInt(k1, 10)];
-      this.LL_flg.push(caseLoad.symbol == "LL" ? true : false);
-
       const fix_type: string = caseLoad.fix_node.toString();
       if (!(fix_type in fix_node)) {
         caseData.reac = {};
@@ -97,10 +118,11 @@ export class ResultReacService {
             "反力の集計が終わりました",
             performance.now() - startTime
           );
-          this.reac = data.reac;
+          const reac = data.reac;
+          const max_values = data.max_value;
 
           // 組み合わせの集計処理を実行する
-          this.comb.setReacCombineJson(this.reac, defList, combList, pickList);
+          this.comb.setReacCombineJson(reac, defList, combList, pickList);
 
           // 反力テーブルの集計
           this.worker2.onmessage = ({ data }) => {
@@ -110,13 +132,17 @@ export class ResultReacService {
                 performance.now() - startTime
               );
               this.columns = data.table;
-              this.isCalculated = true;
+              this.set_LL_columns(reac, Object.keys(jsonData), max_values);
             } else {
               console.log("反力テーブルの集計に失敗しました", data.error);
             }
           };
+          // 連行荷重の子データは除外する
+          const keys = Object.keys(reac).filter(e => !e.includes('.'));
+          for(const k of keys){
+            this.reac[k] = reac[k];
+          }
           this.worker2.postMessage({ reac: this.reac });
-          this.three.setResultData(this.reac);
         } else {
           console.log("反力の集計に失敗しました", data.error);
         }
@@ -128,4 +154,105 @@ export class ResultReacService {
       // You should add a fallback so that your program still executes correctly.
     }
   }
+
+    // 連行荷重の断面力を集計する
+    private set_LL_columns(reac: any, load_keys: string[], org_max_values: {}){
+
+      this.LL_flg = new Array();
+  
+      const load_name = this.load.getLoadNameJson(0);
+      const defList: any = {};
+      const combList: any = {};
+      const max_values: any = {};
+      const three_reac: any = {};
+
+      let flg = false;
+  
+      for (const caseNo of Object.keys(load_name)) {
+        const caseLoad: any = load_name[caseNo];
+        if(caseLoad.symbol !== "LL"){
+          this.LL_flg.push(false);
+          max_values[caseNo] = org_max_values[caseNo];
+  
+        } else {
+  
+          // 連行荷重の場合 
+          flg = true;
+          this.LL_flg.push(true);
+  
+          const target_LL_Keys: string[] = load_keys.filter(e =>{
+            return e.indexOf(caseNo + ".") === 0;
+          })
+          const caseList: string[] = [caseNo]; 
+          const tmp_max_values = org_max_values[caseNo];
+          const tmp_reac = (target_LL_Keys.length > 0) ? JSON.parse(JSON.stringify(reac[caseNo])) : reac[caseNo];
+  
+          for(const k of target_LL_Keys){
+            // ケースを追加
+            caseList.push(k);
+  
+            // max_valuesを更新
+            const target_max_values = org_max_values[k];
+            for(const kk of Object.keys(tmp_max_values)){
+              if(tmp_max_values[kk] < target_max_values[kk]){
+                tmp_max_values[kk] = target_max_values[kk];
+              }
+            }
+            // three.js 用を更新
+            const target_reac = reac[k];
+            for(let i = 0; i < tmp_reac.length; i++){
+              for(const kk of Object.keys(tmp_reac[i])){
+                if(kk==='id'){
+                  continue;
+                }
+                if(Math.abs(tmp_reac[i][kk]) < Math.abs(target_reac[i][kk])){
+                  tmp_reac[i][kk] = target_reac[i][kk];
+                }
+              }
+            }
+
+
+          }
+          defList[caseNo] = caseList;
+          combList[caseNo] = [{ caseNo, coef: 1 }];
+          max_values[caseNo] = tmp_max_values;
+          three_reac[caseNo] = tmp_reac;
+        }
+  
+      }
+
+      // 集計が終わったら three.js に通知
+      this.three.setResultData(three_reac, max_values);
+  
+      if(flg === false){
+        this.isCalculated = true;
+        return; // 連行荷重がなければ ここまで
+      }
+  
+      // combine のモジュールを利用して 連行荷重の組合せケースを集計する
+      this.worker3.onmessage = ({ data }) => {
+        console.log(data);
+        const reacCombine = data.reacCombine;
+  
+        this.worker4.onmessage = ({ data }) => {
+          const LL_columns = data.result;
+          const three_reac = JSON.parse(JSON.stringify(this.reac));
+          for(const k of Object.keys(LL_columns)){
+            this.columns[k] = LL_columns[k];
+            this.reac[k] = reacCombine[k];
+          }
+          this.isCalculated = true;
+        };
+        this.worker4.postMessage({reacCombine});
+      }
+  
+      this.worker3.postMessage({ 
+        defList, 
+        combList, 
+        reac: reac, 
+        reacKeys: this.comb.reacKeys
+      });
+    }
+
+
 }

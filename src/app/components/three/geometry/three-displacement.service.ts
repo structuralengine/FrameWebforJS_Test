@@ -15,16 +15,16 @@ import { ResultPickupDisgService } from '../../result/result-pickup-disg/result-
 import { ThreeNodesService } from './three-nodes.service';
 import { ThreeMembersService } from './three-members.service';
 import { ThreePanelService } from './three-panel.service';
+import { InputLoadService } from '../../input/input-load/input-load.service';
+import { Object3D } from 'three';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThreeDisplacementService {
-
-  private lineList: THREE.Line[];
+  private lineList: THREE.Object3D;
   private targetData: any;
 
-  private isVisible: boolean;
   private scale: number;
   private params: any;          // GUIの表示制御
   private gui: any;
@@ -34,21 +34,25 @@ export class ThreeDisplacementService {
   private membData: any
   private panelData: any
   private allDisgData: any;
+  private max_values: any;
+
+  // アニメーションのオブジェクト
+  private animationObject: any;
+
 
   constructor(private scene: SceneService,
-              private helper: DataHelperModule,
-              private comb_disg: ResultCombineDisgService,
-              private pik_disg: ResultPickupDisgService,
               private node: InputNodesService,
               private member: InputMembersService,
               private panel: InputPanelService,
-              private three_node: ThreeNodesService,
-              private three_member: ThreeMembersService,
-              private three_panel: ThreePanelService,) {
-    this.lineList = new Array();
+              private load: InputLoadService,
+              private three_member: ThreeMembersService) {
+
+    this.lineList = new THREE.Object3D();
+    this.lineList.visible = false;
+    this.scene.add(this.lineList);
+
     this.targetData = new Array();
 
-    this.isVisible = null;
     this.ClearData();
 
     // gui
@@ -58,43 +62,51 @@ export class ThreeDisplacementService {
     this.gui = null;
     this.gui_max_scale = 1;
 
+    // アニメーションのオブジェクト
+    this.animationObject = null;
   }
 
   public visibleChange(flag: boolean): void {
-    if ( this.isVisible === flag) {
+    if ( this.lineList.visible === flag) {
       return;
     }
-    for (const mesh of this.lineList) {
-      mesh.visible = flag;
-    }
-    this.isVisible = flag;
+    this.lineList.visible = flag;
+
     if (flag === true) {
       this.guiEnable();
+
     } else {
+      // アニメーションのオブジェクトを解放
+      if (this.animationObject !== null) {
+        cancelAnimationFrame(this.animationObject);
+        this.animationObject = null;
+      }
       this.guiDisable();
     }
   }
 
   // データをクリアする
   public ClearData(): void {
-    if (this.lineList.length > 0) {
-      // 線を削除する
-      for (const mesh of this.lineList) {
-        // 文字を削除する
-        while (mesh.children.length > 0) {
-          const object = mesh.children[0];
-          object.parent.remove(object);
-        }
-        this.scene.remove(mesh);
-      }
-      this.lineList = new Array();
+
+    // 線を削除する
+    while (this.lineList.children.length > 0) {
+      const object = this.lineList.children[0];
+      object.parent.remove(object);
     }
+
     this.scale = 0.5;
 
     this.nodeData = {};
     this.membData = {};
     this.panelData = {};
     this.allDisgData = {};
+    this.max_values = {};
+
+    // アニメーションのオブジェクト
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
   }
 
   private guiEnable(): void {
@@ -119,9 +131,11 @@ export class ThreeDisplacementService {
   }
 
   // 解析結果をセットする
-  public setResultData(getDisgJson: any): void {
+  public setResultData(getDisgJson: any, max_values: any): void {
+
     this.nodeData = this.node.getNodeJson(0);
     this.membData = this.member.getMemberJson(0);
+    
     /////// パネルの1辺を仮想の部材として登録
     const panelData = this.panel.getPanelJson(0);
     for(const pk of Object.keys(panelData)){
@@ -149,7 +163,8 @@ export class ThreeDisplacementService {
     }
     this.panelData = this.panel.getPanelJson(0);
     this.allDisgData = getDisgJson;
-    this.changeData(1);
+    this.max_values = max_values;
+    // this.changeData(1);
   }
 
   public changeData(index: number): void {
@@ -166,12 +181,38 @@ export class ThreeDisplacementService {
     if (membKeys.length <= 0 && panelKeys.length <= 0) {
       return;
     }
-
+    
     // 変位データを入手
     const targetKey: string = index.toString();
     if (!(targetKey in this.allDisgData)) {
       return;
     }
+
+    // スケールの決定に用いる変数を写す
+    let minDistance: number;
+    let maxDistance: number;
+    [minDistance, maxDistance] = this.getDistance();
+
+    // 非表示だったら 表示する
+    if(this.lineList.visible===false){
+      this.visibleChange(true);
+    }
+
+    // 連行荷重の場合 アニメーションを走らせる
+    const symbol: string = this.load.getLoadName(index, "symbol");
+    if(symbol === "LL"){
+      this.change_LL_Load(targetKey, membKeys, minDistance, maxDistance);
+      return;
+    }
+
+    // 描く
+    this.changeDisg(targetKey, membKeys, minDistance, maxDistance);
+
+  }
+
+  private changeDisg(targetKey: string, membKeys: string[],
+                      minDistance: number, maxDistance: number): void {
+
     const disgData = this.allDisgData[targetKey];
 
     this.targetData = new Array();
@@ -233,21 +274,83 @@ export class ThreeDisplacementService {
       });
     }
 
-    // スケールの決定に用いる変数を写す
-    let minDistance: number;
-    let maxDistance: number;
-    [minDistance, maxDistance] = this.getDistance();
-
-    const maxValue: number = this.allDisgData['max_value'+ targetKey];
-    this.targetData['scale'] = minDistance / maxValue;
+    const i = targetKey.indexOf('.');
+    let targetKey2 = targetKey;
+    if(i>0){
+      targetKey2 = targetKey.slice(0, i);
+    }
+    const maxValue: number = this.max_values[targetKey2];
+    if(maxValue > 0){
+      this.targetData['scale'] = minDistance / maxValue;
+    }
+    else{
+      this.targetData['scale'] = 1;
+    }
     this.gui_max_scale = maxDistance / minDistance;
 
     this.onResize();
+    
+  }
+  
+  // 連行荷重を変更する
+  public change_LL_Load(id: string, membKeys: string[],
+                        minDistance: number, maxDistance: number): void{
+
+    const memberLoadData = this.load.getMemberLoadJson(0, id); //計算に使う版
+    const LL_keys = Object.keys(memberLoadData);
+
+    // 対象の連行荷重を全部削除する
+    let keys = Object.keys(this.allDisgData).filter(e =>{
+      return e.indexOf(id + ".") === 0;
+    })
+    if(keys === undefined){
+      return;
+    }
+    
+    keys = [id].concat(keys)
+
+    // 一旦アニメーションを削除
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
+
+    // 連行荷重の場合
+    this.animation(LL_keys, membKeys, minDistance, maxDistance); //ループのきっかけ
+
+  }
+
+
+  // 連行移動荷重のアニメーションを開始する
+  public animation( keys: string[], membKeys: string[],
+                    minDistance: number, maxDistance: number,
+                    i: number = 0, old_j: number = 0 ) {
+
+    let j: number = Math.floor(i / 10); // 10フレームに１回位置を更新する
+
+    if(j < keys.length){
+      i = i + 1; // 次のフレーム
+    }else{
+      i = 0;
+      j = 0;
+    }
+
+    // 次のフレームを要求
+    this.animationObject = requestAnimationFrame(() => {
+      this.animation(keys, membKeys, minDistance, maxDistance, i, j);
+    });
+
+    if(j === old_j){
+      return;
+    }
+
+    this.changeDisg(keys[j], membKeys, minDistance, maxDistance)
+
+    this.scene.render();
   }
 
   private onResize(): void {
 
-    const tmplineList: THREE.Line[] = this.lineList;
     let scale: number = this.targetData['scale'] * this.scale * 0.7;
 
     for (let i = 0; i < this.targetData.length; i++) {
@@ -310,10 +413,10 @@ export class ThreeDisplacementService {
         colors.push(threeColor.r, threeColor.g, threeColor.b);
       }
 
-      if (this.lineList.length > i) {
-        const line = this.lineList[i];
+      if (this.lineList.children.length > i) {
+        const line: Object3D = this.lineList.children[i];
         // line を修正するコード
-        const geometry: THREE.BufferGeometry = line.geometry;
+        const geometry: THREE.BufferGeometry = line['geometry'];
         geometry.setFromPoints(positions);
 
       } else {
@@ -327,13 +430,9 @@ export class ThreeDisplacementService {
 
         line.scale.set(1, 1, 1);
         line.name = target.name;
-
-        tmplineList.push(line);
-        line.visible = false; //----------> ポイント：非表示で生成する
-        this.scene.add(line);
+        this.lineList.add(line);
       }
     }
-    this.lineList = tmplineList;
   }
 
   private getDistance(): number[] {

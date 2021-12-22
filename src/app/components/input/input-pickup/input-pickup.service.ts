@@ -79,7 +79,7 @@ export class InputPickupService {
       for (let key in row) {
         if (key === 'row' || key === 'name') {
           data[key] = row[key];
-        } else {
+        } else if (key.charAt(0) === 'C'){
           const value = row[key];
           if (this.helper.toNumber(value) != null) {
             flg = true;

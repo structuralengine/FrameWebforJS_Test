@@ -127,6 +127,12 @@ export class ThreeLoadService {
 
     // 選択中のオブジェクト
     this.selecteddObject = null;
+
+    // アニメーションのオブジェクト
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
   }
 
   // ファイルを読み込むなど、りセットする
@@ -154,7 +160,6 @@ export class ThreeLoadService {
     // const nodeLoadData = this.load.getNodeLoadJson(0);
     const nodeLoadData = {};
     // 要素荷重データを入手
-    // const memberLoadData = this.load.getMemberLoadJson(0);
     const memberLoadData = {};
     for (const id of Object.keys(loadData)) {
       const tmp = loadData[id];
@@ -166,7 +171,7 @@ export class ThreeLoadService {
       }
     }
 
-    // 荷重図を非表示のまま作成する
+    // 荷重図を(非表示のまま)作成する
     for (const id of Object.keys(this.AllCaseLoadList)) {
       const LoadList = this.AllCaseLoadList[id];
       this.currentIndex = id; // カレントデータをセット
@@ -214,27 +219,13 @@ export class ThreeLoadService {
   }
 
   // 表示ケースを変更する
-  public changeCase(changeCase: number, isLoad: boolean = false): void {
-    if (!this.visibleCaseChange(changeCase, isLoad)) {
-      return;
-    }
+  public changeCase(changeCase: number, isLL_Load: boolean = false): void {
 
-    // 連行荷重が完成したら 以下のアニメーションを有効にする
+        // 連行荷重が完成したら 以下のアニメーションを有効にする
     // 荷重名称を調べる
-    if(isLoad===false){
+    if(isLL_Load===false){
       const symbol: string = this.load.getLoadName(changeCase, "symbol");
-      isLoad = (symbol === "LL");
-    }
-    if (isLoad) {
-      const LL_list = this.load.getMemberLoadJson(0, this.currentIndex);
-      const LL_keys: string[] = Object.keys(LL_list);
-      if (LL_keys.length > 0) {
-        const keys = LL_keys.map((value) => {
-          return Number(value);
-        });
-        this.animation(keys); //ループのきっかけ
-        return;
-      }
+      isLL_Load = symbol.includes("LL");
     }
 
     if (this.animationObject !== null) {
@@ -242,30 +233,40 @@ export class ThreeLoadService {
       this.animationObject = null;
     }
 
+    this.currentIndex = changeCase.toString();
+    if (!isLL_Load) {
+      this.visibleCaseChange(this.currentIndex);
+      
+    } else {
+      // 連行荷重の場合
+      const LL_list = this.load.getMemberLoadJson(0, this.currentIndex);
+      const LL_keys: string[] = Object.keys(LL_list);
+      if (LL_keys.length > 0) {
+        this.animation(LL_keys); //ループのきっかけ
+        return;
+      }
+    }
+
     this.scene.render();
   }
 
-  private visibleCaseChange(changeCase: number, isLoad = false): boolean {
-    const id: string = changeCase.toString();
-    // if (empty == 1) {
-    //   this.currentIndex = String(this.load.LL_length * this.load.LL_pitch);
-    // }
+  private visibleCaseChange(id: string, isLL_Load= false): void {
 
-    if (this.currentIndex === id && isLoad == false) {
-      // 同じなら何もしない
-      return false;
-    }
-
-    if (changeCase < 1) {
+    if (id === null) {
       // 非表示にして終わる
       for (const key of Object.keys(this.AllCaseLoadList)) {
         const targetLoad = this.AllCaseLoadList[key];
         const ThreeObject: THREE.Object3D = targetLoad.ThreeObject;
         ThreeObject.visible = false;
       }
+      // アニメーションのオブジェクトを解放
+      if (this.animationObject !== null) {
+        cancelAnimationFrame(this.animationObject);
+        this.animationObject = null;
+      }
       this.scene.render();
       this.currentIndex = id;
-      return false;
+      return;
     }
 
     // 初めての荷重ケースが呼び出された場合
@@ -281,27 +282,37 @@ export class ThreeLoadService {
     }
 
     // カレントデータをセット
-    this.currentIndex = id;
+    if(isLL_Load == false) { // 連行荷重アニメーション中は currentIndex は 親id のまま変えない
+      this.currentIndex = id;
+    }
 
-    return true;
   }
 
   // 連行移動荷重のアニメーションを開始する
-  public animation(keys: number[], k: number = 0) {
-    const i: number = Math.floor(k / 10); // 10フレームに１回位置を更新する
+  public animation(keys: string[], i: number = 0, old_j: number = 0) {
 
-    const j = i < keys.length ? k + 1 : 0; // 次のフレーム
+    let j: number = Math.floor(i / 10); // 10フレームに１回位置を更新する
+
+    if(j < keys.length){
+      i = i + 1; // 次のフレーム
+    }else{
+      i = 0;
+      j = 0;
+    }
 
     // 次のフレームを要求
     this.animationObject = requestAnimationFrame(() => {
-      this.animation(keys, j);
+      this.animation(keys, i, j);
     });
 
-    const g = i < keys.length ? keys[i] : keys[0];
-    if (this.visibleCaseChange(g)) {
-      // レンダリングする
-      this.scene.render();
+    if(j === old_j){
+      return;
     }
+    
+    this.visibleCaseChange(keys[j], true)
+    // レンダリングする
+    this.scene.render();
+ 
   }
 
   // ケースを追加する
@@ -398,6 +409,12 @@ export class ThreeLoadService {
     this.scene.remove(ThreeObject);
 
     delete this.AllCaseLoadList[id];
+
+    // アニメーションのオブジェクトを解放
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
 
     if(option){
       this.scene.render();
@@ -524,13 +541,70 @@ export class ThreeLoadService {
     this.currentIndex = oldIndex;
   }
 
+  // 連行荷重を変更する
+  public change_LL_Load(id: string): void{
+
+    const memberLoadData = this.load.getMemberLoadJson(0, id); //計算に使う版
+    const LL_keys = Object.keys(memberLoadData);
+
+    // 対象の連行荷重を全部削除する
+    let keys = Object.keys(this.AllCaseLoadList).filter(e =>{
+      return e.indexOf(id + ".") === 0;
+    })
+    if(keys !== undefined){
+      keys = [id].concat(keys)
+      for (const key of keys) {
+        this.removeCase(key);
+      }
+    } else{
+      keys = [id];
+    }
+
+    if (Object.keys(this.memberData).length > 0) {
+      for(const key of LL_keys){
+        // 一旦削除したので追加する
+        this.addCase(key);
+        const LoadList = this.AllCaseLoadList[key];
+        // 
+        const targetMemberLoad = memberLoadData[key];
+        // 要素荷重の最大値を調べる
+        this.setMaxMemberLoad(targetMemberLoad);
+        // 要素荷重を作成する
+        this.createMemberLoad(
+          targetMemberLoad,
+          this.nodeData,
+          this.memberData,
+          LoadList.ThreeObject,
+          LoadList.memberLoadList
+        );
+      }
+      // 重なりを調整する
+      this.setOffset();
+      // サイズを調整する
+      this.onResize();
+    }
+
+    // 一旦アニメーションを削除
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
+
+    // 連行荷重の場合
+    this.animation(LL_keys); //ループのきっかけ
+
+  }
+
   // 荷重の入力が変更された場合
   public changeData(row: number): void {
-    // this.currentIndexを'1.3'等から'1'に直す
-    const strNo = this.currentIndex.indexOf(".");
-    if (strNo >= 0) {
-      this.currentIndex = this.currentIndex.slice(0, strNo - this.currentIndex.length);
+
+    const index = parseInt(this.currentIndex, 10);
+    const symbol: string = this.load.getLoadName(index, "symbol");
+    if(symbol === "LL"){
+      this.change_LL_Load(this.currentIndex);
+      return;
     }
+
     // データになカレントデータがなければ
     if (!(this.currentIndex in this.load.load)) {
       this.removeCase(this.currentIndex);
@@ -558,36 +632,28 @@ export class ThreeLoadService {
       return; //要素がなければ 以降の処理は行わない
     }
 
-    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex); // 簡易版
-    if (this.currentIndex in tempMemberLoad) {
-      // 要素荷重データを入手
-      const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex); //計算に使う版：直後に同じ関数を呼んでいる
-      // キーに小数点があるケース（連行荷重）を削除する
-      const keys = Object.keys(this.AllCaseLoadList);
-      for (const key of keys) {
-        if(key.includes('.')) {
-          this.removeCase(key, false);
-        }
-      }
+    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex); //計算に使う版
+    const memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex); //計算に使う版
+
+    if (this.currentIndex in memberLoadData) {
       // 要素荷重を変更
       this.changeMemberLode(row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
-      row++;
 
       // 対象行以下の行について
-      const memberLoads = tempMemberLoad[this.currentIndex];
-      let i = memberLoads.findIndex((e) => e.row === row);
+      row++;
+      const tmLoad = tempMemberLoad[this.currentIndex];
+      let i = tmLoad.findIndex((e) => e.row === row);
       while (i >= 0) {
-        const targetMemberLoad = memberLoads[i];
-        if (targetMemberLoad.L1 == null) {
+        if (tmLoad[i].L1 == null) {
           break;
         }
-        if (!targetMemberLoad.L1.includes("-")) {
+        if (!tmLoad[i].L1.includes("-")) {
           break;
         }
         // 要素荷重を変更
-        this.changeMemberLode(targetMemberLoad.row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+        this.changeMemberLode(tmLoad[i].row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
         row++;
-        i = memberLoads.findIndex((e) => e.row === row);
+        i = tmLoad.findIndex((e) => e.row === row);
       }
     }
 
@@ -657,50 +723,35 @@ export class ThreeLoadService {
 
   // 要素荷重を変更
   private changeMemberLode(row: number, memberLoadData: any): void {
+
     for (const key of Object.keys(memberLoadData)) {
 
       // "LL"（連行荷重）の時に発生する
       if (this.AllCaseLoadList[key] === undefined) {
-        this.addCase(key)
+        this.addCase(key) // 来ないと思う
       }
       const LoadList = this.AllCaseLoadList[key];
 
-      if (this.currentIndex in memberLoadData) {
-        // 対象業(row) に入力されている部材番号を調べる
-        const tempMemberLoad = memberLoadData[key];
-        // 要素荷重の最大値を調べる
-        this.setMaxMemberLoad(tempMemberLoad, key);
+      // 対象業(row) に入力されている部材番号を調べる
+      const tempMemberLoad = memberLoadData[key];
+      // 要素荷重の最大値を調べる
+      this.setMaxMemberLoad(tempMemberLoad, key);
 
-        // 対象行(row) に入力されている部材番号を調べる
-        const targetMemberLoad = tempMemberLoad.filter(
-          (load) => load.row === row
-        );
-        // 同じ行にあった荷重を一旦削除
-        this.removeMemberLoadList(LoadList, row);
+      // 対象行(row) に入力されている部材番号を調べる
+      const targetMemberLoad = tempMemberLoad.filter(
+        (load) => load.row === row
+      );
+      // 同じ行にあった荷重を一旦削除
+      this.removeMemberLoadList(LoadList, row);
 
-        this.createMemberLoad(
-          targetMemberLoad,
-          this.nodeData,
-          this.memberData,
-          LoadList.ThreeObject,
-          LoadList.memberLoadList
-        );
-      } else {
-        // ケースが存在しなかった
-        this.removeMemberLoadList(LoadList);
-        for (const key of Object.keys(LoadList.memberLoadList)) {
-          LoadList.memberLoadList[key] = {
-            gx: [],
-            gy: [],
-            gz: [],
-            x: [],
-            y: [],
-            z: [],
-            t: [],
-            r: [],
-          };
-        }
-      }
+      this.createMemberLoad(
+        targetMemberLoad,
+        this.nodeData,
+        this.memberData,
+        LoadList.ThreeObject,
+        LoadList.memberLoadList
+      );
+
     }
   }
 

@@ -64,13 +64,14 @@ export class ThreeLoadMemberPoint {
     const length = nodei.distanceTo(nodej);
     const L1 = p.L1;
     const L2 = p.L2;
+    /* 同じようなことを getPoints でもやってるのでコメントアウト
     if (pL1 < 0 || length < pL1) {
       P1 = 0;
     }
     if (pL2 < 0 || length < pL2) {
       P2 = 0;
     }
-
+    */
     // 矢印
     for (const arrow of this.getArrow(direction, length,[P1, P2], [L1, L2])) {
       child.add(arrow);
@@ -125,6 +126,7 @@ export class ThreeLoadMemberPoint {
   ): any {
 
     let len = nodei.distanceTo(nodej);
+/* この判定は、input-load.service でやるべきなので コメントアウト
     if (pL1 < 0 || len < pL1) {
       pL1 = 0;
       P1 = 0;
@@ -133,7 +135,7 @@ export class ThreeLoadMemberPoint {
       pL2 = 0;
       P2 = 0;
     }
-
+*/
     //let LL: number = len;
 
     // 絶対座標系荷重の距離変換を行う
