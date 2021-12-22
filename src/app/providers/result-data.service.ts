@@ -123,7 +123,11 @@ export class ResultDataService {
       const defines = new Array();
       for (const caseNo of this.defList[defNo]) {
         defines.push(caseNo);
-        const symbol: string = load[caseNo].symbol;
+        const strNo: string = Math.abs(caseNo).toString();
+        if(!('symbol' in load[strNo])){
+          continue;
+        }
+        const symbol: string = load[strNo].symbol;
         if(symbol.includes('LL')){
           // 連行荷重の場合
           const target_LL_Keys: string[] = load_keys.filter(e =>{

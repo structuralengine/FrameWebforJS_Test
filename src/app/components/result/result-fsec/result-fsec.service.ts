@@ -52,11 +52,19 @@ export class ResultFsecService {
     this.isCalculated = false;
   }
 
-  public getFsecColumns(typNo: number): any {
+  public getFsecColumns(typNo: number, mode: string = null): any {
 
     const key: string = typNo.toString();
-    if(key in this.columns) {
-      return this.columns[key];  
+    if(!(key in this.columns)) {
+      return new Array(); 
+    }
+    const col = this.columns[key];
+    if(mode === null){
+      return col;
+    } else{
+      if(mode in col) {
+        return col[mode]; // 連行荷重の時は combine のようになる
+      }
     }
 
     return new Array();
@@ -99,7 +107,7 @@ export class ResultFsecService {
                 performance.now() - startTime
               );
               this.columns = data.table;
-              this.set_LL_columns(Object.keys(jsonData), max_values);
+              this.set_LL_columns(fsec, Object.keys(jsonData), max_values);
             } else {
               console.log("断面力テーブルの集計に失敗しました", data.error);
             }
@@ -129,7 +137,7 @@ export class ResultFsecService {
   }
 
   // 連行荷重の断面力を集計する
-  private set_LL_columns(load_keys: string[], org_max_values: {}){
+  private set_LL_columns(fsec: any, load_keys: string[], org_max_values: {}){
 
     this.LL_flg = new Array();
 
@@ -208,7 +216,7 @@ export class ResultFsecService {
     this.worker3.postMessage({ 
       defList, 
       combList, 
-      fsec: this.fsec, 
+      fsec: fsec, 
       fsecKeys: this.comb.fsecKeys
     });
 
