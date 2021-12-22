@@ -127,6 +127,12 @@ export class ThreeLoadService {
 
     // 選択中のオブジェクト
     this.selecteddObject = null;
+
+    // アニメーションのオブジェクト
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
   }
 
   // ファイルを読み込むなど、りセットする
@@ -252,6 +258,11 @@ export class ThreeLoadService {
         const targetLoad = this.AllCaseLoadList[key];
         const ThreeObject: THREE.Object3D = targetLoad.ThreeObject;
         ThreeObject.visible = false;
+      }
+      // アニメーションのオブジェクトを解放
+      if (this.animationObject !== null) {
+        cancelAnimationFrame(this.animationObject);
+        this.animationObject = null;
       }
       this.scene.render();
       this.currentIndex = id;
@@ -394,6 +405,12 @@ export class ThreeLoadService {
     this.scene.remove(ThreeObject);
 
     delete this.AllCaseLoadList[id];
+
+    // アニメーションのオブジェクトを解放
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
 
     if(option){
       this.scene.render();
