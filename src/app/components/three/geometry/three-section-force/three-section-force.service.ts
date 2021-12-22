@@ -41,8 +41,8 @@ export class ThreeSectionForceService {
 
   private nodeData: any;
   private memberData: any;
-  private fsecData: any;
-  private max_values: any = {};
+  private fsecData = { fsec: null, comb_fsec: null, pik_fsec: null };
+  private max_values = { fsec: null, comb_fsec: null, pik_fsec: null };
 
   constructor(
     private scene: SceneService,
@@ -224,8 +224,8 @@ export class ThreeSectionForceService {
 
     this.nodeData = this.node.getNodeJson(0);
     this.memberData = this.member.getMemberJson(0);
-    this.fsecData = { fsec: fsecJson };
-    this.max_values = { fsec: max_values };
+    this.fsecData.fsec = fsecJson;
+    this.max_values.fsec = max_values;
     this.currentMode = "fsec";
     this.currentIndex = keys[0];
     this.changeMesh();
@@ -233,13 +233,13 @@ export class ThreeSectionForceService {
   }
   // combine
   public setCombResultData(fsecJson: any, max_values: any): void {
-    this.fsecData["comb_fsec"] = fsecJson;
-    this.max_values["comb_fsec"] = max_values;
+    this.fsecData.comb_fsec = fsecJson;
+    this.max_values.comb_fsec = max_values;
   }
   // pick up
   public setPickupResultData(fsecJson: any, max_values: any): void {
-    this.fsecData["pik_fsec"] = fsecJson;
-    this.max_values["pik_fsec"] = max_values;
+    this.fsecData.pik_fsec = fsecJson;
+    this.max_values.pik_fsec = max_values;
   }
 
 
@@ -294,7 +294,7 @@ export class ThreeSectionForceService {
       this.ThreeObject2.visible = false;
       return;
     }
-    
+
     const fsecList = this.fsecData[this.currentMode];
     if (!(this.currentIndex in fsecList)) {
       this.ThreeObject1.visible = false;
