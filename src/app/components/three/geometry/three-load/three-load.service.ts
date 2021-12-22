@@ -289,7 +289,7 @@ export class ThreeLoadService {
   }
 
   // 連行移動荷重のアニメーションを開始する
-  public animation(keys: string[], i: number = 0) {
+  public animation(keys: string[], i: number = 0, old_j: number = 0) {
 
     let j: number = Math.floor(i / 10); // 10フレームに１回位置を更新する
 
@@ -302,9 +302,13 @@ export class ThreeLoadService {
 
     // 次のフレームを要求
     this.animationObject = requestAnimationFrame(() => {
-      this.animation(keys, i);
+      this.animation(keys, i, j);
     });
 
+    if(j === old_j){
+      return;
+    }
+    
     this.visibleCaseChange(keys[j], true)
     // レンダリングする
     this.scene.render();

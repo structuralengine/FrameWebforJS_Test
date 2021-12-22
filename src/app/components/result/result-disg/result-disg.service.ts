@@ -153,18 +153,16 @@ export class ResultDisgService {
           return e.indexOf(caseNo + ".") === 0;
         })
         const caseList: string[] = [caseNo]; 
-        const tmp_max_values = org_max_values[caseNo];
+        let tmp_max_values = org_max_values[caseNo];
 
         for(const k of target_LL_Keys){
           // ケースを追加
           caseList.push(k);
 
           // max_valuesを更新
-          const target_max_values = org_max_values[k];
-          for(const kk of Object.keys(tmp_max_values)){
-            if(tmp_max_values[kk] < target_max_values[kk]){
-              tmp_max_values[kk] = target_max_values[kk];
-            }
+          const target_max_values = Math.abs(org_max_values[k]);
+          if(tmp_max_values < target_max_values){
+            tmp_max_values = target_max_values;
           }
         }
         defList[caseNo] = caseList;
