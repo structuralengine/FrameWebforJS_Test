@@ -316,9 +316,7 @@ export class MenuComponent implements OnInit {
       g23D.checked = (this.helper.dimension === 3);
     }
     this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.scene.createCamera();    // three.js のカメラを変更する
-    this.scene.addControls();
-    this.scene.render();
+    this.scene.changeGui(this.helper.dimension);
   }
 
   // テスト ---------------------------------------------
