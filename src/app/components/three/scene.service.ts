@@ -30,6 +30,7 @@ export class SceneService {
   private aspectRatio: number;
   private Width: number;
   private Height: number;
+  private controls: OrbitControls;
 
   // helper
   private axisHelper: THREE.AxesHelper;
@@ -64,6 +65,7 @@ export class SceneService {
                 deviceRatio: number,
                 Width: number,
                 Height: number): void {
+    this.controls = null;
     // カメラ
     this.aspectRatio = aspectRatio;
     this.Width = Width;
@@ -80,7 +82,7 @@ export class SceneService {
       0.1,
       255
     );
-    this.createCamera(aspectRatio, Width, Height);
+    this.initCamera(aspectRatio, Width, Height);
     // 環境光源
     this.add(new THREE.AmbientLight(0xf0f0f0));
     // レンダラー
@@ -104,20 +106,31 @@ export class SceneService {
       this.render();
     });
     this.gui.add( this.params, 'OrthographicCamera' ).onChange( ( value ) => {
-      // guiによる設定
-      this.params.Orthographic = value;
-      const pos = this.camera.position;
-      const rot = this.camera.rotation;
-      this.createCamera(aspectRatio, Width, Height/*, value*/);
-      this.scene.children[this.scene.children.length - 1]
-      this.camera.position.set(pos.x, pos.y, pos.z);
-      this.camera.rotation.set(rot.x, rot.y, rot.z);
-      // this.addControls(); ・・・・これが重くなる原因です！！
-      this.render();
+      this.OrthographicCamera_onChange(value);
     });
     // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
     this.gui.open();
     this.changeGui(this.helper.dimension);  //2Dモードで作成
+  }
+
+  private OrthographicCamera_onChange( value ){
+    this.params.Orthographic = value;
+    const pos = this.camera.position;
+    const rot = this.camera.rotation;
+    this.initCamera(this.aspectRatio, this.Width, this.Height);
+    // this.scene.children[this.scene.children.length - 1]
+    this.controls.object = this.camera; // OrbitControl の登録カメラを変更
+
+    this.camera.position.set(pos.x, pos.y, pos.z);
+    if(this.helper.dimension === 2){
+      this.camera.rotation.set(0, 0, 0);
+    } else {
+      this.camera.rotation.set(rot.x, rot.y, rot.z);
+    }
+    
+    this.camera.updateMatrix();
+    this.controls.update();
+    this.render();
   }
 
   // 床面を生成する
@@ -136,15 +149,15 @@ export class SceneService {
   // コントロール
   public addControls() {
     if(this.labelRenderer===null) return;
-    const controls = new OrbitControls(this.camera, this.labelRenderer.domElement);
-    controls.damping = 0.2;
-    controls.addEventListener('change', this.render);
-    controls.enableRotate = (this.helper.dimension === 3) ? true : false; // 2次元モードの場合はカメラの回転を無効にする
+    this.controls = new OrbitControls(this.camera, this.labelRenderer.domElement);
+    this.controls.damping = 0.2;
+    this.controls.addEventListener('change', this.render);
+    this.controls.enableRotate = (this.helper.dimension === 3) ? true : false; // 2次元モードの場合はカメラの回転を無効にする
     if(this.controlsGizmo !== null){
       document.body.removeChild(this.controlsGizmo);
     }
     // Add the Obit Controls Gizmo
-    const controlsGizmo = new OrbitControlsGizmo(controls, { size:  100, padding:  8 });
+    const controlsGizmo = new OrbitControlsGizmo(this.controls, { size:  100, padding:  8 });
     // Add the Gizmo domElement to the dom
     this.controlsGizmo = controlsGizmo.domElement;
     document.body.appendChild(this.controlsGizmo);
@@ -158,7 +171,7 @@ export class SceneService {
   }
 
   // カメラの初期化
-  public createCamera(
+  public initCamera(
     aspectRatio: number=null,
     Width: number=null, Height: number=null ) {
 
@@ -170,41 +183,15 @@ export class SceneService {
     if (target !== undefined) {
       this.scene.remove(this.camera);
     }
-    if(this.helper.dimension === 3){
-      if (!this.params.Orthographic) {  //Orthographic === false
-        this.camera = this.PerspectiveCamera;
-        // this.PerspectiveCameraを作成したためコメントアウト
-        // this.camera = new THREE.PerspectiveCamera(
-        //   70,
-        //   aspectRatio,
-        //   0.1,
-        //   1000
-        // );
-      } else {  //Orthographic === true
-        this.camera = this.OrthographicCamera;
-        // this.OrthographicCameraを作成したためコメントアウト
-        /* this.camera = new THREE.OrthographicCamera(
-          -Width/10, Width/10,
-          Height/10, -Height/10,
-          0.1,
-          255
-        ); */
-      }
-      this.camera.position.set(0, -50, 20);
-      this.camera.name = 'camera';
-      this.scene.add(this.camera);
-
-    } else if(this.helper.dimension === 2){
-      this.camera = new THREE.OrthographicCamera(
-        -Width/10, Width/10,
-        Height/10, -Height/10,
-        0.1,
-        21
-      );
-      this.camera.position.set(0, 0, 10);
-      this.camera.name = 'camera';
-      this.scene.add(this.camera);
+    if(!this.params.Orthographic){
+      this.camera = this.PerspectiveCamera;
+      if(this.controls !== null) this.controls.enableRotate = true;
+    } else { 
+      this.camera = this.OrthographicCamera;
+      if(this.controls !== null) this.controls.enableRotate = (this.helper.dimension === 3 );
     }
+    this.camera.name = 'camera';
+    this.scene.add(this.camera);
   }
 
   // レンダラーを初期化する
@@ -329,9 +316,11 @@ export class SceneService {
         camera = controller;
         // 2Dモードであれば、触れないようにする
         if (dimension === 2) {
-          camera.__checkbox.hidden = true;
+          camera.domElement.hidden = true;
+          this.OrthographicCamera_onChange(true);
         } else {
-          camera.__checkbox.hidden = false;
+          camera.domElement.hidden = false;
+          this.OrthographicCamera_onChange(false);
         }
         break;
       }
