@@ -196,7 +196,7 @@ export class ThreeService {
 
   //////////////////////////////////////////////////////
   // 編集ページの変更通知を処理する
-  public async ChangePage(currentPage: number, option = {}): Promise<void> {
+  public ChangePage(currentPage: number, option = {}): void {
     if (this.currentIndex === currentPage) {
       return;
     }
@@ -254,7 +254,7 @@ export class ThreeService {
       case "fsec":
       case "comb_fsec":
       case "pik_fsec":
-        await this.fsec.changeData(currentPage, this.mode);
+        this.fsec.changeData(currentPage, this.mode);
         break;
     }
     this.currentIndex = currentPage;

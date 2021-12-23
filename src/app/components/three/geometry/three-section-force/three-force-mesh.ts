@@ -194,7 +194,7 @@ export class ThreeSectionForceMeshService {
   }
 
   // 文字
-  public async setText(group: any, Enable1: boolean, Enable2: boolean): Promise<any> {
+  public setText(group: any, Enable1: boolean, Enable2: boolean): any {
 
     const child = group.getObjectByName('group');
 
@@ -253,7 +253,7 @@ export class ThreeSectionForceMeshService {
       text.rotateZ(Math.PI/2);
       text.name = key;
       child.add(text);
-      await text.sync();
+      text.sync();
     }
     return;
   }
