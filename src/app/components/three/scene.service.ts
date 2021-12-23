@@ -22,6 +22,7 @@ export class SceneService {
 
   // ギズモ
   private controlsGizmo: HTMLCanvasElement = null;
+  //private controlsGizmoParent: OrbitControlsGizmo;
 
   // カメラ
   private camera:THREE.PerspectiveCamera | THREE.OrthographicCamera;
@@ -53,7 +54,7 @@ export class SceneService {
     // gui
     this.params = {
       GridHelper: true,
-      OrthographicCamera: false,
+      Perspective: true,
       ReDraw: this.render
     };
   }
@@ -76,12 +77,14 @@ export class SceneService {
       0.1,
       1000
     );
+    this.PerspectiveCamera.position.set(0,-20,50);
     this.OrthographicCamera = new THREE.OrthographicCamera(
       -Width/10, Width/10,
       Height/10, -Height/10,
       0.1,
       255
     );
+    this.OrthographicCamera.position.set(0,0,10);
     this.initCamera(aspectRatio, Width, Height);
     // 環境光源
     this.add(new THREE.AmbientLight(0xf0f0f0));
@@ -105,28 +108,35 @@ export class SceneService {
       this.GridHelper.visible = value;
       this.render();
     });
-    this.gui.add( this.params, 'OrthographicCamera' ).onChange( ( value ) => {
-      this.OrthographicCamera_onChange(value);
+    this.gui.add( this.params, "Perspective" ).onChange( ( value ) => {
+      if (this.helper.dimension === 3) {
+        this.OrthographicCamera_onChange(value);
+      } else {
+        this.params.Perspective = false
+      }
     });
     // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
     this.gui.open();
+
     this.changeGui(this.helper.dimension);  //2Dモードで作成
   }
 
   private OrthographicCamera_onChange( value ){
-    this.params.Orthographic = value;
+    this.params.Perspective = value;
     const pos = this.camera.position;
     const rot = this.camera.rotation;
     this.initCamera(this.aspectRatio, this.Width, this.Height);
     // this.scene.children[this.scene.children.length - 1]
     this.controls.object = this.camera; // OrbitControl の登録カメラを変更
-
     this.camera.position.set(pos.x, pos.y, pos.z);
     if(this.helper.dimension === 2){
-      this.camera.rotation.set(0, 0, 0);
+      this.camera.position.set(0, 0, 10)
+      this.controls.target.set(0, 0, 0);  //this.controls.update();でターゲットにlookAtされていることが原因
     } else {
       this.camera.rotation.set(rot.x, rot.y, rot.z);
     }
+    // Gizmoを作り直す
+    this.addGizmo();
     
     this.camera.updateMatrix();
     this.controls.update();
@@ -153,14 +163,28 @@ export class SceneService {
     this.controls.damping = 0.2;
     this.controls.addEventListener('change', this.render);
     this.controls.enableRotate = (this.helper.dimension === 3) ? true : false; // 2次元モードの場合はカメラの回転を無効にする
+    
+    // Gizmoを作り直す
+    this.addGizmo();
+  }
+
+  // Gizmoは、カメラの切り替わりのたびに作りなおす
+  private addGizmo(): void {
+
+    // 一旦消して
     if(this.controlsGizmo !== null){
       document.body.removeChild(this.controlsGizmo);
     }
-    // Add the Obit Controls Gizmo
-    const controlsGizmo = new OrbitControlsGizmo(this.controls, { size:  100, padding:  8 });
-    // Add the Gizmo domElement to the dom
-    this.controlsGizmo = controlsGizmo.domElement;
-    document.body.appendChild(this.controlsGizmo);
+    if (this.helper.dimension === 3) {
+      // Add the Obit Controls Gizmo
+      const controlsGizmo = new OrbitControlsGizmo(this.controls, { size:  100, padding:  8 });
+      // Add the Gizmo domElement to the dom
+      this.controlsGizmo = controlsGizmo.domElement;
+      document.body.appendChild(this.controlsGizmo);
+    } else {
+      this.controlsGizmo = null;
+    }
+
   }
 
    // 物体とマウスの交差判定に用いるレイキャスト
@@ -183,12 +207,12 @@ export class SceneService {
     if (target !== undefined) {
       this.scene.remove(this.camera);
     }
-    if(!this.params.Orthographic){
+    if(this.params.Perspective && this.helper.dimension === 3){
       this.camera = this.PerspectiveCamera;
-      if(this.controls !== null) this.controls.enableRotate = true;
+      if(this.controls !== null) this.controls.enableRotate = true;// 回転できる
     } else { 
       this.camera = this.OrthographicCamera;
-      if(this.controls !== null) this.controls.enableRotate = (this.helper.dimension === 3 );
+      if(this.controls !== null) this.controls.enableRotate = (this.helper.dimension === 3 ); // 回転できる
     }
     this.camera.name = 'camera';
     this.scene.add(this.camera);
@@ -311,7 +335,7 @@ export class SceneService {
     // カメラのGUIを取り出し、可変かどうかを設定する。
     let camera: any = null;
     for (const controller of this.gui.__controllers) {
-      if (controller.property === "OrthographicCamera") {
+      if (controller.property === "Perspective") {
         // カメラのGUIを取り出す
         camera = controller;
         // 2Dモードであれば、触れないようにする
@@ -320,7 +344,7 @@ export class SceneService {
           this.OrthographicCamera_onChange(true);
         } else {
           camera.domElement.hidden = false;
-          this.OrthographicCamera_onChange(false);
+          this.OrthographicCamera_onChange(this.params.Perspective);
         }
         break;
       }
