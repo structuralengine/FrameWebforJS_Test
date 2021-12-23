@@ -124,6 +124,9 @@ export class ResultDataService {
       for (const caseNo of this.defList[defNo]) {
         defines.push(caseNo);
         const strNo: string = Math.abs(caseNo).toString();
+        if(!(strNo in load)){
+          continue;
+        }
         if(!('symbol' in load[strNo])){
           continue;
         }

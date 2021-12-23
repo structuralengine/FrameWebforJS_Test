@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import * as THREE from "three";
-import { Text } from 'troika-three-text'
 import { Vector2 } from 'three';
 import { ThreeLoadText } from '../three-load/three-load-text';
 import { noUndefined } from '@angular/compiler/src/util';
@@ -209,14 +208,14 @@ export class ThreeSectionForceMeshService {
     for(const key  of names){
         const text = group.getObjectByName(key);
         child.remove(text); // を消す
-        text.dispose();
+        // text.dispose();
     }
     for(let i=0; i<2; i++){
       const key = 'P' + (i+1);
       const text = group.getObjectByName(key);
       if(text !== undefined){
         child.remove(text);
-        text.dispose();
+        // text.dispose();
       }
     }
     // この時点で child に P1, P2 というオブジェクトは削除されている
@@ -243,17 +242,17 @@ export class ThreeSectionForceMeshService {
         continue;
       }
       const textString: string = value.toFixed(2);
-      // const text = this.text.create(textString, pos[i], 0.2);
-      const text = new Text();
-      text.text = textString;
-      text.fontSize = 0.2;
-      text.position.set(pos[i].x, pos[i].y, 0);
-      text.color = 0x000000;
+      const text = this.text.create(textString, pos[i], 0.1);
+      // const text = new Text();
+      // text.text = textString;
+      // text.fontSize = 0.2;
+      // text.position.set(pos[i].x, pos[i].y, 0);
+      // text.color = 0x000000;
       text.rotateX(Math.PI);
       text.rotateZ(Math.PI/2);
       text.name = key;
       child.add(text);
-      text.sync();
+      // text.sync();
     }
     return;
   }

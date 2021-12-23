@@ -68,7 +68,7 @@ export class ThreeSectionForceService {
 
     // gui
     this.scale = 100;
-    this.textCount = 50;
+    this.textCount = 5; // 上位 5% の文字だけ出力する
     this.gui = null;
   }
 
@@ -93,7 +93,7 @@ export class ThreeSectionForceService {
         let text: any = mesh.getObjectByName("text");
         while (text !== undefined) {
           mesh.remove(text);
-          text.dispose();
+          // text.dispose();
           text = mesh.getObjectByName("text");
         }
         // 文字以外の子要素を削除する
