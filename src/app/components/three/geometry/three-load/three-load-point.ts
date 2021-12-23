@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { Vector2 } from 'three';
 import { ThreeLoadText } from "./three-load-text";
 
-import { Text } from 'troika-three-text'
 import { ThreeLoadDimension } from './three-load-dimension';
 
 

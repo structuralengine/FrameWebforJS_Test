@@ -68,7 +68,7 @@ export class ThreeSectionForceService {
 
     // gui
     this.scale = 100;
-    this.textCount = 50;
+    this.textCount = 5; // 上位 5% の文字だけ出力する
     this.gui = null;
   }
 
@@ -93,7 +93,7 @@ export class ThreeSectionForceService {
         let text: any = mesh.getObjectByName("text");
         while (text !== undefined) {
           mesh.remove(text);
-          text.dispose();
+          // text.dispose();
           text = mesh.getObjectByName("text");
         }
         // 文字以外の子要素を削除する
@@ -244,7 +244,7 @@ export class ThreeSectionForceService {
     this.max_values.pik_fsec = max_values;
   }
 
-  private async changeMesh(): Promise<void>{
+  private changeMesh(): void{
 
     if(this.currentIndex === undefined){
       return;
@@ -285,7 +285,7 @@ export class ThreeSectionForceService {
       key2 = "y";
     } else {
       this.params[this.currentRadio] = true;
-      await this.changeMesh();
+      this.changeMesh();
       return;
     }
 
@@ -472,17 +472,17 @@ export class ThreeSectionForceService {
         if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
           f2 = true;
         }
-        await this.mesh.setText(mesh, f1, f2);
+        this.mesh.setText(mesh, f1, f2);
       }
     }
   }
 
   // データが変更された時に呼び出される
   // 変数 this.targetData に値をセットする
-  public async changeData(index: number, ModeName: string): Promise<void> {
+  public changeData(index: number, ModeName: string): void {
     this.currentIndex = index.toString();
     this.currentMode = ModeName;
-    await this.changeMesh();
+    this.changeMesh();
     this.onResize();
   }
 

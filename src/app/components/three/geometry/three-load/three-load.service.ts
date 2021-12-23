@@ -6,7 +6,6 @@ import { InputLoadService } from "../../../input/input-load/input-load.service";
 import { ThreeNodesService } from "../three-nodes.service";
 
 import * as THREE from "three";
-import { Text } from "troika-three-text";
 
 import { ThreeMembersService } from "../three-members.service";
 
