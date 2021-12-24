@@ -68,7 +68,7 @@ export class ThreeSectionForceService {
 
     // gui
     this.scale = 100;
-    this.textCount = 5; // 上位 5% の文字だけ出力する
+    this.textCount = 15; // 上位 15% の文字だけ出力する
     this.gui = null;
   }
 
