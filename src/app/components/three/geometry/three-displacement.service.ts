@@ -171,6 +171,7 @@ export class ThreeDisplacementService {
 
     // 格点データを入手
     if (Object.keys(this.nodeData).length <= 0) {
+      this.visibleChange(false);
       return;
     }
 
@@ -179,12 +180,14 @@ export class ThreeDisplacementService {
     // パネルデータを入手
     const panelKeys = Object.keys(this.panelData);
     if (membKeys.length <= 0 && panelKeys.length <= 0) {
+      this.visibleChange(false);
       return;
     }
     
     // 変位データを入手
     const targetKey: string = index.toString();
     if (!(targetKey in this.allDisgData)) {
+      this.visibleChange(false);
       return;
     }
 
@@ -205,6 +208,11 @@ export class ThreeDisplacementService {
       return;
     }
 
+    // アニメーションのオブジェクト
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
     // 描く
     this.changeDisg(targetKey, membKeys, minDistance, maxDistance);
 
@@ -296,18 +304,15 @@ export class ThreeDisplacementService {
   public change_LL_Load(id: string, membKeys: string[],
                         minDistance: number, maxDistance: number): void{
 
-    const memberLoadData = this.load.getMemberLoadJson(0, id); //計算に使う版
-    const LL_keys = Object.keys(memberLoadData);
-
     // 対象の連行荷重を全部削除する
-    let keys = Object.keys(this.allDisgData).filter(e =>{
+    let LL_keys = Object.keys(this.allDisgData).filter(e =>{
       return e.indexOf(id + ".") === 0;
     })
-    if(keys === undefined){
+    if(LL_keys === undefined){
       return;
     }
     
-    keys = [id].concat(keys)
+    LL_keys = [id].concat(LL_keys)
 
     // 一旦アニメーションを削除
     if (this.animationObject !== null) {

@@ -9,6 +9,12 @@ body {
 .pq-resize-iframe {
     display: none;
 }
+a[href="http://paramquery.com/pro"] {
+    display: none;
+}
+a[href="https://paramquery.com/pro"] {
+    display: none;
+}
 
 .obit-controls-gizmo {
     position: absolute;
@@ -18,9 +24,20 @@ body {
 }
 
 @media print {
+    .pq-resize-iframe {
+        display: none;
+    }
+    a[href="http://paramquery.com/pro"] {
+        display: none;
+    }
+    a[href="https://paramquery.com/pro"] {
+        display: none;
+    }
+    
     .obit-controls-gizmo {
         display: none;
     }
+    
 }
 
 @media print {
