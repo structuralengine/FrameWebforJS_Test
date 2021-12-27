@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as THREE from "three";
 import { Vector2 } from 'three';
-import { Line2 } from '../../libs/Line2.js';
-import { LineMaterial } from '../../libs/LineMaterial.js';
-import { LineGeometry } from '../../libs/LineGeometry.js';
 
 import { ThreeLoadDimension } from './three-load-dimension';
 import { ThreeLoadText } from "./three-load-text";
@@ -19,7 +16,7 @@ export class ThreeLoadTemperature {
   private colors: number[];
   private arrow_mat: THREE.MeshBasicMaterial;
 
-  private matLine: LineMaterial;
+  private matLine: THREE.LineBasicMaterial;
 
   private text: ThreeLoadText;
   private dim: ThreeLoadDimension;
@@ -29,19 +26,12 @@ export class ThreeLoadTemperature {
     this.text = text;
     this.dim = new ThreeLoadDimension(text);
 
-    // 線の色を決める
-    const line_color = 0xff0000;
-    const three_color = new THREE.Color(line_color);
-
-    this.colors = [1, 1, 1, 1, 1, 1]
-
     this.arrow_mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 
-    this.matLine = new LineMaterial({
+    this.matLine = new THREE.LineBasicMaterial({
       color: 0xff0000,
       linewidth: 0.001, // in pixels
       vertexColors: true,
-      dashed: false
     });
   }
   public create(
@@ -60,14 +50,12 @@ export class ThreeLoadTemperature {
 
     // 線を描く
     const points = [];
-    points.push(0, 0, 0);
-    points.push(L, 0, 0);
+    points.push(new THREE.Vector3(0, 0, 0));
+    points.push(new THREE.Vector3(L, 0, 0));
 
-    const geometry = new LineGeometry();
-    geometry.setPositions(points);
-    geometry.setColors(this.colors);
+    const geometry = new THREE.BufferGeometry().setFromPoints( points );
 
-    const line2 = new Line2(geometry, this.matLine);
+    const line2 = new THREE.Line(geometry, this.matLine);
     line2.computeLineDistances();
     line2.name = 'line2';
 
@@ -132,11 +120,10 @@ export class ThreeLoadTemperature {
   public setColor(group: any, status: string): void {
 
     //置き換えるマテリアルを生成 -> colorを設定し，対象オブジェクトのcolorを変える
-    const matLine_Pick = new LineMaterial({
+    const matLine_Pick = new THREE.LineBasicMaterial({
       color: 0x00ffff,
       linewidth: 0.001, 
       vertexColors: true,
-      dashed: false
     })
     const arrow_mat_Pick = new THREE.MeshBasicMaterial({ color: 0x00ffff });
 

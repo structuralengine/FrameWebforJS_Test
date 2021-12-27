@@ -1,52 +1,65 @@
-<div *ngIf="isEnable"  class="invoicetTable fixMember">
-  <div *ngIf="judge" class="pagerBreak"></div>
-    <h2>バネデータ</h2>
-    <div *ngFor="let title of fixMember_typeNum; index as i">
-        <div *ngIf="fixMember_break[i]" class="pagerBreak space"></div>
-        <h3>タイプ{{title}}</h3>
-        <div *ngFor="let dataset of fixMember_table[i] index as j">
-            <div *ngIf="j > 0" class="pagerBreak space"></div>
-            <table class="print-lg">
+<div *ngIf="isEnable" class="invoicetTable fixMember">
+    <div class="print-lg">
+        <div *ngFor="let title of fixMember_typeNum; index as i">
+            <table>
                 <div *ngIf="dimension===3">
-                    <tr>
-                        <th class="id">部材No</th>
-                        <th class="TX">TX</th>
-                        <th class="TY">TY</th>
-                        <th class="TZ">TZ</th>
-                        <th class="TR">TR</th>
-                    </tr>
-                    <tr>
-                        <th class="id"></th>
-                        <th class="TX">(kN/㎡)</th>
-                        <th class="TY">(kN/㎡)</th>
-                        <th class="TZ">(kN/㎡)</th>
-                        <th class="TR">(kN/rad)</th>
-                    </tr>
-                    <tr *ngFor="let data of dataset">
-                        <td class="id">{{data[0]}}</td>
-                        <td class="TX">{{data[1]}}</td>
-                        <td class="TY">{{data[2]}}</td>
-                        <td class="TZ">{{data[3]}}</td>
-                        <td class="TR">{{data[4]}}</td>
-                    </tr>
+                    <thead>
+                        <div *ngIf="i==0">
+                            <h2>バネデータ</h2>
+                        </div>
+                        <tr>
+                            <th colspan="7" style="text-align: left">タイプ{{title}}</th>
+                        </tr>
+                        <tr>
+                            <th class="id">部材No</th>
+                            <th class="TX">TX</th>
+                            <th class="TY">TY</th>
+                            <th class="TZ">TZ</th>
+                            <th class="TR">TR</th>
+                        </tr>
+                        <tr>
+                            <th class="id"></th>
+                            <th class="TX">(kN/㎡)</th>
+                            <th class="TY">(kN/㎡)</th>
+                            <th class="TZ">(kN/㎡)</th>
+                            <th class="TR">(kN/rad)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of fixMember_table[i]">
+                            <td class="id">{{dataset[0]}}</td>
+                            <td class="TX">{{dataset[1]}}</td>
+                            <td class="TY">{{dataset[2]}}</td>
+                            <td class="TZ">{{dataset[3]}}</td>
+                            <td class="TR">{{dataset[4]}}</td>
+                        </tr>
+                    </tbody>
                 </div>
                 <div *ngIf="dimension===2">
-                    <tr>
-                        <th class="id">部材No</th>
-                        <th class="TX">TX</th>
-                        <th class="TY">TY</th>
-                    </tr>
-                    <tr>
-                        <th class="id"></th>
-                        <th class="TX">(kN/㎡)</th>
-                        <th class="TY">(kN/㎡)</th>
-                    </tr>
-                    <tr *ngFor="let data of dataset">
-                        <td class="id">{{data[0]}}</td>
-                        <td class="TX">{{data[1]}}</td>
-                        <td class="TY">{{data[2]}}</td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th colspan="3" style="text-align: left">タイプ{{title}}</th>
+                        </tr>
+                        <tr>
+                            <th class="id">部材No</th>
+                            <th class="TX">TX</th>
+                            <th class="TY">TY</th>
+                        </tr>
+                        <tr>
+                            <th class="id"></th>
+                            <th class="TX">(kN/㎡)</th>
+                            <th class="TY">(kN/㎡)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dataset of fixMember_table[i]">
+                            <td class="id">{{dataset[0]}}</td>
+                            <td class="TX">{{dataset[1]}}</td>
+                            <td class="TY">{{dataset[2]}}</td>
+                        </tr>
+                    </tbody>
                 </div>
             </table>
         </div>
     </div>
+</div>

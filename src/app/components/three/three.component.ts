@@ -79,6 +79,7 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
   // マウス移動時のイベント
   @HostListener('mousemove', ['$event'])
   public onMouseMove(event: MouseEvent) {
+    return; // クリックイベントが発生しないバグが解決するまで全てのマウスイベントを無効にする
     const mouse: THREE.Vector2 = this.getMousePosition(event);
     this.three.detectObject(mouse, 'hover');
   }

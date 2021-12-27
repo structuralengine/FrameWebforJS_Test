@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { InputLoadService } from "../../input/input-load/input-load.service";
 import { ThreeDisplacementService } from "../../three/geometry/three-displacement.service";
 import { ResultCombineDisgService } from "../result-combine-disg/result-combine-disg.service";
 
@@ -6,19 +7,40 @@ import { ResultCombineDisgService } from "../result-combine-disg/result-combine-
   providedIn: "root",
 })
 export class ResultDisgService {
-
   public isCalculated: boolean;
   public disg: any;
   private worker1: Worker;
   private worker2: Worker;
+  private worker3: Worker;
+  private worker4: Worker;
   private columns: any; // 表示用
 
-  constructor(private comb: ResultCombineDisgService,
-              private three: ThreeDisplacementService
-              ){
+  public LL_flg = [];
+
+  constructor(
+    private comb: ResultCombineDisgService,
+    private load: InputLoadService,
+    private three: ThreeDisplacementService
+  ) {
     this.clear();
-    this.worker1 = new Worker(new URL('./result-disg1.worker', import.meta.url), { name: 'result-disg1', type: 'module' });
-    this.worker2 = new Worker(new URL('./result-disg2.worker', import.meta.url), { name: 'result-disg2', type: 'module' });
+    this.worker1 = new Worker(
+      new URL("./result-disg1.worker", import.meta.url),
+      { name: "result-disg1", type: "module" }
+    );
+    this.worker2 = new Worker(
+      new URL("./result-disg2.worker", import.meta.url),
+      { name: "result-disg2", type: "module" }
+    );
+    // 連行荷重の集計
+    this.worker3 = new Worker(
+      new URL("../result-combine-disg/result-combine-disg1.worker", import.meta.url),
+      { name: "LL-disg1", type: "module" }
+    );
+    this.worker4 = new Worker(
+      new URL("../result-combine-disg/result-combine-disg2.worker", import.meta.url),
+      { name: "LL-disg2", type: "module" }
+    );
+    this.LL_flg = new Array();
   }
 
   public clear(): void {
@@ -26,50 +48,163 @@ export class ResultDisgService {
     this.isCalculated = false;
   }
 
-  public getDisgColumns(typNo: number): any {
+  public getDisgColumns(typNo: number, mode: string = null): any {
+
     const key: string = typNo.toString();
-    return (key in this.columns) ? this.columns[key] : new Array();
+    if(!(key in this.columns)) {
+      return new Array(); 
+    }
+    const col = this.columns[key];
+    if(mode === null){
+      return col;
+    } else{
+      if(mode in col) {
+        return col[mode]; // 連行荷重の時は combine のようになる
+      }
+    }
+
+    return new Array();
   }
 
-  public setDisgJson(jsonData: {}, defList: any, combList: any, pickList: any): void {
+  // three-section-force.service から呼ばれる
+  public getDisgJson(): object {
+    return this.disg;
+  }
 
+  public setDisgJson(
+    jsonData: {},
+    defList: any,
+    combList: any,
+    pickList: any
+  ): void {
     const startTime = performance.now(); // 開始時間
-    if (typeof Worker !== 'undefined') {
+
+    if (typeof Worker !== "undefined") {
       // Create a new
 
       this.worker1.onmessage = ({ data }) => {
         if (data.error === null) {
-          console.log('変位量の集計が終わりました', performance.now() - startTime);
-          this.disg = data.disg;
-
-          // 組み合わせの集計処理を実行する
-          this.comb.setDisgCombineJson(this.disg, defList, combList, pickList);
+          console.log(
+            "変位量の集計が終わりました",
+            performance.now() - startTime
+          );
+          const disg = data.disg;
+          const max_values = data.max_value;
           
+          // 組み合わせの集計処理を実行する
+          this.comb.setDisgCombineJson(disg, defList, combList, pickList);
+
           // 変位量テーブルの集計
           this.worker2.onmessage = ({ data }) => {
             if (data.error === null) {
-              console.log('変位量テーブルの集計が終わりました', performance.now() - startTime);
+              console.log(
+                "変位量テーブルの集計が終わりました",
+                performance.now() - startTime
+              );
               this.columns = data.table;
-              this.isCalculated = true;
+              this.set_LL_columns(disg, Object.keys(jsonData), max_values);
             } else {
-              console.log('変位量テーブルの集計に失敗しました', data.error);
+              console.log("変位量テーブルの集計に失敗しました", data.error);
             }
           };
+          // 連行荷重の子データは除外する
+          const keys = Object.keys(disg).filter(e => !e.includes('.'));
+          for(const k of keys){
+            this.disg[k] = disg[k];
+          }
           this.worker2.postMessage({ disg: this.disg });
-          this.three.setResultData(this.disg);
-
         } else {
-          console.log('変位量の集計に失敗しました', data.error);
+          console.log("変位量の集計に失敗しました", data.error);
         }
       };
       this.worker1.postMessage({ jsonData });
-
     } else {
-      console.log('変位量の生成に失敗しました');
+      console.log("変位量の生成に失敗しました");
       // Web workers are not supported in this environment.
       // You should add a fallback so that your program still executes correctly.
     }
-
   }
+
+  // 連行荷重の断面力を集計する
+  private set_LL_columns(disg: any, load_keys: string[], org_max_values: {}){
+
+    this.LL_flg = new Array();
+
+    const load_name = this.load.getLoadNameJson(0);
+    const defList: any = {};
+    const combList: any = {};
+    const max_values: any = {};
+
+    let flg = false;
+
+    for (const caseNo of Object.keys(load_name)) {
+      const caseLoad: any = load_name[caseNo];
+      if(caseLoad.symbol !== "LL"){
+        this.LL_flg.push(false);
+        max_values[caseNo] = org_max_values[caseNo];
+
+      } else {
+
+        // 連行荷重の場合 
+        flg = true;
+        this.LL_flg.push(true);
+
+        const target_LL_Keys: string[] = load_keys.filter(e =>{
+          return e.indexOf(caseNo + ".") === 0;
+        })
+        const caseList: string[] = [caseNo]; 
+        let tmp_max_values = org_max_values[caseNo];
+
+        for(const k of target_LL_Keys){
+          // ケースを追加
+          caseList.push(k);
+
+          // max_valuesを更新
+          const target_max_values = Math.abs(org_max_values[k]);
+          if(tmp_max_values < target_max_values){
+            tmp_max_values = target_max_values;
+          }
+        }
+        defList[caseNo] = caseList;
+        combList[caseNo] = [{ caseNo, coef: 1 }];
+        max_values[caseNo] = tmp_max_values;
+      }
+
+    }
+
+    // 集計が終わったら three.js に通知
+    this.three.setResultData(disg, max_values);
+
+    if(flg === false){
+      this.isCalculated = true;
+      return; // 連行荷重がなければ ここまで
+    }
+
+    // combine のモジュールを利用して 連行荷重の組合せケースを集計する
+    this.worker3.onmessage = ({ data }) => {
+      console.log(data);
+      const disgCombine = data.disgCombine;
+
+      this.worker4.onmessage = ({ data }) => {
+        const LL_columns = data.result;
+
+        for(const k of Object.keys(LL_columns)){
+          this.columns[k] = LL_columns[k];
+          this.disg[k] = disgCombine[k];
+        }
+        this.isCalculated = true;
+      };
+      this.worker4.postMessage({disgCombine});
+    }
+
+    this.worker3.postMessage({ 
+      defList, 
+      combList, 
+      disg: disg, 
+      disgKeys: this.comb.disgKeys
+    });
+  }
+
+
 
 }

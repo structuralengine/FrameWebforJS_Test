@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import * as THREE from "three";
-import { Text } from 'troika-three-text'
 import { Vector2 } from 'three';
 import { ThreeLoadText } from '../three-load/three-load-text';
 import { noUndefined } from '@angular/compiler/src/util';
@@ -137,11 +136,17 @@ export class ThreeSectionForceMeshService {
 
     return {
       points:[
-        new THREE.Vector3(x1, 0, 0),
-        new THREE.Vector3(x1, y1, 0),
-        new THREE.Vector3(x2, y2, 0),
-        new THREE.Vector3(x3, y3, 0),
-        new THREE.Vector3(x3, 0, 0),
+        new THREE.Vector3(x1, 0, 0),  // 0
+        new THREE.Vector3(x1, y1, 0), // 1
+        new THREE.Vector3(x2, y2, 0), // 2
+
+        new THREE.Vector3(x2, y2, 0), // 2
+        new THREE.Vector3(x3, y3, 0), // 3
+        new THREE.Vector3(x3, 0, 0),  // 4
+
+        new THREE.Vector3(x1, 0, 0),  // 0
+        new THREE.Vector3(x2, y2, 0), // 2
+        new THREE.Vector3(x3, 0, 0),  // 4
       ],
       L1,
       L,
@@ -153,12 +158,14 @@ export class ThreeSectionForceMeshService {
   // 面
   private getFace(points: THREE.Vector3[]): THREE.Mesh {
 
-    const face_geo = new THREE.Geometry();
-    face_geo.vertices = points;
+    const face_geo = new THREE.BufferGeometry().setFromPoints( points )
 
-    face_geo.faces.push(new THREE.Face3(0, 1, 2));
-    face_geo.faces.push(new THREE.Face3(2, 3, 4));
-    face_geo.faces.push(new THREE.Face3(0, 2, 4));
+    // const face_geo = new THREE.Geometry();
+    // face_geo.vertices = points;
+    
+    // face_geo.faces.push(new THREE.Face3(0, 1, 2));
+    // face_geo.faces.push(new THREE.Face3(2, 3, 4));
+    // face_geo.faces.push(new THREE.Face3(0, 2, 4));
 
     const mesh = new THREE.Mesh(face_geo, this.face_mat);
     mesh.name = "face";
@@ -169,7 +176,16 @@ export class ThreeSectionForceMeshService {
   // 枠線
   private getLine(points: THREE.Vector3[]): THREE.Line {
 
-    const line_geo = new THREE.BufferGeometry().setFromPoints(points);
+    const line_point = [
+      points[0],
+      points[1],
+      points[2],
+      points[3],
+      points[4],
+      points[5]
+    ]
+
+    const line_geo = new THREE.BufferGeometry().setFromPoints(line_point);
     const line = new THREE.Line(line_geo, this.line_mat);
     line.name = "line";
 
@@ -177,7 +193,7 @@ export class ThreeSectionForceMeshService {
   }
 
   // 文字
-  public async setText(group: any, Enable1: boolean, Enable2: boolean) {
+  public setText(group: any, Enable1: boolean, Enable2: boolean): any {
 
     const child = group.getObjectByName('group');
 
@@ -192,14 +208,14 @@ export class ThreeSectionForceMeshService {
     for(const key  of names){
         const text = group.getObjectByName(key);
         child.remove(text); // を消す
-        text.dispose();
+        // text.dispose();
     }
     for(let i=0; i<2; i++){
       const key = 'P' + (i+1);
       const text = group.getObjectByName(key);
       if(text !== undefined){
         child.remove(text);
-        text.dispose();
+        // text.dispose();
       }
     }
     // この時点で child に P1, P2 というオブジェクトは削除されている
@@ -221,20 +237,24 @@ export class ThreeSectionForceMeshService {
     }
     for(let i=0; i<pos.length; i++){
       const key = keys[i];
-      const textString: string = group[key].toFixed(2);
-      // const text = this.text.create(textString, pos[i], 0.2);
-      const text = new Text();
-      text.text = textString;
-      text.fontSize = 0.2;
-      text.position.set(pos[i].x, pos[i].y, 0);
-      text.color = 0x000000;
+      const value = Math.round(group[key]*100) / 100;
+      if(value === 0){
+        continue;
+      }
+      const textString: string = value.toFixed(2);
+      const text = this.text.create(textString, pos[i], 0.1);
+      // const text = new Text();
+      // text.text = textString;
+      // text.fontSize = 0.2;
+      // text.position.set(pos[i].x, pos[i].y, 0);
+      // text.color = 0x000000;
       text.rotateX(Math.PI);
       text.rotateZ(Math.PI/2);
       text.name = key;
-      await text.sync();
       child.add(text);
+      // text.sync();
     }
-
+    return;
   }
 
 
@@ -313,13 +333,11 @@ export class ThreeSectionForceMeshService {
 
     // 面
     const mesh = child.getObjectByName("face");
-    const geo: THREE.Geometry = mesh["geometry"];
-    for(let i= 0; i < geo.vertices.length; i++){
-      geo.vertices[i].x = points[i].x;
-      geo.vertices[i].y = points[i].y;
-      geo.vertices[i].z = points[i].z;
+    const geo: THREE.BufferGeometry = mesh["geometry"];
+    for(let i= 0; i < geo.attributes.position.count; i++){
+      geo.attributes.position.setXYZ(i, points[i].x, points[i].y, points[i].z);
     }
-    geo.verticesNeedUpdate = true;
+    geo.attributes.position.needsUpdate = true;
 
      // 線
     const line: any = child.getObjectByName("line");

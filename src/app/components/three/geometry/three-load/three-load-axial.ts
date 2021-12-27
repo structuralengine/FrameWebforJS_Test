@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as THREE from "three";
 import { Points, Vector2, Vector3 } from 'three';
-import { Line2 } from '../../libs/Line2.js';
-import { LineMaterial } from '../../libs/LineMaterial';
-import { LineGeometry } from '../../libs/LineGeometry';
 import { ThreeLoadText } from './three-load-text';
 import { ThreeLoadDimension } from './three-load-dimension';
 
@@ -16,8 +13,8 @@ export class ThreeLoadAxial {
   public id = ThreeLoadAxial.id;
 
   
-  private matLine: LineMaterial;
-  private matLine_Pick: LineMaterial;
+  private matLine: THREE.LineBasicMaterial;
+  private matLine_Pick: THREE.LineBasicMaterial;
   private arrow_mat: THREE.MeshBasicMaterial;
   private arrow_mat_Pick: THREE.MeshBasicMaterial;
 
@@ -29,18 +26,15 @@ export class ThreeLoadAxial {
     this.text = text;
     this.dim = new ThreeLoadDimension(text);
     
-    this.matLine = new LineMaterial({
-      //color: 0xffffff,  //65行目付近のcolor.pushと同時に削除
+    this.matLine = new THREE.LineBasicMaterial({
       color: 0xff0000,
       linewidth: 0.001, // in pixels
       vertexColors: true,
-      dashed: false
     });
-    this.matLine_Pick  = new LineMaterial({
+    this.matLine_Pick  = new THREE.LineBasicMaterial({
       color: 0x00ffff,
       linewidth: 0.001, // in pixels
       vertexColors: true,
-      dashed: false
     });
 
     this.arrow_mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -60,16 +54,12 @@ export class ThreeLoadAxial {
     const value = P1;
 
     // 線を描く
-    const points = [];
-    points.push(0, 0, 0);
-    points.push(L, 0, 0);
-    const colors = [1, 1, 1, 1, 1, 1];
+    const points: THREE.Vector3[] = [];
+    points.push(new THREE.Vector3(0, 0, 0));
+    points.push(new THREE.Vector3(L, 0, 0));
 
-    const geometry = new LineGeometry();
-    geometry.setPositions(points);
-    geometry.setColors(colors);
-
-    const line2 = new Line2(geometry, this.matLine);
+    const geometry = new THREE.BufferGeometry().setFromPoints( points );
+    const line2 = new THREE.Line(geometry, this.matLine);
     line2.computeLineDistances();
     line2.position.x = L1;
     line2.name = 'line2';
@@ -77,14 +67,15 @@ export class ThreeLoadAxial {
     child.add(line2);
 
     // 矢印を描く
-    const arrow_geo = new THREE.ConeBufferGeometry(0.05, 0.25, 3, 1, false);
+    const arrow_height = 0.25
+    const arrow_geo = new THREE.ConeBufferGeometry(0.05, arrow_height, 3, 1, false);
     const arrow = new THREE.Mesh(arrow_geo, this.arrow_mat);
     if (value > 0) {
       arrow.rotation.z = -Math.PI / 2;
-      arrow.position.x = L1 + L;
+      arrow.position.x = L1 + L - arrow_height / 2;
     } else {
       arrow.rotation.z = Math.PI / 2;
-      arrow.position.x = L1;
+      arrow.position.x = L1 + arrow_height / 2;
     }
     arrow.name = "arrow";
 
@@ -130,9 +121,6 @@ export class ThreeLoadAxial {
     const XZ = new Vector2(lenXY, localAxis.x.z).normalize();
     group.rotateY(-Math.asin(XZ.y));
     group.rotateX(Math.PI);
-    if (value < 0) {
-      group.rotation.y += Math.PI
-    }
     group.name = ThreeLoadAxial.id + "-" + row.toString() + "-x";
     return group;
   }
@@ -156,7 +144,7 @@ export class ThreeLoadAxial {
     const group0 = group.getObjectByName('group');
 
     function change(
-      matLine: LineMaterial, 
+      matLine: THREE.LineBasicMaterial, 
       matArrow: THREE.MeshBasicMaterial, 
       textVisible: boolean) {
 
@@ -243,10 +231,10 @@ export class ThreeLoadAxial {
     const L1: number = group.L1;
     const L: number = group.L;
     const L2: number = group.L2
-    const points = [new Vector3(point[0] + L1, point[1], 0),
-                    new Vector3(point[0] + L1, child.position.y, 0),
-                    new Vector3(point[3] + L1, child.position.y, 0),
-                    new Vector3(point[3] + L1, point[4], 0)];
+    const points = [new Vector3(point[0].x + L1, point[0].y, 0),
+                    new Vector3(point[0].x + L1, child.position.y, 0),
+                    new Vector3(point[1].x + L1, child.position.y, 0),
+                    new Vector3(point[1].x + L1, point[1].y, 0)];
 
     // 一旦削除
     for(let i=0; i<2; i++){

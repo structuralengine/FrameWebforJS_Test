@@ -12,7 +12,12 @@ addEventListener("message", ({ data }) => {
     const temp = {};
     //
     for(const caseInfo of defList[defNo]) {
-      const baseNo: string = Math.abs(caseInfo).toString();
+      let baseNo: string = '';
+      if(typeof caseInfo === "number"){
+        baseNo = Math.abs(caseInfo).toString();
+      } else {
+        baseNo = caseInfo;
+      }
       const coef: number = Math.sign(caseInfo);
 
       if (!(baseNo in disg)) {

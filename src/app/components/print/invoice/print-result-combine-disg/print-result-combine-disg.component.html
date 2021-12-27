@@ -1,23 +1,25 @@
-<div class="invoicetTable combDisg">
-  <div *ngIf="judge" class="pagerBreak"></div>
-    <h2>COMBINE　変位量</h2>
-    <!--combDisg_titleからtitleごとにデータを取り出す-->
-    <div *ngFor="let title of combDisg_title; index as i">
-        <div *ngIf="combDisg_case_break[i]" class="pagerBreak"></div>
-        <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
-        <!--combDisg_datasetからdxmaxなどを取り出す-->
-        <div *ngFor="let dataset of combDisg_dataset[i]; index as j">
-            <div *ngIf="combDisg_type_break[j]" class="pagerBreak space"></div>
-            <h3>{{ title }}</h3>
-            <h3>{{ dataset[0] }}</h3>
-            <!--dxmaxなどからcase[0]が名称のため飛ばす-->
-            <div *ngFor="let case of dataset; index as k">
-                <div *ngIf="k > 0">
-                    <div *ngFor="let branch of case; index as l">
-                        <div *ngFor="let datas of branch; index as m">
-                            <div *ngIf="m > 0" class="pagerBreak space"></div>
-                            <table class="print-md">
-                                <div *ngIf="dimension===3">
+<div *ngIf="isEnable" class="invoicetTable combDisg">
+    <div class="print-sm">
+        <!--combDisg_titleからtitleごとにデータを取り出す-->
+        <div *ngFor="let title of combDisg_title; index as i">
+            <div *ngFor="let dataset of combDisg_dataset[i]; index as j">
+                <table>
+                    <!--dxmaxなどからcase[0]が名称のため飛ばす-->
+                    <div *ngFor="let datas of dataset; index as k">
+                        <div *ngIf="k > 0">
+                            <div *ngIf="dimension === 3">
+                                <thead>
+                                    <tr>
+                                        <th colspan="8" class="title">COMBINE　変位量</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="8" style="text-align: left">{{ title }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="8" style="text-align: left">
+                                            {{ dataset[0] }}
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <th>節点</th>
                                         <th>X-Disp</th>
@@ -38,6 +40,8 @@
                                         <th>(mmrad)</th>
                                         <th></th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     <tr *ngFor="let data of datas">
                                         <td>{{ data[0] }}</td>
                                         <td>{{ data[1] }}</td>
@@ -46,10 +50,21 @@
                                         <td>{{ data[4] }}</td>
                                         <td>{{ data[5] }}</td>
                                         <td>{{ data[6] }}</td>
-                                        <td>{{ data[7] }}</td>
+                                        <td class="comb">{{ data[7] }}</td>
                                     </tr>
-                                </div>
-                                <div *ngIf="dimension===2">
+                                </tbody>
+                            </div>
+                            <div *ngIf="dimension === 2">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" class="title">COMBINE　変位量</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="5" style="text-align: left">{{ title }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="5" style="text-align: left">{{ dataset[0] }}</th>
+                                    </tr>
                                     <tr>
                                         <th>節点</th>
                                         <th>X-Disp</th>
@@ -64,18 +79,29 @@
                                         <th>(mmrad)</th>
                                         <th></th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     <tr *ngFor="let data of datas">
                                         <td>{{ data[0] }}</td>
                                         <td>{{ data[1] }}</td>
                                         <td>{{ data[2] }}</td>
                                         <td>{{ data[6] }}</td>
-                                        <td>{{ data[7] }}</td>
+                                        <td class="comb">{{ data[7] }}</td>
                                     </tr>
-                                </div>                                
-                            </table>
+                                </tbody>
+                            </div>
+                            <!-- <div *ngIf="
+              j + 1 == combDisg_dataset[0].length &&
+              i + 1 == combDisg_dataset.length;
+              then pagerBl;
+              else pagerBr
+              "></div>
+                            <ng-template #pagerBr>
+                                <div *ngIf="(j + 1) % break_after == 0" class="pagerBreak"></div>
+                            </ng-template> -->
                         </div>
                     </div>
-                </div>
+                </table>
             </div>
         </div>
     </div>

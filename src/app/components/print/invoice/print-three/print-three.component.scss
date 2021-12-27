@@ -2,7 +2,7 @@ $height_header: 32px;
 $height_semiHeader: 32px;
 h2 {
     // height: $height_header;
-    padding:80px 0 32px 0;
+    // padding:80px 0 32px 0;
     line-height: 32px;
     font-size: 16px;
     font-weight: 400;
@@ -11,13 +11,25 @@ h2 {
 
 h3 {
     // height: $height_semiHeader;
-    line-height: 32px;
+    padding: 8px 0;
+    // line-height: 32px;
     font-size: 16px;
     font-family: "ＭＳ 明朝";
 }
 
-.pagerBreak{
+h4 {
+    // height: $height_semiHeader;
+    padding-bottom: 8px;
+    // line-height: 32px;
+    font-size: 16px;
+    font-family: "MS UI Gothic";
+}
+
+.pagerBreak {
     size: A4;
-    margin-top: 64px;
     page-break-before: always;
+}
+
+.fit-picture {
+    margin-bottom: 16px;
 }

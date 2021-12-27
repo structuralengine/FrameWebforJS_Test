@@ -76,6 +76,9 @@ export class ThreeLoadMoment {
         arrow_mat = this.arrow_mat_Blue;
         line_mat = this.line_mat_Blue;
       }
+    } else {
+      arrow_mat = new THREE.MeshBasicMaterial({ color });
+      line_mat = new THREE.LineBasicMaterial({ color });
     }
 
     const child = new THREE.Group();
@@ -137,12 +140,12 @@ export class ThreeLoadMoment {
     }
 
     //中心点を作成
-    const point_geo = new THREE.Geometry();
-    point_geo.vertices.push(new THREE.Vector3(0, 0, 0));
-    const point_mesh = new THREE.Points(point_geo, this.point_mat);
-    point_mesh.name = 'points_center';
-    point_mesh.visible = false;
-    group0.add(point_mesh);
+    // const point_geo = new THREE.Geometry();
+    // point_geo.vertices.push(new THREE.Vector3(0, 0, 0));
+    // const point_mesh = new THREE.Points(point_geo, this.point_mat);
+    // point_mesh.name = 'points_center';
+    // point_mesh.visible = false;
+    // group0.add(point_mesh);
 
     group0.add(child);
     group0.name = "group";
@@ -186,7 +189,7 @@ export class ThreeLoadMoment {
     const arrow_mat_Pick = new THREE.MeshBasicMaterial({ color: 0xafeeee });
     const line_mat_Pick = new THREE.LineBasicMaterial({ color: 0xafeeee });
 
-    for (let target of group.children[0].children[1].children) {
+    for (let target of group.children[0].children[0].children) {
       if (status === "clear") {
         if (target.name === 'arrow' && group.name.slice(-1) === 'x') {
           target.material = this.arrow_mat_Red; //デフォルトのカラー
@@ -242,16 +245,20 @@ export class ThreeLoadMoment {
     const textString: string = group[key].toFixed(2) + " kN m";
 
     //const text = this.text.create(textString, new Vector2(1, 0), 0.1);
+    const child1 = group.getObjectByName("child")
+    const group_scale = child1.scale.x; //or y or z;
+    const sin30 = Math.sin(Math.PI / 6);
+    const cos30 = Math.cos(Math.PI / 6)
     let text: THREE.Mesh;
     if (direction === 'rz'){
       text = this.text.create(
-        textString, new Vector2(Math.cos(Math.PI / 6) * (-1), Math.sin(Math.PI / 6)), 0.1);
+        textString, new Vector2(-group_scale * cos30, group_scale * sin30), 0.1);
     } else if (group.value > 0) {
       text = this.text.create(
-        textString, new Vector2(Math.cos(Math.PI / 6), Math.sin(Math.PI / 6)), 0.1);
+        textString, new Vector2( group_scale * cos30, group_scale * sin30), 0.1);
     } else {
       text = this.text.create(
-        textString, new Vector2(Math.cos(Math.PI / 6) * (-1), Math.sin(Math.PI / 6)), 0.1);
+        textString, new Vector2(-group_scale * cos30, group_scale * sin30), 0.1);
     }
     text.name = key;
 

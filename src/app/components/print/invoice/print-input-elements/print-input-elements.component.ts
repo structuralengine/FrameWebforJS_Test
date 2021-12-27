@@ -19,16 +19,15 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
   isEnable = true;
   page: number;
   load_name: string;
-  countCell: number  = 0;
-  countHead: number  = 0;
+  countCell: number = 0;
+  countHead: number = 0;
   countTotal: number = 0;
   btnPickup: string;
   tableHeight: number;
   invoiceIds: string[];
   invoiceDetails: Promise<any>[];
-  reROW : number = 0;
-  remainCount : number = 0;
-  bottomCell: number = 50;
+  reROW: number = 0;
+  remainCount: number = 0;
 
   public elements_table = [];
   public elements_break = [];
@@ -37,7 +36,11 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
   public judge: boolean;
   public dimension: number;
 
-  constructor(private printService: PrintService,
+  private splen = 5;
+  public break_after: number;
+
+  constructor(
+    private printService: PrintService,
     private countArea: DataCountService,
     private helper: DataHelperModule
   ) {
@@ -66,7 +69,7 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {}
 
   // 材料データ element を印刷する
   private printElement(inputJson): any {
@@ -86,84 +89,31 @@ export class PrintInputElementsComponent implements OnInit, AfterViewInit {
       let body: any[] = new Array();
       for (const key of Object.keys(elist)) {
         const item = elist[key];
+        let line1: any[] = new Array();
+        let line2: any[] = new Array();
 
-        const line = ["", "", "", "", "", "", "", ""];
-        line[0] = key;
-        line[1] = item.A.toFixed(4);
-        line[2] = item.E.toExponential(2);
-        line[3] = item.G.toExponential(2);
-        line[4] = item.Xp.toExponential(2);
-        line[5] = item.Iy.toFixed(6);
-        line[6] = item.Iz.toFixed(6);
-        line[7] = item.J.toFixed(4);
-        line[8] = item.n;
-        body.push(line);
+        // const line = ["", "", "", "", "", "", "", ""];
+        line1[0] = key;
+        line1[1] = item.n;
+        line2[0] = "";
+        line2[1] = item.A.toFixed(4);
+        line2[2] = item.E.toExponential(2);
+        line2[3] = item.G.toExponential(2);
+        line2[4] = item.Xp.toExponential(2);
+        line2[5] = item.Iy.toFixed(6);
+        line2[6] = item.Iz.toFixed(6);
+        line2[7] = item.J.toFixed(6);
+        body.push(line1, line2);
         row++;
-
-        //１テーブルで this.bottomCell行以上データがあるならば
-        if (row > this.bottomCell) {
-          table.push(body);
-          body = [];
-          row = 3;
-        }
       }
-      if (body.length > 0) {
-        table.push(body);
-      }
-      splid.push(table);
-      row = 5;
+
+      splid.push(body);
+      body = [];
     }
-
-    // 全体の高さを計算する
-    let countCell = 0;
-    for (const index of keys) {
-      const elist = json[index]; // 1テーブル分のデータを取り出す
-      countCell += Object.keys(elist).length + 1;
-    }
-    const countHead = keys.length * 3;
-    const countSemiHead = splid.length * 2 ;
-    const countTotal = countCell + countHead + countSemiHead + 3;
-
-    // 各タイプの前に改ページ（break_after）が必要かどうか判定する
-    const break_after: boolean[] = new Array();
-    let ROW = 8;
-    for (const index of keys) {
-      this.reROW = 0;
-      const elist = json[index]; // 1テーブル分のデータを取り出す
-      let countCell = Object.keys(elist).length;
-      ROW += countCell;
-
-      if (ROW < this.bottomCell) {
-        break_after.push(false);
-        this.reROW = ROW + 5;
-        ROW = ROW + 5;
-      } else {
-        if (index === "1") {
-          break_after.push(false);
-        } else {
-          break_after.push(true);
-          ROW = 0;
-        }
-        let countHead_break = Math.floor((countCell / this.bottomCell) *3 + 2);
-        this.reROW = ROW % (this.bottomCell+1);
-        ROW += countHead_break + countCell;
-        ROW = ROW % this.bottomCell;
-        ROW += 5;
-      }
-    }
-
-    this.remainCount = this.reROW;
-
-    //最後のページにどれだけデータが残っているかを求める
-    let lastArrayCount: number = this.remainCount;
 
     return {
       table: splid, // [タイプ１のテーブルリスト[], タイプ２のテーブルリスト[], ...]
       title: title, // [タイプ１のタイトル, タイプ２のタイトル, ... ]
-      this: countTotal, // 全体の高さ
-      last: lastArrayCount, // 最後のページの高さ
-      break_after: break_after, // 各タイプの前に改ページ（break_after）が必要かどうか判定
     };
-
   }
 }

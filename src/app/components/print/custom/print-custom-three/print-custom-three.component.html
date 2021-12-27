@@ -1,0 +1,51 @@
+<div class="printdata-choice">
+    <h2>印刷対象を選択</h2>
+    <div class="print-choice">
+        <ng-container *ngIf="ResultData.isCalculated">
+            <ul>
+                <li>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus0"
+              [(ngModel)]="printCustomThreeService.threeEditable[0]" />
+            <span class="checkbox-parts">軸方向力</span>
+          </label>
+                </li>
+                <li>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
+              [(ngModel)]="printCustomThreeService.threeEditable[1]" />
+            <span class="checkbox-parts">y軸方向のせん断力</span>
+          </label>
+                </li>
+                <li>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus2"
+              [(ngModel)]="printCustomThreeService.threeEditable[2]" />
+            <span class="checkbox-parts">z軸方向のせん断力</span>
+          </label>
+                </li>
+                <li>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus3"
+              [(ngModel)]="printCustomThreeService.threeEditable[3]" />
+            <span class="checkbox-parts">ねじりモーメント</span>
+          </label>
+                </li>
+                <li>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus4"
+              [(ngModel)]="printCustomThreeService.threeEditable[4]" />
+            <span class="checkbox-parts">y軸回りのモーメント</span>
+          </label>
+                </li>
+                <li>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus5"
+              [(ngModel)]="printCustomThreeService.threeEditable[5]" />
+            <span class="checkbox-parts">z軸回りのモーメント</span>
+          </label>
+                </li>
+            </ul>
+        </ng-container>
+    </div>
+</div>

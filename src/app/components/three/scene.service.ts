@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { ThreeComponent } from './three.component';
 import { GUI } from './libs/dat.gui.module.js';
 import { OrbitControls } from './libs/OrbitControls.js';
+import { OrbitControlsGizmo } from  "./libs/OrbitControlsGizmo.js";
 import { CSS2DRenderer, CSS2DObject } from './libs/CSS2DRenderer.js';
 import { SafeHtml } from '@angular/platform-browser';
 import { DataHelperModule } from '../../providers/data-helper.module';
@@ -19,11 +20,18 @@ export class SceneService {
   private renderer: THREE.WebGLRenderer = null;
   private labelRenderer: CSS2DRenderer = null;
 
+  // ギズモ
+  private controlsGizmo: HTMLCanvasElement = null;
+  //private controlsGizmoParent: OrbitControlsGizmo;
+
   // カメラ
-  private camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
+  private camera:THREE.PerspectiveCamera | THREE.OrthographicCamera;
+  private PerspectiveCamera:THREE.PerspectiveCamera;
+  private OrthographicCamera: THREE.OrthographicCamera;
   private aspectRatio: number;
   private Width: number;
   private Height: number;
+  private controls: OrbitControls;
 
   // helper
   private axisHelper: THREE.AxesHelper;
@@ -46,6 +54,7 @@ export class SceneService {
     // gui
     this.params = {
       GridHelper: true,
+      Perspective: true,
       ReDraw: this.render
     };
   }
@@ -57,11 +66,26 @@ export class SceneService {
                 deviceRatio: number,
                 Width: number,
                 Height: number): void {
+    this.controls = null;
     // カメラ
     this.aspectRatio = aspectRatio;
     this.Width = Width;
     this.Height = Height;
-    this.createCamera(aspectRatio, Width, Height);
+    this.PerspectiveCamera = new THREE.PerspectiveCamera(
+      70,
+      aspectRatio,
+      0.1,
+      1000
+    );
+    this.PerspectiveCamera.position.set(0,-20,50);
+    this.OrthographicCamera = new THREE.OrthographicCamera(
+      -Width/10, Width/10,
+      Height/10, -Height/10,
+      0.1,
+      255
+    );
+    this.OrthographicCamera.position.set(0,0,10);
+    this.initCamera(aspectRatio, Width, Height);
     // 環境光源
     this.add(new THREE.AmbientLight(0xf0f0f0));
     // レンダラー
@@ -84,8 +108,39 @@ export class SceneService {
       this.GridHelper.visible = value;
       this.render();
     });
-    this.gui.add( this.params, 'ReDraw' );
+    this.gui.add( this.params, "Perspective" ).onChange( ( value ) => {
+      if (this.helper.dimension === 3) {
+        this.OrthographicCamera_onChange(value);
+      } else {
+        this.params.Perspective = false
+      }
+    });
+    // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
     this.gui.open();
+
+    this.changeGui(this.helper.dimension);  //2Dモードで作成
+  }
+
+  private OrthographicCamera_onChange( value ){
+    this.params.Perspective = value;
+    const pos = this.camera.position;
+    const rot = this.camera.rotation;
+    this.initCamera(this.aspectRatio, this.Width, this.Height);
+    // this.scene.children[this.scene.children.length - 1]
+    this.controls.object = this.camera; // OrbitControl の登録カメラを変更
+    this.camera.position.set(pos.x, pos.y, pos.z);
+    if(this.helper.dimension === 2){
+      this.camera.position.set(0, 0, 10)
+      this.controls.target.set(0, 0, 0);  //this.controls.update();でターゲットにlookAtされていることが原因
+    } else {
+      this.camera.rotation.set(rot.x, rot.y, rot.z);
+    }
+    // Gizmoを作り直す
+    this.addGizmo();
+    
+    this.camera.updateMatrix();
+    this.controls.update();
+    this.render();
   }
 
   // 床面を生成する
@@ -104,10 +159,32 @@ export class SceneService {
   // コントロール
   public addControls() {
     if(this.labelRenderer===null) return;
-    const controls = new OrbitControls(this.camera, this.labelRenderer.domElement);
-    controls.damping = 0.2;
-    controls.addEventListener('change', this.render);
-    controls.enableRotate = (this.helper.dimension === 3) ? true : false; // 2次元モードの場合はカメラの回転を無効にする
+    this.controls = new OrbitControls(this.camera, this.labelRenderer.domElement);
+    this.controls.damping = 0.2;
+    this.controls.addEventListener('change', this.render);
+    this.controls.enableRotate = (this.helper.dimension === 3) ? true : false; // 2次元モードの場合はカメラの回転を無効にする
+    
+    // Gizmoを作り直す
+    this.addGizmo();
+  }
+
+  // Gizmoは、カメラの切り替わりのたびに作りなおす
+  private addGizmo(): void {
+
+    // 一旦消して
+    if(this.controlsGizmo !== null){
+      document.body.removeChild(this.controlsGizmo);
+    }
+    if (this.helper.dimension === 3) {
+      // Add the Obit Controls Gizmo
+      const controlsGizmo = new OrbitControlsGizmo(this.controls, { size:  100, padding:  8 });
+      // Add the Gizmo domElement to the dom
+      this.controlsGizmo = controlsGizmo.domElement;
+      document.body.appendChild(this.controlsGizmo);
+    } else {
+      this.controlsGizmo = null;
+    }
+
   }
 
    // 物体とマウスの交差判定に用いるレイキャスト
@@ -118,7 +195,7 @@ export class SceneService {
   }
 
   // カメラの初期化
-  public createCamera(
+  public initCamera(
     aspectRatio: number=null,
     Width: number=null, Height: number=null ) {
 
@@ -130,28 +207,15 @@ export class SceneService {
     if (target !== undefined) {
       this.scene.remove(this.camera);
     }
-    if(this.helper.dimension === 3){
-      this.camera = new THREE.PerspectiveCamera(
-        70,
-        aspectRatio,
-        0.1,
-        1000
-      );
-      this.camera.position.set(0, -50, 20);
-      this.camera.name = 'camera';
-      this.scene.add(this.camera);
-
-    } else if(this.helper.dimension === 2){
-      this.camera = new THREE.OrthographicCamera(
-        -Width/10, Width/10,
-        Height/10, -Height/10,
-        0.1,
-        21
-      );
-      this.camera.position.set(0, 0, 10);
-      this.camera.name = 'camera';
-      this.scene.add(this.camera);
+    if(this.params.Perspective && this.helper.dimension === 3){
+      this.camera = this.PerspectiveCamera;
+      if(this.controls !== null) this.controls.enableRotate = true;// 回転できる
+    } else { 
+      this.camera = this.OrthographicCamera;
+      if(this.controls !== null) this.controls.enableRotate = (this.helper.dimension === 3 ); // 回転できる
     }
+    this.camera.name = 'camera';
+    this.scene.add(this.camera);
   }
 
   // レンダラーを初期化する
@@ -259,6 +323,32 @@ export class SceneService {
           this.camera.position.set(x, y, z);
     }}}
 
+
+  }
+
+  public changeGui(dimension: number) {
+
+    if (this.gui === undefined) {
+      return
+    }
+
+    // カメラのGUIを取り出し、可変かどうかを設定する。
+    let camera: any = null;
+    for (const controller of this.gui.__controllers) {
+      if (controller.property === "Perspective") {
+        // カメラのGUIを取り出す
+        camera = controller;
+        // 2Dモードであれば、触れないようにする
+        if (dimension === 2) {
+          camera.domElement.hidden = true;
+          this.OrthographicCamera_onChange(true);
+        } else {
+          camera.domElement.hidden = false;
+          this.OrthographicCamera_onChange(this.params.Perspective);
+        }
+        break;
+      }
+    }
 
   }
 

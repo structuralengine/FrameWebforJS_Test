@@ -4,33 +4,36 @@ import { ResultDataService } from "src/app/providers/result-data.service";
 import { ThreeService } from "../three/three.service";
 import { PrintService } from "./print.service";
 
+
+
 @Component({
   selector: "app-print",
   templateUrl: "./print.component.html",
   styleUrls: ["./print.component.scss", "../../app.component.scss"],
 })
 export class PrintComponent implements OnInit {
+  public contentEditable2;
 
   constructor(
     public printService: PrintService,
     public ResultData: ResultDataService,
     private three: ThreeService
-  ) {
+  ) {}
+
+  ngOnInit(){
+    this.printService.selectRadio(-1);
+    this.printService.flg = -1;
   }
 
-  ngOnInit(): void {}
-
   public onPrintInvoice() {
-
     this.printService.setprintDocument();
-    
-    if(this.printService.contentEditable1[10]){
+
+    if (this.printService.contentEditable1[10]) {
       // 図の印刷
-      this.three.getCaptureImage().then(print_target =>{
+      this.three.getCaptureImage().then((print_target) => {
         this.printService.print_target = print_target;
         this.printService.printDocument("invoice", [""]);
-      })
-
+      });
     } else {
       this.printService.printDocument("invoice", [""]);
     }

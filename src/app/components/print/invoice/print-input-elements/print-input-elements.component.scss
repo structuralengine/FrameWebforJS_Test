@@ -1,0 +1,27 @@
+.type1 {
+    text-align: left;
+}
+
+h2 {
+    display: block;
+    // margin-top: 80px;
+    height: 16px;
+    padding: 0 0 16px 0;
+    line-height: 16px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+table {
+    th {
+        padding: 0px 8px;
+    }
+}
+
+// thead:after {
+//     content: "";
+//     height: 1px;
+//     width: 100%;
+//     padding: 10px 0;
+//     display: block;
+// }

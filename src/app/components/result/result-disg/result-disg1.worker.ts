@@ -19,6 +19,7 @@ addEventListener('message', ({ data }) => {
 
   const jsonData = data.jsonData;
   const disg = {};
+  const max_value = {};
   let error: any = null;
 
   try {
@@ -87,15 +88,16 @@ addEventListener('message', ({ data }) => {
           }
         }
       }
-      disg[caseNo.replace("Case", "")] = target;
-      disg["max_value" + caseNo] = Math.abs(max_d);
+      const No: string = caseNo.replace("Case", "");
+      disg[No] = target;
+      max_value[No] = Math.abs(max_d);
     }
 
   } catch (e) {
     error = e;
   }
 
-  postMessage({ disg, error });
+  postMessage({ disg, max_value, error });
 
 
 });

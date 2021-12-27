@@ -1,0 +1,27 @@
+<!-- <div *ngIf="printService.flg == 7 || printService.flg == 8" class="print-custom">
+    <form>
+        <select [(ngModel)]="printService.selectedIndex" (change)="onSelectChange($event.target.value)" name="first">
+      <option *ngFor="let item of printService.printOption" [value]="item.id" [selected]="1">
+        {{ item.name }}
+      </option>
+    </select>
+    </form>
+</div> -->
+
+<div *ngIf="printService.flg == 7" class="print-custom-fsec">
+  <app-print-custom-fsec>
+  </app-print-custom-fsec>
+</div>
+<div *ngIf="printService.flg == 8" class="print-custom-fsec">
+  <app-print-custom-fsec>
+  </app-print-custom-fsec>
+</div>
+<div *ngIf="printService.flg == 9" class="print-custom-fsec">
+  <app-print-custom-fsec>
+  </app-print-custom-fsec>
+</div>
+
+<div *ngIf="printService.flg == 10 && printService.mode == 12">
+  <app-print-custom-three>
+  </app-print-custom-three>
+</div>

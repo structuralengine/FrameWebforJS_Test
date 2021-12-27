@@ -27,7 +27,8 @@
             float: left;
         }
         .detailName {
-            text-align: center;
+            display: flex;
+            align-items: center;
         }
         >a {
             display: block;
@@ -39,6 +40,10 @@
         .card {
             box-shadow: 2px 2px 4px;
             .card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 16px;
                 p {
                     margin: 0;
                     padding: 0;
@@ -78,15 +83,25 @@
         background-color: #7bb7f8;
         p {
             color: #002060;
+            &.detailTitle {
+                min-width: 300px;
+                color: #222;
+                font-weight: 100;
+            }
         }
     }
 }
 
 #pick {
     .card-header {
-        background-color: #ef857d;
+        background-color: #b79fcb;
         p {
-            color: #c00;
+            color: #17184b;
+            &.detailTitle {
+                min-width: 300px;
+                color: #222;
+                font-weight: 100;
+            }
         }
     }
 }

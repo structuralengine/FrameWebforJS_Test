@@ -11,7 +11,11 @@ addEventListener('message', ({ data }) => {
     const combines: any[] = pickList[pickNo];
     let tmp: {} = null;
     for (const combNo of combines) {
-      const com = reacCombine[combNo];
+      const com = JSON.parse(
+        JSON.stringify({
+          temp: reacCombine[combNo]
+        })
+      ).temp;      
       if (tmp == null) {
         tmp = com;
         continue;

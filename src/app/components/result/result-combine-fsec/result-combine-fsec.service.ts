@@ -143,7 +143,12 @@ export class ResultCombineFsecService {
       const temp = {};
       //
       for (const caseInfo of defList[defNo]) {
-        const baseNo: string = Math.abs(caseInfo).toString();
+        let baseNo: string = '';
+        if(typeof caseInfo === "number"){
+          baseNo = Math.abs(caseInfo).toString();
+        } else {
+          baseNo = caseInfo;
+        }
         const coef: number = Math.sign(caseInfo);
   
         if (!(baseNo in fsec)) {
@@ -246,7 +251,7 @@ export class ResultCombineFsecService {
   
         const fsecs = fsecDefine[defNo];
         if(Object.keys(fsecs).length < 1) continue;
-
+  
         // カレントケースを集計する
         const c2 = Math.abs(caseNo).toString().trim();
         for (const key of fsecKeys) {

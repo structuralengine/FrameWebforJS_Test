@@ -4,14 +4,15 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {MatRadioModule} from '@angular/material/radio';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { MatInputModule } from "@angular/material/input";
 
-import { AngularFireModule } from '@angular/fire';
-import { environment } from '../environments/environment';
+import { AngularFireModule } from "@angular/fire";
+import { environment } from "../environments/environment";
 
 import { InputDataService } from "./providers/input-data.service";
 import { DataHelperModule } from "./providers/data-helper.module";
@@ -94,13 +95,15 @@ import { PrintResultReacComponent } from "./components/print/invoice/print-resul
 import { PrintResultPickupDisgComponent } from "./components/print/invoice/print-result-pickup-disg/print-result-pickup-disg.component";
 import { PrintResultPickupFsecComponent } from "./components/print/invoice/print-result-pickup-fsec/print-result-pickup-fsec.component";
 import { PrintResultPickupReacComponent } from "./components/print/invoice/print-result-pickup-reac/print-result-pickup-reac.component";
-import { PrintInputLoadNameComponent } from './components/print/invoice/print-input-load-name/print-input-load-name.component';
-import { PrintThreeComponent } from  './components/print/invoice/print-three/print-three.component';
+import { PrintInputLoadNameComponent } from "./components/print/invoice/print-input-load-name/print-input-load-name.component";
+import { PrintThreeComponent } from "./components/print/invoice/print-three/print-three.component";
 import { DataCountService } from "./components/print/invoice/dataCount.service";
 
 import { PagerComponent } from "./components/input/pager/pager.component";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
-
+import { PrintCustomFsecComponent } from "./components/print/custom/print-custom-fsec/print-custom-fsec.component";
+import { PrintCustomThreeComponent } from "./components/print/custom/print-custom-three/print-custom-three.component";
+import { PrintCustomComponent } from "./components/print/custom/print-custom.component";
 
 @NgModule({
   imports: [
@@ -114,6 +117,7 @@ import { SheetComponent } from "./components/input/sheet/sheet.component";
     NgbModule,
     DataHelperModule,
     MatInputModule,
+    MatRadioModule,
     AngularFireModule.initializeApp(environment.firebase),
   ],
   declarations: [
@@ -176,6 +180,9 @@ import { SheetComponent } from "./components/input/sheet/sheet.component";
     SheetComponent,
     PrintInputLoadNameComponent,
     PrintThreeComponent,
+    PrintCustomFsecComponent,
+    PrintCustomThreeComponent,
+    PrintCustomComponent,
   ],
   entryComponents: [LoginDialogComponent, WaitDialogComponent],
   providers: [

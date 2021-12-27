@@ -43,13 +43,20 @@ export class InputLoadService {
         fix_member: "",
         element: "",
         joint: "",
+        LL_pitch: 0.1
       };
       this.load_name.push(result);
+    } else{
+      // バージョンアップなどにより 足りない項目を追加
+      if(!("LL_pitch" in result)){
+        result["LL_pitch"] = 0.1;
+      }
     }
+
     return result;
   }
 
-  public getLoadColumns(index: number, row: number): any {
+  public getLoadColumns( index: number, row: number): any {
     const typNo: string = index.toString();
 
     let target: any;
@@ -116,6 +123,7 @@ export class InputLoadService {
         "fix_member" in item1 ? item1["fix_member"] : "";
       const _element: string = "element" in item1 ? item1["element"] : "";
       const _joint: string = "joint" in item1 ? item1["joint"] : "";
+      const _LL_pitch: number =  "LL_pitch" in item1 ? item1["LL_pitch"] : 0.1;
 
       this.load_name.push({
         id: index,
@@ -126,6 +134,7 @@ export class InputLoadService {
         fix_member: _fix_member,
         element: _element,
         joint: _joint,
+        LL_pitch: _LL_pitch
       });
 
       if ("load_node" in item1) {
@@ -137,24 +146,23 @@ export class InputLoadService {
 
           const _n: string = "n" in item2 ? item2.n : "";
           let _tx: string = "";
-          if("tx" in item2 ) _tx = item2.tx;
-          if("dx" in item2 ) _tx = item2.dx;
+          if ("tx" in item2) _tx = item2.tx;
+          if ("dx" in item2) _tx = item2.dx;
           let _ty: string = "";
-          if("ty" in item2 ) _ty = item2.ty;
-          if("dy" in item2 ) _ty = item2.dy;
+          if ("ty" in item2) _ty = item2.ty;
+          if ("dy" in item2) _ty = item2.dy;
           let _tz: string = "";
-          if("tz" in item2 ) _tz = item2.tz;
-          if("dz" in item2 ) _tz = item2.dz;
+          if ("tz" in item2) _tz = item2.tz;
+          if ("dz" in item2) _tz = item2.dz;
           let _rx: string = "";
-          if("rx" in item2 ) _rx = item2.rx;
-          if("ax" in item2 ) _rx = item2.ax;
+          if ("rx" in item2) _rx = item2.rx;
+          if ("ax" in item2) _rx = item2.ax;
           let _ry: string = "";
-          if("ry" in item2 ) _ry = item2.ry;
-          if("ay" in item2 ) _ry = item2.ay;
+          if ("ry" in item2) _ry = item2.ry;
+          if ("ay" in item2) _ry = item2.ay;
           let _rz: string = "";
-          if("rz" in item2 ) _rz = item2.rz;
-          if("az" in item2 ) _rz = item2.az;
-          
+          if ("rz" in item2) _rz = item2.rz;
+          if ("az" in item2) _rz = item2.az;
 
           tmp_load1[_row] = {
             row: _row,
@@ -178,9 +186,8 @@ export class InputLoadService {
           const _m2: string = "m2" in item3 ? item3.m2 : "";
           const _L1: string = "L1" in item3 ? item3.L1 : "";
 
-          let _direction: string =
-            "direction" in item3 ? item3.direction : "";
-          if ( _direction !== null ){
+          let _direction: string = "direction" in item3 ? item3.direction : "";
+          if (_direction !== null) {
             _direction = _direction.trim().toLowerCase();
           }
 
@@ -278,16 +285,23 @@ export class InputLoadService {
     }
 
     //
-    for (const load_id of Object.keys(load_member)) {
+    for (let load_id_1 of Object.keys(load_member)) {
       let jsonData = {};
+      const load_id = parseInt(load_id_1, 10);
       if (load_id in load_name) {
-        jsonData = load_name[load_id];
+        jsonData = JSON.parse(JSON.stringify(load_name[load_id]));
       } else {
-        jsonData = { fix_node: 1, fix_member: 1, element: 1, joint: 1 };
+        jsonData["fix_node"] = 1;
+        jsonData["fix_member"] = 1;
+        jsonData["element"] = 1;
+        jsonData["joint"] = 1;
       }
-      jsonData["load_member"] = load_member[load_id];
-      result[load_id] = jsonData;
-      delete load_member[load_id];
+      jsonData["load_member"] = JSON.parse(
+        JSON.stringify(load_member[load_id_1])
+      );
+      result[load_id_1] = jsonData;
+      // jsonData["load_member"] = load_member[load_id_1];
+      // delete load_member[load_id_1];
     }
 
     // 無効なデータを削除する
@@ -295,7 +309,7 @@ export class InputLoadService {
     for (const load_id of Object.keys(result)) {
       let jsonData = result[load_id];
       let flg: boolean = false;
-      if(empty === 0){
+      if (empty === 0) {
         flg = true;
         for (const key of ["fix_node", "fix_member", "element", "joint"]) {
           if (jsonData[key] === empty) {
@@ -312,7 +326,7 @@ export class InputLoadService {
       }
       if (flg === false) {
         deleteKey.push(load_id);
-      } else if (empty ===0) {
+      } else if (empty === 0) {
         const ln = "load_node" in jsonData ? jsonData["load_node"] : [];
         const lm = "load_member" in jsonData ? jsonData["load_member"] : [];
         if (ln.length + lm.length === 0) {
@@ -329,10 +343,10 @@ export class InputLoadService {
 
   // 荷重基本データ
   public getLoadNameJson(
-    empty: number = null, 
-    targetCase: string = "", 
-    isPrint = false): any {
-
+    empty: number = null,
+    targetCase: string = "",
+    isPrint = false
+  ): any {
     const load_name = {};
 
     for (let i = 0; i < this.load_name.length; i++) {
@@ -357,29 +371,26 @@ export class InputLoadService {
       let fix_member = this.helper.toNumber(tmp["fix_member"]);
       let element = this.helper.toNumber(tmp["element"]);
       let joint = this.helper.toNumber(tmp["joint"]);
+      let LL_pitch: number = ("LL_pitch" in tmp) ? this.helper.toNumber(tmp["LL_pitch"]) : 0.1;
 
-      if (
-        rate == null &&
-        symbol === "" &&
-        name === "" &&
-        fix_node == null &&
-        fix_member == null &&
-        element == null &&
-        joint == null
-      ) {
+      if ( rate == null && symbol === "" &&  name === "" &&
+          fix_node == null && fix_member == null && 
+          element == null && joint == null ) {
         continue;
       }
 
       const load_id = (i + 1).toString();
 
       const temp = {
-        fix_node: fix_node == null ? empty : fix_node,
-        fix_member: fix_member == null ? empty : fix_member,
-        element: element == null ? empty : element,
-        joint: joint == null ? empty : joint,
+        fix_node: fix_node === null ? empty : fix_node,
+        fix_member: fix_member === null ? empty : fix_member,
+        element: element === null ? empty : element,
+        joint: joint === null ? empty : joint,
+        symbol: symbol === null ? empty : symbol,
+        LL_pitch: LL_pitch === null ? 0.1 : LL_pitch
       };
 
-      if (empty === null || isPrint === true) {
+      if (empty !== 0 || isPrint === true) {
         temp["rate"] = rate == null ? empty : rate;
         temp["symbol"] = symbol;
         temp["name"] = name;
@@ -390,7 +401,7 @@ export class InputLoadService {
     return load_name;
   }
 
-  public getLoadName(currentPage: number): string {
+  public getLoadName(currentPage: number, target: string = "name"): any {
     if (currentPage < 1) {
       return "";
     }
@@ -401,10 +412,21 @@ export class InputLoadService {
     const i = currentPage - 1;
     const tmp = this.load_name[i];
 
-    let result = "";
-    if ("name" in tmp) {
-      result = tmp["name"];
+    if(target===null){
+      return tmp; // ターゲットの指定が無い時は、全部入り
     }
+
+    let result = "";
+    if (target in tmp) {
+      result = tmp[target];
+    }
+    if(result === undefined){
+      result = "";
+    }
+    if(result === null){
+      result = "";
+    }
+
     return result;
   }
 
@@ -429,11 +451,17 @@ export class InputLoadService {
         let ry = this.helper.toNumber(row["ry"]);
         let rz = this.helper.toNumber(row["rz"]);
 
-        if ( n != null &&
-          ( tx != null || ty != null || tz != null ||
-            rx != null || ry != null || rz != null)) {
+        if (
+          n != null &&
+          (tx != null ||
+            ty != null ||
+            tz != null ||
+            rx != null ||
+            ry != null ||
+            rz != null)
+        ) {
           let tmp = {};
-          if(n > 0)  {
+          if (n > 0) {
             tmp = {
               n: row.n,
               tx: tx == null ? empty : tx,
@@ -441,11 +469,11 @@ export class InputLoadService {
               tz: tz == null ? empty : tz,
               rx: rx == null ? empty : rx,
               ry: ry == null ? empty : ry,
-              rz: rz == null ? empty : rz
+              rz: rz == null ? empty : rz,
             };
-          } else  {
-            const coef = (empty===null) ? 1 : 1000;
-            const No = (empty===null) ? row["n"] : Math.abs(n).toString();
+          } else {
+            const coef = empty === null ? 1 : 1000;
+            const No = empty === null ? row["n"] : Math.abs(n).toString();
             tmp = {
               n: No,
               dx: tx == null ? empty : tx / coef,
@@ -453,7 +481,7 @@ export class InputLoadService {
               dz: tz == null ? empty : tz / coef,
               ax: rx == null ? empty : rx / coef,
               ay: ry == null ? empty : ry / coef,
-              az: rz == null ? empty : rz / coef
+              az: rz == null ? empty : rz / coef,
             };
           }
 
@@ -480,13 +508,15 @@ export class InputLoadService {
         continue;
       }
 
-      const load1: any[] = this.load[load_id];
+      const load1: any[] = JSON.parse(JSON.stringify(this.load[load_id]));
       if (load1.length === 0) {
         continue;
       }
 
-      const tmp_member = new Array();
+      let tmp_member = new Array();
       if (empty === null) {
+        // ファイルに保存する用のデータ作成
+
         for (let j = 0; j < load1.length; j++) {
           const row = load1[j];
           const m1 = this.helper.toNumber(row["m1"]);
@@ -498,8 +528,16 @@ export class InputLoadService {
           const P1 = this.helper.toNumber(row["P1"]);
           const P2 = this.helper.toNumber(row["P2"]);
 
-          if( m1 != null || m2 != null || mark != null || direction != '' ||
-              L1 != null || L2 != null || P1 != null || P2 != null) {
+          if (
+            m1 != null ||
+            m2 != null ||
+            mark != null ||
+            direction != "" ||
+            L1 != null ||
+            L2 != null ||
+            P1 != null ||
+            P2 != null
+          ) {
             const tmp = {
               m1: row.m1,
               m2: row.m2,
@@ -516,338 +554,239 @@ export class InputLoadService {
             tmp_member.push(tmp);
           }
         }
+        if (tmp_member.length > 0) {
+          load_member[load_id] = tmp_member;
+        }
       } else {
         // 計算用のデータ作成
 
-        const load2: any[] = this.convertMemberLoads(load1);
+        // load1のlistの順番をrow順に入れ替える
+        load1.sort((a, b) => {
+          if (a.row < b.row) {
+            return -1;
+          } else if (a.row > b.row) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
 
-        for (let j = 0; j < load2.length; j++) {
-          const row = load2[j];
+        let numL1: number = 0;  // 連行荷重のスタート位置
 
-          let direction: string = row["direction"];
-          direction = direction.trim().toLowerCase();
+        let _L11: number[] = [0]; // L1に加算する距離で、 連行荷重(symbol == "LL")の時に特別な処理をする
+        
+        const load_num = parseInt(load_id, 10);
 
-          const tmp = {
-            m: row["m1"],
-            direction: direction,
-            mark: row["mark"],
-            L1: this.helper.toNumber(row["L1"], 3),
-            L2: this.helper.toNumber(row["L2"], 3),
-            P1: this.helper.toNumber(row["P1"], 2),
-            P2: this.helper.toNumber(row["P2"], 2),
-          };
+        const load_name = this.getLoadName(load_num, null);
+        const symbol: string = load_name["symbol"];
+        if (symbol == "LL") {
+          // 列車連行荷重の場合
+          // _L11 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // L1に加算したケースを複数作る
+          const LL_pitch: number = load_name["LL_pitch"];
 
-          tmp["row"] = row.row;
+          // 連行荷重のスタート位置を決定する
+          const LL_position = this.get_LL_position(load1);
+          numL1 = LL_position['L1']; 
+          load1[0].L1 = numL1.toFixed(3);
+          let LL_length = LL_position['LL_length'];
+          LL_length += Math.abs(numL1);
 
-          tmp_member.push(tmp);
+          // 連行荷重の荷重の数を決定する
+          const count = Math.round(LL_length / LL_pitch *10)/10; 
+          for (let i = 1; i <= count; i++) {
+            const LL1: number = Math.round(i * LL_pitch * 1000) / 1000;
+            _L11.push(LL1);
+          }
+
         }
-      }
-      if (tmp_member.length > 0) {
-        load_member[load_id] = tmp_member;
+        const digit: number = Math.pow(10, (_L11.length-1).toString().length); // 桁数
+
+        // 連行荷重がある場合はループになる
+        for (let i = 0; i < _L11.length; i++) {
+
+          if( i > 0 ){
+            load1[0].L1 = (numL1 + _L11[i]).toFixed(3); // 連行荷重の場合1行目の L1を
+          }
+
+          // 要素荷重を サーバーで扱える形式に変換する
+          const load2: any[] = this.convertMemberLoads(load1);
+
+          if (load2.length > 0) {
+            let new_load_id: string = load_id;
+
+            if( i > 0 ){
+              // 連行荷重の場合の ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
+              new_load_id = (Math.round((load_num + i / digit)*digit)/digit).toString();
+            }
+
+            load_member[new_load_id] = load2;
+
+          }
+        }
       }
     }
     return load_member;
   }
 
-  // 要素荷重を サーバーで扱える形式に変換する
-  private convertMemberLoads(load1: any[]): any {
-    // 有効な行を選別する
-    const load2 = new Array();
-    for (let j = 0; j < load1.length; j++) {
-      const row: {} = load1[j];
-      const r = row["row"];
-      let m1 = this.helper.toNumber(row["m1"]);
-      let m2 = this.helper.toNumber(row["m2"]);
-      let direction: string = row["direction"];
+  private get_LL_position(load1: any[]): object {
 
-      if (direction === null || direction === undefined) {
-        direction = "";
+    // 荷重の長さ(L1)を調べる
+    let L1: number = 0
+
+    for(let i = 0; i < load1.length; i++){
+      const targetLoad = load1[i];
+      const _L1 : number = this.helper.toNumber(targetLoad.L1);
+      if(_L1 <= 0){
+        L1 -= _L1;
       }
-      direction = direction.trim().toLowerCase();
-
-      const mark = this.helper.toNumber(row["mark"]);
-      const L1 = this.helper.toNumber(row["L1"]);
-      let L2 = this.helper.toNumber(row["L2"]);
-      let P1 = this.helper.toNumber(row["P1"]);
-      let P2 = this.helper.toNumber(row["P2"]);
-
-      if (mark === 9) { direction = 'x'; }
-
-      if ((m1 != null || m2 != null) && direction !== "" && mark != null &&
-          (L1 != null || L2 != null || P1 != null || P2 != null)) {
-        m1 = m1 == null ? 0 : m1;
-        m2 = m2 == null ? 0 : m2;
-
-        direction = direction.trim();
-        const sL1: string = L1 == null ? "0" : row["L1"].toString();
-        L2 = L2 == null ? 0 : L2;
-        P1 = P1 == null ? 0 : P1;
-        P2 = P2 == null ? 0 : P2;
-
-        load2.push({
-          row: r,
-          m1: m1,
-          m2: m2,
-          direction: direction,
-          mark: mark,
-          L1: sL1,
-          L2: L2,
-          P1: P1,
-          P2: P2,
-        });
+      if(targetLoad.L2 <= 0){
+        L1 -= targetLoad.L2;
       }
     }
+
+    // 載荷する部材の長さ(L2)を調べる
+    let L2 = 0
+
+    const m1: number = Math.abs(load1[0].m1);
+    const m2: number = Math.abs(load1[0].m2);
+    for (let j = m1; j <= m2; j++) {
+      L2 += Math.round(this.member.getMemberLength(j.toString()) * 1000);
+    }
+    L2 = L2 / 1000;
+
+    
+    return {
+      L1: -L1,      // スタート位置は -L1
+      LL_length: L2 // 最大長さは L2
+    };
+
+  }
+
+  // 要素荷重を サーバーで扱える形式に変換する
+  private convertMemberLoads(load1: any[]): any {
+
+    // 有効な行を選別する
+    let load2 = this.getEnableLoad(load1);
     if (load2.length === 0) {
       return new Array();
     }
 
     // 要素番号 m1, m2 に入力が無い場合 -------------------------------------
-    for (let j = 0; j < load2.length; j++) {
-      const row = load2[j];
+    for(const row of load2){
       if (row.m1 === 0) {
         row.m1 = row.m2;
-        load2[j] = row;
       }
       if (row.m2 === 0) {
         row.m2 = row.m1;
-        load2[j] = row;
       }
     }
 
-    //入れ替え
-    let i = 0;
-    do {
-      const row = load2[i];
-      if (row.m2 < 0) {
-        if (Math.abs(row.m1) > Math.abs(row.m2)) {
-          let aaa = row.m1;
-          let bbb = -row.m2;
-          row.m2 = -aaa;
-          row.m1 = bbb;
+    // m1>m2 の場合 入れ替え
+    for(const row of load2){
+      if (Math.abs(row.m1) > Math.abs(row.m2)) {
+        if (row.m2 < 0){
+          // m2にマイナスがあって m1>m2 の場合 入れ替え
+          [row.m1, row.m2] = [-row.m2, -row.m1];
+        } else{
+          [row.m1, row.m2] = [row.m2, row.m1]; // 入れ替え
         }
       }
-      i += 1;
-    } while (i < load2.length);
-
-    i = 0;
-    do {
-      const targetLoad = load2[i];
-      if (targetLoad.m1 > 0 && targetLoad.m2 > 0) {
-        if (targetLoad.m1 > targetLoad.m2) {
-          let ccc = targetLoad.m1;
-          let ddd = targetLoad.m2;
-          targetLoad.m2 = ccc;
-          targetLoad.m1 = ddd;
-        }
-      }
-      i += 1;
-    } while (i < load2.length);
+    }
 
     // 要素番号 m2 にマイナスが付いた場合の入力を分ける ------------------------
-    i = 0;
     let curNo = -1;
     let curPos = 0;
-    do {
-      const row = load2[i];
-      if (row.m2 < 0) {
-        const reLoadsInfo = this.getMemberGroupLoad(row, curNo, curPos);
-        const newLoads = reLoadsInfo["loads"];
-        curNo = reLoadsInfo["curNo"];
-        curPos = reLoadsInfo["curPos"];
-        load2.splice(i, 1);
-        for (let j = 0; j < newLoads.length; j++) {
-          load2.push(newLoads[j]);
-        }
-      } else {
-        i += 1;
+    let load3 = new Array();
+  
+    let old_row: number = -1;
+    for(const row of load2){
+
+      if(old_row + 1 < row['row']){
+        // 空白行があった場合 グループ化を解除
+        curNo = -1;
+        curPos = 0;
       }
-    } while (i < load2.length);
+      old_row = row['row']; //現在の行数を記録しておく
+
+      if (row.m2 < 0) {
+        const res = this.getMemberGroupLoad(row, curNo, curPos); // ※ここで L1 のマイナスは消える
+        curNo = res["curNo"];
+        curPos = res["curPos"];
+        load3 = load3.concat(res["loads"]);
+      } else {
+        load3.push(row);
+      }
+    }
 
     // 要素番号 m1 != m2 の場合の入力を分ける -----------------------
-    i = 0;
-    do {
-      const targetLoad = load2[i];
-      const m1 = this.helper.toNumber(targetLoad.m1);
-      const m2 = this.helper.toNumber(targetLoad.m2);
-      if (m1 < m2) {
-        const newLoads = this.getMemberRepeatLoad(targetLoad);
-        load2.splice(i, 1);
-        for (let j = 0; j < newLoads.length; j++) {
-          load2.push(newLoads[j]);
-        }
+    load2 = new Array();
+    for(const row of load3){
+      if (row.m1 < row.m2) {
+        const res = this.getMemberRepeatLoad(row);
+        load2 = load2.concat(res);
       } else {
-        i += 1;
-      }
-    } while (i < load2.length);
-
-    // 距離 にマイナスが付いた場合の入力を直す -------------------
-    curNo = -1;
-    curPos = 0;
-    for (let j = 0; j < load2.length; j++) {
-      const targetLoad = load2[j];
-      const sL1: string = targetLoad.L1.toString();
-      if (sL1.includes("-") || targetLoad.L2 < 0) {
-        const reLoadsInfo = this.setMemberLoadAddition(
-          targetLoad,
-          curNo,
-          curPos
-        );
-        const newLoads = reLoadsInfo["loads"];
-        curNo = reLoadsInfo["curNo"];
-        curPos = reLoadsInfo["curPos"];
-        //load2.splice(j, 1);
-        for (let k = 0; k < newLoads.length; k++) {
-          load2.push(newLoads[k]);
-        }
+        load2.push(row);
       }
     }
 
-    // 荷重距離ゼロの行を削除する -------------------------------------
-    for (let i = load2.length - 1; i >= 0; i--) {
-      const item = load2[i];
-      const LL: number = Math.round(this.member.getMemberLength(item["m1"]) * 1000);
-      const L1: number = Math.round(this.helper.toNumber(item["L1"]) * 1000);
-      const L2: number = Math.round(item["L2"] * 1000);
-      if(item.mark===2){
-        if ( LL - (L1 + L2 ) <= 0) {
-          load2.splice(i, 1);
-        }
+    // memberの外側に出ている荷重を破棄する
+    load3 = new Array();
+    for(const row of load2){
+      const checked = this.checkIntoMember(row);
+      if(checked.P1 !==0 || checked.P2 !==0){
+        load3.push(checked);
       }
     }
 
+    // サーバーでは使わない記号を置き換える
+    for (const row of load3) {
+      row["m"] = row["m1"];
+      delete row["sL1"];
+      delete row["m1"];
+      delete row["m2"];
+      // delete row["row"]; // row は three.js の ID として使うので消さない
+    }
 
-    return load2;
+    return load3;
   }
 
   // 要素番号 m2 にマイナスが付いた場合の入力を分ける
-  private getMemberGroupLoad(
-    targetLoad: any,
-    curNo: number,
-    curPos: number
-  ): any {
+  private getMemberGroupLoad( targetLoad: any, curNo: number,  _curPos: number ): any {
+    // ※この関数内では距離を 100倍した整数で処理する
+
+    let curPos: number = Math.round(_curPos * 1000);
+
     const result = {};
 
     // もともとの入力データを保存  . . . . . . . . . . . . . . . . . .
     const org_m1: number = Math.abs(targetLoad.m1);
     const org_m2: number = Math.abs(targetLoad.m2);
 
-    // L1の位置を確定する . . . . . . . . . . . . . . . . . . . . . .
-    let m1: number = Math.abs(targetLoad.m1);
-    let m2: number = Math.abs(targetLoad.m2);
-    let L1: number = Math.abs(this.helper.toNumber(targetLoad.L1));
-
-    let P2: number;
-    let Po: number;
-    let L: number;
-    let ll: number;
-    let lo: number;
-
-    const sL1: string = targetLoad.L1.toString();
-    if (sL1.includes("-")) {
-      // 距離L1が加算モードで入力されている場合
-      if (m1 <= curNo && curNo <= m2) {
-        m1 = curNo;
-        L1 = curPos + L1;
-        targetLoad.m1 = m1;
-        targetLoad.L1 = L1.toString();
-      }
-    }
-
-    for (let j = m1; j <= m2; j++) {
-      const Lj: number = this.member.getMemberLength(j.toString());
-      if (L1 > Lj) {
-        L1 = L1 - Lj;
-        targetLoad.m1 = j + 1;
-        targetLoad.L1 = L1.toString();
-      } else {
-        targetLoad.m1 = j;
-        break;
-      }
-    }
-    curNo = targetLoad.m1;
-    curPos = this.helper.toNumber(targetLoad.L1);
+     // L1の位置を確定する . . . . . . . . . . . . . . . . . . . . . .
+    [curNo, curPos] = this.getL1Position(targetLoad, curNo, curPos);
 
     // L2の位置を確定する . . . . . . . . . . . . . . . . . . . . . .
-    m1 = Math.abs(targetLoad.m1);
-    m2 = Math.abs(targetLoad.m2);
-    let L2: number = Math.abs(targetLoad.L2);
-
-    switch (targetLoad.mark) {
-      case 1:
-      case 11:
-        if (targetLoad.L2 < 0) {
-          L2 = L1 + L2;
-        }
-        for (let j = m1; j <= m2; j++) {
-          L = this.member.getMemberLength(j.toString());
-          if (L2 > L) {
-            L2 = L2 - L;
-            targetLoad.m2 = j + 1;
-            targetLoad.L2 = L2;
-          } else {
-            targetLoad.m2 = j;
-            targetLoad.L2 = L2;
-            break;
-          }
-        }
-        curNo = Math.abs(targetLoad.m2);
-        curPos = targetLoad.L2;
-        break;
-
-      default:
-        if (targetLoad.L2 < 0) {
-          // 連続部材の全長さLLを計算する
-          ll = 0;
-          for (let j = m1; j <= m2; j++) {
-            ll = ll + this.member.getMemberLength(j.toString());
-          }
-          L2 = ll - (curPos + L2);
-          if (L2 < 0) {
-            L2 = 0;
-          }
-          targetLoad.m2 = m2;
-          targetLoad.L2 = L2;
-        }
-        for (let j = m2; j >= org_m1; j--) {
-          L = this.member.getMemberLength(j.toString());
-          if (L2 > L) {
-            L2 = L2 - L;
-            targetLoad.m2 = j - 1;
-            targetLoad.L2 = L2;
-          } else {
-            break;
-          }
-        }
-        curNo = Math.abs(targetLoad.m2);
-        curPos = L - targetLoad.L2;
-        break;
-    }
-
-    // ちょうど j端 になったら次の部材の 距離0(ゼロ) とする
-    if (Math.round(curPos*1000) >= Math.round(L*1000)) {
-      if (org_m2 > curNo) {
-        curNo = curNo + 1;
-        curPos = 0;
-      }
-    }
+    [curNo, curPos] = this.getL2Position(targetLoad, curNo, curPos, org_m1);
 
     // 部材を連続して入力データを作成する  . . . . . . . . . . . . . . . . . . . . . . . . . . .
     const loads = new Array();
-    m1 = Math.abs(targetLoad.m1);
-    m2 = Math.abs(targetLoad.m2);
+    let m1: number = Math.abs(targetLoad.m1);
+    let m2: number = Math.abs(targetLoad.m2);
 
     // 連続部材の全長さLLを計算する
-    ll = 0;
+    let ll: number = 0;
     for (let j = m1; j <= m2; j++) {
-      ll = ll + this.member.getMemberLength(j.toString());
+      ll = ll + Math.round(this.member.getMemberLength(j.toString()) * 1000);
     }
-    L1 = this.helper.toNumber(targetLoad.L1);
-    L2 = targetLoad.L2;
+    let L1: number = Math.round(targetLoad.L1 * 1000);
+    let L2: number = Math.round(targetLoad.L2 * 1000);
 
     switch (targetLoad.mark) {
       case 1:
       case 11:
-        if (m1 === m2) {
+        const LL1: number = targetLoad.L1;
+        const LL2: number = targetLoad.L2;
+        if (m1 === m2 && LL1 * LL2 >= 0) {
           const newLoads = {};
           newLoads["direction"] = targetLoad.direction;
           newLoads["mark"] = targetLoad.mark;
@@ -889,7 +828,7 @@ export class InputLoadService {
           newLoads["mark"] = targetLoad.mark;
           newLoads["m1"] = j.toString();
           newLoads["m2"] = j.toString();
-          newLoads["L1"] = "0";
+          newLoads["L1"] = 0;
           newLoads["L2"] = 0;
           newLoads["P1"] = targetLoad.P1;
           newLoads["P2"] = targetLoad.P1;
@@ -899,9 +838,9 @@ export class InputLoadService {
 
       default:
         // 中間値を計算
-        lo = ll - L1 - L2; // 荷重載荷長
-        Po = (targetLoad.P2 - targetLoad.P1) / lo;
-        P2 = targetLoad.P1;
+        let lo: number = ll - L1 - L2; // 荷重載荷長
+        let Po: number = (targetLoad.P2 - targetLoad.P1) / lo;
+        let P2: number = targetLoad.P1;
 
         for (let j = m1; j <= m2; j++) {
           const newLoads = {};
@@ -910,7 +849,7 @@ export class InputLoadService {
 
           newLoads["m1"] = j.toString();
           newLoads["m2"] = j.toString();
-          L = this.member.getMemberLength(newLoads["m1"]); // 要素長
+          let L: number = Math.round(this.member.getMemberLength(newLoads["m1"]) * 1000); // 要素長
           switch (j) {
             case m1:
               L = L - L1;
@@ -919,7 +858,7 @@ export class InputLoadService {
               L = L - L2;
               break;
           }
-          newLoads["L1"] = "0";
+          newLoads["L1"] = 0;
           newLoads["L2"] = 0;
           newLoads["P1"] = P2;
           P2 = P2 + Po * L;
@@ -939,17 +878,157 @@ export class InputLoadService {
 
     // 行rowの入力情報があれば追加する  . . . . . . . . . . . . . . . . . . . .
     if ("row" in targetLoad) {
-      for (let i = 0; i < loads.length; i++) {
-        loads[i]["row"] = targetLoad["row"];
+      for (const load of loads) {
+        load["row"] = targetLoad["row"];
       }
     }
 
     // 戻り値を作成する  . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    _curPos = curPos / 1000;
     result["loads"] = loads;
     result["curNo"] = curNo;
-    result["curPos"] = curPos;
-    
+    result["curPos"] = _curPos;
+
     return result;
+  }
+
+
+  // L1の位置を確定する . . . . . . . . . . . . . . . . . . . . . .
+  private getL1Position(targetLoad: any,
+    curNo: number, curPos: number): number[] {
+
+    const sL1: string = targetLoad.sL1;
+
+    let m1: number = Math.abs(targetLoad.m1);
+    const m2: number = Math.abs(targetLoad.m2);
+    let L1: number = Math.round(Math.abs(targetLoad.L1) * 1000);
+    let L2: number = Math.round(Math.abs(targetLoad.L2) * 1000);
+
+    if (sL1.includes("-")) {
+      // 距離L1が加算モードで入力されている場合
+      // ->最初のL1が負のときも加算モードが適用されるため、負の方向に移動できなくなる（エラー）
+      if (m1 <= curNo && curNo <= m2) {
+        m1 = curNo;
+        L1 = curPos + L1;
+        targetLoad.m1 = m1;
+        targetLoad.L1 = L1 / 1000;
+      }
+      // 最初の加算モードならば、そのまま負の状態にする
+      if (curNo < m1 && curNo < m2) {
+        targetLoad.m1 = m1;
+        L1 = Math.round(targetLoad.L1 * 1000);
+      }
+    }
+
+    // 距離L1 から 部材m1 を推定する
+    for (let j = m1; j <= m2; j++) {
+      let L: number = Math.round(this.member.getMemberLength(j.toString()) * 1000);
+      if (L1 > L) {
+        if (j + 1 > m2) {
+          // 全長より荷重の方が長い場合 なかったことにする
+          targetLoad.m1 = m2;
+          targetLoad.L1 = 0;
+          targetLoad.P1 = 0;
+          break;
+        }
+        L1 = L1 - L;
+        if (targetLoad.mark === 1 || targetLoad.mark === 11) {
+          L2 = L2 - L;
+        }
+        if (j + 1 <= m2) {
+          targetLoad.m1 = j + 1;
+          targetLoad.L1 = L1 / 1000;
+        }
+      } else {
+        targetLoad.m1 = j;
+        break;
+      }
+    }
+    curNo = targetLoad.m1;
+    curPos = Math.round(targetLoad.L1 * 1000);
+
+    targetLoad.L1 = L1 / 1000;
+    targetLoad.L2 = L2 / 1000;
+
+    return [curNo, curPos];
+  }
+
+  // L2の位置を確定する . . . . . . . . . . . . . . . . . . . . . .
+  private getL2Position(targetLoad: any,
+    curNo: number, curPos: number, org_m1: number): number[] {
+
+  // L2の位置を確定する . . . . . . . . . . . . . . . . . . . . . .
+    let m1: number = Math.abs(targetLoad.m1);
+    let L2: number = Math.round(Math.abs(targetLoad.L2) * 1000);
+    let m2: number = Math.abs(targetLoad.m2);
+    let L1: number = targetLoad.L1 * 1000;
+
+    switch (targetLoad.mark) {
+      case 1:
+      case 11:
+        if (targetLoad.L2 < 0) {
+          L2 = L1 + L2;
+        }
+        for (let j = m1; j <= m2; j++) {
+          const L: number = Math.round(this.member.getMemberLength(j.toString()) * 1000);
+          if (L2 > L) {
+            if (j + 1 > m2) {
+              // 全長より荷重の方が長い場合 なかったことにする
+              targetLoad.m2 = m2;
+              targetLoad.L2 = 0;
+              targetLoad.P2 = 0;
+              break;
+            }
+            L2 = L2 - L;
+            targetLoad.m2 = j + 1;
+            targetLoad.L2 = L2 / 1000;
+          } else {
+            targetLoad.m2 = j;
+            targetLoad.L2 = L2 / 1000;
+            break;
+          }
+        }
+        curNo = Math.abs(targetLoad.m2);
+        // curPos = Math.round(Math.abs(targetLoad.L2) * 1000);
+        curPos = Math.round(targetLoad.L2 * 1000);
+        break;
+
+      default:
+        if (targetLoad.L2 < 0) {
+          // 連続部材の全長さLLを計算する
+          let ll = 0;
+          for (let j = m1; j <= m2; j++) {
+            ll += Math.round(this.member.getMemberLength(j.toString()) * 1000);
+          }
+          L2 = ll - (curPos + L2);
+          if (L2 < 0) {
+            L2 = 0;
+          }
+          targetLoad.m2 = m2;
+          targetLoad.L2 = L2 / 1000;
+        }
+        let L = 0;
+        for (let j = m2; j >= org_m1; j--) {
+          L = Math.round(this.member.getMemberLength(j.toString()) * 1000);
+          if (L2 > L) {
+            L2 = L2 - L;
+            targetLoad.m2 = j - 1;
+            targetLoad.L2 = L2 / 1000;
+          } else {
+            break;
+          }
+        }
+        if (curNo <= targetLoad.m2) {
+          curNo = Math.abs(targetLoad.m2);
+          curPos = L - Math.round(Math.abs(targetLoad.L2) * 1000);
+        } else {
+          L = 0;
+          curPos = L - Math.round(Math.abs(targetLoad.L2) * 1000);
+        }
+        break;
+    }
+
+    return [curNo, curPos];
   }
 
   // 要素番号 m1 != m2 の場合の入力を分ける
@@ -975,58 +1054,105 @@ export class InputLoadService {
     return result;
   }
 
-  // 距離 L2 にマイナスが付いた場合の入力を分ける
-  private setMemberLoadAddition(
-    targetLoad: any,
-    curNo: number,
-    curPos: number
-  ): any {
-    let L: number;
-    let ll: number;
+  // 有効な行を選別する
+  private getEnableLoad(load1: any[]): any[] {
 
-    let m1: number = Math.abs(targetLoad.m1);
-    const m2: number = Math.abs(targetLoad.m2);
-    let L1: number = Math.abs(targetLoad.L1);
-    let L2: number = Math.abs(targetLoad.L2);
+    let load2 = new Array();
 
-    const sL1: string = targetLoad.L1.toString();
-    if (sL1.includes("-")) {
-      // 距離L1が加算モードで入力されている場合
-      if (m1 <= curNo && curNo <= m2) {
-        m1 = curNo;
-        L1 = curPos + L1;
-        targetLoad.m1 = m1;
-        targetLoad.L1 = L1.toString();
+    // 有効な行を選別する
+    for (const row of load1) {
+
+      // const r = row["row"];
+      let m1 = this.helper.toNumber(row["m1"]);
+      let m2 = this.helper.toNumber(row["m2"]);
+      let direction: string = row["direction"];
+
+      if (direction === null || direction === undefined) {
+        direction = "";
       }
-      curNo = targetLoad.m1;
-      curPos = this.helper.toNumber(targetLoad.L1);
+      direction = direction.trim().toLowerCase();
+
+      const mark = this.helper.toNumber(row["mark"]);
+      let L1 = this.helper.toNumber(row["L1"]);
+      let L2 = this.helper.toNumber(row["L2"]);
+      let P1 = this.helper.toNumber(row["P1"]);
+      let P2 = this.helper.toNumber(row["P2"]);
+
+      if (mark === 9) {
+        direction = "x";
+      }
+
+      if (
+        (m1 != null || m2 != null) &&
+        direction !== "" &&
+        mark != null &&
+        (L1 != null || L2 != null || P1 != null || P2 != null)
+      ) {
+        m1 = m1 == null ? 0 : m1;
+        m2 = m2 == null ? 0 : m2;
+
+        direction = direction.trim();
+        let sL1: string = L1 == null ? "0" : row["L1"].toString();
+        L1 = L1 == null ? 0 : L1;
+        L2 = L2 == null ? 0 : L2;
+        P1 = P1 == null ? 0 : P1;
+        P2 = P2 == null ? 0 : P2;
+
+        load2.push({
+          row: row["row"],
+          m1, m2, direction, mark,
+          sL1, L1, L2, P1, P2
+        });
+      }
     }
 
-    if (targetLoad.L2 < 0) {
-      // 連続部材の全長さLLを計算する
-      ll = 0;
-      for (let j = m1; j <= m2; j++) {
-        ll = ll + this.member.getMemberLength(j.toString());
-      }
-      L2 = ll - (curPos + L2);
-      // if (targetLoad.L2 < 0) {
-      //   L2 = 0;
-      // }
-      targetLoad.m2 = Math.sign(targetLoad.m2) * m2;
-      targetLoad.L2 = L2;
-      L = this.member.getMemberLength(m2.toString());
-      curNo = Math.abs(targetLoad.m2);
-      curPos = L - targetLoad.L2;
-    }
+    return load2;
+  }
 
-    if (curPos >= L - 0.0001) {
-      if (m2 > curNo) {
-        curNo = curNo + 1;
-        curPos = 0;
+   
+  // memberの範囲外に出ていないか確認する
+  public checkIntoMember(load) {
+    // loadの数値と型を保存しておく
+    const mark = load.mark;
+    const m1 = load.m1.toString();
+    let L1 = Math.round(load.L1 *1000);
+    let L2 = Math.round(load.L2 *1000);
+    let P1 = Math.round(load.P1 *100)/100;
+    let P2 = Math.round(load.P2 *100)/100;
+
+    // memberの範囲外に出ていないか確認
+    const len = Math.round(this.member.getMemberLength(m1) * 1000);
+
+    if (mark === 1 || mark === 11) {
+      if (L1 < 0 || L1 > len) {
+        L1 = 0;
+        P1 = 0;
+      }
+      if (L2 < 0 || L2 > len) {
+        L2 = 0;
+        P2 = 0;
+      };
+    } else if (mark === 2 || mark === 9) {
+      if ( L1 + L2 > len) {
+        L1 = 0;
+        L2 = 0;
+        P1 = 0;
+        P2 = 0;
+      } else {
+        if (L2 < 0 ) {
+          L2 = 0;
+        }
+        if (L1 < 0) {
+          L1 = 0;
+        }    
       }
     }
-    const result = { loads: targetLoad, curNo: curNo, curPos: curPos };
-    return result;
+    // 数値をそのままに、元の型に戻す
+    load.L1 = L1 / 1000;
+    load.L2 = L2 / 1000;
+    load.P1 = P1;
+    load.P2 = P2;
+    return load;
   }
 
   // 有効な 荷重ケース数を調べる
@@ -1047,4 +1173,5 @@ export class InputLoadService {
     }
     return maxCase;
   }
+
 }

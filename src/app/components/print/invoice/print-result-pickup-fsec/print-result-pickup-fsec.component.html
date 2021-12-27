@@ -1,23 +1,26 @@
-<div *ngIf="isEnable"  class="invoicetTable pickfsec">
-  <div *ngIf="judge" class="pagerBreak"></div>
-    <h2>PICKUP 断面力</h2>
-    <!--pickFsec_titileからtitleごとにデータを取り出す-->
-    <div *ngFor="let title of pickFsec_title; index as i">
-        <div *ngIf="pickFsec_case_break[i]" class="pagerBreak"></div>
-        <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
-        <!--pickFsec_datasetからfxmaxなどを取り出す-->
-        <div *ngFor="let dataset of pickFsec_dataset[i]; index as j">
-            <div *ngIf="pickFsec_type_break[j]" class="pagerBreak space"></div>
-            <h3>{{ title }}</h3>
-            <h3>{{ dataset[0] }}</h3>
-            <!--fxmaxなどからcase[0]が名称のため飛ばす-->
-            <div *ngFor="let case of dataset; index as k">
-                <div *ngIf="k > 0">
-                    <div *ngFor="let branch of case; index as l">
-                        <div *ngFor="let datas of branch; index as m">
-                            <div *ngIf="m > 0" class="pagerBreak space"></div>
-                            <table class="print-sm">
-                                <div *ngIf="dimension===3">
+<div *ngIf="isEnable" class="invoicetTable pickfsec">
+    <div class="print-sm">
+        <!--pickFsec_titileからtitleごとにデータを取り出す-->
+        <div *ngFor="let title of pickFsec_title; index as i">
+            <!-- 小タイトル毎に毎回出力するように下に移動した <h3>{{ title }}</h3> -->
+            <!--pickFsec_datasetからfxmaxなどを取り出す-->
+            <div *ngIf="i!==0" class="pagerBreak"> </div>
+            <div *ngFor="let dataset of pickFsec_dataset[i]; index as j">
+                <table>
+                    <div *ngFor="let datas of dataset; index as k">
+                        <!--fxmaxなどからcase[0]が名称のため飛ばす-->
+                        <div *ngIf="k > 0">
+                            <div *ngIf="dimension===3">
+                                <thead>
+                                    <tr>
+                                        <th colspan="9" class="title">PICKUP　断面力</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="9" style="text-align: left;">{{title}}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="9" style="text-align: left;">{{ dataset[0] }}</th>
+                                    </tr>
                                     <tr>
                                         <th>部材</th>
                                         <th>節点</th>
@@ -41,6 +44,8 @@
                                         <th>(kN・m)</th>
                                         <th></th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     <tr *ngFor="let data of datas">
                                         <td>{{data[0]}}</td>
                                         <td>{{data[1]}}</td>
@@ -51,10 +56,21 @@
                                         <td>{{data[6]}}</td>
                                         <td>{{data[7]}}</td>
                                         <td>{{data[8]}}</td>
-                                        <td>{{data[9]}}</td>
+                                        <td class="comb">{{data[9]}}</td>
                                     </tr>
-                                </div>
-                                <div *ngIf="dimension===2">
+                                </tbody>
+                            </div>
+                            <div *ngIf="dimension===2">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6" class="title">PICKUP　断面力</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="6" style="text-align: left;">{{title}}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="6" style="text-align: left;">{{ dataset[0] }}</th>
+                                    </tr>
                                     <tr>
                                         <th>部材</th>
                                         <th>節点</th>
@@ -72,6 +88,8 @@
                                         <th>(kN・m)</th>
                                         <th></th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     <tr *ngFor="let data of datas">
                                         <td>{{data[0]}}</td>
                                         <td>{{data[1]}}</td>
@@ -79,13 +97,18 @@
                                         <td>{{data[3]}}</td>
                                         <td>{{data[4]}}</td>
                                         <td>{{data[8]}}</td>
-                                        <td>{{data[9]}}</td>
+                                        <td class="comb">{{data[9]}}</td>
                                     </tr>
-                                </div>                                
-                            </table>
+                                </tbody>
+                            </div>
+                            <!-- <div *ngIf="j+1 == pickFsec_dataset[0].length && i+1 == pickFsec_dataset.length;then pagerBl ;else pagerBr">
+                            </div>
+                            <ng-template #pagerBr>
+                                <div *ngIf="(((j+1) % break_after) == 0)" class="pagerBreak"></div>
+                            </ng-template> -->
                         </div>
                     </div>
-                </div>
+                </table>
             </div>
         </div>
     </div>

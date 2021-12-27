@@ -131,6 +131,9 @@ $border-color: #428bca; // ボーダーライン
     border-bottom: #0e036e;
     border-bottom-style: solid;
     border-bottom-width: thin;
+    word-wrap: break-word;
+    /* IEやFirefox対応用 */
+    overflow-wrap: break-word;
 }
 
 .three-container {
@@ -248,11 +251,48 @@ $border-color: #428bca; // ボーダーライン
             }
         }
     }
-    .pageNum {
-        padding: 8px;
-        border: 1px solid #333333;
-        border-radius: 4px;
-        text-align: center;
+}
+
+.pageNum {
+    padding: 8px;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.move_case {
+    display: flex;
+    align-items: center;
+    .circle {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #f5f5f5;
+    }
+    li {
+        margin: 0 4px;
+        a {
+            &:hover {
+                cursor: pointer;
+                opacity: 0.7;
+                background-color: #333;
+            }
+            &.active {
+                background-color: #333;
+            }
+        }
+    }
+}
+
+.LL_area {
+    margin-bottom: 16px;
+    form {
+        mat-form-field {
+            &:first-child {
+                margin-right: 8px;
+            }
+        }
     }
 }
 

@@ -2,12 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { InputDataService } from "../../../../providers/input-data.service";
 import { ResultDataService } from "../../../../providers/result-data.service";
 import { AfterViewInit } from "@angular/core";
-import { JsonpClientBackend } from "@angular/common/http";
 import { DataCountService } from "../dataCount.service";
-import { newArray } from "@angular/compiler/src/util";
-import { ArrayCamera } from "three";
 import { ResultCombineFsecService } from "src/app/components/result/result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { PrintCustomFsecService } from "../../custom/print-custom-fsec/print-custom-fsec.service";
 
 @Component({
   selector: "app-print-result-pickup-fsec",
@@ -37,13 +35,24 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
   public judge: boolean;
 
+  private kk = 0;
+  private flg: boolean = false;
+
+  private splen = 5;
+  public break_after: number;
+  public pagerBl;
+  public pagerBr;
+
   constructor(
     private InputData: InputDataService,
     private ResultData: ResultDataService,
     private countArea: DataCountService,
     private combFsec: ResultCombineFsecService,
-    private helper: DataHelperModule ) {
-      this.dimension = this.helper.dimension;
+    private custom: PrintCustomFsecService,
+    private helper: DataHelperModule,
+    private printCustomFsec: PrintCustomFsecService
+  ) {
+    this.dimension = this.helper.dimension;
     this.judge = false;
     this.clear();
   }
@@ -59,11 +68,11 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
     const resultjson: any = this.ResultData.pickfsec.fsecPickup;
     const keys: string[] = Object.keys(resultjson);
     if (keys.length > 0) {
-      const tables = this.printPickForce(resultjson);
+      this.custom.clear();
+      const jud = this.custom.dataset;
+      const tables = this.printPickForce(resultjson, jud);
       this.pickFsec_dataset = tables.table;
       this.pickFsec_title = tables.titleSum;
-      this.pickFsec_case_break = tables.break_after_case;
-      this.pickFsec_type_break = tables.break_after_type;
       this.judge = this.countArea.setCurrentY(tables.this, tables.last);
     } else {
       this.isEnable = false;
@@ -72,44 +81,54 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {}
 
-  private printPickForce(json): any {
+  private printPickForce(json, jud): any {
     const titleSum: any = [];
     const body: any[] = new Array();
     const typeSum: any = [];
 
     const KEYS = this.combFsec.fsecKeys;
     const TITLES = this.combFsec.titles;
-
-    // [
-    //   "fx_max",
-    //   "fx_min",
-    //   "fy_max",
-    //   "fy_min",
-    //   "fz_max",
-    //   "fz_min",
-    //   "mx_max",
-    //   "mx_min",
-    //   "my_max",
-    //   "my_min",
-    //   "mz_max",
-    //   "mz_min",
-    // ];
-    //const TITLES = ['軸方向力 最大', '軸方向力 最小', 'y方向のせん断力 最大', 'y方向のせん断力 最小', 'z方向のせん断力 最大', 'z方向のせん断力 最小',
-    //  'ねじりモーメント 最大', 'ねじりモーメント 最小', 'y軸回りの曲げモーメント 最大', 'y軸回りの曲げモーメント力 最小', 'z軸回りの曲げモーメント 最大', 'z軸回りの曲げモーメント 最小'];
-
     const keys: string[] = Object.keys(json);
 
     //　テーブル
     const splid: any = [];
-    let typeData: any = [];
     let typeDefinition: any = [];
     let typeName: any = [];
     let typeAll: any = [];
     this.row = 0;
 
+    let target_flg = false;
+
+    for (let i = 0; i < jud.length; i++) {
+      if (jud[i].check === true) {
+        this.flg = true;
+        break;
+      }
+    }
+
+    if (!this.printCustomFsec.fsecEditable.includes(true)) {
+      for (let i = 0; i < this.printCustomFsec.fsecEditable.length; i++) {
+        this.printCustomFsec.fsecEditable[i] = true;
+      }
+    }
+
+    for (let i = 0; i < jud.length; i++) {
+      if ("check" in jud[i]) {
+        if (jud[i].check === true) {
+          target_flg = true;
+          break;
+        }
+      }
+    }
+
+    if (target_flg === false) {
+      for (let i = 0; i < jud.length; i++) {
+        jud[i].check = true;
+      }
+    }
+
     for (const index of keys) {
       const elist = json[index]; // 1テーブル分のデータを取り出す
-
       // 荷重名称
       const title: any = [];
       let loadName: string = "";
@@ -124,158 +143,83 @@ export class PrintResultPickupFsecComponent implements OnInit, AfterViewInit {
       }
       titleSum.push(title);
 
-      let table: any = [];
-      let type: any = [];
       for (let i = 0; i < KEYS.length; i++) {
-        const key = KEYS[i];
-        const title2 = TITLES[i];
-        const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if(!(key in elieli)) continue;
+        if (this.printCustomFsec.fsecEditable[i] === true) {
+          const key = KEYS[i];
+          const title2 = TITLES[i];
+          const elieli = json[index]; // 1行分のnodeデータを取り出す
+          if (!(key in elieli)) continue;
 
+          typeName.push(title2);
 
-        typeName.push(title2);
-
-        const elist = elieli[key]; // 1行分のnodeデータを取り出す.
-        let body: any[] = new Array();
-        if (i === 0) {
-          this.row = 10;
-        } else {
-          this.row = 7;
-        }
-
-        for (const k of Object.keys(elist)) {
-          const item = elist[k];
-          // 印刷する1行分のリストを作る
-          const line = ["", "", "", "", "", "", "", "", "", ""];
-          line[0] = item.m.toString();
-          line[1] = item.n.toString();
-          line[2] = item.l.toFixed(3);
-          line[3] = item.fx.toFixed(2);
-          line[4] = item.fy.toFixed(2);
-          line[5] = item.fz.toFixed(2);
-          line[6] = item.mx.toFixed(2);
-          line[7] = item.my.toFixed(2);
-          line[8] = item.mz.toFixed(2);
-          line[9] = item.comb + ':' + item.case;
-
-          body.push(line);
-          this.row++;
-
-          //１テーブルでthis.bottomCell行以上データがあるならば
-          if (this.row > this.bottomCell) {
-            table.push(body);
-            body = [];
-            this.row = 3;
+          const elist = elieli[key]; // 1行分のnodeデータを取り出す.
+          let body: any[] = new Array();
+          if (i === 0) {
+            this.row = 10;
+          } else {
+            this.row = 7;
           }
-        }
-        if (body.length > 0) {
-          table.push(body);
-        }
+          this.kk = 0;
 
-        if (table.length > 0) {
-          typeData.push(table);
-          table = [];
+          for (const k of Object.keys(elist)) {
+            const item = elist[k];
+            this.kk = item.m === "" ? this.kk : Number(item.m) - 1;
+            if (jud[this.kk].check === true || this.flg === false) {
+              // 印刷する1行分のリストを作る
+              const line = ["", "", "", "", "", "", "", "", "", ""];
+              line[0] = item.m.toString();
+              line[1] = item.n.toString();
+              line[2] = item.l.toFixed(3);
+              line[3] = item.fx.toFixed(2);
+              line[4] = item.fy.toFixed(2);
+              line[5] = item.fz.toFixed(2);
+              line[6] = item.mx.toFixed(2);
+              line[7] = item.my.toFixed(2);
+              line[8] = item.mz.toFixed(2);
+              line[9] = item.comb + ":" + item.case;
+
+              body.push(line);
+              this.row++;
+
+              //１テーブルでthis.bottomCell行以上データがあるならば
+              // if (this.row > this.bottomCell) {
+              //   table.push(body);
+              //   body = [];
+              //   this.row = 3;
+              // }
+            }
+          }
+          // if (body.length > 0) {
+          //   table.push(body);
+          // }
+
+          // if (table.length > 0) {
+          //   typeData.push(table);
+          //   table = [];
+          // }
+          typeDefinition.push(typeName, body);
+          typeAll.push(typeDefinition);
+          typeName = [];
+          body = [];
+          typeDefinition = [];
         }
-        typeDefinition.push(typeName, typeData);
-        typeAll.push(typeDefinition);
-        typeName = [];
-        typeData = [];
-        typeDefinition = [];
       }
       splid.push(typeAll);
       typeAll = [];
     }
 
-    let countHead: number = 0;
-    let countSemiHead: number = 0;
-    // 全体の高さを計算する
-    let countCell = 0;
-    for (const index of keys) {
-      const elist = json[index]; // 1テーブル分のデータを取り出す
-      for (let i = 0; i < KEYS.length; i++) {
-        const key = KEYS[i];
-        const elieli = json[index]; // 1行分のnodeデータを取り出す
-        if(!(key in elieli)) continue;
-
-        const elist = elieli[key]; // 1行分のnodeデータを取り出す.
-        for (const k of Object.keys(elist)) {
-          countCell += Object.keys(elist).length;
-        }
-        countSemiHead += Object.keys(elieli).length * 3;
-      }
-      countHead += Object.keys(json).length;
+    if (splid.length > 0) {
+      const splidlength = -(splid[0][0][1].length / this.splen);
+      this.break_after =
+        Math.floor(splidlength + 5) > 0 ? Math.floor(splidlength + 5) : 1;
     }
 
-    const countTotal = countCell + countHead + countSemiHead + 3;
-
-    //　各荷重状態の前に改ページ(break_after)が必要かどうかを判定する。
-    const break_after_case: boolean[] = new Array();
-    const break_after_type: boolean[] = new Array();
-    let ROW_type = 7; // 行
-    let ROW_case = 10;
-    let countCell_type: number = 0;
-    let countCell_case: number = 0;
-    for (const index of Object.keys(json)) {
-      const elieli = json[index]; // 1行分のnodeデータを取り出す
-      for (let i = 0; i < KEYS.length; i++) {
-        const key: string = KEYS[i];
-        if(!(key in elieli)) continue;
-
-        const elist = elieli[key]; // 1行分のnodeデータを取り出す.
-
-        // x方向Max,minなどのタイプでの分割
-        countCell_type = Object.keys(elist).length;
-
-        ROW_type += countCell_type;
-        ROW_case += countCell_type;
-
-        if (ROW_type < this.bottomCell) {
-          break_after_type.push(false);
-          ROW_type += 5;
-        } else {
-          if (i === 0) {
-            break_after_type.push(false);
-          } else {
-            break_after_type.push(true);
-            ROW_type = 0;
-          }
-          let countHead_break = Math.floor((countCell_type / this.bottomCell) * 3 + 2);
-          ROW_type += countCell_type + countHead_break;
-          ROW_type = ROW_type % this.bottomCell;
-          ROW_type += 5;
-        }
-      }
-
-      //荷重タイプごとに分割するかどうか
-      countCell_case += Object.keys(elieli).length;
-      ROW_case += countCell_case;
-      if (ROW_case < this.bottomCell) {
-        break_after_case.push(false);
-        ROW_case += 7;
-      } else {
-        if (index === "1") {
-          break_after_case.push(false);
-        } else {
-          break_after_case.push(true);
-        }
-        let countHead_breakLoad = Math.floor((countCell_type / this.bottomCell) * 3 + 5);
-        ROW_case += countCell_type + countHead_breakLoad;
-        ROW_case = ROW_type % this.bottomCell;
-        ROW_case += 7;
-      }
-    }
-
-    //最後のページの行数だけ取得している
-    let lastArrayCount: number = countTotal % this.bottomCell;
+    this.flg = false;
 
     return {
       titleSum,
       table: splid,
       typeSum,
-      break_after_case,
-      break_after_type,
-      this: countTotal,
-      last: lastArrayCount, // 最後のページの高さ
     };
   }
 }
