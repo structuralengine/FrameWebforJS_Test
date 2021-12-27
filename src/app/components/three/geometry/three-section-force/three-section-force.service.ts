@@ -77,6 +77,11 @@ export class ThreeSectionForceService {
       return;
     }
     this.currentMode = ModeName;
+    if(ModeName.length === 0){
+      this.guiDisable();
+      return;
+    }
+
     this.guiEnable();
     this.changeMesh();
     this.onResize();
