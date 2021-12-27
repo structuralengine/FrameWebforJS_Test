@@ -902,6 +902,7 @@ export class InputLoadService {
     let m1: number = Math.abs(targetLoad.m1);
     const m2: number = Math.abs(targetLoad.m2);
     let L1: number = Math.round(Math.abs(targetLoad.L1) * 1000);
+    let L2: number = Math.round(Math.abs(targetLoad.L2) * 1000);
 
     if (sL1.includes("-")) {
       // 距離L1が加算モードで入力されている場合
@@ -931,6 +932,9 @@ export class InputLoadService {
           break;
         }
         L1 = L1 - L;
+        if (targetLoad.mark === 1 || targetLoad.mark === 11) {
+          L2 = L2 - L;
+        }
         if (j + 1 <= m2) {
           targetLoad.m1 = j + 1;
           targetLoad.L1 = L1 / 1000;
@@ -944,6 +948,7 @@ export class InputLoadService {
     curPos = Math.round(targetLoad.L1 * 1000);
 
     targetLoad.L1 = L1 / 1000;
+    targetLoad.L2 = L2 / 1000;
 
     return [curNo, curPos];
   }
@@ -1112,8 +1117,8 @@ export class InputLoadService {
     const m1 = load.m1.toString();
     let L1 = Math.round(load.L1 *1000);
     let L2 = Math.round(load.L2 *1000);
-    let P1 = load.P1;
-    let P2 = load.P2;
+    let P1 = Math.round(load.P1 *100)/100;
+    let P2 = Math.round(load.P2 *100)/100;
 
     // memberの範囲外に出ていないか確認
     const len = Math.round(this.member.getMemberLength(m1) * 1000);
