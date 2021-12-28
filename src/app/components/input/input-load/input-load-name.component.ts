@@ -165,6 +165,14 @@ export class InputLoadNameComponent implements OnInit {
       for (let i = 0; i < ui.updateList.length; i++) {
         target = ui.updateList[i];
 
+        // セルを消した時に、値がundefinedになるため、''に変換する
+        const target_load_name = this.data.load_name[target.rowIndx];
+        for (const key of Object.keys(target.newRow)) {
+          if (target.newRow[key] === undefined) {
+            target_load_name[key] = '';
+          }
+        }
+
         const r = this.helper.toNumber(target.rowData["rate"]);
         let s = target.rowData["symbol"];
         if(s === undefined){
@@ -178,7 +186,7 @@ export class InputLoadNameComponent implements OnInit {
 
         if (
           r === null &&
-          s === null &&
+          (s === "" || s === undefined) &&
           (n === "" || n === undefined) &&
           fm === null &&
           fn === null &&

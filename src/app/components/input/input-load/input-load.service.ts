@@ -948,7 +948,10 @@ export class InputLoadService {
     curPos = Math.round(targetLoad.L1 * 1000);
 
     targetLoad.L1 = L1 / 1000;
-    targetLoad.L2 = L2 / 1000;
+    // L2が加算モードになっていた場合、L2の計算結果を更新しない
+    if (targetLoad.L2 >= 0) {
+      targetLoad.L2 = L2 / 1000;
+    }
 
     return [curNo, curPos];
   }
