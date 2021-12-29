@@ -22,6 +22,11 @@ export class ThreeReactService {
   private selectionItem: THREE.Mesh;     // 選択中のアイテム
   private reacData: any;
   private nodeData: any;
+  // GUI
+  private scale: number;
+  private params: any; // GUIの表示制御
+  private gui: any;
+  private gui_max_scale: number;
 
   constructor(private scene: SceneService,
     private helper: DataHelperModule,
@@ -34,6 +39,14 @@ export class ThreeReactService {
     this.pointLoadList = new Array();
     this.selectionItem = null;
     this.reacData = {};
+
+    // gui
+    this.scale = 1.0;
+    this.params = { 
+      reactScale: this.scale 
+    };
+    this.gui = null;
+    this.gui_max_scale = 100;
     
     this.ClearData();
   }
@@ -45,7 +58,39 @@ export class ThreeReactService {
     for (const mesh of this.pointLoadList) {
       mesh.visible = flag;
     }
+
     this.isVisible = flag;
+    
+    if (flag === true) {
+      this.guiEnable();
+    } else {
+      this.guiDisable();
+    }
+  }
+  
+  // guiを表示する
+  private guiEnable(): void {
+    if (this.gui !== null) {
+      return;
+    }
+
+    this.gui = this.scene.gui
+      .add(this.params, "reactScale", 0, this.gui_max_scale)
+      .step(1)
+      .onChange((value) => {
+        this.scale = value;
+        //this.onResize();
+        this.scene.render();
+      });
+  }
+
+  // guiを非表示にする
+  private guiDisable(): void {
+    if (this.gui === null) {
+      return;
+    }
+    this.scene.gui.remove(this.gui);
+    this.gui = null;
   }
 
 
@@ -62,6 +107,8 @@ export class ThreeReactService {
       this.scene.remove(mesh);
     }
     this.pointLoadList = new Array();
+
+    this.scale = 1.0;
 
   }
 
@@ -309,6 +356,15 @@ export class ThreeReactService {
 
     return line;
 
+  }
+
+  private onResize(): void{
+    const pointLoadList = this.pointLoadList;
+    const scale = this.scale;
+    for (const key of Object.keys(pointLoadList)) {
+      const target = pointLoadList[key];
+      target.scale.set(scale, scale, scale);
+    }
   }
 
 
