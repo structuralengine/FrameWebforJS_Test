@@ -583,7 +583,7 @@ export class InputLoadService {
           // 列車連行荷重の場合
           // _L11 = [0, 0.1, 0.2, 0.3, 0.4, 0.5]; // L1に加算したケースを複数作る
           const LL_pitch: number = load_name["LL_pitch"];
-
+          load1[0].L1 = '0';
           // 連行荷重のスタート位置を決定する
           const LL_position = this.get_LL_position(load1);
           numL1 = LL_position['L1']; 
@@ -948,7 +948,10 @@ export class InputLoadService {
     curPos = Math.round(targetLoad.L1 * 1000);
 
     targetLoad.L1 = L1 / 1000;
-    targetLoad.L2 = L2 / 1000;
+    // L2が加算モードになっていた場合、L2の計算結果を更新しない
+    if (targetLoad.L2 >= 0) {
+      targetLoad.L2 = L2 / 1000;
+    }
 
     return [curNo, curPos];
   }
