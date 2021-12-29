@@ -859,6 +859,10 @@ export class InputLoadComponent implements OnInit {
   }
 
   private checkLL(symbol: string): void{
+    if (symbol === undefined) {
+      this.LL_flg = false;
+      return
+    }
     if (symbol.includes("LL")) {
       this.LL_flg = true;
     } else {
