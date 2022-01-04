@@ -101,4 +101,13 @@ export class DataHelperModule {
     return scale;
   }
 
+  public getCircleScale(data: number, max: number): number {
+
+    const ratio = 1 * Math.abs(data) / max;
+    
+    // 円を用いた倍率を設定する
+    const scale = ( 1 - ( ratio - 1)**2 )**0.5; 
+    return scale;
+  }
+
 }

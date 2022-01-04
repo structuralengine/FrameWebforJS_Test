@@ -239,7 +239,7 @@ export class ThreeReactService {
 
     const group = new THREE.Group();
 
-    let scale: number = value / mMax;
+    let scale: number = Math.sign(value) * this.helper.getCircleScale(value, mMax);
     scale /= 5;
 
     const curve = new THREE.EllipseCurve(
@@ -303,7 +303,8 @@ export class ThreeReactService {
     const group = new THREE.Group();
 
     const maxLength: number = this.maxLength() * 0.2;
-    const length: number = maxLength * value / pMax;
+    const ratio = this.helper.getCircleScale(value, pMax);
+    const length = Math.sign(value) * maxLength * ratio;
 
     const linewidth: number = Math.abs(length) / 5000;
 
