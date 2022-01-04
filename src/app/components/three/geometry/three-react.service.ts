@@ -22,6 +22,11 @@ export class ThreeReactService {
   private selectionItem: THREE.Mesh;     // 選択中のアイテム
   private reacData: any;
   private nodeData: any;
+  // GUI
+  private scale: number;
+  private params: any; // GUIの表示制御
+  private gui: any;
+  private gui_max_scale: number;
 
   constructor(private scene: SceneService,
     private helper: DataHelperModule,
@@ -34,6 +39,14 @@ export class ThreeReactService {
     this.pointLoadList = new Array();
     this.selectionItem = null;
     this.reacData = {};
+
+    // gui
+    this.scale = 1.0;
+    this.params = { 
+      reactScale: this.scale 
+    };
+    this.gui = null;
+    this.gui_max_scale = 10;
     
     this.ClearData();
   }
@@ -45,7 +58,39 @@ export class ThreeReactService {
     for (const mesh of this.pointLoadList) {
       mesh.visible = flag;
     }
+
     this.isVisible = flag;
+    
+    if (flag === true) {
+      this.guiEnable();
+    } else {
+      this.guiDisable();
+    }
+  }
+  
+  // guiを表示する
+  private guiEnable(): void {
+    if (this.gui !== null) {
+      return;
+    }
+
+    this.gui = this.scene.gui
+      .add(this.params, "reactScale", 0, this.gui_max_scale)
+      .step(0.1)
+      .onChange((value) => {
+        this.scale = value;
+        this.onResize();
+        this.scene.render();
+      });
+  }
+
+  // guiを非表示にする
+  private guiDisable(): void {
+    if (this.gui === null) {
+      return;
+    }
+    this.scene.gui.remove(this.gui);
+    this.gui = null;
   }
 
 
@@ -62,6 +107,8 @@ export class ThreeReactService {
       this.scene.remove(mesh);
     }
     this.pointLoadList = new Array();
+
+    this.scale = 1.0;
 
   }
 
@@ -99,6 +146,8 @@ export class ThreeReactService {
 
     // サイズを調整しオブジェクトを登録する
     this.createReact(this.reacData[targetCase], this.nodeData);
+
+    this.onResize();
   }
 
   // 節点荷重の矢印を描く
@@ -139,19 +188,19 @@ export class ThreeReactService {
         continue;
       }
       // x方向の集中荷重
-      const xArrow: THREE.Line = this.setPointReact(reac.tx, pMax, node, 'px');
+      const xArrow: THREE.Group = this.setPointReact(reac.tx, pMax, node, 'px');
       if (xArrow !== null) {
         this.pointLoadList.push(xArrow);
         this.scene.add(xArrow);
       }
       // y方向の集中荷重
-      const yArrow: THREE.Line = this.setPointReact(reac.ty, pMax, node, 'py');
+      const yArrow: THREE.Group = this.setPointReact(reac.ty, pMax, node, 'py');
       if (yArrow !== null) {
         this.pointLoadList.push(yArrow);
         this.scene.add(yArrow);
       }
       // z方向の集中荷重
-      const zArrow: THREE.Line = this.setPointReact(reac.tz, pMax, node, 'pz');
+      const zArrow: THREE.Group = this.setPointReact(reac.tz, pMax, node, 'pz');
       if (zArrow !== null) {
         this.pointLoadList.push(zArrow);
         this.scene.add(zArrow);
@@ -182,11 +231,16 @@ export class ThreeReactService {
   }
 
   // 節点荷重の矢印を作成する
-  private setMomentReact(value: number, mMax: number, node: any, color: number, name: string): THREE.Line {
+  private setMomentReact(value: number, mMax: number, node: any, color: number, name: string): THREE.Group {
 
     if (value === 0) {
       return null;
     }
+
+    const group = new THREE.Group();
+
+    let scale: number = Math.sign(value) * this.helper.getCircleScale(value, mMax);
+    scale /= 5;
 
     const curve = new THREE.EllipseCurve(
       0, 0,              // ax, aY
@@ -200,54 +254,57 @@ export class ThreeReactService {
     const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
     const lineMaterial = new THREE.LineBasicMaterial({ color, linewidth: 5 });
     const ellipse = new THREE.Line(lineGeometry, lineMaterial);
+    group.add(ellipse);
 
     const arrowGeometry = new THREE.ConeGeometry(0.3, 3, 3, 1, true);
     const arrowMaterial = new THREE.MeshBasicMaterial({ color });
     const cone = new THREE.Mesh(arrowGeometry, arrowMaterial);
     cone.rotateX(Math.PI);
     cone.position.set(4, 0.5, 0);
+    group.add(cone);
 
-    ellipse.add(cone);
-    ellipse.position.set(node.x, node.y, node.z);
+    group.position.set(node.x, node.y, node.z);
+    group.scale.set(scale, scale, scale)
 
     switch (name) {
       case 'mx':
-        ellipse.rotateY(Math.PI / 2);
+        group.rotateY(Math.PI / 2);
         if(value < 0){
-          ellipse.rotateX(Math.PI);
+          group.rotateX(Math.PI);
         }
         break;
       case 'my':
-        ellipse.rotateX(Math.PI / 2);
+        group.rotateX(Math.PI / 2);
         if(value < 0){
-          ellipse.rotateY(Math.PI);
+          group.rotateY(Math.PI);
         }
         break;
       case 'mz':
         if(value > 0){
-          ellipse.rotateX(Math.PI); // 反転
+          group.rotateX(Math.PI); // 反転
         }
         break;
     }
 
-    let scale: number = value / mMax;
-    scale /= 5;
-    ellipse.scale.set(scale, scale, scale);
+    group['base_scale'] = scale
 
-    return ellipse;
+    return group;
 
   }
 
   // 節点荷重の矢印を作成する
   private setPointReact(value: number, pMax: number,
-    node: any, name: string): THREE.Line {
+    node: any, name: string): THREE.Group {
 
     if (value === 0) {
       return null;
     }
 
+    const group = new THREE.Group();
+
     const maxLength: number = this.maxLength() * 0.2;
-    const length: number = maxLength * value / pMax;
+    const ratio = this.helper.getCircleScale(value, pMax);
+    const length = Math.sign(value) * maxLength * ratio;
 
     const linewidth: number = Math.abs(length) / 5000;
 
@@ -255,18 +312,18 @@ export class ThreeReactService {
     const positions: THREE.Vector3[] = [];
 
 
-    positions.push(new THREE.Vector3(node.x, node.y, node.z));
+    positions.push(new THREE.Vector3(0, 0, 0));
     switch (name) {
       case 'px':
-        positions.push(new THREE.Vector3(node.x - length, node.y, node.z));
+        positions.push(new THREE.Vector3( -length, 0, 0 ));
         color = 0xFF0000;
         break;
       case 'py':
-        positions.push(new THREE.Vector3(node.x, node.y - length, node.z));
+        positions.push(new THREE.Vector3( 0, -length, 0 ));
         color = 0x00FF00;
         break;
       case 'pz':
-        positions.push(new THREE.Vector3(node.x, node.y, node.z - length));
+        positions.push(new THREE.Vector3( 0, 0, -length ));
         color = 0x0000FF;
         break;
     }
@@ -278,17 +335,19 @@ export class ThreeReactService {
     const cone: THREE.Mesh = new THREE.Mesh(arrowGeometry, arrowMaterial);
     switch (name) {
       case 'px':
-        cone.position.set(node.x - cone_height / 2, node.y, node.z);
+        cone.position.set( -cone_height / 2, 0, 0 );
         cone.rotation.z = Math.PI / 2 * 3;
         break;
       case 'py':
-        cone.position.set(node.x, node.y - cone_height / 2, node.z);
+        cone.position.set( 0, -cone_height / 2, 0 );
         break;
       case 'pz':
-        cone.position.set(node.x, node.y, node.z - cone_height / 2);
+        cone.position.set( 0, 0, -cone_height / 2 );
         cone.rotation.x = Math.PI / 2;
         break;
     }
+    cone.name = "cone";
+    group.add(cone);
 
     const threeColor = new THREE.Color(color);
     const colors = [];
@@ -301,14 +360,26 @@ export class ThreeReactService {
       linewidth,
     });
     const line = new THREE.Line(geometry, matLine);
+    line.name = "line";
     line.computeLineDistances();
-    line.add(cone);
+    group.add(line)
 
-    line.scale.set(1, 1, 1);
-    line.name = name;
+    group.position.set(node.x, node.y, node.z);
+    group.name = name;
+    group["base_scale"] = 1;
 
-    return line;
+    return group;
 
+  }
+
+  private onResize(): void{
+    const pointLoadList = this.pointLoadList;
+    const scale = this.params.reactScale;
+    for (const key of Object.keys(pointLoadList)) {
+      const target = pointLoadList[key];
+      const scale2 = scale * target.base_scale;
+      target.scale.set(scale2, scale2, scale2);
+    }
   }
 
 
