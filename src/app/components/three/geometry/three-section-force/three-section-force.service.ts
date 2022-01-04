@@ -310,6 +310,10 @@ export class ThreeSectionForceService {
       return;
     }
 
+    /* if (this.gui === null) {
+      this.guiEnable();
+    } */
+
     const fsecDatas = [];
     const f = fsecList[this.currentIndex];
     let flg = false;
@@ -487,6 +491,9 @@ export class ThreeSectionForceService {
   public changeData(index: number, ModeName: string): void {
     this.currentIndex = index.toString();
     this.currentMode = ModeName;
+    if (this.gui === null) {
+      this.guiEnable();
+    }
     this.changeMesh();
     this.onResize();
   }
@@ -508,6 +515,9 @@ export class ThreeSectionForceService {
       return;
     }
     const max_value = max_values[this.currentIndex];
+    if (max_value === undefined) {
+      return
+    }
 
     let scale3: number = 1;
     if (this.params.axialForce === true) {

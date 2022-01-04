@@ -170,10 +170,10 @@ export class ResultReacService {
   
       for (const caseNo of Object.keys(load_name)) {
         const caseLoad: any = load_name[caseNo];
-        if(caseLoad.symbol !== "LL"){
+        if(!caseLoad.symbol.includes("LL")){
           this.LL_flg.push(false);
           max_values[caseNo] = org_max_values[caseNo];
-  
+          three_reac[caseNo] = reac[caseNo];
         } else {
   
           // 連行荷重の場合 
