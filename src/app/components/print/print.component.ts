@@ -53,22 +53,28 @@ export class PrintComponent implements OnInit {
     } else {
       // データを取得
       const inputJson = this.InputData.getInputJson(1);
+
       // PDFサーバーに送る
-      const json = JSON.stringify(inputJson);
+      const json = {"body": JSON.stringify(inputJson)};
       const url = 'https://vprk48kosh.execute-api.ap-northeast-1.amazonaws.com/default/FramePrintPDF';
-      this.http.post<string>(url, json, {
+
+      this.http.post(url, json, {
         headers: new HttpHeaders({
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json'
+          'Content-Type': 'application/json'
         })
-      }).toPromise()
-      .then((res) => {
-        const response: any = res;
-        return response;
-      })
-      .catch(err =>{
-        console.log(err);
-      });
+      }).subscribe(
+        (response) => {
+          this.showPDF(response.toString());
+        },
+        (err) => {
+          if('error' in err){
+            if('text' in err.error){
+              this.showPDF(err.error.text.toString());
+              return;
+            }
+          }
+        }
+      );
 
     }
   }
