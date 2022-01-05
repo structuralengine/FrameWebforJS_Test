@@ -49,6 +49,7 @@
     "jquery-ui-pack": "1.12.3",
     "pako": "^2.0.2",
     "pqgrid": "^7.5.0",
+    "print-js": "^1.6.0",
     "rxjs": "~6.6.2",
     "rxjs-compat": "^6.5.3",
     "three": "^0.128.0",
