@@ -43,6 +43,13 @@ export class PrintComponent implements OnInit {
     }
   }
 
+  public options = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    })
+  };
+
   public onPrintPDF(): void {
     if (this.printService.contentEditable1[10]) {
       // 図の印刷
@@ -55,14 +62,10 @@ export class PrintComponent implements OnInit {
       const inputJson = this.InputData.getInputJson(1);
 
       // PDFサーバーに送る
-      const json = {"body": JSON.stringify(inputJson)};
+      const json = JSON.stringify(inputJson);
       const url = 'https://vprk48kosh.execute-api.ap-northeast-1.amazonaws.com/default/FramePrintPDF';
 
-      this.http.post(url, json, {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      }).subscribe(
+      this.http.post(url, json, this.options).subscribe(
         (response) => {
           this.showPDF(response.toString());
         },
