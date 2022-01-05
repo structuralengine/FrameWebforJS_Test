@@ -29,12 +29,12 @@ export class ThreeLoadAxial {
     this.matLine = new THREE.LineBasicMaterial({
       color: 0xff0000,
       linewidth: 0.001, // in pixels
-      vertexColors: true,
+      vertexColors: false, // true
     });
     this.matLine_Pick  = new THREE.LineBasicMaterial({
       color: 0x00ffff,
       linewidth: 0.001, // in pixels
-      vertexColors: true,
+      vertexColors: false, // true
     });
 
     this.arrow_mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -69,15 +69,25 @@ export class ThreeLoadAxial {
     // 矢印を描く
     const arrow_height = 0.25
     const arrow_geo = new THREE.ConeBufferGeometry(0.05, arrow_height, 3, 1, false);
-    const arrow = new THREE.Mesh(arrow_geo, this.arrow_mat);
+    const arrow_child = new THREE.Mesh(arrow_geo, this.arrow_mat);
     if (value > 0) {
-      arrow.rotation.z = -Math.PI / 2;
-      arrow.position.x = L1 + L - arrow_height / 2;
+      arrow_child.position.x = -arrow_height / 2;
     } else {
-      arrow.rotation.z = Math.PI / 2;
-      arrow.position.x = L1 + arrow_height / 2;
+      arrow_child.position.x = arrow_height / 2;
     }
+    arrow_child.name = "arrow_child";
+
+    const arrow = new THREE.Group();
     arrow.name = "arrow";
+    arrow.add(arrow_child);
+
+    if (value > 0) {
+      arrow_child.rotation.z = -Math.PI / 2;
+      arrow.position.x = L1 + L;
+    } else {
+      arrow_child.rotation.z = Math.PI / 2;
+      arrow.position.x = L1;
+    }
 
     child.add(arrow);
     child.name = "child";
@@ -136,6 +146,12 @@ export class ThreeLoadAxial {
   // 大きさを反映する
   public setScale(group: any, scale: number): void {
     group.scale.set(1, scale, scale);
+    // coneにのみスケールを反映させる
+    const arrow = group.getObjectByName('arrow');
+    if (arrow !== undefined) {
+      arrow.scale.set(scale, 1, 1);
+    }
+
   }
 
   // ハイライトを反映させる
