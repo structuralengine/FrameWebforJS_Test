@@ -98,7 +98,7 @@ export class InputDataService {
     // empty = 1: 印刷時
     let isPrint = false;
     if (empty === 1) {
-      empty = 0; // 印刷時 は 計算時と同じ
+      empty = null; // 印刷時 は 計算時と同じ
       isPrint = true;
     }
 
@@ -187,7 +187,9 @@ export class InputDataService {
       }
     }
 
-    jsonData["dimension"] = this.helper.dimension;
+    if (!isPrint) {
+      jsonData["dimension"] = this.helper.dimension;
+    }
 
     return jsonData;
   }
