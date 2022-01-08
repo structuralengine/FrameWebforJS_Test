@@ -115,7 +115,7 @@ export class MenuComponent implements OnInit {
 
   // ファイルを保存
   save(): void {
-    const inputJson: string = JSON.stringify(this.InputData.getInputJson(1));
+    const inputJson: string = JSON.stringify(this.InputData.getInputJson());
     const blob = new window.Blob([inputJson], { type: "text/plain" });
     if (this.fileName.length === 0) {
       this.fileName = "frameWebForJS.json";

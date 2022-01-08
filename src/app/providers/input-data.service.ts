@@ -187,7 +187,9 @@ export class InputDataService {
       }
     }
 
-    jsonData["dimension"] = this.helper.dimension;
+    if (!isPrint) {
+      jsonData["dimension"] = this.helper.dimension;
+    }
 
     return jsonData;
   }
