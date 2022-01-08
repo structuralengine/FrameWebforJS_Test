@@ -5,8 +5,7 @@ import { InputDataService } from "src/app/providers/input-data.service";
 import { ResultDataService } from "src/app/providers/result-data.service";
 import { ThreeService } from "../three/three.service";
 import { PrintService } from "./print.service";
-import printJS from 'print-js'
-
+import printJS from "print-js";
 
 @Component({
   selector: "app-print",
@@ -24,7 +23,7 @@ export class PrintComponent implements OnInit {
     private http: HttpClient
   ) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.printService.selectRadio(-1);
     this.printService.flg = -1;
   }
@@ -45,9 +44,9 @@ export class PrintComponent implements OnInit {
 
   public options = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept': 'application/json'
-    })
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+    }),
   };
 
   public onPrintPDF(): void {
@@ -63,27 +62,26 @@ export class PrintComponent implements OnInit {
 
       // PDFサーバーに送る
       const json = JSON.stringify(inputJson);
-      const url = 'https://vprk48kosh.execute-api.ap-northeast-1.amazonaws.com/default/FramePrintPDF';
+      const url =
+        "https://vprk48kosh.execute-api.ap-northeast-1.amazonaws.com/default/FramePrintPDF";
 
       this.http.post(url, json, this.options).subscribe(
         (response) => {
           this.showPDF(response.toString());
         },
         (err) => {
-          if('error' in err){
-            if('text' in err.error){
+          if ("error" in err) {
+            if ("text" in err.error) {
               this.showPDF(err.error.text.toString());
               return;
             }
           }
         }
       );
-
     }
   }
 
-  private showPDF(base64: string){
-    printJS({printable: base64, type: 'pdf', base64: true});
+  private showPDF(base64: string) {
+    printJS({ printable: base64, type: "pdf", base64: true });
   }
-
 }
