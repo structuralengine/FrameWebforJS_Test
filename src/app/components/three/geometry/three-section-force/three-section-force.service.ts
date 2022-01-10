@@ -78,6 +78,8 @@ export class ThreeSectionForceService {
     }
     this.currentMode = ModeName;
     if(ModeName.length === 0){
+      this.ThreeObject1.visible = false; 
+      this.ThreeObject2.visible = false; 
       this.guiDisable();
       return;
     }
