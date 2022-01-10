@@ -1295,7 +1295,7 @@ export class ThreeLoadService {
 
       const scale1: number = this.LoadScale / 100;
       const scale2: number = this.baseScale();
-      const scale: number = scale1 * scale2;
+      let scale: number = scale1 * scale2;
 
       // 節点荷重のスケールを変更する
       for (const n of Object.keys(loadList.pointLoadList)) {
@@ -1340,7 +1340,7 @@ export class ThreeLoadService {
           const editor = item.editor;
           // 大きさを変更する
           const scale: number =
-            4 * this.helper.getScale(Math.abs(item.value), loadList.pMax);
+            4 * this.helper.getCircleScale(Math.abs(item.value), loadList.pMax);
           editor.setSize(item, scale);
           // オフセットする
           if (item.value > 0) {
@@ -1357,7 +1357,7 @@ export class ThreeLoadService {
         let offset = 0;
         for (const item of list[k]) {
           const editor = item.editor;
-          const scale: number = this.helper.getScale(item.value, loadList.mMax);
+          const scale: number = this.helper.getCircleScale(item.value, loadList.mMax);
           editor.setSize(item, scale);
           editor.setOffset(item, offset);
           offset += this.baseScale() * 0.1;
@@ -1375,7 +1375,7 @@ export class ThreeLoadService {
         const editor = item.editor;
 
         if (item.name.indexOf(ThreeLoadMemberMoment.id) !== -1) {
-          const scale: number = this.helper.getScale(
+          const scale: number = this.helper.getCircleScale(
             Math.abs(item.value),
             loadList.mMax
           );
@@ -1511,7 +1511,7 @@ export class ThreeLoadService {
             offset2 = offset0 * -1;
           } else if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
             // 集中荷重
-            const scale: number = this.helper.getScale(
+            const scale: number = this.helper.getCircleScale(
               Math.abs(item.value),
               loadList.pMax
             );
@@ -1555,7 +1555,7 @@ export class ThreeLoadService {
             }
           } else if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
             // 集中荷重
-            const scale: number = this.helper.getScale(
+            const scale: number = this.helper.getCircleScale(
               Math.abs(item.value),
               loadList.pMax
             );
@@ -1577,7 +1577,7 @@ export class ThreeLoadService {
         const editor = item.editor;
         // 大きさを変更する
         if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
-          const scale: number = this.helper.getScale(
+          const scale: number = this.helper.getCircleScale(
             Math.abs(item.value),
             loadList.pMax
           );

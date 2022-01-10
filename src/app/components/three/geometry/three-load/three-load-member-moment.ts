@@ -260,11 +260,11 @@ export class ThreeLoadMemberMoment {
             if (item_child2.name.includes('MomentLoad')) {
               for (const item_child3 of item_child2.children) {
                 if (item_child3.name === 'group') {
-                  for (const item_child4 of item_child3.children) {
-                    if (item_child4.name === 'child') {
-                      item_child4.scale.set(scale, scale, scale);
-                    }
-                  }
+                  // for (const item_child4 of item_child3.children) {
+                    // if (item_child4.name === 'child') {
+                      item_child3.scale.set(scale, scale, scale);
+                    // }
+                  // }
                 }
               }
             }
