@@ -46,8 +46,8 @@ export class PrintComponent implements OnInit {
 
   public options = {
     headers: new HttpHeaders({
-      "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "application/json",
+      "Content-Type": "application/json",
+      "Accept": "*/*"
     }),
   };
 
@@ -122,16 +122,20 @@ export class PrintComponent implements OnInit {
         json["dimension"] = this.helper.dimension;
       }
 
+      /*
       const blob = new window.Blob([JSON.stringify(json)], {
         type: "text/plain",
       });
       FileSaver.saveAs(blob, "test.json");
+      */
 
       // PDFサーバーに送る
       const url =
-        "https://vprk48kosh.execute-api.ap-northeast-1.amazonaws.com/default/FramePrintPDF";
+        "https://frameprintpdf.azurewebsites.net/api/Function1";
 
-      this.http.post(url, JSON.stringify(json), this.options).subscribe(
+      const jsonStr = JSON.stringify(json);
+
+      this.http.post(url, jsonStr, this.options).subscribe(
         (response) => {
           this.showPDF(response.toString());
         },
