@@ -1110,6 +1110,7 @@ export class ThreeLoadService {
         }
       }
 
+      const arrowAddGroup = new Array();
       let arrow: THREE.Group = null;
 
       // 分布荷重 y, z -------------------------------
@@ -1161,6 +1162,8 @@ export class ThreeLoadService {
             load.row
           );
         }
+        arrow["row"] = load.row;
+        arrowAddGroup.push(arrow);
       } else if (load.mark === 9) {
         // 温度荷重
         arrow = this.loadEditor[ThreeLoadTemperature.id].create(
@@ -1171,49 +1174,65 @@ export class ThreeLoadService {
           load.row
         );
         direction = "t";
+        arrow["row"] = load.row;
+        arrowAddGroup.push(arrow);
       } else if (load.mark === 1) {
         // 集中荷重荷重
         if (["x", "y", "z", "gx", "gy", "gz"].includes(direction)) {
-          arrow = this.loadEditor[ThreeLoadMemberPoint.id].create(
-            nodei,
-            nodej,
-            localAxis,
-            direction,
-            load.L1,
-            load.L2,
-            P1,
-            P2,
-            load.row
-          );
+          // for ( let n = 0; n < 2; n++ ) {
+            arrow = this.loadEditor[ThreeLoadMemberPoint.id].create(
+              nodei,
+              nodej,
+              localAxis,
+              direction,
+              load.L1,
+              load.L2,
+              P1,
+              P2,
+              load.row,
+            );
+            arrow["row"] = load.row;
+            arrowAddGroup.push(arrow);
+          // }
         }
       } else if (load.mark === 11) {
         // モーメント荷重
         if (["x", "y", "z", "gx", "gy", "gz"].includes(direction)) {
-          arrow = this.loadEditor[ThreeLoadMemberMoment.id].create(
-            nodei,
-            nodej,
-            localAxis,
-            direction,
-            load.L1,
-            load.L2,
-            P1,
-            P2,
-            load.row
-          );
+          for ( let n = 1; n <= 2; n++ ) {
+            arrow = this.loadEditor[ThreeLoadMemberMoment.id].create(
+              nodei,
+              nodej,
+              localAxis,
+              direction,
+              load.L1,
+              load.L2,
+              P1,
+              P2,
+              load.row,
+              n
+            );
+            arrow["row"] = load.row;
+            // arrow["name"] = "child";
+            arrowAddGroup.push(arrow);
+          }
           direction = "r";
         }
       }
 
       // リストに登録する
-      if (arrow === null) {
+      // if (arrow === null) {
+      if (arrowAddGroup.length === 0) {
         continue;
       }
 
-      arrow["row"] = load.row;
-      target[direction].push(arrow);
-      ThreeObject.add(arrow);
+      // arrow["row"] = load.row;
+      for ( const arrow of arrowAddGroup ) {
+        target[direction].push(arrow);
+        ThreeObject.add(arrow);
+      }
       memberLoadList[mNo] = target;
     }
+    console.log("Break")
   }
 
   // three.service から呼ばれる 表示・非表示の制御
