@@ -74,20 +74,6 @@
               <span class="radio-parts">PICKUP 断面力</span>
             </label>
           </li>
-          <!-- <li>
-            <label style="width: 100%">
-              <input type="radio" name="radio-result" class="radio-input" id="print8"
-              (click)="printService.selectRadio(8)" />
-              <span class="radio-parts">COMBINE 断面力</span>
-            </label>
-          </li>
-          <li>
-            <label style="width: 100%">
-              <input type="radio" name="radio-result" class="radio-input" id="print9"
-              (click)="printService.selectRadio(9)" />
-              <span class="radio-parts">PICKUP 断面力</span>
-            </label>
-          </li> -->
         </ng-container>
         <li>
           <label style="width: 100%">
@@ -96,13 +82,6 @@
             <span class="radio-parts">画面印刷</span>
           </label>
         </li>
-        <!-- <li>
-          <label style="width: 100%">
-            <input type="radio" name="radio-result" class="radio-input" id="print10"
-              (click)="printService.selectRadio(10)" />
-            <span class="radio-parts">画面印刷</span>
-          </label>
-        </li> -->
       </ul>
     </div>
 
@@ -110,7 +89,8 @@
       <button (click)="onPrintPDF()">印刷する</button>
     </div>
   </div>
-  <!-- <div class="print-custom"> -->
+
+  <!--
   <ng-container *ngIf="ResultData.isCalculated">
     <app-print-custom>
     </app-print-custom>
@@ -118,5 +98,6 @@
   <ng-container *ngIf="!ResultData.isCalculated">
     <div></div>
   </ng-container>
-  <!-- </div> -->
+  -->
+  
 </div>

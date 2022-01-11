@@ -8,6 +8,8 @@ import { PrintService } from "./print.service";
 import printJS from "print-js";
 import * as FileSaver from "file-saver";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { WaitDialogComponent } from "../wait-dialog/wait-dialog.component";
 
 @Component({
   selector: "app-print",
@@ -22,7 +24,8 @@ export class PrintComponent implements OnInit {
     public ResultData: ResultDataService,
     private three: ThreeService,
     private http: HttpClient,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -129,6 +132,8 @@ export class PrintComponent implements OnInit {
       FileSaver.saveAs(blob, "test.json");
       */
 
+      const modalRef = this.modalService.open(WaitDialogComponent);
+
       // PDFサーバーに送る
       const url =
         "https://frameprintpdf.azurewebsites.net/api/Function1";
@@ -138,14 +143,15 @@ export class PrintComponent implements OnInit {
       this.http.post(url, jsonStr, this.options).subscribe(
         (response) => {
           this.showPDF(response.toString());
+          modalRef.close();
         },
         (err) => {
           if ("error" in err) {
             if ("text" in err.error) {
               this.showPDF(err.error.text.toString());
-              return;
             }
           }
+          modalRef.close();
         }
       );
     }
