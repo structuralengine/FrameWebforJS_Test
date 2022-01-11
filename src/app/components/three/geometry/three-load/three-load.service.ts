@@ -1179,7 +1179,7 @@ export class ThreeLoadService {
       } else if (load.mark === 1) {
         // 集中荷重荷重
         if (["x", "y", "z", "gx", "gy", "gz"].includes(direction)) {
-          // for ( let n = 0; n < 2; n++ ) {
+          for ( let n = 1; n <= 2; n++ ) {
             arrow = this.loadEditor[ThreeLoadMemberPoint.id].create(
               nodei,
               nodej,
@@ -1190,10 +1190,11 @@ export class ThreeLoadService {
               P1,
               P2,
               load.row,
+              n
             );
             arrow["row"] = load.row;
             arrowAddGroup.push(arrow);
-          // }
+          }
         }
       } else if (load.mark === 11) {
         // モーメント荷重
@@ -1231,8 +1232,7 @@ export class ThreeLoadService {
         ThreeObject.add(arrow);
       }
       memberLoadList[mNo] = target;
-    }
-    console.log("Break")
+    } 
   }
 
   // three.service から呼ばれる 表示・非表示の制御

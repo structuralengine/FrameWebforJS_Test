@@ -89,7 +89,6 @@ export class ThreeLoadMemberMoment {
     group.name = "group";
 
     // 全体の位置を修正する
-    group.add(group);
     group["points"] = p.points;
     group["L1"] = p.L1;
     group["L"] = p.LL;
