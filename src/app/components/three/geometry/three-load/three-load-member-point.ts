@@ -256,7 +256,11 @@ export class ThreeLoadMemberPoint {
   // オフセットを反映する
   public setOffset(group: THREE.Group, offset: number): void {
     for (const item of group.children) {
-      item.position.y = offset;
+      if (item.name === 'arrow') {
+        for (const item_child1 of item.children) {
+          item_child1.position.y = offset;
+        }
+      }
     }
   }
 
@@ -271,11 +275,13 @@ export class ThreeLoadMemberPoint {
   // 大きさを反映する
   public setScale(group: any, scale: number): void {
     for (const item of group.children) {
-      if (item.name === 'arrow') {
-        for (const item_child1 of item.children) {
-          item_child1.scale.set(scale, scale, scale);
-        }
-      }
+      //if (item.name === 'arrow') {
+        //for (const item_child1 of item.children) {
+          item.scale.set(1, scale, scale);
+          // コーンの先が細く、または太くなる。
+          //item.children[0].scale.x = scale;
+        //}
+      //}
     }
   }
 
