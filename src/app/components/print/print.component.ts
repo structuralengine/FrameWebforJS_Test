@@ -143,17 +143,20 @@ export class PrintComponent implements OnInit {
       this.http.post(url, jsonStr, this.options).subscribe(
         (response) => {
           this.showPDF(response.toString());
-          modalRef.close();
         },
         (err) => {
           if ("error" in err) {
             if ("text" in err.error) {
               this.showPDF(err.error.text.toString());
+              return;
             }
           }
-          modalRef.close();
+          alert(err);
         }
-      );
+      ).add(() => {
+        // finally的な処理
+        modalRef.close();
+      });
     }
   }
 
