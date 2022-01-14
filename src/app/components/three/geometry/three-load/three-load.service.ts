@@ -597,6 +597,8 @@ export class ThreeLoadService {
   // 荷重の入力が変更された場合
   public changeData(row: number): void {
 
+    let row1 = row; // 変更・調整されるrow1を定義
+
     const index = parseInt(this.currentIndex, 10);
     const symbol: string = this.load.getLoadName(index, "symbol");
     if(symbol === "LL"){
@@ -636,12 +638,12 @@ export class ThreeLoadService {
 
     if (this.currentIndex in memberLoadData) {
       // 要素荷重を変更
-      this.changeMemberLode(row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+      this.changeMemberLode(row1, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
 
       // 対象行以下の行について
-      row++;
+      row1++;
       const tmLoad = tempMemberLoad[this.currentIndex];
-      let i = tmLoad.findIndex((e) => e.row === row);
+      let i = tmLoad.findIndex((e) => e.row === row1);
       while (i >= 0) {
         if (tmLoad[i].L1 == null) {
           break;
@@ -650,11 +652,47 @@ export class ThreeLoadService {
           break;
         }
         // 要素荷重を変更
-        this.changeMemberLode(tmLoad[i].row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
-        row++;
-        i = tmLoad.findIndex((e) => e.row === row);
+        this.changeMemberLode(tmLoad[i].row1, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+        row1++;
+        i = tmLoad.findIndex((e) => e.row === row1);
       }
     }
+
+    // 変更行をピックアップして、対象の部材番号・directionのオブジェクトの順番を整理する。
+    // 変更行をピックアップ
+    const tempMemberLoadData = memberLoadData[this.currentIndex];
+    const targetMemberLoadData = tempMemberLoadData.filter(
+      (load) => load.row === row
+    );
+    // 再構築されたlistでforループを回す → 基本は1回
+    for (const key of Object.keys(targetMemberLoadData)) {
+      // 変更された行のdirectionを拾う.
+      const direction = targetMemberLoadData[key]["direction"];
+      // 順番を並び変えるmemberLoadListを拾う.
+      const targetCaseLoadList = this.AllCaseLoadList[this.currentIndex];
+      if (targetCaseLoadList === undefined) {
+        break;
+      };
+      const memberLoadList = targetCaseLoadList.memberLoadList;
+      for (const key1 of Object.keys(memberLoadList)) {
+        const targetList = memberLoadList[key1];
+        const list = targetList[direction];
+        if (list === undefined) {
+          break;
+        };
+        // rowをキーに昇順で並べ替える
+        list.sort((a, b) => {
+          if (a.row < b.row) {
+            return -1;
+          } else if (a.row > b.row) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+      }
+    }
+    
 
     // 重なりを調整する
     this.setOffset();
@@ -1414,11 +1452,21 @@ export class ThreeLoadService {
       ["y", "z"].forEach((k) => {
         let offset1 = offset0;
         let offset2 = offset0 * -1;
-        let offset3 = offset0;
-        let offset4 = offset0 * -1;
+        //let offset3 = offset0;
+        //let offset4 = offset0 * -1;
 
         // ここで並び替えが必要 または、その外側
         // keyはitemのrow
+        // load1のlistの順番をrow順に入れ替える
+        /*list[k].sort((a, b) => {
+          if (a.row < b.row) {
+            return -1;
+          } else if (a.row > b.row) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });*/
 
         const Xarea1 = []; // 既存荷重の頂点配列
         list[k].forEach((item) => {
@@ -1431,6 +1479,8 @@ export class ThreeLoadService {
               loadList.wMax
             );
             editor.setSize(item, scale);
+            // P1とP2の符号が異なる場合の補正値を入手
+            let offset3: number = 0;
             //以降は当たり判定に用いる部分
             const vertice_points = []; // 新規荷重の頂点配列
             //当たり判定のエリアを登録
@@ -1445,72 +1495,46 @@ export class ThreeLoadService {
               vertice_points.push(pos_arr[i]); // x
               vertice_points.push(pos_arr[i + 1] * scale); // y
             }
-            if (Xarea1.length === 0) {
-              if (item.value > 0) {
-                editor.setOffset(item, offset3);
+            // P1とP2がねじれた荷重は、当たり判定の範囲を大きくする
+            if (item.P1 * item.P2 < 0) {
+              if (item.P1 > 0) {
+                if (item.P1 !== item.value) {
+                  offset3 = vertice_points[3];
+                  const s = vertice_points[3];
+                  for (let n = 1; n < 18; n+=2) {
+                    vertice_points[n] -= s;
+                  } 
+                } else {
+                  offset3 = vertice_points[9];
+                  const s = vertice_points[9] * (-1);
+                  for (let n = 1; n < 18; n+=2) {
+                    vertice_points[n] += s;
+                  } 
+                }
               } else {
-                editor.setOffset(item, offset4);
+                if (item.P1 !== item.value) {
+                  offset3 = vertice_points[3];
+                  const s = vertice_points[3] * (-1);
+                  for (let n = 1; n < 18; n+=2) {
+                    vertice_points[n] += s;
+                  } 
+                } else {
+                  offset3 = vertice_points[9];
+                  const s = vertice_points[9];
+                  for (let n = 1; n < 18; n+=2) {
+                    vertice_points[n] -= s;
+                  } 
+                }
               }
             }
-
-            //次のforループの名称 -> breakで使用
-            /*all_check: for (let hit_points of Xarea1) {
-              const pre_scale: number = this.helper.getScale(
-                Math.abs(hit_points[10]),
-                loadList.wMax
-              );
-              //for (let num2 = 0; num2 < 5; num2++) {
-
-              //接触判定
-              let judgeX = this.self_raycaster(vertice_points, hit_points, "x");
-              let judgeY = this.self_raycaster(vertice_points, hit_points, "y");
-
-              if (
-                judgeX === "Hit" &&
-                (judgeY === "Hit" || judgeY === "Touch")
-              ) {
-                // オフセットする
-                if (item.value > 0) {
-                  offset1 += pre_scale * 1.0; // オフセット距離に高さを加算する
-                  editor.setOffset(item, offset1);
-                  vertice_points[1] += offset1;
-                  vertice_points[3] += offset1;
-                  vertice_points[5] += offset1;
-                  vertice_points[7] += offset1;
-                  vertice_points[9] += offset1;
-                  vertice_points[11] += offset1;
-                  vertice_points[13] += offset1;
-                  vertice_points[15] += offset1;
-                  vertice_points[17] += offset1;
-                } else {
-                  offset2 -= pre_scale * 1.0; // オフセット距離に高さを加算する
-                  editor.setOffset(item, offset2);
-                  // 当たり判定位置が違う。原本にoffset2を加えるのが正しい。
-                  // forループでoffset2が蓄積されてしまっている。
-                  vertice_points[1] += offset2;
-                  vertice_points[3] += offset2;
-                  vertice_points[5] += offset2;
-                  vertice_points[7] += offset2;
-                  vertice_points[9] += offset2;
-                  vertice_points[11] += offset2;
-                  vertice_points[13] += offset2;
-                  vertice_points[15] += offset2;
-                  vertice_points[17] += offset2;
-                }
-              } else if (judgeX === "NotHit" || judgeY === "NotHit") {
-                //オフセットしない
-                if (item.value > 0) {
-                  editor.setOffset(item, offset1);
-                } else {
-                  editor.setOffset(item, offset2);
-                }
-                continue;
+            /*if (Xarea1.length === 0) {
+              if (item.value > 0) {
+                editor.setOffset(item, offset1);
               } else {
-                //現状ケースを確認できていない
-                break all_check;
+                editor.setOffset(item, offset2);
               }
-              //}
             }*/
+
             const Xarea2 = [];
             //既存の荷重を全て調べ、xについての接触リストを作成する
             for (let hit_points of Xarea1) {
@@ -1527,7 +1551,7 @@ export class ThreeLoadService {
                 // maxYの符号を合わせる
                 if (Math.sign( hit_points[3] ) === Math.sign( hit_points[7] )) {
                   maxY = Math.sign( hit_points[3] ) * maxY;
-                } else {
+                } else { // P1とP2の符号が違うケース. マイナスの方向に合わせる
                   maxY = (-1) * maxY;
                 }
                 // offset値と荷重を登録する
@@ -1542,24 +1566,42 @@ export class ThreeLoadService {
             for (const point of Xarea2) {
               const height = point[0];
               const value = point[1];
+              //if (Math.abs(value) !== Math.abs(item.value)) {
+                //continue;
+              //}
               if (value > 0) {
                 maxOffset_plus = (maxOffset_plus > height) ? maxOffset_plus : height;
               } else {
                 maxOffset_minus = (maxOffset_minus < height) ? maxOffset_minus : height;
               }
             }
+            /*if (item.P1 * item.P2 < 0) {
+              if (Math.abs(vertice_points[1]) > Math.abs(vertice_points[11])) {
+                offset3 = vertice_points[11];
+              } else if ((Math.abs(vertice_points[1]) > Math.abs(vertice_points[11]))) {
+                offset3 = vertice_points[1];
+              } else {
+                if (item.P2 > 0) {
+                  offset3 = vertice_points[11];
+                } else {
+                  offset3 = vertice_points[1];
+                }
+              }
+            }*/
             // オフセットを反映させる, vertice_pointsのy座標を調整する
             if (item.value > 0) {
-              offset1 += maxOffset_plus;
+              // offset0とmaxOffset_plusの和が総オフセット距離
+              offset1 += maxOffset_plus - offset3;
               editor.setOffset(item, offset1);
               for (let num = 1; num < 18; num+=2) {
-                vertice_points[num] += maxOffset_plus
+                vertice_points[num] += maxOffset_plus - offset3
               }
             } else {
-              offset2 += maxOffset_minus;
+              // offset0とmaxOffset_minusの和が総オフセット距離
+              offset2 += maxOffset_minus - offset3;
               editor.setOffset(item, offset2);
               for (let num = 1; num < 18; num+=2) {
-                vertice_points[num] += maxOffset_minus;
+                vertice_points[num] += maxOffset_minus - offset3;
               }
             }
 
@@ -1579,10 +1621,10 @@ export class ThreeLoadService {
             ]); //メッシュの5点の2次元座標と，valueの値を保存する
 
             // memo：ここ必要？ rの情報を反映させたいだけ
-            const pre_scale: number =
-              (1 * Math.abs(item.value)) / loadList.wMax;
-            offset3 = offset1 + pre_scale;
-            offset4 = offset2 - pre_scale;
+            // const pre_scale: number =
+              // (1 * Math.abs(item.value)) / loadList.wMax;
+            // offset3 = offset1 + pre_scale;
+            // offset4 = offset2 - pre_scale;
             offset1 = offset0;
             offset2 = offset0 * -1;
           } else if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
@@ -1604,29 +1646,29 @@ export class ThreeLoadService {
             const width = item.L / this.baseScale() / 100;
             // 分布荷重に合わせる (memo：123, 345, 135)
             vertice_points.push(pos_arr.x - width); // x1
-            vertice_points.push(pos_arr.y); // y1
+            vertice_points.push(0); // y1
             vertice_points.push(pos_arr.x - width); // x2
-            vertice_points.push(pos_arr.y + Math.sign(item.value) * scale); // y2
+            vertice_points.push(Math.sign(item.value) * scale); // y2
             vertice_points.push(pos_arr.x); // x3
-            vertice_points.push(pos_arr.y + Math.sign(item.value) * scale); // y3
+            vertice_points.push(Math.sign(item.value) * scale); // y3
             vertice_points.push(pos_arr.x); // x3
-            vertice_points.push(pos_arr.y + Math.sign(item.value) * scale); // y3
+            vertice_points.push(Math.sign(item.value) * scale); // y3
             vertice_points.push(pos_arr.x + width); // x4
-            vertice_points.push(pos_arr.y + Math.sign(item.value) * scale); // y4
+            vertice_points.push(Math.sign(item.value) * scale); // y4
             vertice_points.push(pos_arr.x + width); // x5
-            vertice_points.push(pos_arr.y); // y5
+            vertice_points.push(0); // y5
             vertice_points.push(pos_arr.x - width); // x1
-            vertice_points.push(pos_arr.y); // y1
+            vertice_points.push(0); // y1
             vertice_points.push(pos_arr.x); // x3
-            vertice_points.push(pos_arr.y + Math.sign(item.value) * scale); // y3
+            vertice_points.push(Math.sign(item.value) * scale); // y3
             vertice_points.push(pos_arr.x + width); // x5
-            vertice_points.push(pos_arr.y); // y5
+            vertice_points.push(0); // y5
             //}
             if (Xarea1.length === 0) {
               if (item.value > 0) {
-                editor.setOffset(item, offset3);
+                editor.setOffset(item, offset1);
               } else {
-                editor.setOffset(item, offset4);
+                editor.setOffset(item, offset2);
               }
             }
 
@@ -1651,7 +1693,7 @@ export class ThreeLoadService {
 
             }
 
-            // hitAreaの該当項目を参照して、offset距離を入手する。
+            // Xarea2の該当項目を参照して、offset距離を入手する。
             let maxOffset_plus: number = 0;
             let maxOffset_minus: number = 0;
             for (const point of Xarea2) {
@@ -1674,6 +1716,7 @@ export class ThreeLoadService {
               offset2 += maxOffset_minus;
               editor.setOffset(item, offset2);
               for (let num = 1; num < 18; num+=2) {
+                // 前の変更情報が残っている？
                 vertice_points[num] += maxOffset_minus;
               }
             }
@@ -1694,10 +1737,10 @@ export class ThreeLoadService {
             ]); //メッシュの5点の2次元座標と，valueの値を保存する
 
             // memo：ここ必要？ rの情報を反映させたいだけ
-            const pre_scale: number =
-              this.helper.getCircleScale( item.value, loadList.pMax );
-            offset3 = offset1 + pre_scale;
-            offset4 = offset2 - pre_scale;
+            // const pre_scale: number =
+              // this.helper.getCircleScale( item.value, loadList.pMax );
+            // offset3 = offset1 + pre_scale;
+            // offset4 = offset2 - pre_scale;
             offset1 = offset0;
             offset2 = offset0 * -1;
 
