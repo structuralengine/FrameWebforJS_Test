@@ -10,6 +10,7 @@ import * as FileSaver from "file-saver";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { WaitDialogComponent } from "../wait-dialog/wait-dialog.component";
+import * as pako from "pako";
 
 @Component({
   selector: "app-print",
@@ -140,7 +141,12 @@ export class PrintComponent implements OnInit {
 
       const jsonStr = JSON.stringify(json);
 
-      this.http.post(url, jsonStr, this.options).subscribe(
+      // pako を使ってgzip圧縮する
+      const compressed = pako.gzip(jsonStr);
+      //btoa() を使ってBase64エンコードする
+      const base64Encoded = btoa(compressed);
+
+      this.http.post(url, base64Encoded, this.options).subscribe(
         (response) => {
           this.showPDF(response.toString());
         },
