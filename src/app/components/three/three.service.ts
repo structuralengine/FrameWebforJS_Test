@@ -637,6 +637,8 @@ export class ThreeService {
     let title5: string[] = new Array();
     let title6: string[] = new Array();
 
+    this.printService.setprintDocument();
+
     switch (this.mode) {
       case "fix_member":
         if ("fix_member" in this.printService.inputJson) {
