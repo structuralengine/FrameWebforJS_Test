@@ -1417,6 +1417,9 @@ export class ThreeLoadService {
         let offset3 = offset0;
         let offset4 = offset0 * -1;
 
+        // ここで並び替えが必要 または、その外側
+        // keyはitemのrow
+
         const Xarea1 = []; // 既存荷重の頂点配列
         list[k].forEach((item) => {
           const editor = item.editor;
@@ -1451,7 +1454,7 @@ export class ThreeLoadService {
             }
 
             //次のforループの名称 -> breakで使用
-            all_check: for (let hit_points of Xarea1) {
+            /*all_check: for (let hit_points of Xarea1) {
               const pre_scale: number = this.helper.getScale(
                 Math.abs(hit_points[10]),
                 loadList.wMax
@@ -1507,6 +1510,57 @@ export class ThreeLoadService {
                 break all_check;
               }
               //}
+            }*/
+            const Xarea2 = [];
+            //既存の荷重を全て調べ、xについての接触リストを作成する
+            for (let hit_points of Xarea1) {
+
+              //接触判定
+              let judgeX = this.self_raycaster(vertice_points, hit_points, "x");
+
+              // X方向において当たり判定があった範囲（hit_points）を記録する。
+              if (judgeX === "Hit") {
+                // 当たり判定の上面の中で、最も絶対値が多い値を探す
+                let maxY = Math.max( Math.abs(hit_points[3]), 
+                                     Math.abs(hit_points[5]), 
+                                     Math.abs(hit_points[7]) );
+                // maxYの符号を合わせる
+                if (Math.sign( hit_points[3] ) === Math.sign( hit_points[7] )) {
+                  maxY = Math.sign( hit_points[3] ) * maxY;
+                } else {
+                  maxY = (-1) * maxY;
+                }
+                // offset値と荷重を登録する
+                Xarea2.push( [maxY, item.value] );
+              }
+
+            }
+
+            // hitAreaの該当項目を参照して、offset距離を入手する。
+            let maxOffset_plus: number = 0;
+            let maxOffset_minus: number = 0;
+            for (const point of Xarea2) {
+              const height = point[0];
+              const value = point[1];
+              if (value > 0) {
+                maxOffset_plus = (maxOffset_plus > height) ? maxOffset_plus : height;
+              } else {
+                maxOffset_minus = (maxOffset_minus < height) ? maxOffset_minus : height;
+              }
+            }
+            // オフセットを反映させる, vertice_pointsのy座標を調整する
+            if (item.value > 0) {
+              offset1 += maxOffset_plus;
+              editor.setOffset(item, offset1);
+              for (let num = 1; num < 18; num+=2) {
+                vertice_points[num] += maxOffset_plus
+              }
+            } else {
+              offset2 += maxOffset_minus;
+              editor.setOffset(item, offset2);
+              for (let num = 1; num < 18; num+=2) {
+                vertice_points[num] += maxOffset_minus;
+              }
             }
 
             // ここでprescale分かける？
@@ -1524,6 +1578,7 @@ export class ThreeLoadService {
               item.value,
             ]); //メッシュの5点の2次元座標と，valueの値を保存する
 
+            // memo：ここ必要？ rの情報を反映させたいだけ
             const pre_scale: number =
               (1 * Math.abs(item.value)) / loadList.wMax;
             offset3 = offset1 + pre_scale;
@@ -1638,8 +1693,8 @@ export class ThreeLoadService {
               item.value,
             ]); //メッシュの5点の2次元座標と，valueの値を保存する
 
+            // memo：ここ必要？ rの情報を反映させたいだけ
             const pre_scale: number =
-              //(1 * Math.abs(item.value)) / loadList.wMax;
               this.helper.getCircleScale( item.value, loadList.pMax );
             offset3 = offset1 + pre_scale;
             offset4 = offset2 - pre_scale;
