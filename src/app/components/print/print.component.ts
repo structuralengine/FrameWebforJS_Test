@@ -133,10 +133,10 @@ export class PrintComponent implements OnInit {
       }
 
       // resultデータの印刷
-      const blob = new window.Blob([JSON.stringify(json)], {
-        type: "text/plain",
-      });
-      FileSaver.saveAs(blob, "test.json");
+      // const blob = new window.Blob([JSON.stringify(json)], {
+      //   type: "text/plain",
+      // });
+      // FileSaver.saveAs(blob, "test.json");
 
       const modalRef = this.modalService.open(WaitDialogComponent);
 
