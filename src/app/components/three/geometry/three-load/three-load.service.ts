@@ -1455,19 +1455,6 @@ export class ThreeLoadService {
         //let offset3 = offset0;
         //let offset4 = offset0 * -1;
 
-        // ここで並び替えが必要 または、その外側
-        // keyはitemのrow
-        // load1のlistの順番をrow順に入れ替える
-        /*list[k].sort((a, b) => {
-          if (a.row < b.row) {
-            return -1;
-          } else if (a.row > b.row) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });*/
-
         const Xarea1 = []; // 既存荷重の頂点配列
         list[k].forEach((item) => {
           const editor = item.editor;
@@ -1497,7 +1484,21 @@ export class ThreeLoadService {
             }
             // P1とP2がねじれた荷重は、当たり判定の範囲を大きくする
             if (item.P1 * item.P2 < 0) {
-              if (item.P1 > 0) {
+              if (item.P2 > 0) {
+                if (item.P2 === item.value) {
+                  offset3 = vertice_points[3];
+                  const s = vertice_points[3] * (-1);
+                  for (let n = 1; n < 18; n+=2) {
+                    vertice_points[n] += s;
+                  } 
+                } else {
+                  offset3 = vertice_points[9];
+                  const s = vertice_points[9];
+                  for (let n = 1; n < 18; n+=2) {
+                    vertice_points[n] -= s;
+                  } 
+                }
+              } else {
                 if (item.P1 !== item.value) {
                   offset3 = vertice_points[3];
                   const s = vertice_points[3];
@@ -1511,29 +1512,8 @@ export class ThreeLoadService {
                     vertice_points[n] += s;
                   } 
                 }
-              } else {
-                if (item.P1 !== item.value) {
-                  offset3 = vertice_points[3];
-                  const s = vertice_points[3] * (-1);
-                  for (let n = 1; n < 18; n+=2) {
-                    vertice_points[n] += s;
-                  } 
-                } else {
-                  offset3 = vertice_points[9];
-                  const s = vertice_points[9];
-                  for (let n = 1; n < 18; n+=2) {
-                    vertice_points[n] -= s;
-                  } 
-                }
               }
             }
-            /*if (Xarea1.length === 0) {
-              if (item.value > 0) {
-                editor.setOffset(item, offset1);
-              } else {
-                editor.setOffset(item, offset2);
-              }
-            }*/
 
             const Xarea2 = [];
             //既存の荷重を全て調べ、xについての接触リストを作成する
@@ -1548,11 +1528,11 @@ export class ThreeLoadService {
                 let maxY = Math.max( Math.abs(hit_points[3]), 
                                      Math.abs(hit_points[5]), 
                                      Math.abs(hit_points[7]) );
-                // maxYの符号を合わせる
-                if (Math.sign( hit_points[3] ) === Math.sign( hit_points[7] )) {
+                // maxYの符号を絶対値が大きい方に合わせる
+                if (Math.abs( hit_points[3] ) <= Math.abs( hit_points[7] )) {
+                  maxY = Math.sign( hit_points[7] ) * maxY;
+                } else {
                   maxY = Math.sign( hit_points[3] ) * maxY;
-                } else { // P1とP2の符号が違うケース. マイナスの方向に合わせる
-                  maxY = (-1) * maxY;
                 }
                 // offset値と荷重を登録する
                 Xarea2.push( [maxY, item.value] );
@@ -1566,42 +1546,26 @@ export class ThreeLoadService {
             for (const point of Xarea2) {
               const height = point[0];
               const value = point[1];
-              //if (Math.abs(value) !== Math.abs(item.value)) {
-                //continue;
-              //}
               if (value > 0) {
                 maxOffset_plus = (maxOffset_plus > height) ? maxOffset_plus : height;
               } else {
                 maxOffset_minus = (maxOffset_minus < height) ? maxOffset_minus : height;
               }
             }
-            /*if (item.P1 * item.P2 < 0) {
-              if (Math.abs(vertice_points[1]) > Math.abs(vertice_points[11])) {
-                offset3 = vertice_points[11];
-              } else if ((Math.abs(vertice_points[1]) > Math.abs(vertice_points[11]))) {
-                offset3 = vertice_points[1];
-              } else {
-                if (item.P2 > 0) {
-                  offset3 = vertice_points[11];
-                } else {
-                  offset3 = vertice_points[1];
-                }
-              }
-            }*/
             // オフセットを反映させる, vertice_pointsのy座標を調整する
             if (item.value > 0) {
               // offset0とmaxOffset_plusの和が総オフセット距離
               offset1 += maxOffset_plus - offset3;
               editor.setOffset(item, offset1);
               for (let num = 1; num < 18; num+=2) {
-                vertice_points[num] += maxOffset_plus - offset3
+                vertice_points[num] += maxOffset_plus;
               }
             } else {
               // offset0とmaxOffset_minusの和が総オフセット距離
               offset2 += maxOffset_minus - offset3;
               editor.setOffset(item, offset2);
               for (let num = 1; num < 18; num+=2) {
-                vertice_points[num] += maxOffset_minus - offset3;
+                vertice_points[num] += maxOffset_minus;
               }
             }
 
@@ -1620,11 +1584,6 @@ export class ThreeLoadService {
               item.value,
             ]); //メッシュの5点の2次元座標と，valueの値を保存する
 
-            // memo：ここ必要？ rの情報を反映させたいだけ
-            // const pre_scale: number =
-              // (1 * Math.abs(item.value)) / loadList.wMax;
-            // offset3 = offset1 + pre_scale;
-            // offset4 = offset2 - pre_scale;
             offset1 = offset0;
             offset2 = offset0 * -1;
           } else if (item.name.indexOf(ThreeLoadMemberPoint.id) !== -1) {
@@ -1736,24 +1695,8 @@ export class ThreeLoadService {
               item.value,
             ]); //メッシュの5点の2次元座標と，valueの値を保存する
 
-            // memo：ここ必要？ rの情報を反映させたいだけ
-            // const pre_scale: number =
-              // this.helper.getCircleScale( item.value, loadList.pMax );
-            // offset3 = offset1 + pre_scale;
-            // offset4 = offset2 - pre_scale;
             offset1 = offset0;
             offset2 = offset0 * -1;
-
-            // オフセットする
-            /*if (item.value > 0) {
-              editor.setOffset(item, offset3 + offset0);
-              offset3 += scale * 1.0; // オフセット距離に高さを加算する
-            } else {
-              editor.setOffset(item, offset4 - offset0);
-              offset4 -= scale * 1.0; // オフセット距離に高さを加算する
-            }*/
-            //offset1 = offset3;
-            //offset2 = offset4;
           }
         });
       });
