@@ -10,7 +10,7 @@ export class PrintCustomThreeService {
 
   constructor(private ResultData: ResultDataService) {
     for (let i = 0; i < 6; i++) {
-      this.threeEditable = [false, false, false, false, false, false];
+      this.threeEditable = [true, true, true, true, true, true];
     }
   }
 

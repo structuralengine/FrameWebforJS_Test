@@ -81,8 +81,8 @@ export class SceneService {
     this.OrthographicCamera = new THREE.OrthographicCamera(
       -Width/10, Width/10,
       Height/10, -Height/10,
-      0.1,
-      255
+      -1000,
+      1000
     );
     this.OrthographicCamera.position.set(0,0,10);
     this.initCamera(aspectRatio, Width, Height);

@@ -10,6 +10,8 @@ import * as FileSaver from "file-saver";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { WaitDialogComponent } from "../wait-dialog/wait-dialog.component";
+import * as pako from "pako";
+import { InputLoadService } from "../input/input-load/input-load.service";
 
 @Component({
   selector: "app-print",
@@ -20,6 +22,7 @@ export class PrintComponent implements OnInit {
   public contentEditable2;
   constructor(
     public InputData: InputDataService,
+    public load: InputLoadService,
     public printService: PrintService,
     public ResultData: ResultDataService,
     private three: ThreeService,
@@ -50,7 +53,7 @@ export class PrintComponent implements OnInit {
   public options = {
     headers: new HttpHeaders({
       "Content-Type": "application/json",
-      "Accept": "*/*"
+      Accept: "*/*",
     }),
   };
 
@@ -122,38 +125,51 @@ export class PrintComponent implements OnInit {
         alert("データが存在しないため，印刷できませんでした．");
         return;
       } else {
+        if (!this.printService.contentEditable1[0]) {
+          json["load"] = this.load.getLoadNameJson(null, "", true);
+        }
         json["dimension"] = this.helper.dimension;
+        json["input"] = this.printService.contentEditable1[0] ? true : false;
       }
 
-      /*
-      const blob = new window.Blob([JSON.stringify(json)], {
-        type: "text/plain",
-      });
-      FileSaver.saveAs(blob, "test.json");
-      */
+      // resultデータの印刷
+      // const blob = new window.Blob([JSON.stringify(json)], {
+      //   type: "text/plain",
+      // });
+      // FileSaver.saveAs(blob, "test.json");
 
       const modalRef = this.modalService.open(WaitDialogComponent);
 
       // PDFサーバーに送る
-      const url =
-        "https://frameprintpdf.azurewebsites.net/api/Function1";
+      const url = "https://frameprintpdf.azurewebsites.net/api/Function1";
 
       const jsonStr = JSON.stringify(json);
 
-      this.http.post(url, jsonStr, this.options).subscribe(
-        (response) => {
-          this.showPDF(response.toString());
-          modalRef.close();
-        },
-        (err) => {
-          if ("error" in err) {
-            if ("text" in err.error) {
-              this.showPDF(err.error.text.toString());
+      // pako を使ってgzip圧縮する
+      const compressed = pako.gzip(jsonStr);
+      //btoa() を使ってBase64エンコードする
+      const base64Encoded = btoa(compressed);
+
+      this.http
+        .post(url, base64Encoded, this.options)
+        .subscribe(
+          (response) => {
+            this.showPDF(response.toString());
+          },
+          (err) => {
+            if ("error" in err) {
+              if ("text" in err.error) {
+                this.showPDF(err.error.text.toString());
+                return;
+              }
             }
+            alert(err);
           }
+        )
+        .add(() => {
+          // finally的な処理
           modalRef.close();
-        }
-      );
+        });
     }
   }
 
