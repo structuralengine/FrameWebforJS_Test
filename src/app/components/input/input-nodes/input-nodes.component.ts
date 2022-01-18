@@ -100,7 +100,7 @@ export class InputNodesComponent implements OnInit {
         node['x'] = (target.newRow.x !== undefined) ? target.newRow.x : '';
         node['y'] = (target.newRow.y !== undefined) ? target.newRow.y : '';
         node['z'] = (target.newRow.z !== undefined) ? target.newRow.z : '';
-        this.dataset[no] = node;
+        this.dataset.splice(no, 1, node)
       }
       this.three.changeData('nodes');
     }
