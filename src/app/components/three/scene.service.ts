@@ -36,6 +36,7 @@ export class SceneService {
   // helper
   private axisHelper: THREE.AxesHelper;
   private GridHelper: THREE.GridHelper;
+  private GridDistance: number;
 
   // gui
   public gui: GUI;
@@ -146,12 +147,46 @@ export class SceneService {
   // 床面を生成する
   private createHelper() {
     this.axisHelper = new THREE.AxesHelper(200);
+    this.axisHelper.name = "axisHelper";
     this.scene.add(this.axisHelper);
-
     this.GridHelper = new THREE.GridHelper(200, 20);
     this.GridHelper.geometry.rotateX(Math.PI / 2);
     this.GridHelper.material['opacity'] = 0.2;
     this.GridHelper.material['transparent'] = true;
+    this.GridHelper.name = "GridHelper";
+    this.scene.add(this.GridHelper);
+
+  }
+
+  public setNewHelper(max: number) {
+    // GridHelperの範囲の最大値は最大長さを切り上げた長さ.
+    const Distance = Math.ceil( max /10) * 10;
+    if (this.GridDistance !== Distance) {
+      // maxDistanceをキーに大きさを設定する。
+      this.createNewScale(Distance);
+      this.GridDistance = Distance;
+    }
+  }
+
+  private createNewScale(Distance: number): void {
+
+    // AxisHelperをthis.sceneから取り除く.
+    this.scene.remove(this.axisHelper);
+
+    // AxisHelperを新たに作成し、追加する.
+    this.axisHelper = new THREE.AxesHelper(Distance * 2);
+    this.axisHelper.name = "axisHelper";
+    this.scene.add(this.axisHelper);
+
+    // GridHelperをthis.sceneから取り除く.
+    this.scene.remove(this.GridHelper);
+
+    // GridHelperを新たに作成し、追加する.
+    this.GridHelper = new THREE.GridHelper(Distance * 2, 20);
+    this.GridHelper.geometry.rotateX(Math.PI / 2);
+    this.GridHelper.material['opacity'] = 0.2;
+    this.GridHelper.material['transparent'] = true;
+    this.GridHelper.name = "GridHelper";
     this.scene.add(this.GridHelper);
 
   }

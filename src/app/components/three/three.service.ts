@@ -191,6 +191,7 @@ export class ThreeService {
     this.fsec.ClearData();
 
     // 再描画
+    this.scene.setNewHelper(100);
     this.scene.render();
   }
 
