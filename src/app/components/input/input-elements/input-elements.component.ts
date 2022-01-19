@@ -267,6 +267,21 @@ export class InputElementsComponent implements OnInit {
       this.three.selectChange("elements", row, column);
     },
     change: (evt, ui) => {
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const element = this.data.getElementColumns(this.page, no + 1);
+        element['E']  = (newRow.E  !== undefined) ? newRow.E  : '';
+        element['G']  = (newRow.G  !== undefined) ? newRow.G  : '';
+        element['Xp'] = (newRow.Xp !== undefined) ? newRow.Xp : '';
+        element['A']  = (newRow.A  !== undefined) ? newRow.A  : '';
+        element['J']  = (newRow.J  !== undefined) ? newRow.J  : '';
+        element['Iy'] = (newRow.Iy !== undefined) ? newRow.Iy : '';
+        element['Iz'] = (newRow.Iz !== undefined) ? newRow.Iz : '';
+        element['n']  = (newRow.n  !== undefined) ? newRow.n  : '';
+        this.dataset.splice(no, 1, element)
+      }
       this.three.changeData("elements", this.page);
       // 名称が変更されたら、変更を内部データ全体に反映させる
       if ("n" in ui.updateList[0].newRow) {
