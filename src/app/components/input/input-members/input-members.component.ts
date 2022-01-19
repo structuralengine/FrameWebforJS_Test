@@ -179,7 +179,7 @@ export class InputMembersComponent implements OnInit {
     for (let i = this.dataset.length + 1; i <= row; i++) {
       const member = this.data.getMemberColumns(i);
       const m: string = member["id"];
-      const e = member.e;
+      const e = (member.e !== null) ? member.e : undefined;
       if (m !== "") {
         const l: any = this.data.getMemberLength(m);
         member["L"] = l != null ? l.toFixed(3) : l;
@@ -269,6 +269,26 @@ export class InputMembersComponent implements OnInit {
           this.dataset[row]["n"] = n;
           this.grid.refreshDataAndView();
         }
+      }
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const member = this.data.getMemberColumns(no + 1);
+        member['ni'] = (newRow.ni !== undefined) ? newRow.ni : '';
+        member['nj'] = (newRow.nj !== undefined) ? newRow.nj : '';
+        member['e']  = (newRow.e  !== undefined) ? newRow.e  : '';
+        member['cg'] = (newRow.cg !== undefined) ? newRow.cg : '';
+
+        // 入力によって反映される値を設定
+        if ( member['ni'] !== '' || member['nj'] !== '' ) {
+          const l: number = this.data.getMemberLength(no.toString());
+          member["L"] = (l == null) ? null : l.toFixed(3);
+        }
+        if (member['e'] !== '') {
+          const EleName = this.element.getElementName(newRow.e);
+          member["n"] = (EleName == '') ? '' : EleName;
+        }
+        this.dataset.splice(no, 1, member)
       }
       this.three.changeData("members");
     },
