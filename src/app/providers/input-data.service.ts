@@ -170,8 +170,9 @@ export class InputDataService {
       if (Object.keys(pickup).length > 0) {
         jsonData["pickup"] = pickup;
       }
-
-      jsonData["three"] = this.three.getSettingJson();
+      if (!isPrint) {
+        jsonData["three"] = this.three.getSettingJson();
+      }
     }
 
     // 解析するモードの場合
