@@ -22,6 +22,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { UserInfoService } from "src/app/providers/user-info.service";
 import { environment } from "src/environments/environment";
 import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-custom-fsec.service";
+import { PrintCustomService } from "../print/custom/print-custom.service";
 
 @Component({
   selector: "app-menu",

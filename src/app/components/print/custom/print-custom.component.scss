@@ -230,7 +230,9 @@ tfoot {
                 border-right: 3px solid #d01137;
             }
         }
-        &.fsec {
+        &.fsec,
+        &.reac,
+        &.disg {
             li {
                 display: flex;
                 justify-content: center;
