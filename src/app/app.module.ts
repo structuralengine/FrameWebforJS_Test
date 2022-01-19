@@ -104,6 +104,8 @@ import { SheetComponent } from "./components/input/sheet/sheet.component";
 import { PrintCustomFsecComponent } from "./components/print/custom/print-custom-fsec/print-custom-fsec.component";
 import { PrintCustomThreeComponent } from "./components/print/custom/print-custom-three/print-custom-three.component";
 import { PrintCustomComponent } from "./components/print/custom/print-custom.component";
+import { PrintCustomReacComponent } from './components/print/custom/print-custom-reac/print-custom-reac.component';
+import { PrintCustomDisgComponent } from './components/print/custom/print-custom-disg/print-custom-disg.component';
 
 @NgModule({
   imports: [
@@ -183,6 +185,8 @@ import { PrintCustomComponent } from "./components/print/custom/print-custom.com
     PrintCustomFsecComponent,
     PrintCustomThreeComponent,
     PrintCustomComponent,
+    PrintCustomReacComponent,
+    PrintCustomDisgComponent,
   ],
   entryComponents: [LoginDialogComponent, WaitDialogComponent],
   providers: [

@@ -4,7 +4,9 @@ import { Router } from "@angular/router";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { InputDataService } from "src/app/providers/input-data.service";
 import { ResultDataService } from "src/app/providers/result-data.service";
+import { PrintCustomDisgService } from "./custom/print-custom-disg/print-custom-disg.service";
 import { PrintCustomFsecService } from "./custom/print-custom-fsec/print-custom-fsec.service";
+import { PrintCustomReacService } from "./custom/print-custom-reac/print-custom-reac.service";
 import { PrintCustomThreeService } from "./custom/print-custom-three/print-custom-three.service";
 
 @Injectable({
@@ -36,6 +38,8 @@ export class PrintService {
     public InputData: InputDataService,
     private ResultData: ResultDataService,
     private customFsec: PrintCustomFsecService,
+    private customReac: PrintCustomReacService,
+    private customDisg: PrintCustomDisgService,
     private customThree: PrintCustomThreeService,
     private helper: DataHelperModule
   ) {
@@ -216,35 +220,39 @@ export class PrintService {
         this.contentEditable1[1] &&
         Object.keys(this.ResultData.disg.disg).length !== 0
       ) {
-        json["disg"] = this.ResultData.disg.disg;
+        json["disg"] = this.dataChoice(this.ResultData.disg.disg);
         json["disgName"] = this.getNames(json["disg"]);
       }
       if (
         this.contentEditable1[2] &&
         Object.keys(this.ResultData.combdisg.disgCombine).length !== 0
       ) {
-        json["disgCombine"] = this.ResultData.combdisg.disgCombine;
+        json["disgCombine"] = this.dataChoice(
+          this.ResultData.combdisg.disgCombine
+        );
         json["disgCombineName"] = this.getNames(json["disgCombine"], "Combine");
       }
       if (
         this.contentEditable1[3] &&
         Object.keys(this.ResultData.pickdisg.disgPickup).length !== 0
       ) {
-        json["disgPickup"] = this.ResultData.pickdisg.disgPickup;
+        json["disgPickup"] = this.dataChoice(
+          this.ResultData.pickdisg.disgPickup
+        );
         json["disgPickupName"] = this.getNames(json["disgPickup"], "Pickup");
       }
       if (
         this.contentEditable1[7] &&
         Object.keys(this.ResultData.fsec.fsec).length !== 0
       ) {
-        json["fsec"] = this.dataChoice(this.ResultData.fsec.fsec);
+        json["fsec"] = this.dataChoiceFsec(this.ResultData.fsec.fsec);
         json["fsecName"] = this.getNames(json["fsec"]);
       }
       if (
         this.contentEditable1[8] &&
         Object.keys(this.ResultData.combfsec.fsecCombine).length !== 0
       ) {
-        json["fsecCombine"] = this.dataChoice(
+        json["fsecCombine"] = this.dataChoiceFsec(
           this.ResultData.combfsec.fsecCombine
         );
         json["fsecCombineName"] = this.getNames(json["fsecCombine"], "Combine");
@@ -253,7 +261,7 @@ export class PrintService {
         this.contentEditable1[9] &&
         Object.keys(this.ResultData.pickfsec.fsecPickup).length !== 0
       ) {
-        json["fsecPickup"] = this.dataChoice(
+        json["fsecPickup"] = this.dataChoiceFsec(
           this.ResultData.pickfsec.fsecPickup
         );
         json["fsecPickupName"] = this.getNames(json["fsecPickup"], "Pickup");
@@ -262,21 +270,25 @@ export class PrintService {
         this.contentEditable1[4] &&
         Object.keys(this.ResultData.reac.reac).length !== 0
       ) {
-        json["reac"] = this.ResultData.reac.reac;
+        json["reac"] = this.dataChoice(this.ResultData.reac.reac);
         json["reacName"] = this.getNames(json["reac"]);
       }
       if (
         this.contentEditable1[5] &&
         Object.keys(this.ResultData.combreac.reacCombine).length !== 0
       ) {
-        json["reacCombine"] = this.ResultData.combreac.reacCombine;
+        json["reacCombine"] = this.dataChoice(
+          this.ResultData.combreac.reacCombine
+        );
         json["reacCombineName"] = this.getNames(json["reacCombine"], "Combine");
       }
       if (
         this.contentEditable1[6] &&
         Object.keys(this.ResultData.pickreac.reacPickup).length !== 0
       ) {
-        json["reacPickup"] = this.ResultData.pickreac.reacPickup;
+        json["reacPickup"] = this.dataChoice(
+          this.ResultData.pickreac.reacPickup
+        );
         json["reacPickupName"] = this.getNames(
           json["reacPickupName"],
           "Pickup"
@@ -341,7 +353,7 @@ export class PrintService {
     }
   }
 
-  private dataChoice(json) {
+  private dataChoiceFsec(json) {
     const choiceMember = this.customFsec.dataset;
     const axis = this.customFsec.fsecEditable;
     let basic: boolean = true;
@@ -376,6 +388,41 @@ export class PrintService {
         }
       }
       split[type] = basic ? body1 : body2;
+    }
+    return split;
+  }
+
+  private dataChoice(json) {
+    const axis =
+      Object.keys(json["1"])[0] === "dx_max"
+        ? this.customDisg.disgEditable
+        : this.customReac.reacEditable;
+    let split = {};
+    for (const type of Object.keys(json)) {
+      let LL: boolean = false;
+
+      let body1 = new Array();
+      let body2 = {};
+
+      let i = 0;
+      for (const list of Object.keys(json[type])) {
+        if (isFinite(Number(Object.keys(json[type])[0]))) {
+          LL = true;
+          const item = json[type][list];
+          body1.push(item);
+        } else {
+          let axisArr = {};
+          if (axis[i] === true) {
+            for (const ax of Object.keys(json[type][list])) {
+              const item = json[type][list][ax];
+              axisArr[ax] = item;
+            }
+            body2[list] = axisArr;
+          }
+          i++;
+        }
+      }
+      split[type] = LL ? body1 : body2;
     }
     return split;
   }
