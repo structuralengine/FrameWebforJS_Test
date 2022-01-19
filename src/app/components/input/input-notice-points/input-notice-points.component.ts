@@ -144,6 +144,23 @@ export class InputNoticePointsComponent implements OnInit {
         }
         this.grid.refreshDataAndView();
       }
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const notice_points = this.data.getNoticePointsColumns(no + 1);
+        const newRow = target.newRow;
+        notice_points['m'] = (newRow.m != undefined) ? newRow.m : '';
+        for (let num = 1; num <= this.data.NOTICE_POINTS_COUNT; num++) {
+          const key = "L" + num.toString();
+          notice_points[key] = (newRow[key] != undefined && key in newRow) ? newRow[key] : '';
+        }
+        // 部材長の情報を作成する. 
+        if (newRow.m !== '') {
+          const l: number = this.member.getMemberLength(newRow.m);
+          notice_points['len'] = (l == null) ? null : l.toFixed(3);
+        }
+        this.dataset.splice(no, 1, notice_points);
+      }
       this.three.changeData("notice-points");
     },
   };
