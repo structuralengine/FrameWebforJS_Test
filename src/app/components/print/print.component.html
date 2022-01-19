@@ -5,80 +5,135 @@
       <ul>
         <li>
           <label style="width: 100%">
-            <input type="radio" name="radio-print" class="radio-input" id="result0"
-              (click)="printService.selectRadio(0)" />
+            <input
+              type="radio"
+              name="radio-print"
+              class="radio-input"
+              id="result0"
+              (click)="printService.selectRadio(0)"
+            />
             <span class="radio-parts">入力データ</span>
           </label>
         </li>
         <ng-container *ngIf="ResultData.isCalculated">
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print1"
-                (click)="printService.selectRadio(1)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print1"
+                (click)="printService.selectRadio(1)"
+              />
               <span class="radio-parts">変位量</span>
             </label>
           </li>
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print2"
-                (click)="printService.selectRadio(2)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print2"
+                (click)="printService.selectRadio(2)"
+              />
               <span class="radio-parts">COMBINE 変位量</span>
             </label>
           </li>
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print3"
-                (click)="printService.selectRadio(3)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print3"
+                (click)="printService.selectRadio(3)"
+              />
               <span class="radio-parts">PICKUP 変位量</span>
             </label>
           </li>
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print4"
-                (click)="printService.selectRadio(4)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print4"
+                (click)="printService.selectRadio(4)"
+              />
               <span class="radio-parts">反力</span>
             </label>
           </li>
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print5"
-                (click)="printService.selectRadio(5)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print5"
+                (click)="printService.selectRadio(5)"
+              />
               <span class="radio-parts">COMBINE 反力</span>
             </label>
           </li>
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print6"
-                (click)="printService.selectRadio(6)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print6"
+                (click)="printService.selectRadio(6)"
+              />
               <span class="radio-parts">PICKUP 反力</span>
             </label>
           </li>
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print7"
-                (click)="printService.selectRadio(7)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print7"
+                (click)="printService.selectRadio(7)"
+              />
               <span class="radio-parts">断面力</span>
             </label>
           </li>
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print8"
-                (click)="printService.selectRadio(8)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print8"
+                (click)="printService.selectRadio(8)"
+              />
               <span class="radio-parts">COMBINE 断面力</span>
             </label>
           </li>
           <li>
             <label style="width: 100%">
-              <input type="radio" name="radio-print" class="radio-input" id="print9"
-                (click)="printService.selectRadio(9)" />
+              <input
+                type="radio"
+                name="radio-print"
+                class="radio-input"
+                id="print9"
+                (click)="printService.selectRadio(9)"
+              />
               <span class="radio-parts">PICKUP 断面力</span>
             </label>
           </li>
         </ng-container>
         <li>
           <label style="width: 100%">
-            <input type="radio" name="radio-print" class="radio-input" id="print10"
-              (click)="printService.selectRadio(10)" />
+            <input
+              type="radio"
+              name="radio-print"
+              class="radio-input"
+              id="print10"
+              (click)="printService.selectRadio(10)"
+            />
             <span class="radio-parts">画面印刷</span>
           </label>
         </li>
@@ -90,14 +145,10 @@
     </div>
   </div>
 
-  <!--
   <ng-container *ngIf="ResultData.isCalculated">
-    <app-print-custom>
-    </app-print-custom>
+    <app-print-custom> </app-print-custom>
   </ng-container>
   <ng-container *ngIf="!ResultData.isCalculated">
     <div></div>
   </ng-container>
-  -->
-  
 </div>
