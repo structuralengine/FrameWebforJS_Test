@@ -26,7 +26,7 @@ export class InputPanelService {
 
     // 対象データが無かった時に処理
     if (result == undefined) {
-      result = { row, m: '', len: '' };
+      result = { row, e: '' };// , len: '' };
       for (let i = 1; i <= this.PANEL_VERTEXS_COUNT; i++) {
         result['point-' + i] = '';
       }
