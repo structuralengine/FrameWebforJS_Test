@@ -788,6 +788,39 @@ export class InputLoadComponent implements OnInit {
         const row = range.rowIndx + 1;
         this.three.changeData("load_values", row);
       }
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const load = this.data.getLoadColumns(this.page, no + 1);
+        // 不適切をはじく処理
+        const L1 = this.helper.toNumber(newRow["L1"]);
+        if (L1 === null) {
+          newRow["L1"] = null;
+        }
+        const direction = newRow["direction"];
+        if (direction !== undefined && direction !== null) {
+          newRow["direction"] = direction.trim().toLowerCase();
+        }
+        // this.datasetに代入
+        load['m1'] = (newRow.m1 != undefined) ? newRow.m1 : '';
+        load['m2'] = (newRow.m2 != undefined) ? newRow.m2 : '';
+        load['direction'] = (newRow.direction != "") ? newRow.direction : '';
+        load['mark'] = (newRow.mark != undefined) ? newRow.mark : '';
+        load['L1'] = (newRow.L1 != undefined) ? newRow.L1 : '';
+        load['L2'] = (newRow.L2 != undefined) ? newRow.L2 : '';
+        load['P1'] = (newRow.P1 != undefined) ? newRow.P1 : '';
+        load['P2'] = (newRow.P2 != undefined) ? newRow.P2 : '';
+        load['n']  = (newRow.n  != undefined) ? newRow.n  : '';
+        load['tx'] = (newRow.tx != undefined) ? newRow.tx : '';
+        load['ty'] = (newRow.ty != undefined) ? newRow.ty : '';
+        load['tz'] = (newRow.tz != undefined) ? newRow.tz : '';
+        load['rx'] = (newRow.rx != undefined) ? newRow.rx : '';
+        load['ry'] = (newRow.ry != undefined) ? newRow.ry : '';
+        load['rz'] = (newRow.rz != undefined) ? newRow.rz : '';
+        this.dataset.splice(no, 1, load);
+        this.three.changeData("load_values", no + 1);
+        console.log("Break");
+      }
     },
   };
   width1 = this.helper.dimension === 3 ? 1020 : 810;
@@ -839,6 +872,9 @@ export class InputLoadComponent implements OnInit {
         }
         const row = range.rowIndx + 1;
         this.three.changeData("load_values", row);
+      }
+      for (const target of ui.addList) {
+        console.log("Break");
       }
     },
   };
