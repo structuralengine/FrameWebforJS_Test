@@ -115,6 +115,20 @@ export class InputJointComponent implements OnInit {
         this.three.selectChange('joints', row, column);
       },
       change: (evt, ui) => {
+        // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+        for (const target of ui.addList) {
+          const no: number = target.rowIndx;
+          const joint = this.data.getJointColumns(this.page, no + 1);
+          const newRow = target.newRow;
+          joint['m']  = (newRow.m  != undefined) ? newRow.m  : '';
+          joint['xi'] = (newRow.xi != undefined) ? newRow.xi : '';
+          joint['yi'] = (newRow.yi != undefined) ? newRow.yi : '';
+          joint['zi'] = (newRow.zi != undefined) ? newRow.zi : '';
+          joint['xj'] = (newRow.xj != undefined) ? newRow.xj : '';
+          joint['yj'] = (newRow.yj != undefined) ? newRow.yj : '';
+          joint['zj'] = (newRow.zj != undefined) ? newRow.zj : '';
+          this.dataset.splice(no, 1, joint);
+        }
         this.three.changeData('joints', this.page);
       }
     };

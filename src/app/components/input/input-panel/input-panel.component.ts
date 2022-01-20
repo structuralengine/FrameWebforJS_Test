@@ -115,6 +115,18 @@ export class InputPanelComponent {
         }
         this.grid.refreshDataAndView();
       }
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const panel = this.data.getPanelColumns(no + 1);
+        const newRow = target.newRow;
+        panel['e'] = (newRow.e != undefined) ? newRow.e : '';
+        for (let num = 1; num <= this.data.PANEL_VERTEXS_COUNT; num++) {
+          const key = "point-" + num.toString();
+          panel[key] = (newRow[key] != undefined) ? newRow[key] : '';
+        }
+        this.dataset.splice(no, 1, panel);
+      }
       this.three.changeData('panel');
     }
   };

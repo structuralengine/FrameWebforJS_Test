@@ -188,6 +188,33 @@ export class InputLoadNameComponent implements OnInit {
           this.setNewList(target.rowIndx + 1);
         }
       }
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const load_name = this.data.getLoadNameColumns(no + 1);
+        load_name['rate']  = (newRow.rate != undefined) ? newRow.rate  : null;
+        load_name['symbol'] = (newRow.symbol != "") ? newRow.symbol : null;
+        load_name['name'] = (newRow.name != "") ? newRow.name : '';
+        load_name['fix_node'] = (newRow.fix_node != undefined) ? newRow.fix_node : null;
+        load_name['element'] = (newRow.element != undefined) ? newRow.element : null;
+        load_name['fix_member'] = (newRow.fix_member != undefined) ? newRow.fix_member : null;
+        load_name['joint'] = (newRow.joint != undefined) ? newRow.joint : null;
+        this.dataset.splice(no, 1, load_name);
+
+        if (
+          load_name['rate'] === null &&
+          load_name['symbol'] === null &&
+          (load_name['name'] === "" || load_name['name'] === undefined) &&
+          load_name['fix_node'] === null &&
+          load_name['element'] === null &&
+          load_name['fix_member'] === null &&
+          load_name['joint'] === null
+        ) {
+          this.setNewList(no + 1);
+        }
+      }
+
       if (target !== null) {
         this.three.changeData("load_names", target.rowIndx + 1);
       }

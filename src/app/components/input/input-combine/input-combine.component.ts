@@ -112,6 +112,19 @@ export class InputCombineComponent implements OnInit {
         this.loadData(dataV + this.ROWS_COUNT);
         this.grid.refreshDataAndView();
       }
+    },
+    change: (evt, ui) => {
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const combine = this.data.getCombineDataColumns(no + 1, this.COLUMNS_COUNT);
+        combine['name'] = (newRow['name'] != undefined) ? newRow['name'] : '';
+        for (let i = 1; i <= this.COLUMNS_COUNT; i++) { 
+          const key = "C" + i.toString();
+          combine[key] = (newRow[key] != undefined) ? newRow[key] : null;
+        }
+        this.dataset.splice(no, 1, combine);
+      }
     }
   };
 

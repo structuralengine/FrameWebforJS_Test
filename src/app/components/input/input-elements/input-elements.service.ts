@@ -157,7 +157,9 @@ export class InputElementsService {
     if (e === "" || e === undefined) {
       return "";
     }
-
+    if (Object.keys(this.element).length === 0) {
+      return "";
+    }
     const key = Object.keys(this.element)[0];
     const row = this.element[key];
 

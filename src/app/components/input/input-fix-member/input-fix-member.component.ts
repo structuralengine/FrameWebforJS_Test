@@ -122,6 +122,18 @@ export class InputFixMemberComponent implements OnInit {
       this.three.selectChange('fix_member', row, column);
     },
     change: (evt, ui) => {
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const fixmember = this.data.getFixMemberColumns(this.page, no + 1);
+        fixmember['m']  = (newRow.m  != undefined) ? newRow.m  : '';
+        fixmember['tx'] = (newRow.tx != undefined) ? newRow.tx : '';
+        fixmember['ty'] = (newRow.ty != undefined) ? newRow.ty : '';
+        fixmember['tz'] = (newRow.tz != undefined) ? newRow.tz : '';
+        fixmember['tr'] = (newRow.tr != undefined) ? newRow.tr : '';
+        this.dataset.splice(no, 1, fixmember)
+      }
       this.three.changeData('fix_member', this.page);
     }
   };

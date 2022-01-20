@@ -120,6 +120,19 @@ export class InputFixNodeComponent implements OnInit {
       this.three.selectChange('fix_nodes', row, column);
     },
     change: (evt, ui) => {
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const node = this.data.getFixNodeColumns(this.page, no + 1);
+        node['n'] = (target.newRow.n != undefined) ? target.newRow.n : '';
+        node['tx'] = (target.newRow.tx != undefined) ? target.newRow.tx : '';
+        node['ty'] = (target.newRow.ty != undefined) ? target.newRow.ty : '';
+        node['tz'] = (target.newRow.tz != undefined) ? target.newRow.tz : '';
+        node['rx'] = (target.newRow.rx != undefined) ? target.newRow.rx : '';
+        node['ry'] = (target.newRow.ry != undefined) ? target.newRow.ry : '';
+        node['rz'] = (target.newRow.rz != undefined) ? target.newRow.rz : '';
+        this.dataset.splice(no, 1, node)
+      }
       this.three.changeData('fix_nodes', this.page);
     }
   };
