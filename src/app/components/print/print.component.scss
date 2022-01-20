@@ -133,11 +133,9 @@
     margin-bottom: 12px;
     font-size: 16px;
     .message {
-        p {
+        .caution {
             margin-bottom: 8px;
-            .caution {
-                color: #d01137;
-            }
+            color: #d01137;
         }
     }
 }

@@ -430,7 +430,6 @@ export class PrintService {
     const choiceMember = this.customFsec.dataset;
     //　軸方向指定データ
     const axis = this.customFsec.fsecEditable;
-    let basic: boolean = true;
     let split = {};
     this.priCount += 2;
     //case毎
@@ -438,6 +437,7 @@ export class PrintService {
       let kk = 0;
       let body1 = new Array();
       let body2 = {};
+      let basic: boolean = true;
       this.priCount += 2;
 
       let i = 0;
@@ -458,11 +458,11 @@ export class PrintService {
           }
         } else {
           let axisArr = new Array();
+          basic = false;
           if (axis[i] === true) {
             this.priCount += 2;
 
             for (const ax of Object.keys(json[type][list])) {
-              basic = false;
               const item = json[type][list][ax];
               // 部材番号が空の場合は部材番号が前のものと同じ
               kk = item.m === "" ? kk : Number(item.m) - 1;
