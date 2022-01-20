@@ -658,41 +658,44 @@ export class ThreeLoadService {
       }
     }
 
-    // 変更行をピックアップして、対象の部材番号・directionのオブジェクトの順番を整理する。
-    // 変更行をピックアップ
-    const tempMemberLoadData = memberLoadData[this.currentIndex];
-    const targetMemberLoadData = tempMemberLoadData.filter(
-      (load) => load.row === row
-    );
-    // 再構築されたlistでforループを回す → 基本は1回
-    for (const key of Object.keys(targetMemberLoadData)) {
-      // 変更された行のdirectionを拾う.
-      const direction = targetMemberLoadData[key]["direction"];
-      // 順番を並び変えるmemberLoadListを拾う.
-      const targetCaseLoadList = this.AllCaseLoadList[this.currentIndex];
-      if (targetCaseLoadList === undefined) {
-        break;
-      };
-      const memberLoadList = targetCaseLoadList.memberLoadList;
-      for (const key1 of Object.keys(memberLoadList)) {
-        const targetList = memberLoadList[key1];
-        const list = targetList[direction];
-        if (list === undefined) {
+    if (this.currentIndex in memberLoadData){
+
+      // 変更行をピックアップして、対象の部材番号・directionのオブジェクトの順番を整理する。
+      // 変更行をピックアップ
+      const tempMemberLoadData = memberLoadData[this.currentIndex];
+      const targetMemberLoadData = tempMemberLoadData.filter(
+        (load) => load.row === row
+      );
+      // 再構築されたlistでforループを回す → 基本は1回
+      for (const key of Object.keys(targetMemberLoadData)) {
+        // 変更された行のdirectionを拾う.
+        const direction = targetMemberLoadData[key]["direction"];
+        // 順番を並び変えるmemberLoadListを拾う.
+        const targetCaseLoadList = this.AllCaseLoadList[this.currentIndex];
+        if (targetCaseLoadList === undefined) {
           break;
         };
-        // rowをキーに昇順で並べ替える
-        list.sort((a, b) => {
-          if (a.row < b.row) {
-            return -1;
-          } else if (a.row > b.row) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
+        const memberLoadList = targetCaseLoadList.memberLoadList;
+        for (const key1 of Object.keys(memberLoadList)) {
+          const targetList = memberLoadList[key1];
+          const list = targetList[direction];
+          if (list === undefined) {
+            break;
+          };
+          // rowをキーに昇順で並べ替える
+          list.sort((a, b) => {
+            if (a.row < b.row) {
+              return -1;
+            } else if (a.row > b.row) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+        }
       }
+
     }
-    
 
     // 重なりを調整する
     this.setOffset();
