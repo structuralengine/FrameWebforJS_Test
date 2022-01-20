@@ -31,8 +31,8 @@ export class PrintComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.printService.selectRadio(-1);
-    this.printService.flg = -1;
+    this.printService.selectRadio(0);
+    this.printService.flg = 0;
   }
 
   public onPrintInvoice() {
@@ -64,7 +64,7 @@ export class PrintComponent implements OnInit {
         this.printService.printDocument("invoice", [""]);
       });
     } else {
-      const json = this.printService.getPrintDatas();
+      const json = this.printService.json;
       if (Object.keys(json).length !== 0) {
         // resultデータの印刷
         // const blob = new window.Blob([JSON.stringify(json)], {
@@ -72,8 +72,8 @@ export class PrintComponent implements OnInit {
         // });
         // FileSaver.saveAs(blob, "test.json");
 
-        const modalRef = this.modalService.open(WaitDialogComponent);
-
+        // const modalRef = this.modalService.open(WaitDialogComponent);
+        document.getElementById("print-loading").style.display = "block";
         // PDFサーバーに送る
         const url = "https://frameprintpdf.azurewebsites.net/api/Function1";
 
@@ -102,7 +102,7 @@ export class PrintComponent implements OnInit {
           )
           .add(() => {
             // finally的な処理
-            modalRef.close();
+            document.getElementById("print-loading").style.display = "none";
           });
       }
     }

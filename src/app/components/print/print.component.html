@@ -9,6 +9,7 @@
               type="radio"
               name="radio-print"
               class="radio-input"
+              checked
               id="result0"
               (click)="printService.selectRadio(0)"
             />
@@ -141,7 +142,26 @@
     </div>
 
     <div class="print-ing">
-      <button (click)="onPrintPDF()">印刷する</button>
+      <button
+        *ngIf="!printService.pageOver && !printService.pageError"
+        (click)="onPrintPDF()"
+      >
+        印刷する
+      </button>
+      <p class="pseudo" *ngIf="printService.pageOver || printService.pageError">
+        印刷する
+      </p>
+      <div class="error_message">
+        <p *ngIf="printService.pageDisplay">
+          想定枚数：{{ printService.pageCount }}枚程度
+        </p>
+        <p *ngIf="printService.pageError" style="color: red">
+          印刷データが<br />存在しません
+        </p>
+        <p *ngIf="printService.pageOver" style="color: red">
+          ページ枚数を1000枚<br />程度に抑えて下さい
+        </p>
+      </div>
     </div>
   </div>
 
