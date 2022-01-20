@@ -21,6 +21,7 @@ export class PrintComponent implements OnInit {
   public contentEditable2;
   public combineJson: any;
   public pickupJson: any;
+  public id;
   constructor(
     public InputData: InputDataService,
     public printService: PrintService,
@@ -33,6 +34,7 @@ export class PrintComponent implements OnInit {
   ngOnInit() {
     this.printService.selectRadio(0);
     this.printService.flg = 0;
+    this.id = document.getElementById("printButton");
   }
 
   public onPrintInvoice() {
@@ -74,6 +76,9 @@ export class PrintComponent implements OnInit {
 
         // loadingの表示
         document.getElementById("print-loading").style.display = "block";
+        this.id.setAttribute("disabled", "true");
+        this.id.style.opacity = "0.7";
+
         // PDFサーバーに送る
         const url = "https://frameprintpdf.azurewebsites.net/api/Function1";
 
@@ -104,6 +109,9 @@ export class PrintComponent implements OnInit {
             // finally的な処理
             // loadingの表示終了
             document.getElementById("print-loading").style.display = "none";
+            const id = document.getElementById("printButton");
+            this.id.removeAttribute("disabled");
+            this.id.style.opacity = "";
           });
       }
     }
