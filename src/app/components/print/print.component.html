@@ -142,21 +142,26 @@
     </div>
 
     <div class="print-ing">
-      <button *ngIf="!printService.pageOver" (click)="onPrintPDF()">
+      <button
+        *ngIf="!printService.pageOver && !printService.pageError"
+        (click)="onPrintPDF()"
+      >
         印刷する
       </button>
-      <div *ngIf="printService.pageOver">
-        <button>印刷する</button>
+      <p class="pseudo" *ngIf="printService.pageOver || printService.pageError">
+        印刷する
+      </p>
+      <div class="error_message">
+        <p *ngIf="printService.pageDisplay">
+          想定枚数：{{ printService.pageCount }}枚程度
+        </p>
+        <p *ngIf="printService.pageError" style="color: red">
+          印刷データが<br />存在しません
+        </p>
         <p *ngIf="printService.pageOver" style="color: red">
-          ページ枚数が多すぎます．
+          ページ枚数を1000枚<br />程度に抑えて下さい
         </p>
       </div>
-      <p *ngIf="printService.pageError" style="color: red">
-        データが存在しません
-      </p>
-    </div>
-    <div *ngIf="printService.pageDisplay">
-      <p>想定枚数：{{ printService.pageCount }}枚程度</p>
     </div>
   </div>
 

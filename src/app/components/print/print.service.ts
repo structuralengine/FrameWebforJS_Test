@@ -219,9 +219,13 @@ export class PrintService {
   public newPrintJson() {
     setTimeout(() => {
       this.priCount = 0;
-      if (!(this.contentEditable1[10] === true)) this.getPrintDatas();
+      if (!(this.contentEditable1[10] === true)) {
+        this.getPrintDatas();
+      } else {
+        this.pageError = false;
+      }
       this.pageCount = Math.ceil((Math.ceil(this.priCount / 69) * 2) / 50) * 50;
-      this.pageOver = this.pageCount > 1500 ? true : false;
+      this.pageOver = this.pageCount > 1000 ? true : false;
 
       if (
         this.pageCount > 50 &&
