@@ -819,7 +819,6 @@ export class InputLoadComponent implements OnInit {
         load['rz'] = (newRow.rz != undefined) ? newRow.rz : '';
         this.dataset.splice(no, 1, load);
         this.three.changeData("load_values", no + 1);
-        console.log("Break");
       }
     },
   };

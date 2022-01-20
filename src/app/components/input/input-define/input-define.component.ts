@@ -99,6 +99,18 @@ export class InputDefineComponent implements OnInit {
         this.loadData(dataV + this.ROWS_COUNT);
         this.grid.refreshDataAndView();
       }
+    },
+    change: (evt, ui) => {
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const define = this.data.getDefineDataColumns(no + 1, this.COLUMNS_COUNT);
+        for (let i = 1; i <= this.COLUMNS_COUNT; i++) { 
+          const key = "C" + i.toString();
+          define[key] = (newRow[key] != undefined) ? newRow[key] : '';
+        }
+        this.dataset.splice(no, 1, define);
+      }
     }
   };
 
