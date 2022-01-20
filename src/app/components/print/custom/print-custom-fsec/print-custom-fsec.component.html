@@ -3,7 +3,7 @@
         <p>印刷範囲の選択</p>
         <app-sheet #grid [options]="options" (click)="printService.newPrintJson()"></app-sheet>
     </div>
-    <div *ngIf="printService.flg == 8 ||printService.flg == 9">
+    <div *ngIf="(printService.flg == 7 && printCustomService.LL_exist === true) || printService.flg == 8 ||printService.flg == 9">
         <div class="print-choice">
             <ul class="fsec">
                 <li>

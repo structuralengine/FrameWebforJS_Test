@@ -140,12 +140,13 @@ $border-color: #428bca; // ボーダーライン
         position: absolute;
         right: 0;
         bottom: 0;
-        img {
-            width: 80px;
-            height: 80px;
+        svg {
+            width: 60px;
+            margin-bottom: 8px;
+            text-align: center;
         }
         p {
-            font-size: 8vh;
+            font-size: 10px;
             text-align: center;
         }
     }

@@ -72,7 +72,7 @@ export class PrintComponent implements OnInit {
         // });
         // FileSaver.saveAs(blob, "test.json");
 
-        // const modalRef = this.modalService.open(WaitDialogComponent);
+        // loadingの表示
         document.getElementById("print-loading").style.display = "block";
         // PDFサーバーに送る
         const url = "https://frameprintpdf.azurewebsites.net/api/Function1";
@@ -102,6 +102,7 @@ export class PrintComponent implements OnInit {
           )
           .add(() => {
             // finally的な処理
+            // loadingの表示終了
             document.getElementById("print-loading").style.display = "none";
           });
       }

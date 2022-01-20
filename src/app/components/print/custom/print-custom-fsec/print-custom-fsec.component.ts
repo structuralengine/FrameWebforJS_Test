@@ -6,6 +6,7 @@ import { PrintService } from "../../print.service";
 import { InputMembersService } from "src/app/components/input/input-members/input-members.service";
 import { InputElementsService } from "src/app/components/input/input-elements/input-elements.service";
 import { PrintCustomFsecService } from "./print-custom-fsec.service";
+import { PrintCustomService } from "../print-custom.service";
 
 @Component({
   selector: "app-print-custom-fsec",
@@ -65,6 +66,7 @@ export class PrintCustomFsecComponent implements OnInit {
   constructor(
     private app: AppComponent,
     public printCustomFsecService: PrintCustomFsecService,
+    public printCustomService: PrintCustomService,
     public printService: PrintService
   ) {}
 
