@@ -125,6 +125,7 @@ $border-color: #428bca; // ボーダーライン
 }
 
 .body-container {
+    position: relative;
     width: 100%;
     margin: 0;
     padding: 0 16px;
@@ -134,6 +135,20 @@ $border-color: #428bca; // ボーダーライン
     word-wrap: break-word;
     /* IEやFirefox対応用 */
     overflow-wrap: break-word;
+    #print-loading {
+        display: none;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        img {
+            width: 80px;
+            height: 80px;
+        }
+        p {
+            font-size: 8vh;
+            text-align: center;
+        }
+    }
 }
 
 .three-container {
