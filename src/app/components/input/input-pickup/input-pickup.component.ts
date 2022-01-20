@@ -109,6 +109,19 @@ export class InputPickupComponent implements OnInit {
         this.loadData(dataV + this.ROWS_COUNT);
         this.grid.refreshDataAndView();
       }
+    },
+    change: (evt, ui) => {
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const pickup = this.data.getPickUpDataColumns(no + 1, this.COLUMNS_COUNT);
+        pickup['name'] = (newRow['name'] != undefined) ? newRow['name'] : '';
+        for (let i = 1; i <= this.COLUMNS_COUNT; i++) { 
+          const key = "C" + i.toString();
+          pickup[key] = (newRow[key] != undefined) ? newRow[key] : null;
+        }
+        this.dataset.splice(no, 1, pickup);
+      }
     }
   };
 
