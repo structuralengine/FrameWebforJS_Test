@@ -15,9 +15,7 @@ import { PrintCustomThreeService } from "./custom/print-custom-three/print-custo
 export class PrintService {
   public isPrinting = false;
   public contentEditable1: boolean[];
-
   public mode: number;
-
   public selectedIndex: string;
 
   public inputJson: any;
@@ -28,10 +26,14 @@ export class PrintService {
   public flg: number = -1;
 
   public print_target: any; // Three.js 印刷 の図のデータ
-
   public printOption = [];
-
   public printRadio: any;
+  public json = {};
+  public priCount: number = 0;
+  public pageCount: number = 0;
+  public pageOver: boolean = false;
+  public pageDisplay: boolean = true;
+  public pageError: boolean = false;
 
   constructor(
     private router: Router,
@@ -204,106 +206,147 @@ export class PrintService {
         this.selectedIndex = String(i);
       }
     }
+    for (let j = 0; j < 12; j++) {
+      this.customDisg.disgEditable[j] = true;
+      this.customFsec.fsecEditable[j] = true;
+      this.customReac.reacEditable[j] = true;
+    }
+    this.priCount = 0;
+    this.customFsec.checkReverse();
+    this.newPrintJson();
+  }
+
+  public newPrintJson() {
+    setTimeout(() => {
+      this.priCount = 0;
+      if (!(this.contentEditable1[10] === true)) this.getPrintDatas();
+      this.pageCount = Math.ceil((Math.ceil(this.priCount / 69) * 2) / 50) * 50;
+      this.pageOver = this.pageCount > 1500 ? true : false;
+
+      if (
+        this.pageCount > 50 &&
+        !(this.contentEditable1[0] == true || this.contentEditable1[13] == true)
+      ) {
+        this.pageDisplay = true;
+      } else {
+        this.pageDisplay = false;
+      }
+    }, 50);
   }
 
   public getPrintDatas() {
     // データを取得
-    let json = {};
+    this.json = {};
     if (
       this.contentEditable1[0] &&
       Object.keys(this.InputData.getInputJson(1)).length !== 0
     ) {
-      json = this.InputData.getInputJson(1);
+      this.json = this.InputData.getInputJson(1);
     }
     if (this.ResultData.isCalculated == true) {
       if (
         this.contentEditable1[1] &&
         Object.keys(this.ResultData.disg.disg).length !== 0
       ) {
-        json["disg"] = this.dataChoice(this.ResultData.disg.disg);
-        json["disgName"] = this.getNames(json["disg"]);
+        this.json["disg"] = this.dataChoice(this.ResultData.disg.disg);
+        this.json["disgName"] = this.getNames(this.json["disg"]);
       }
       if (
         this.contentEditable1[2] &&
         Object.keys(this.ResultData.combdisg.disgCombine).length !== 0
       ) {
-        json["disgCombine"] = this.dataChoice(
+        this.json["disgCombine"] = this.dataChoice(
           this.ResultData.combdisg.disgCombine
         );
-        json["disgCombineName"] = this.getNames(json["disgCombine"], "Combine");
+        this.json["disgCombineName"] = this.getNames(
+          this.json["disgCombine"],
+          "Combine"
+        );
       }
       if (
         this.contentEditable1[3] &&
         Object.keys(this.ResultData.pickdisg.disgPickup).length !== 0
       ) {
-        json["disgPickup"] = this.dataChoice(
+        this.json["disgPickup"] = this.dataChoice(
           this.ResultData.pickdisg.disgPickup
         );
-        json["disgPickupName"] = this.getNames(json["disgPickup"], "Pickup");
+        this.json["disgPickupName"] = this.getNames(
+          this.json["disgPickup"],
+          "Pickup"
+        );
       }
       if (
         this.contentEditable1[7] &&
         Object.keys(this.ResultData.fsec.fsec).length !== 0
       ) {
-        json["fsec"] = this.dataChoiceFsec(this.ResultData.fsec.fsec);
-        json["fsecName"] = this.getNames(json["fsec"]);
+        this.json["fsec"] = this.dataChoiceFsec(this.ResultData.fsec.fsec);
+        this.json["fsecName"] = this.getNames(this.json["fsec"]);
       }
       if (
         this.contentEditable1[8] &&
         Object.keys(this.ResultData.combfsec.fsecCombine).length !== 0
       ) {
-        json["fsecCombine"] = this.dataChoiceFsec(
+        this.json["fsecCombine"] = this.dataChoiceFsec(
           this.ResultData.combfsec.fsecCombine
         );
-        json["fsecCombineName"] = this.getNames(json["fsecCombine"], "Combine");
+        this.json["fsecCombineName"] = this.getNames(
+          this.json["fsecCombine"],
+          "Combine"
+        );
       }
       if (
         this.contentEditable1[9] &&
         Object.keys(this.ResultData.pickfsec.fsecPickup).length !== 0
       ) {
-        json["fsecPickup"] = this.dataChoiceFsec(
+        this.json["fsecPickup"] = this.dataChoiceFsec(
           this.ResultData.pickfsec.fsecPickup
         );
-        json["fsecPickupName"] = this.getNames(json["fsecPickup"], "Pickup");
+        this.json["fsecPickupName"] = this.getNames(
+          this.json["fsecPickup"],
+          "Pickup"
+        );
       }
       if (
         this.contentEditable1[4] &&
         Object.keys(this.ResultData.reac.reac).length !== 0
       ) {
-        json["reac"] = this.dataChoice(this.ResultData.reac.reac);
-        json["reacName"] = this.getNames(json["reac"]);
+        this.json["reac"] = this.dataChoice(this.ResultData.reac.reac);
+        this.json["reacName"] = this.getNames(this.json["reac"]);
       }
       if (
         this.contentEditable1[5] &&
         Object.keys(this.ResultData.combreac.reacCombine).length !== 0
       ) {
-        json["reacCombine"] = this.dataChoice(
+        this.json["reacCombine"] = this.dataChoice(
           this.ResultData.combreac.reacCombine
         );
-        json["reacCombineName"] = this.getNames(json["reacCombine"], "Combine");
+        this.json["reacCombineName"] = this.getNames(
+          this.json["reacCombine"],
+          "Combine"
+        );
       }
       if (
         this.contentEditable1[6] &&
         Object.keys(this.ResultData.pickreac.reacPickup).length !== 0
       ) {
-        json["reacPickup"] = this.dataChoice(
+        this.json["reacPickup"] = this.dataChoice(
           this.ResultData.pickreac.reacPickup
         );
-        json["reacPickupName"] = this.getNames(
-          json["reacPickupName"],
+        this.json["reacPickupName"] = this.getNames(
+          this.json["reacPickupName"],
           "Pickup"
         );
       }
     }
-
-    if (Object.keys(json).length === 0) {
-      alert("データが存在しないため，印刷できませんでした．");
+    if (Object.keys(this.json).length === 0) {
+      this.pageError = true;
       return;
     }
+    this.pageError = false;
 
-    json["dimension"] = this.helper.dimension;
+    this.json["dimension"] = this.helper.dimension;
 
-    return json;
+    return this.json;
   }
 
   private getNames(json, target = "") {
@@ -358,10 +401,12 @@ export class PrintService {
     const axis = this.customFsec.fsecEditable;
     let basic: boolean = true;
     let split = {};
+    this.priCount += 2;
     for (const type of Object.keys(json)) {
       let kk = 0;
       let body1 = new Array();
       let body2 = {};
+      this.priCount += 2;
 
       let i = 0;
       for (const list of Object.keys(json[type])) {
@@ -370,16 +415,20 @@ export class PrintService {
           kk = item.m === "" ? kk : Number(item.m) - 1;
           if (choiceMember[kk].check === true) {
             body1.push(item);
+            this.priCount += 1;
           }
         } else {
           let axisArr = new Array();
           if (axis[i] === true) {
+            this.priCount += 2;
+
             for (const ax of Object.keys(json[type][list])) {
               basic = false;
               const item = json[type][list][ax];
               kk = item.m === "" ? kk : Number(item.m) - 1;
               if (choiceMember[kk].check === true) {
                 axisArr.push(item);
+                this.priCount += 1;
               }
             }
             body2[list] = axisArr;
@@ -398,6 +447,8 @@ export class PrintService {
         ? this.customDisg.disgEditable
         : this.customReac.reacEditable;
     let split = {};
+    this.priCount += 2;
+
     for (const type of Object.keys(json)) {
       let LL: boolean = false;
 
@@ -405,17 +456,23 @@ export class PrintService {
       let body2 = {};
 
       let i = 0;
+      this.priCount += 2;
+
       for (const list of Object.keys(json[type])) {
         if (isFinite(Number(Object.keys(json[type])[0]))) {
           LL = true;
           const item = json[type][list];
           body1.push(item);
+          this.priCount += 1;
         } else {
           let axisArr = {};
           if (axis[i] === true) {
+            this.priCount += 2;
+
             for (const ax of Object.keys(json[type][list])) {
               const item = json[type][list][ax];
               axisArr[ax] = item;
+              this.priCount += 1;
             }
             body2[list] = axisArr;
           }

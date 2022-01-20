@@ -1,7 +1,7 @@
 <div>
     <div>
         <p>印刷範囲の選択</p>
-        <app-sheet #grid [options]="options"></app-sheet>
+        <app-sheet #grid [options]="options" (click)="printService.newPrintJson()"></app-sheet>
     </div>
     <div *ngIf="printService.flg == 8 ||printService.flg == 9">
         <div class="print-choice">
@@ -10,12 +10,12 @@
                     <p>軸方向力</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus0"
-              [(ngModel)]="printCustomFsecService.fsecEditable[0]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[0]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最大</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus0"
-              [(ngModel)]="printCustomFsecService.fsecEditable[1]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[1]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最小</span>
           </label>
                 </li>
@@ -23,12 +23,12 @@
                     <p>y軸方向のせん断力</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[2]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[2]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最大</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[3]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[3]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最小</span>
           </label>
                 </li>
@@ -36,12 +36,12 @@
                     <p>z軸方向のせん断力</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[4]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[4]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最大</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[5]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[5]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最小</span>
           </label>
                 </li>
@@ -49,12 +49,12 @@
                     <p>ねじりモーメント</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[6]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[6]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最大</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[7]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[7]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最小</span>
           </label>
                 </li>
@@ -62,12 +62,12 @@
                     <p>y軸回りのモーメント</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[8]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[8]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最大</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[9]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[9]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最小</span>
           </label>
                 </li>
@@ -75,12 +75,12 @@
                     <p>z軸回りのモーメント</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[10]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[10]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最大</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[11]" />
+              [(ngModel)]="printCustomFsecService.fsecEditable[11]" (click)=" printService.newPrintJson()" />
             <span class="checkbox-parts">最小</span>
           </label>
                 </li>

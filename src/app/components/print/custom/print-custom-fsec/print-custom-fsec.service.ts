@@ -11,28 +11,33 @@ export class PrintCustomFsecService {
   public fsecEditable: boolean[];
   constructor(
     private member: InputMembersService,
-
     private element: InputElementsService
   ) {
     this.fsecEditable = [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
     ];
   }
 
   clear() {
     this.dataset = new Array();
     this.loadData();
+  }
+
+  checkReverse() {
+    for (const index of this.dataset) {
+      index["check"] = true;
+    }
   }
 
   // 指定行row 以降のデータを読み取る
