@@ -9,9 +9,6 @@ export class PrintCustomService {
 
   constructor() {}
 
-  public select(id) {
-    let i = id;
-  }
   public LL() {
     this.LL_exist =
       this.LL_flg.filter((n) => n === true).length > 0 ? true : false;

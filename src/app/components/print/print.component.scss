@@ -111,7 +111,7 @@
 }
 
 .print-ing {
-    button {
+    #printButton {
         width: 160px;
         margin-bottom: 8px;
         // background: none;
@@ -132,19 +132,12 @@
     }
     margin-bottom: 12px;
     font-size: 16px;
-    .pseudo {
-        width: 160px;
-        border: 0.5px solid #83abcd;
-        border-radius: 3px;
-        margin: 0 auto 8px auto;
-        padding: 12px 44px;
-        background-color: #669987;
-        color: #ffffff;
-        opacity: 0.7;
-    }
-    .error_message {
+    .message {
         p {
             margin-bottom: 8px;
+            .caution {
+                color: #d01137;
+            }
         }
     }
 }

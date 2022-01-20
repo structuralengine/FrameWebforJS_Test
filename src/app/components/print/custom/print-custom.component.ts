@@ -22,8 +22,5 @@ export class PrintCustomComponent implements OnInit {
 
   public onSelectChange(value) {
     this.printService.flg = Number(value);
-    //  let v = parseInt(value);
-    //  const data = this.fileIndex.FEMlist[v - 1];
-    //  this.InputData.initModel(data.file);　//FemMainServiceのinitModel()にdata.fileを送る
   }
 }

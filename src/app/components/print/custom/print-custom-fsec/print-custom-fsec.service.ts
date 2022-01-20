@@ -34,6 +34,7 @@ export class PrintCustomFsecService {
     this.loadData();
   }
 
+  // 断面力部材番号の選択をすべてtrueにする
   checkReverse() {
     for (const index of this.dataset) {
       index["check"] = true;
