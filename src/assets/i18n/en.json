@@ -10,13 +10,13 @@
         "input-fix-node": {
             "node": "Node",
             "displacementRestraint": "Displacement Restraint",
-            "x_direction": "X-Direction",
-            "y_direction": "Y-Direction",
-            "z_direction": "Z-Direction",
+            "x_direction": "TX",
+            "y_direction": "TY",
+            "z_direction": "TZ",
             "rotationalRestraint": "Rotational Restraint",
-            "x_around": "X-axis rotation",
-            "y_around": "Y-axis rotation",
-            "z_around": "Z-axis rotation"
+            "x_around": "MX",
+            "y_around": "MY",
+            "z_around": "MZ"
         }
     }
 }
