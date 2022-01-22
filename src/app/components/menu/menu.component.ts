@@ -22,6 +22,7 @@ import { UserInfoService } from "src/app/providers/user-info.service";
 import { environment } from "src/environments/environment";
 import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-custom-fsec.service";
 import { PrintCustomService } from "../print/custom/print-custom.service";
+import { LanguagesService } from "src/app/providers/languages.service";
 
 @Component({
   selector: "app-menu",
@@ -45,13 +46,14 @@ export class MenuComponent implements OnInit {
     private three: ThreeService,
     public printService: PrintService,
     public auth: AngularFireAuth,
-    public user: UserInfoService
+    public user: UserInfoService,
+    public language: LanguagesService
   ) {
     this.fileName = "";
   }
 
   ngOnInit() {
-    this.fileName = "立体骨組構造解析ソフトver1.10.3";
+    this.fileName = "";
     this.helper.isContentsDailogShow = false;
     this.setDimension(2);
   }
@@ -64,7 +66,7 @@ export class MenuComponent implements OnInit {
     this.PrintData.clear();
     this.CustomFsecData.clear();
     this.three.ClearData();
-    this.fileName = "立体骨組構造解析ソフトver1.10.3";
+    this.fileName = "";
   }
 
   // ファイルを開く
