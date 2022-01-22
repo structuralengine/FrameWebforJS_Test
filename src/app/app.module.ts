@@ -84,6 +84,8 @@ import { PrintCustomThreeComponent } from "./components/print/custom/print-custo
 import { PrintCustomComponent } from "./components/print/custom/print-custom.component";
 import { PrintCustomReacComponent } from "./components/print/custom/print-custom-reac/print-custom-reac.component";
 import { PrintCustomDisgComponent } from "./components/print/custom/print-custom-disg/print-custom-disg.component";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
 @NgModule({
   imports: [
@@ -99,6 +101,14 @@ import { PrintCustomDisgComponent } from "./components/print/custom/print-custom
     MatInputModule,
     MatRadioModule,
     AngularFireModule.initializeApp(environment.firebase),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+      defaultLanguage: "ja",
+    }),
   ],
   declarations: [
     AppComponent,
@@ -177,3 +187,6 @@ import { PrintCustomDisgComponent } from "./components/print/custom/print-custom
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}

@@ -1,0 +1,22 @@
+{
+    "app": {
+        "node": "Node",
+        "fixNode": "FixNode"
+    },
+    "menu": {
+        "softName": "FrameWebForJS ver1.10.3"
+    },
+    "input": {
+        "input-fix-node": {
+            "node": "Node",
+            "displacementRestraint": "Displacement Restraint",
+            "x_direction": "X-Direction",
+            "y_direction": "Y-Direction",
+            "z_direction": "Z-Direction",
+            "rotationalRestraint": "Rotational Restraint",
+            "x_around": "X-axis rotation",
+            "y_around": "Y-axis rotation",
+            "z_around": "Z-axis rotation"
+        }
+    }
+}

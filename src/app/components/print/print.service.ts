@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { InputDataService } from "src/app/providers/input-data.service";
+import { LanguagesService } from "src/app/providers/languages.service";
 import { ResultDataService } from "src/app/providers/result-data.service";
 import { PrintCustomDisgService } from "./custom/print-custom-disg/print-custom-disg.service";
 import { PrintCustomFsecService } from "./custom/print-custom-fsec/print-custom-fsec.service";
@@ -43,7 +44,8 @@ export class PrintService {
     private customReac: PrintCustomReacService,
     private customDisg: PrintCustomDisgService,
     private customThree: PrintCustomThreeService,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private language: LanguagesService
   ) {
     this.contentEditable1 = [
       false, // 0-入力データ
@@ -371,6 +373,7 @@ export class PrintService {
     this.pageError = false;
 
     this.json["dimension"] = this.helper.dimension;
+    this.json["language"] = this.language.browserLang;
 
     return this.json;
   }

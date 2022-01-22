@@ -1,0 +1,22 @@
+{
+    "app": {
+        "node": "節点",
+        "fixNode": "支点"
+    },
+    "menu": {
+        "softName": "立体骨組構造解析ソフトver1.10.3"
+    },
+    "input": {
+        "input-fix-node": {
+            "node": "節点",
+            "displacementRestraint": "変位拘束",
+            "x_direction": "X方向",
+            "y_direction": "Y方向",
+            "z_direction": "Z方向",
+            "rotationalRestraint": "回転拘束",
+            "x_around": "X軸回り",
+            "y_around": "Y軸回り",
+            "z_around": "Z軸回り"
+        }
+    }
+}
