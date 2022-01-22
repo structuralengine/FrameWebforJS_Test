@@ -34,6 +34,9 @@ export class ThreeJointService {
     }
 
   public visibleChange(flag: boolean): void {
+
+    this.selectChange(-1, -1)
+
     if( this.isVisible === flag){
       return;
     }

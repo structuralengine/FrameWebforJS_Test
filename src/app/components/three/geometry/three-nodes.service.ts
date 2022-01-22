@@ -250,6 +250,8 @@ export class ThreeNodesService {
   // 表示設定を変更する
   public visibleChange(flag: boolean, text: boolean, gui: boolean): void {
 
+    this.selectChange(-1)
+
     // 表示設定
     if (this.objVisible !== flag) {
       this.nodeList.visible = flag;

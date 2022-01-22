@@ -219,6 +219,9 @@ export class ThreeLoadService {
 
   // 表示ケースを変更する
   public changeCase(changeCase: number, isLL_Load: boolean = false): void {
+    
+    // 全てのオブジェクトをデフォルトのカラーの状態にする
+    this.selectChange(-1, -1); 
 
         // 連行荷重が完成したら 以下のアニメーションを有効にする
     // 荷重名称を調べる
