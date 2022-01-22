@@ -14,7 +14,6 @@ import { ResultDataService } from "../../providers/result-data.service";
 import { ThreeService } from "../three/three.service";
 
 import * as pako from "pako";
-import { DataCountService } from "../print/invoice/dataCount.service";
 
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { SceneService } from "../three/scene.service";
@@ -45,7 +44,6 @@ export class MenuComponent implements OnInit {
     private http: HttpClient,
     private three: ThreeService,
     public printService: PrintService,
-    public countArea: DataCountService,
     public auth: AngularFireAuth,
     public user: UserInfoService
   ) {
@@ -77,7 +75,7 @@ export class MenuComponent implements OnInit {
     this.PrintData.clear();
     this.CustomFsecData.clear();
     this.three.ClearData();
-    this.countArea.clear();
+    // this.countArea.clear();
     const modalRef = this.modalService.open(WaitDialogComponent);
 
     const file = evt.target.files[0];
