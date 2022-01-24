@@ -53,6 +53,11 @@
             "node_i":"i端",
             "node_j":"j端",
             "memberNo":"部材No"
+        },
+        "input-notice-points":{
+            "memberNo":"部材No",
+            "distance":"部材長\n(m)",
+            "distance_from_node_i":"i-端からの距離(m)"
         }
     }
 }

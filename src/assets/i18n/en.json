@@ -53,6 +53,11 @@
             "node_i":"Node-I",
             "node_j":"Node-J",
             "memberNo":"MemberNo"
+        },
+        "input-notice-points":{
+            "memberNo":"Member\nNo",
+            "distance":"Distance\n(m)",
+            "distance_from_node_i":"Distance from Node-I (m)"
         }
     }
 }

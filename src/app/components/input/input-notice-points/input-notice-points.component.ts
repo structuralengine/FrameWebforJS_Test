@@ -6,6 +6,7 @@ import { ThreeService } from "../../three/three.service";
 import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-notice-points",
@@ -21,7 +22,7 @@ export class InputNoticePointsComponent implements OnInit {
   private dataset = [];
   private columnHeaders: any = [
     {
-      title: "部材No",
+      title: this.translate.instant("input.input-notice-points.memberNo"),
       dataType: "string",
       dataIndx: "m",
       sortable: false,
@@ -29,7 +30,7 @@ export class InputNoticePointsComponent implements OnInit {
       width: 10,
     },
     {
-      title: "部材長\n(m)",
+      title: this.translate.instant("input.input-notice-points.distance"),
       dataType: "float",
       format: "#.000",
       dataIndx: "len",
@@ -38,7 +39,9 @@ export class InputNoticePointsComponent implements OnInit {
       editable: false,
       style: { background: "#dae6f0" },
     },
-    { title: "i-端 からの距離(m)", colModel: [] },
+    { 
+      title: this.translate.instant("input.input-notice-points.distance_from_node_i"),
+      colModel: [] },
   ];
 
   private ROWS_COUNT = 15;
@@ -48,7 +51,8 @@ export class InputNoticePointsComponent implements OnInit {
     private member: InputMembersService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private three: ThreeService
+    private three: ThreeService,
+    private translate: TranslateService
   ) {
     for (let i = 1; i <= this.data.NOTICE_POINTS_COUNT; i++) {
       const id = "L" + i;
