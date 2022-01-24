@@ -210,14 +210,13 @@ export class PrintService {
 
     // 変位，反力，断面力の印刷する軸の選択用
     // 初期値true
-    for (let j = 0; j < 12; j++) {
-      this.customDisg.disgEditable[j] = true;
-      this.customFsec.fsecEditable[j] = true;
-      this.customReac.reacEditable[j] = true;
-    }
+    // for (let j = 0; j < 12; j++) {
+    //   this.customDisg.disgEditable[j] = true;
+    //   this.customFsec.fsecEditable[j] = true;
+    //   this.customReac.reacEditable[j] = true;
+    // }
     this.priCount = 0;
-    // 断面力部材番号の選択をすべてtrueにする
-    this.customFsec.checkReverse();
+
     this.newPrintJson();
   }
 
