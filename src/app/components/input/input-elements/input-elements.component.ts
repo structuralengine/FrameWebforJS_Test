@@ -5,6 +5,7 @@ import { ThreeService } from "../../three/three.service";
 import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-elements",
@@ -17,7 +18,7 @@ export class InputElementsComponent implements OnInit {
   private dataset = [];
   private columnHeaders3D = [
     {
-      title: "弾性係数",
+      title: this.translate.instant("input.input-elements.elastic"),
       align: "center",
       colModel: [
         {
@@ -30,7 +31,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "せん断弾性係数",
+      title: this.translate.instant("input.input-elements.shear_elastic"),
       align: "center",
       colModel: [
         {
@@ -43,7 +44,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "膨張係数",
+      title: this.translate.instant("input.input-elements.cte"),
       align: "center",
       colModel: [
         {
@@ -56,7 +57,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "断面積",
+      title: this.translate.instant("input.input-elements.area"),
       align: "center",
       colModel: [
         {
@@ -70,7 +71,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "ねじり定数",
+      title: this.translate.instant("input.input-elements.torsionConstant"),
       align: "center",
       colModel: [
         {
@@ -84,7 +85,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "断面二次モーメント",
+      title: this.translate.instant("input.input-elements.inertia"),
       align: "center",
       colModel: [
         {
@@ -106,7 +107,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "名称",
+      title: this.translate.instant("input.input-elements.material_name"),
       align: "center",
       dataType: "string",
       format: "#.000000",
@@ -117,7 +118,7 @@ export class InputElementsComponent implements OnInit {
   ];
   private columnHeaders2D = [
     {
-      title: "弾性係数",
+      title: this.translate.instant("input.input-elements.elastic"),
       align: "center",
       colModel: [
         {
@@ -130,7 +131,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "膨張係数",
+      title: this.translate.instant("input.input-elements.cte"),
       align: "center",
       colModel: [
         {
@@ -143,7 +144,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "断面積",
+      title: this.translate.instant("input.input-elements.area"),
       align: "center",
       colModel: [
         {
@@ -157,7 +158,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "断面二次",
+      title: this.translate.instant("input.input-elements.inertia"),
       align: "center",
       colModel: [
         {
@@ -171,7 +172,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "名称",
+      title: this.translate.instant("input.input-elements.material_name"),
       align: "center",
       dataType: "string",
       format: "#.000000",
@@ -189,7 +190,8 @@ export class InputElementsComponent implements OnInit {
     private data: InputElementsService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private three: ThreeService
+    private three: ThreeService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {

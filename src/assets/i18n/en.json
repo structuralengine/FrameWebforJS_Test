@@ -34,6 +34,15 @@
             "material":"Material",
             "codeAngle":"Angle of Rocation",
             "material_name":"Name of Material"
+        },
+        "input-elements":{
+            "elastic":"Elastic",
+            "shear_elastic":"Shear Elastic",
+            "cte":"CTE",
+            "area":"Area",
+            "torsionConstant":"Torsion Constant",
+            "inertia":"Inertia",
+            "material_name":"Name of Material"
         }
     }
 }

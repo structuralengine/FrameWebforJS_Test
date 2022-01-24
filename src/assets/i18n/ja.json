@@ -34,6 +34,15 @@
             "material":"材料",
             "codeAngle":"コードアングル",
             "material_name":"材料名称"
+        },
+        "input-elements":{
+            "elastic":"弾性係数",
+            "shear_elastic":"せん断弾性係数",
+            "cte":"膨張係数",
+            "area":"断面積",
+            "torsionConstant":"ねじり定数",
+            "inertia":"断面二次モーメント",
+            "material_name":"名称"
         }
     }
 }
