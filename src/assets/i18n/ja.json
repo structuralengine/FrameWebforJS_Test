@@ -58,6 +58,15 @@
             "memberNo":"部材No",
             "distance":"部材長\n(m)",
             "distance_from_node_i":"i-端からの距離(m)"
+        },
+        "input-fix-member":{
+            "member":"部材",
+            "displacementRestraint":"変位拘束 (kN/m/m)",
+            "v_axis":"部材軸方向",
+            "y_axis":"部材Y軸",
+            "z_axis":"部材Z軸",
+            "rotationalRestraint":"回転拘束",
+            "r_axis":"軸直角方向"
         }
     }
 }

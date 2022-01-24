@@ -58,6 +58,15 @@
             "memberNo":"Member\nNo",
             "distance":"Distance\n(m)",
             "distance_from_node_i":"Distance from Node-I (m)"
+        },
+        "input-fix-member":{
+            "member":"Member",
+            "displacementRestraint":"Displacement Restraint (kN/m/m)",
+            "v_axis":"Kv",
+            "y_axis":"Ky",
+            "z_axis":"Kz",
+            "rotationalRestraint":"Rotational Restraint",
+            "r_axis":"Kr"
         }
     }
 }
