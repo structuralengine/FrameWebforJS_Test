@@ -361,7 +361,7 @@ export class PrintService {
           this.ResultData.pickreac.reacPickup
         );
         this.json["reacPickupName"] = this.getNames(
-          this.json["reacPickupName"],
+          this.json["reacPickup"],
           "Pickup"
         );
       }
