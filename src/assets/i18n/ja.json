@@ -67,6 +67,29 @@
             "z_axis":"部材Z軸",
             "rotationalRestraint":"回転拘束",
             "r_axis":"軸直角方向"
+        },
+        "input-load-name":{
+            "cf":"割増し係数",
+            "symbol":"記号",
+            "name":"名称",
+            "fixNode":"支点",
+            "crossSection":"断面",
+            "fixMember":"バネ",
+            "joint":"結合"
+        },
+        "input-load":{
+            "memberLoad":"要素荷重",
+            "memberNo":"部材No",
+            "direction":"方向",
+            "mark":"マーク",
+            "nodeLoad":"節点荷重",
+            "node": "節点"
+        },
+        "input-combine":{
+            "name": "名称　　　　　　　　　　　　　　"
+        },
+        "input-pickup":{
+            "name": "名称　　　　　　　　　　　　　　"
         }
     }
 }

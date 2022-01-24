@@ -6,6 +6,7 @@ import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { ThreeLoadService } from "../../three/geometry/three-load/three-load.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-load-name",
@@ -21,7 +22,7 @@ export class InputLoadNameComponent implements OnInit {
   private dataset = [];
   private columnHeaders = [
     {
-      title: "割増し係数",
+      title: this.translate.instant("input.input-load-name.cf"),
       dataType: "float",
       format: "#.000",
       dataIndx: "rate",
@@ -30,7 +31,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "right",
     },
     {
-      title: "記号",
+      title: this.translate.instant("input.input-load-name.symbol"),
       dataType: "string",
       dataIndx: "symbol",
       sortable: false,
@@ -38,7 +39,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "left",
     },
     {
-      title: "名称",
+      title: this.translate.instant("input.input-load-name.name"),
       dataType: "string",
       dataIndx: "name",
       sortable: false,
@@ -46,7 +47,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "left",
     },
     {
-      title: "支点",
+      title: this.translate.instant("input.input-load-name.fixNode"),
       dataType: "integer",
       dataIndx: "fix_node",
       sortable: false,
@@ -54,7 +55,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "right",
     },
     {
-      title: "断面",
+      title: this.translate.instant("input.input-load-name.crossSection"),
       dataType: "integer",
       dataIndx: "element",
       sortable: false,
@@ -62,7 +63,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "right",
     },
     {
-      title: "バネ",
+      title: this.translate.instant("input.input-load-name.fixMember"),
       dataType: "integer",
       dataIndx: "fix_member",
       sortable: false,
@@ -70,7 +71,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "right",
     },
     {
-      title: "結合",
+      title: this.translate.instant("input.input-load-name.joint"),
       dataType: "integer",
       dataIndx: "joint",
       sortable: false,
@@ -86,7 +87,8 @@ export class InputLoadNameComponent implements OnInit {
     private three: ThreeService,
     private app: AppComponent,
     private helper: DataHelperModule,
-    private threeload: ThreeLoadService
+    private threeload: ThreeLoadService,
+    private translate: TranslateService
   ) {
     this.loadData(this.ROWS_COUNT);
   }

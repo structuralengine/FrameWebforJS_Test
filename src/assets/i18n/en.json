@@ -67,6 +67,29 @@
             "z_axis":"Kz",
             "rotationalRestraint":"Rotational Restraint",
             "r_axis":"Kr"
+        },
+        "input-load-name":{
+            "cf":"C.F",
+            "symbol":"Symbol",
+            "name":"Name",
+            "fixNode":"Support",
+            "crossSection":"Section",
+            "fixMember":"Spring",
+            "joint":"Joint"
+        },
+        "input-load":{
+            "memberLoad":"Member Load",
+            "memberNo":"MemberNo",
+            "direction":"Direction",
+            "mark":"Mark",
+            "nodeLoad":"Node Load",
+            "node": "Node"
+        },
+        "input-combine":{
+            "name": "Name of Load"
+        },
+        "input-pickup":{
+            "name": "Name of Load"
         }
     }
 }
