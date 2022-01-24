@@ -47,6 +47,12 @@
         "input-panel":{
             "materialNo":"Material No",
             "nodeNo":"Node No."
+        },
+        "input-joint":{
+            "member":"Member",
+            "node_i":"Node-I",
+            "node_j":"Node-J",
+            "memberNo":"MemberNo"
         }
     }
 }

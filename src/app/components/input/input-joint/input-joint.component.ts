@@ -5,6 +5,7 @@ import { ThreeService } from '../../three/three.service';
 import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from 'src/app/app.component';
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'app-input-joint',
@@ -17,24 +18,36 @@ export class InputJointComponent implements OnInit {
 
   private dataset = [];
   private columnHeaders3D =[
-    { title: '部材', align: 'center', colModel: [
+    { 
+      title: this.translate.instant("input.input-joint.member"),
+      align: 'center', colModel: [
       { title: "No", dataType: "string", dataIndx: "m", sortable: false },
     ]},      
-    { title: 'i端', align: 'center', colModel: [
+    { 
+      title: this.translate.instant("input.input-joint.node_i"),
+      align: 'center', colModel: [
       { title: "x", dataType: "integer", dataIndx: "xi", sortable: false },
       { title: "y", dataType: "integer", dataIndx: "yi", sortable: false },
       { title: "z", dataType: "integer", dataIndx: "zi", sortable: false },
     ]},      
-    { title: 'i端', align: 'center', colModel: [
+    { 
+      title: this.translate.instant("input.input-joint.node_j"),
+      align: 'center', colModel: [
       { title: "x", dataType: "integer", dataIndx: "xj", sortable: false },
       { title: "y", dataType: "integer", dataIndx: "yj", sortable: false },
       { title: "z", dataType: "integer", dataIndx: "zj", sortable: false }
     ]},      
   ];
   private columnHeaders2D =[
-    { title: "部材No", dataType: "string", dataIndx: "m", sortable: false },
-    { title: "i端", dataType: "integer", dataIndx: "zi", sortable: false },
-    { title: "j端", dataType: "integer", dataIndx: "zj", sortable: false }
+    { 
+      title: this.translate.instant("input.input-joint.memberNo"),
+      dataType: "string", dataIndx: "m", sortable: false },
+    { 
+      title: this.translate.instant("input.input-joint.node_i"),
+      dataType: "integer", dataIndx: "zi", sortable: false },
+    { 
+      title: this.translate.instant("input.input-joint.node_j"),
+      dataType: "integer", dataIndx: "zj", sortable: false }
   ];
 
   private ROWS_COUNT = 15;
@@ -44,7 +57,9 @@ export class InputJointComponent implements OnInit {
     private data: InputJointService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private three: ThreeService) {}
+    private three: ThreeService,
+    private translate: TranslateService
+    ) {}
 
     ngOnInit() {
       this.ROWS_COUNT = this.rowsCount();

@@ -47,6 +47,12 @@
         "input-panel":{
             "materialNo":"材料No",
             "nodeNo":"頂点No."
+        },
+        "input-joint":{
+            "member":"部材",
+            "node_i":"i端",
+            "node_j":"j端",
+            "memberNo":"部材No"
         }
     }
 }
