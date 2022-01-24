@@ -1,36 +1,36 @@
-const {app, BrowserWindow, Menu} = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 const path = require("path");
 // const Config = require('electron-config');
 
 function createWindow(canvasObject) {
 
-  const mainWindow = new BrowserWindow({
-    width: 1600,
-    height: 1280,
-    'icon': 'favicon.ico',
-    webPreferences: {
-      worldSafeExecuteJavaScript: true,
-      frame: false,
-      backgroundColor: 'WHITE',
-      contextIsolation: true,
-      nodeIntegration: true,
-      nodeIntegrationInWorker: true,
-      useContentSize: true,
-      enableRemoteModule: true,
-    },
-  })
-  mainWindow.loadFile(path.join(__dirname, `/dist/index.html`)).then(r => 1)
+    const mainWindow = new BrowserWindow({
+        width: 1600,
+        height: 1280,
+        'icon': 'favicon.ico',
+        webPreferences: {
+            worldSafeExecuteJavaScript: true,
+            frame: false,
+            backgroundColor: 'WHITE',
+            contextIsolation: true,
+            nodeIntegration: true,
+            nodeIntegrationInWorker: true,
+            useContentSize: true,
+            enableRemoteModule: true,
+        },
+    })
+    mainWindow.loadFile(path.join(__dirname, `/dist/index.html`)).then(r => 1)
 
-  // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+    // Open the DevTools.
+    //mainWindow.webContents.openDevTools()
 
-  mainWindow.on('closed', function () {
-    app.quit();
-  });
-  // Build menu from template
-  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-  // Insert menu
-  Menu.setApplicationMenu(mainMenu);
+    mainWindow.on('closed', function() {
+        app.quit();
+    });
+    // Build menu from template
+    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+    // Insert menu
+    Menu.setApplicationMenu(mainMenu);
 }
 
 
@@ -43,23 +43,23 @@ app.whenReady().then(createWindow)
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 })
 
 app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-  }
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow()
+    }
 })
 
 const mainMenuTemplate = [
-  // Each object is a dropdown
-  {
-    label: '',
-    submenu: []
-  }
+    // Each object is a dropdown
+    {
+        label: '',
+        submenu: []
+    }
 ];
