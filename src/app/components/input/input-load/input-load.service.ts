@@ -318,7 +318,15 @@ export class InputLoadService {
         }
       } else {
         for (const key of Object.keys(jsonData)) {
-          if (jsonData[key] !== empty) {
+          if(key === 'LL_pitch'){
+            continue;
+          }
+          if(typeof(jsonData[key]) === 'string'){
+            if(jsonData[key].trim().length > 0){
+              flg = true;
+              break;
+            }
+          } else if (jsonData[key] !== empty) {
             flg = true;
             break;
           }
