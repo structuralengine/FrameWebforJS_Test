@@ -1,7 +1,8 @@
 {
     "app": {
         "node": "Node",
-        "fixNode": "FixNode"
+        "fixNode": "FixNode",
+        "member":"Member"
     },
     "menu": {
         "softName": "FrameWebForJS ver1.10.3"

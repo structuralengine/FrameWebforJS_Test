@@ -1,7 +1,8 @@
 {
     "app": {
         "node": "節点",
-        "fixNode": "支点"
+        "fixNode": "支点",
+        "member":"部材"
     },
     "menu": {
         "softName": "立体骨組構造解析ソフトver1.10.3"
