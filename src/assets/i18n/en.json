@@ -43,6 +43,10 @@
             "torsionConstant":"Torsion Constant",
             "inertia":"Inertia",
             "material_name":"Name of Material"
+        },
+        "input-panel":{
+            "materialNo":"Material No",
+            "nodeNo":"Node No."
         }
     }
 }

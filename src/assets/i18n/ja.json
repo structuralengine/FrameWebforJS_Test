@@ -43,6 +43,10 @@
             "torsionConstant":"ねじり定数",
             "inertia":"断面二次モーメント",
             "material_name":"名称"
+        },
+        "input-panel":{
+            "materialNo":"材料No",
+            "nodeNo":"頂点No."
         }
     }
 }
