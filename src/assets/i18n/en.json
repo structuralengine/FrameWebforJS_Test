@@ -2,7 +2,14 @@
     "app": {
         "node": "Node",
         "fixNode": "FixNode",
-        "member":"Member"
+        "member":"Member",
+        "element":"Material",
+        "panel":"Panel",
+        "joint":"Joint",
+        "noticePoint":"Location",
+        "fixMember":"Spring",
+        "loadName":"Load",
+        "inputDefine":"Combination"
     },
     "menu": {
         "softName": "FrameWebForJS ver1.10.3"
@@ -18,6 +25,15 @@
             "x_around": "MX",
             "y_around": "MY",
             "z_around": "MZ"
+        },
+        "input-members":{
+            "node":"Node",
+            "node_i":"Node-I",
+            "node_j":"Node-J",
+            "distance":"Distance",
+            "material":"Material",
+            "codeAngle":"Angle of Rocation",
+            "material_name":"Name of Material"
         }
     }
 }

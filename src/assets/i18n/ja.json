@@ -2,7 +2,14 @@
     "app": {
         "node": "節点",
         "fixNode": "支点",
-        "member":"部材"
+        "member":"部材",
+        "element":"材料",
+        "panel":"パネル",
+        "joint":"結合",
+        "noticePoint":"着目点",
+        "fixMember":"バネ",
+        "loadName":"荷重",
+        "inputDefine":"組合せ"
     },
     "menu": {
         "softName": "立体骨組構造解析ソフトver1.10.3"
@@ -18,6 +25,15 @@
             "x_around": "X軸回り",
             "y_around": "Y軸回り",
             "z_around": "Z軸回り"
+        },
+        "input-members":{
+            "node":"節点",
+            "node_i":"i端",
+            "node_j":"j端",
+            "distance":"部材長",
+            "material":"材料",
+            "codeAngle":"コードアングル",
+            "material_name":"材料名称"
         }
     }
 }
