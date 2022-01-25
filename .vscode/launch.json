@@ -5,11 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug with Chrome",
+            "name": "Debug_with_Chrome",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:4200",
             "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "Build.Renderer"
         },
         {
             "name": "Main",
@@ -33,7 +34,7 @@
     "compounds": [
         {
             "name": "Application Debug",
-            "configurations": [ "Debug with Chrome", "Main" ]
+            "configurations": [ "Debug_with_Chrome", "Main" ]
         }
     ]
 }
