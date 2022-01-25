@@ -188,5 +188,5 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 })
 export class AppModule {}
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.TranslateHttpLoader);
+  return new TranslateHttpLoader(http);
 }

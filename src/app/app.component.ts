@@ -9,6 +9,8 @@ import { ResultDisgService } from "./components/result/result-disg/result-disg.s
 import { ResultReacService } from "./components/result/result-reac/result-reac.service";
 import { DataHelperModule } from "./providers/data-helper.module";
 
+import html2canvas from "html2canvas";
+
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -101,3 +103,13 @@ export class AppComponent implements OnInit {
     this.printService.printDocument("invoice", invoiceIds);
   }
 }
+
+window.onload = function () {
+  //HTML内に画像を表示
+  html2canvas(document.getElementById("target")).then(function (canvas) {
+    //imgタグのsrcの中に、html2canvasがレンダリングした画像を指定する。
+    var imgData = canvas.toDataURL();
+    var pic = document.getElementById("result");
+    pic.setAttribute("src", "imgData");
+  });
+};

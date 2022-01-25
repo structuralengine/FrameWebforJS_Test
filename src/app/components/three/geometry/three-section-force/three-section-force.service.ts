@@ -10,6 +10,7 @@ import { InputMembersService } from "../../../input/input-members/input-members.
 import { ThreeMembersService } from "../three-members.service";
 import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
+import { ThreeService } from "../../three.service";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +20,7 @@ export class ThreeSectionForceService {
   private ThreeObject2: THREE.Object3D;
   private currentIndex: string;
   private currentMode: string;
-  private currentRadio: string;
+  public currentRadio: string;
 
   private scale: number;
   private textCount: number; // 文字を出力する数
@@ -38,6 +39,9 @@ export class ThreeSectionForceService {
   private gui_dimension: number = null;
 
   private mesh: ThreeSectionForceMeshService;
+
+  public max: number;
+  public min: number;
 
   private nodeData: any;
   private memberData: any;
@@ -77,9 +81,9 @@ export class ThreeSectionForceService {
       return;
     }
     this.currentMode = ModeName;
-    if(ModeName.length === 0){
-      this.ThreeObject1.visible = false; 
-      this.ThreeObject2.visible = false; 
+    if (ModeName.length === 0) {
+      this.ThreeObject1.visible = false;
+      this.ThreeObject2.visible = false;
       this.guiDisable();
       return;
     }
@@ -172,7 +176,7 @@ export class ThreeSectionForceService {
     //   this.onResize();
     //   this.scene.render();
     // });
-    
+
     for (const key of this.radioButtons) {
       this.gui[key] = this.scene.gui
         .add(this.params, key, this.params[key])
@@ -184,6 +188,7 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
+          this.scene.getMaxMinValue(this.max, this.min, this.currentRadio);
           this.onResize();
           this.scene.render();
         });
@@ -251,9 +256,8 @@ export class ThreeSectionForceService {
     this.max_values.pik_fsec = max_values;
   }
 
-  private changeMesh(): void{
-
-    if(this.currentIndex === undefined){
+  private changeMesh(): void {
+    if (this.currentIndex === undefined) {
       return;
     }
 
@@ -325,7 +329,7 @@ export class ThreeSectionForceService {
         flg = true;
       }
     }
-    if(flg===false) {
+    if (flg === false) {
       fsecDatas.push(f);
       this.ThreeObject1.visible = true;
       this.ThreeObject2.visible = false;
@@ -461,6 +465,8 @@ export class ThreeSectionForceService {
 
     // 上位、下位の順位の数値を選出する
     const targetValues = Array.from(new Set(textValues));
+    this.max = targetValues[0];
+    this.min = targetValues[targetValues.length - 1];
     const count = Math.floor(textValues.length * (this.textCount / 100));
     let Upper = targetValues;
     if (count < targetValues.length) {
@@ -468,8 +474,7 @@ export class ThreeSectionForceService {
     }
     const targetList = Array.from(new Set(Upper));
 
-
-    for( let i = 0; i < ThreeObjects.length; i++){
+    for (let i = 0; i < ThreeObjects.length; i++) {
       const ThreeObject = ThreeObjects[i];
       if (ThreeObject.visible === false) {
         continue; // 非表示の ThreeObject の文字は追加しない
@@ -518,7 +523,7 @@ export class ThreeSectionForceService {
     }
     const max_value = max_values[this.currentIndex];
     if (max_value === undefined) {
-      return
+      return;
     }
 
     let scale3: number = 1;
@@ -556,5 +561,4 @@ export class ThreeSectionForceService {
       });
     }
   }
-
 }
