@@ -1,7 +1,7 @@
 {
     "app": {
         "node": "Node",
-        "fixNode": "FixNode",
+        "fixNode": "Support",
         "member":"Member",
         "element":"Material",
         "panel":"Panel",
@@ -9,7 +9,12 @@
         "noticePoint":"Location",
         "fixMember":"Spring",
         "loadName":"Load",
-        "inputDefine":"Combination"
+        "inputDefine":"Combination",
+        "input":"Input",
+        "displacement":"Displacement",
+        "reaction":"Reaction",
+        "memberSectionForce":"MemberSectionForce",
+        "output":"Output"
     },
     "menu": {
         "softName": "FrameWebForJS ver1.10.3"

@@ -9,7 +9,12 @@
         "noticePoint":"着目点",
         "fixMember":"バネ",
         "loadName":"荷重",
-        "inputDefine":"組合せ"
+        "inputDefine":"組合せ",
+        "input":"入力",
+        "displacement":"変位",
+        "reaction":"支点反力",
+        "memberSectionForce":"部材断面力",
+        "output":"出力"
     },
     "menu": {
         "softName": "立体骨組構造解析ソフトver1.10.3"
