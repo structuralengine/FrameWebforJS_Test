@@ -256,11 +256,16 @@ export class ThreeService {
       case "comb_fsec":
       case "pik_fsec":
         this.fsec.changeData(currentPage, this.mode);
+        this.scene.getMaxMinValue(
+          this.secForce.max,
+          this.secForce.min,
+          this.secForce.currentRadio
+        );
         break;
     }
     this.currentIndex = currentPage;
 
-    // 再描画
+    this.scene.getStatus(this.mode, this.currentIndex); // 再描画
     this.scene.render();
   }
 
@@ -460,11 +465,18 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange(ModeName);
+      this.scene.getMaxMinValue(
+        this.secForce.max,
+        this.secForce.min,
+        this.secForce.currentRadio
+      );
     }
 
     this.mode = ModeName;
     this.currentIndex = -1;
 
+    document.getElementById("max-min").style.display = "none";
+    this.scene.getStatus(this.mode, this.currentIndex); // 再描画
     // 再描画
     this.scene.render();
   }
@@ -594,8 +606,8 @@ export class ThreeService {
           }
         }
       } else {
-        let counter = 0;  
-        this.currentIndex = -1;// this.ChangePageの冒頭ではじかれるため、this.currentIndexを調整
+        let counter = 0;
+        this.currentIndex = -1; // this.ChangePageの冒頭ではじかれるため、this.currentIndexを調整
         for (let i = 0; i < captureCase.length; i++) {
           const key = captureCase[i];
 

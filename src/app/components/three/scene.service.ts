@@ -41,6 +41,17 @@ export class SceneService {
   public gui: GUI;
   private params: any; // GridHelperの表示制御
 
+  public max_Three: string;
+  public min_Three: string;
+
+  public Three_unit: string;
+  public ModeName: any;
+  public index: any;
+  public max: any;
+  public min: any;
+  public radio: any;
+
+
   // 初期化
   public constructor(private helper: DataHelperModule) {
     // シーンを作成
@@ -392,6 +403,55 @@ export class SceneService {
         }
         break;
       }
+    }
+
+  }
+
+  public getStatus(mode, currentIndex) {
+    this.ModeName = mode;
+    this.index = currentIndex;
+    this.getMaxMin();
+  }
+
+  public getMaxMinValue(max, min, radio) {
+    this.max = max;
+    this.min = min;
+    this.radio = radio;
+    this.getMaxMin();
+  }
+
+  public getMaxMin(): void {
+    if (
+      this.ModeName === "fsec" ||
+      this.ModeName === "comb_fsec" ||
+      this.ModeName === "pik_fsec"
+    ) {
+      if (this.radio.includes("Force")) {
+        this.Three_unit = "kN";
+      } else if (this.radio.includes("oment")) {
+        this.Three_unit = "kN・m";
+      }
+      this.max_Three = Number(this.max).toFixed(2);
+      this.min_Three = Number(this.min).toFixed(2);
+      document.getElementById("max-min").style.display = "block";
+    } else if (
+      this.ModeName === "disg" ||
+      this.ModeName === "comb_disg" ||
+      this.ModeName === "pik_disg"
+    ) {
+      this.Three_unit = "kN";
+      this.max_Three = "50";
+      this.min_Three = "1";
+      document.getElementById("max-min").style.display = "block";
+    } else if (
+      this.ModeName === "reac" ||
+      this.ModeName === "comb_reac" ||
+      this.ModeName === "pik_reac"
+    ) {
+      this.Three_unit = "kN";
+      this.max_Three = "50";
+      this.min_Three = "1";
+      document.getElementById("max-min").style.display = "block";
     }
   }
 }
