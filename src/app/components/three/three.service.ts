@@ -594,7 +594,8 @@ export class ThreeService {
           }
         }
       } else {
-        let counter = 0;
+        let counter = 0;  
+        this.currentIndex = -1;// this.ChangePageの冒頭ではじかれるため、this.currentIndexを調整
         for (let i = 0; i < captureCase.length; i++) {
           const key = captureCase[i];
 

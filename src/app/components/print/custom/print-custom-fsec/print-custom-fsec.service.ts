@@ -9,6 +9,8 @@ import { ArrayCamera } from "three";
 export class PrintCustomFsecService {
   public dataset: any[];
   public fsecEditable: boolean[];
+  public flg: boolean;
+
   constructor(
     private member: InputMembersService,
     private element: InputElementsService

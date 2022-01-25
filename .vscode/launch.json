@@ -1,45 +1,40 @@
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Electron: Main",
-        "protocol": "inspector",
-        // Prelaunch task compiles main.ts for Electron & starts Angular dev server.
-        "preLaunchTask": "Build: All",
-        "cwd": "${workspaceFolder}",
-        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
-        "runtimeArgs": ["--remote-debugging-port=9223", "--serve", "."],
-        "windows": {
-          "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+        {
+            "name": "Debug_with_Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "Build.Renderer"
+        },
+        {
+            "name": "Main",
+            "type": "node",
+            "request": "launch",
+            "protocol": "inspector",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+            "trace": "verbose",
+            "runtimeArgs": [
+                "--serve",
+                ".",
+                "--remote-debugging-port=9876"
+            ],
+            "windows": {
+                "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+            },
+            "preLaunchTask": "Build.Main"
         }
-      },
-      {
-        "name": "Electron: Renderer",
-        "type": "chrome",
-        "request": "attach",
-        "port": 9223,
-        "webRoot": "${workspaceFolder}",
-        "timeout": 30000,
-        "urlFilter": "http://localhost:4200/*",
-        // Source map overrides are copied from Angular CLI debugging recipe.
-        // See: https://github.com/Microsoft/vscode-recipes/tree/master/Angular-CLI
-        "sourceMaps": true,
-        "sourceMapPathOverrides": {
-          "webpack:/*": "${webRoot}/*",
-          "/./*": "${webRoot}/*",
-          "/src/*": "${webRoot}/*",
-          "/*": "*",
-          "/./~/*": "${webRoot}/node_modules/*"
-        }
-      }
     ],
     "compounds": [
-      {
-        "name": "Electron: All",
-        // The main process should be started before renderer to prevent timeout.
-        "configurations": ["Electron: Main", "Electron: Renderer"]
-      }
+        {
+            "name": "Application Debug",
+            "configurations": [ "Debug_with_Chrome", "Main" ]
+        }
     ]
   }
