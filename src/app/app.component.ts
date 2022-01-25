@@ -8,8 +8,6 @@ import { ResultFsecService } from "./components/result/result-fsec/result-fsec.s
 import { ResultDisgService } from "./components/result/result-disg/result-disg.service";
 import { ResultReacService } from "./components/result/result-reac/result-reac.service";
 import { DataHelperModule } from "./providers/data-helper.module";
-import { environment } from "src/environments/environment";
-import { ElectronService } from "./core/services";
 import { TranslateService } from "@ngx-translate/core";
 
 import html2canvas from "html2canvas";
@@ -30,20 +28,9 @@ export class AppComponent implements OnInit {
     public disg: ResultDisgService,
     public reac: ResultReacService,
     public print: PrintService,
-    private electronService: ElectronService,
     private translate: TranslateService
   ) {
-    console.log("environment", environment);
     this.translate.setDefaultLang("ja");
-
-    if (electronService.isElectron) {
-      console.log(process.env);
-      console.log("Run in electron");
-      console.log("Electron ipcRenderer", this.electronService.ipcRenderer);
-      console.log("NodeJS childProcess", this.electronService.childProcess);
-    } else {
-      console.log("Run in browser");
-    }
   }
 
   ngOnInit() {
