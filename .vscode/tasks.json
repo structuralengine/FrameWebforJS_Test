@@ -1,27 +1,49 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "ng-serve",
-            "type": "shell",
-            "isBackground": true,
-            "command": "ng serve",
-            "problemMatcher": {
-                "owner": "custom",
-                "pattern": {
-                    "regexp": "^$"
-                },
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": ".*Angular Live Development Server.*",
-                    "endsPattern": ".*Compiled successfully.*"
-                }
-            }
-        },
-        {
-            "label": "ng-kill",
-            "type": "shell",
-            "command": "killall ng"
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build.Main",
+      "type": "shell",
+      "command": "npm run electron:serve-tsc",
+      "isBackground": false,
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "ts",
+        "applyTo": "closedDocuments",
+        "fileLocation": ["relative", "${cwd}"],
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*",
+          "endsPattern": "^.*Terminal will be reused by tasks, press any key to close it.*"
         }
-    ]
+      }
+    },
+    {
+      "label": "Build.Renderer",
+      "type": "shell",
+      "command": "npm run ng:serve",
+      "isBackground": true,
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "ts",
+        "applyTo": "closedDocuments",
+        "fileLocation": ["relative", "${cwd}"],
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*",
+          "endsPattern": "^.*Compiled successfully.*"
+        }
+      }
+    }
+  ]
 }

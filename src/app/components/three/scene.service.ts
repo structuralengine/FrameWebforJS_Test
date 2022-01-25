@@ -51,6 +51,7 @@ export class SceneService {
   public min: any;
   public radio: any;
 
+
   // 初期化
   public constructor(private helper: DataHelperModule) {
     // シーンを作成
@@ -403,6 +404,7 @@ export class SceneService {
         break;
       }
     }
+
   }
 
   public getStatus(mode, currentIndex) {

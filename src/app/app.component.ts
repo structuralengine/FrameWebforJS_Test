@@ -8,6 +8,9 @@ import { ResultFsecService } from "./components/result/result-fsec/result-fsec.s
 import { ResultDisgService } from "./components/result/result-disg/result-disg.service";
 import { ResultReacService } from "./components/result/result-reac/result-reac.service";
 import { DataHelperModule } from "./providers/data-helper.module";
+import { environment } from "src/environments/environment";
+import { ElectronService } from "./core/services";
+import { TranslateService } from "@ngx-translate/core";
 
 import html2canvas from "html2canvas";
 
@@ -17,7 +20,7 @@ import html2canvas from "html2canvas";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  btnReac: string;
+  btnReac!: string;
   constructor(
     private _router: Router,
     private ResultData: ResultDataService,
@@ -26,8 +29,22 @@ export class AppComponent implements OnInit {
     public fsec: ResultFsecService,
     public disg: ResultDisgService,
     public reac: ResultReacService,
-    public print: PrintService
-  ) {}
+    public print: PrintService,
+    private electronService: ElectronService,
+    private translate: TranslateService
+  ) {
+    console.log("environment", environment);
+    this.translate.setDefaultLang("ja");
+
+    if (electronService.isElectron) {
+      console.log(process.env);
+      console.log("Run in electron");
+      console.log("Electron ipcRenderer", this.electronService.ipcRenderer);
+      console.log("NodeJS childProcess", this.electronService.childProcess);
+    } else {
+      console.log("Run in browser");
+    }
+  }
 
   ngOnInit() {
     this.helper.isContentsDailogShow = false;
