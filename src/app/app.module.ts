@@ -87,6 +87,9 @@ import { PrintCustomDisgComponent } from "./components/print/custom/print-custom
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
+const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
+  new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -104,10 +107,9 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
+        useFactory: httpLoaderFactory,
         deps: [HttpClient],
       },
-      defaultLanguage: "ja",
     }),
   ],
   declarations: [
@@ -187,6 +189,3 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
   bootstrap: [AppComponent],
 })
 export class AppModule {}
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.TranslateHttpLoader);
-}
