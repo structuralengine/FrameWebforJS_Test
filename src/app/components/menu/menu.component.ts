@@ -86,8 +86,18 @@ export class MenuComponent implements OnInit {
     this.fileToText(file)
       .then((text) => {
         this.app.dialogClose(); // 現在表示中の画面を閉じる
+        this.ResultData.clear(); // 解析結果を削除
         const old = this.helper.dimension;
-        this.InputData.loadInputData(text); // データを読み込む
+        const jsonData: {} = JSON.parse(text);
+        let resultData: {} = null;
+        if ('result' in jsonData) {
+          resultData = jsonData['result'];
+          delete jsonData['result'];
+        }
+        this.InputData.loadInputData(jsonData); // データを読み込む
+        if (resultData !== null) {
+          this.ResultData.loadResultData(resultData); // 解析結果を読み込む
+        }
         if (old !== this.helper.dimension) {
           this.setDimension(this.helper.dimension);
         }
@@ -211,6 +221,7 @@ export class MenuComponent implements OnInit {
               }
             }
 
+            this.InputData.getResult(jsonData);
             // テスト ---------------------------------------------
             // this.saveResult(json);
             // --------------------------------------------- テスト*/
