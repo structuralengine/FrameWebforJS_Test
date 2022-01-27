@@ -37,6 +37,16 @@ export class InputDataService {
   ) {
     this.clear();
   }
+  public result: object;
+  public getResult(jsonData): void {
+    
+    const result = jsonData;
+    delete result['old_points'];
+    delete result['deduct_points'];
+    delete result['new_points'];
+
+    this.result = result
+  };
 
   // データをクリアする ///////////////////////////////////////////////////////////////
   public clear(): void {
@@ -52,12 +62,12 @@ export class InputDataService {
     this.define.clear();
     this.combine.clear();
     this.pickup.clear();
+    this.result = null
   }
 
   // ファイルを読み込む ///////////////////////////////////////////////////////////////
-  public loadInputData(inputText: string): void {
+  public loadInputData(jsonData: object): void {
     this.clear();
-    const jsonData: {} = JSON.parse(inputText);
     this.node.setNodeJson(jsonData);
     this.fixnode.setFixNodeJson(jsonData);
     this.member.setMemberJson(jsonData);
@@ -172,6 +182,9 @@ export class InputDataService {
       }
       if (!isPrint) {
         jsonData["three"] = this.three.getSettingJson();
+      }
+      if (!(this.result == null)) {
+        jsonData["result"] = this.result;
       }
     }
 
