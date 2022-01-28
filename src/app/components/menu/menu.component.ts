@@ -70,6 +70,7 @@ export class MenuComponent implements OnInit {
     this.three.ClearData();
     this.fileName = "";
     this.three.fileName = "";
+    this.three.mode = "";
   }
 
   // ファイルを開く
@@ -101,13 +102,15 @@ export class MenuComponent implements OnInit {
         this.InputData.loadInputData(jsonData); // データを読み込む
         if (resultData !== null) {
           this.ResultData.loadResultData(resultData); // 解析結果を読み込む
+          this.ResultData.isCalculated = true;
+        } else {
+          this.ResultData.isCalculated = false;
         }
         if (old !== this.helper.dimension) {
           this.setDimension(this.helper.dimension);
         }
         this.three.fileload();
         modalRef.close();
-        this.ResultData.isCalculated = false;
       })
       .catch((err) => {
         alert(err);

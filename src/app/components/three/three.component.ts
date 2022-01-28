@@ -31,25 +31,34 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
   }
 
   public contentsDialog = {
-    nodes: this.translate.instant("app.node"),
-    fix_nodes: this.translate.instant("app.fixNode"),
-    members: "部材",
-    elements: "材料",
-    panel: "パネル",
-    joints: "結合",
-    notice_points: "着目点",
-    fix_member: "バネ",
-    load_names: "荷重",
-    load_values: "荷重",
-    disg: "変位量",
-    comb_disg: "Combine変位量",
-    pik_disg: "PickUp変位量",
-    fsec: "断面力",
-    comb_fsec: "Combine断面力",
-    pik_fsec: "PickUp断面力",
-    reac: "反力",
-    comb_reac: "Combine反力",
-    pik_reac: "PickUp反力",
+    nodes: this.translate.instant("app.node") + "図",
+    fix_nodes: this.translate.instant("app.fixNode") + "図",
+    members: "部材図",
+    elements: "材料図",
+    panel: "パネル図",
+    joints: "結合図",
+    notice_points: "着目点図",
+    fix_member: "バネ図",
+    load_names: "荷重図",
+    load_values: "荷重図",
+    disg: "変位量図",
+    comb_disg: "Combine変位量図",
+    pik_disg: "PickUp変位量図",
+    fsec: "断面力図",
+    comb_fsec: "Combine断面力図",
+    pik_fsec: "PickUp断面力図",
+    reac: "反力図",
+    comb_reac: "Combine反力図",
+    pik_reac: "PickUp反力図",
+  };
+
+  public direction = {
+    axialForce: "軸方向力",
+    shearForceY: "y軸方向のせん断力",
+    shearForceZ: "z軸方向のせん断力",
+    torsionalMoment: "ねじりモーメント",
+    momentY: "y軸回りの曲げモーメント",
+    momentZ: "z軸回りの曲げモーメント",
   };
 
   constructor(
@@ -152,22 +161,20 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
     html2canvas(screenArea).then((canvas) => {
       this.img.nativeElement.src = canvas.toDataURL();
       this.downloadLink.nativeElement.href = canvas.toDataURL("image/png");
-      const date = new Date();
       let filename =
-        this.three.fileName == "" ? "FrameWebForJS" : this.three.fileName;
+        this.three.fileName == void 0 ? "FrameWebForJS" : this.three.fileName;
       filename = filename.substring(0, filename.lastIndexOf("."));
+      const mode = this.three.mode === void 0 ? "" : this.three.mode;
 
       const figureType = "_" + this.contentsDialog[this.three.mode];
       let index = "";
-      if (
-        !(this.three.mode == "nodes" || "members" || "panel" || "notice_points")
-      ) {
+      if (!(mode == "nodes" || "members" || "panel" || "notice_points")) {
         index = "_" + "Case" + this.scene.index;
       }
 
       let radio = "";
-      if (!this.three.mode.includes("fsec")) {
-        radio = "_" + this.scene.radio;
+      if (mode !== "" && mode.includes("fsec")) {
+        radio = "_" + this.direction[this.scene.radio];
       }
 
       this.downloadLink.nativeElement.download =
