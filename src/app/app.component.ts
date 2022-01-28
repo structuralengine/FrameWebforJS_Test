@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     public disg: ResultDisgService,
     public reac: ResultReacService,
     public print: PrintService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {
     this.translate.setDefaultLang("ja");
   }

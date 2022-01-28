@@ -56,7 +56,6 @@ export class SceneService {
   public min_m: any;
   public radio: any;
 
-
   // 初期化
   public constructor(private helper: DataHelperModule) {
     // シーンを作成
@@ -409,7 +408,6 @@ export class SceneService {
         break;
       }
     }
-
   }
 
   public getStatus(mode, currentIndex) {
@@ -477,5 +475,9 @@ export class SceneService {
       this.min_Three_m = (this.min_m !== undefined) ? this.min_m.toString() + '節点' : '';
       document.getElementById("max-min").style.display = "block";
     }
+  }
+
+  public maxMinClear() {
+    document.getElementById("max-min").style.display = "none";
   }
 }

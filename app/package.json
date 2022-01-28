@@ -1,7 +1,0 @@
-{
-    "name": "frame-web-for-js",
-    "version": "10.4.0",
-    "main": "main.js",
-    "private": true,
-    "dependencies": {}
-}

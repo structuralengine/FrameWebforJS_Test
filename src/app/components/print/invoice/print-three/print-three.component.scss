@@ -31,5 +31,11 @@ h4 {
 }
 
 .fit-picture {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+    img {
+        width: 780px;
+        height: 500px;
+        object-fit: cover;
+        object-position: 0 0;
+    }
 }
