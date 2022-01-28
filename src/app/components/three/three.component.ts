@@ -47,6 +47,8 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
       window.innerWidth,
       window.innerHeight - 120
     );
+    this.three.canvasWidth = String(window.innerWidth) + "px";
+    this.three.canvasHeight = String(window.innerHeight - 120) + "px";
     this.three.OnInit();
 
     // ラベルを表示する用のレンダラーを HTML に配置する
@@ -122,7 +124,8 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
 
   public downloadImage() {
     const screenArea = document.getElementById("screenArea");
-    screenArea.style.height = (window.innerHeight - 200).toString() + "px";
+    screenArea.style.width = String(window.innerWidth) + "px";
+    screenArea.style.height = String(window.innerHeight - 120) + "px";
     html2canvas(screenArea).then((canvas) => {
       this.img.nativeElement.src = canvas.toDataURL();
       this.downloadLink.nativeElement.href = canvas.toDataURL("image/png");

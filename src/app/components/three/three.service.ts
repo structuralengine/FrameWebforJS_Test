@@ -31,6 +31,9 @@ export class ThreeService {
 
   public selectedNumber: number;
 
+  public canvasWidth: string;
+  public canvasHeight: string;
+
   constructor(
     public scene: SceneService,
     private node: ThreeNodesService,
@@ -551,7 +554,8 @@ export class ThreeService {
       const title2: string = captureInfo.title2;
       const title3: string[] = captureInfo.title3;
       const screenArea = document.getElementById("screenArea");
-      screenArea.style.height = (window.innerHeight - 200).toString() + "px";
+      screenArea.style.width = this.canvasWidth;
+      screenArea.style.height = this.canvasHeight;
 
       if (captureCase.length === 0) {
         html2canvas(screenArea).then((canvas) => {
