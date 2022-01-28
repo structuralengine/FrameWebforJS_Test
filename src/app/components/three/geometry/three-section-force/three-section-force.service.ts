@@ -47,6 +47,7 @@ export class ThreeSectionForceService {
   private memberData: any;
   private fsecData = { fsec: null, comb_fsec: null, pik_fsec: null };
   private max_values = { fsec: null, comb_fsec: null, pik_fsec: null };
+  public value_ranges = { fsec: null, comb_fsec: null, pik_fsec: null };
 
   constructor(
     private scene: SceneService,
@@ -188,7 +189,7 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
-          this.scene.getMaxMinValue2(this.max, this.min, 'some', 'some', this.currentRadio);
+          this.scene.getMaxMinValue(this.value_ranges['1'], this.currentRadio);
           this.onResize();
           this.scene.render();
         });
@@ -227,7 +228,7 @@ export class ThreeSectionForceService {
   }
 
   // 解析結果をセットする
-  public setResultData(fsecJson: any, max_values: any): void {
+  public setResultData(fsecJson: any, max_values: any, value_ranges: any): void {
     const keys = Object.keys(fsecJson);
     if (keys.length === 0) {
       this.ClearData();
@@ -238,6 +239,7 @@ export class ThreeSectionForceService {
     this.memberData = this.member.getMemberJson(0);
     this.fsecData.fsec = fsecJson;
     this.max_values.fsec = max_values;
+    this.value_ranges.fsec = value_ranges;
     this.currentMode = "fsec";
     this.currentIndex = keys[0];
     this.changeMesh();

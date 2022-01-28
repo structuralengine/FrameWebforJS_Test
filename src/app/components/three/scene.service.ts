@@ -426,16 +426,6 @@ export class SceneService {
     this.getMaxMin();
   }
 
-  public getMaxMinValue2(max, min, max_m, min_m, radio) {
-    this.max = (max != undefined) ? max : 0;
-    this.min = (min != undefined) ? min : 0;
-    this.max_m = (max_m != undefined) ? max_m : 0;
-    this.min_m = (min_m != undefined) ? min_m : 0;
-    this.radio = radio;
-    this.maxminFlag = false;
-    this.getMaxMin();
-  }
-
   public getMaxMin(): void {
     if (
       this.ModeName === "fsec" ||
@@ -449,8 +439,8 @@ export class SceneService {
       }
       this.max_Three = Number(this.max).toFixed(2);
       this.min_Three = Number(this.min).toFixed(2);
-      this.max_Three_m = this.max_m;
-      this.min_Three_m = this.min_m;
+      this.max_Three_m = (this.max_m !== undefined) ? this.max_m.toString() + '部材' : '';
+      this.min_Three_m = (this.min_m !== undefined) ? this.min_m.toString() + '部材' : '';
       document.getElementById("max-min").style.display = "block";
     } else if (
       this.ModeName === "disg" ||
