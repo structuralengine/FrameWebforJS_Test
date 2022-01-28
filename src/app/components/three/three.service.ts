@@ -34,6 +34,8 @@ export class ThreeService {
   public canvasWidth: string;
   public canvasHeight: string;
 
+  public fileName: string;
+
   constructor(
     public scene: SceneService,
     private node: ThreeNodesService,

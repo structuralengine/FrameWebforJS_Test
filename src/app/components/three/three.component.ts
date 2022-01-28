@@ -12,6 +12,8 @@ import * as THREE from "three";
 import { SceneService } from "./scene.service";
 import { ThreeService } from "./three.service";
 import html2canvas from "html2canvas";
+import { TranslateService } from "@ngx-translate/core";
+import { MenuComponent } from "../menu/menu.component";
 
 @Component({
   selector: "app-three",
@@ -28,12 +30,33 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
     return this.canvasRef.nativeElement;
   }
 
-  fileName: string;
+  public contentsDialog = {
+    nodes: this.translate.instant("app.node"),
+    fix_nodes: this.translate.instant("app.fixNode"),
+    members: "部材",
+    elements: "材料",
+    panel: "パネル",
+    joints: "結合",
+    notice_points: "着目点",
+    fix_member: "バネ",
+    load_names: "荷重",
+    load_values: "荷重",
+    disg: "変位量",
+    comb_disg: "Combine変位量",
+    pik_disg: "PickUp変位量",
+    fsec: "断面力",
+    comb_fsec: "Combine断面力",
+    pik_fsec: "PickUp断面力",
+    reac: "反力",
+    comb_reac: "Combine反力",
+    pik_reac: "PickUp反力",
+  };
 
   constructor(
     private ngZone: NgZone,
     public scene: SceneService,
-    private three: ThreeService
+    private three: ThreeService,
+    private translate: TranslateService
   ) {
     THREE.Object3D.DefaultUp.set(0, 0, 1);
   }
@@ -130,19 +153,25 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
       this.img.nativeElement.src = canvas.toDataURL();
       this.downloadLink.nativeElement.href = canvas.toDataURL("image/png");
       const date = new Date();
-      const filename =
-        date.getFullYear() +
-        "_" +
-        (date.getMonth() + 1) +
-        "_" +
-        date.getDate() +
-        "_" +
-        date.getHours() +
-        date.getMinutes() +
-        date.getSeconds() +
-        ".png";
+      let filename =
+        this.three.fileName == "" ? "FrameWebForJS" : this.three.fileName;
+      filename = filename.substring(0, filename.lastIndexOf("."));
 
-      this.downloadLink.nativeElement.download = filename;
+      const figureType = "_" + this.contentsDialog[this.three.mode];
+      let index = "";
+      if (
+        !(this.three.mode == "nodes" || "members" || "panel" || "notice_points")
+      ) {
+        index = "_" + "Case" + this.scene.index;
+      }
+
+      let radio = "";
+      if (!this.three.mode.includes("fsec")) {
+        radio = "_" + this.scene.radio;
+      }
+
+      this.downloadLink.nativeElement.download =
+        filename + figureType + index + radio + ".png";
       this.downloadLink.nativeElement.click();
     });
   }
