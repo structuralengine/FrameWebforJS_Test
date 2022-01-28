@@ -550,9 +550,11 @@ export class ThreeService {
       const title1: string = captureInfo.title1;
       const title2: string = captureInfo.title2;
       const title3: string[] = captureInfo.title3;
+      const screenArea = document.getElementById("screenArea");
+      screenArea.style.height = (window.innerHeight - 200).toString() + "px";
 
       if (captureCase.length === 0) {
-        html2canvas(this.canvasElement).then((canvas) => {
+        html2canvas(screenArea).then((canvas) => {
           result.push({
             title: title2,
             src: canvas.toDataURL(),
@@ -590,7 +592,7 @@ export class ThreeService {
 
               // this.ChangePage(number,this.mode).finally(() => {
               this.secForce.changeRadioButtons(loadType);
-              html2canvas(this.canvasElement).then((canvas) => {
+              html2canvas(screenArea).then((canvas) => {
                 result.push({
                   title: title2 + name,
                   type: loadTypeJa,
@@ -626,7 +628,7 @@ export class ThreeService {
 
           this.ChangePage(number);
 
-          html2canvas(this.canvasElement).then((canvas) => {
+          html2canvas(screenArea).then((canvas) => {
             result.push({
               title: title2 + name,
               src: canvas.toDataURL(),
