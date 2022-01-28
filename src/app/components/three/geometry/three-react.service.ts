@@ -22,6 +22,8 @@ export class ThreeReactService {
   private selectionItem: THREE.Mesh;     // 選択中のアイテム
   private reacData: any;
   private nodeData: any;
+  private max_values: any;
+  public value_range: any;
   // GUI
   private scale: number;
   private params: any; // GUIの表示制御
@@ -110,6 +112,9 @@ export class ThreeReactService {
 
     this.scale = 1.0;
 
+    // this.max_values = {};
+    // this.value_range = {};
+
   }
 
   public maxLength(): number {
@@ -118,9 +123,11 @@ export class ThreeReactService {
   }
 
   // 解析結果をセットする
-  public setResultData(getReacJson: any, max_values: any): void {
+  public setResultData(getReacJson: any, max_values: any, value_range: any): void {
     this.nodeData = this.node.getNodeJson(0);
     this.reacData = getReacJson;
+    this.max_values = max_values;
+    this.value_range = value_range;
   }
 
   public changeData(index: number): void {

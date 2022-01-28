@@ -120,6 +120,7 @@ export class ResultReacService {
           );
           const reac = data.reac;
           const max_values = data.max_value;
+          const value_range = data.value_range;
 
           // 組み合わせの集計処理を実行する
           this.comb.setReacCombineJson(reac, defList, combList, pickList);
@@ -132,7 +133,7 @@ export class ResultReacService {
                 performance.now() - startTime
               );
               this.columns = data.table;
-              this.set_LL_columns(reac, Object.keys(jsonData), max_values);
+              this.set_LL_columns(reac, Object.keys(jsonData), max_values, value_range);
             } else {
               console.log("反力テーブルの集計に失敗しました", data.error);
             }
@@ -148,6 +149,7 @@ export class ResultReacService {
         }
       };
       this.worker1.postMessage({ jsonData });
+      //const a = this.woker1_test({ jsonData })
     } else {
       console.log("反力の生成に失敗しました");
       // Web workers are not supported in this environment.
@@ -156,7 +158,7 @@ export class ResultReacService {
   }
 
     // 連行荷重の断面力を集計する
-    private set_LL_columns(reac: any, load_keys: string[], org_max_values: {}){
+    private set_LL_columns(reac: any, load_keys: string[], org_max_values: {}, org_value_range: {}){
 
       this.LL_flg = new Array();
   
@@ -164,6 +166,7 @@ export class ResultReacService {
       const defList: any = {};
       const combList: any = {};
       const max_values: any = {};
+      const value_range: any = {};
       const three_reac: any = {};
 
       let flg = false;
@@ -173,6 +176,7 @@ export class ResultReacService {
         if(!caseLoad.symbol.includes("LL")){
           this.LL_flg.push(false);
           max_values[caseNo] = org_max_values[caseNo];
+          value_range[caseNo] = org_value_range[caseNo];
           three_reac[caseNo] = reac[caseNo];
         } else {
   
@@ -222,7 +226,7 @@ export class ResultReacService {
       }
 
       // 集計が終わったら three.js に通知
-      this.three.setResultData(three_reac, max_values);
+      this.three.setResultData(three_reac, max_values, value_range);
   
       if(flg === false){
         this.isCalculated = true;
@@ -252,6 +256,109 @@ export class ResultReacService {
         reac: reac, 
         reacKeys: this.comb.reacKeys
       });
+    }
+
+    woker1_test ( data ){
+
+      // 文字列string を数値にする
+      const toNumber = (num: string) => {
+        let result: number = null;
+        try {
+          const tmp: string = num.toString().trim();
+          if (tmp.length > 0) {
+            result = ((n: number) => isNaN(n) ? null : n)(+tmp);
+          }
+        } catch {
+          result = null;
+        }
+        return result;
+      };
+    
+    
+      const jsonData = data.jsonData;
+      const reac = {};
+      const max_value = {};
+      const value_range = {};
+      let error: any = null;
+    
+      try {
+        for (const caseNo of Object.keys(jsonData)) {
+          const target = new Array();
+          const caseData: {} = jsonData[caseNo];
+    
+          // 存在チェック
+          if (typeof (caseData) !== 'object') {
+            continue;
+          }
+          if (!('reac' in caseData)) {
+            continue;
+          }
+          const json: {} = caseData['reac'];
+          if (json === null) {
+            continue;
+          }
+    
+          let max_d = 0;
+          let max_r = 0;
+          let values = {max_d: -65535, max_r: -65535,
+                        min_d:  65535, min_r:  65535 }
+    
+          for (const n of Object.keys(json)) {
+            const item: {} = json[n];
+    
+            let tx: number = toNumber(item['tx']);
+            let ty: number = toNumber(item['ty']);
+            let tz: number = toNumber(item['tz']);
+            let mx: number = toNumber(item['mx']);
+            let my: number = toNumber(item['my']);
+            let mz: number = toNumber(item['mz']);
+    
+            const result = {
+              id: n.replace('node', ''),
+              tx: (tx == null) ? 0 : -tx,
+              ty: (ty == null) ? 0 : -ty,
+              tz: (tz == null) ? 0 : -tz,
+              mx: (mx == null) ? 0 : mx,
+              my: (my == null) ? 0 : my,
+              mz: (mz == null) ? 0 : -mz
+            };
+            target.push(result);
+                
+            // 最大値を記録する three.js で使う
+            for (const v of [tx, ty, tz]) {
+              if (Math.abs(max_d) < Math.abs(v)) {
+                max_d = v;
+              }
+              if (values.max_d < v) {
+                values.max_d = v;
+              }
+              if (values.min_d > v) {
+                values.min_d = v;
+              }
+            }
+            for (const v of [mx, my, mz]) {
+              if (Math.abs(max_r) < Math.abs(v)) {
+                max_r = v;
+              }
+              if (values.max_r < v) {
+                values.max_r = v;
+              }
+              if (values.min_r > v) {
+                values.min_r = v;
+              }
+            }
+    
+          }
+          const No: string = caseNo.replace("Case", "");
+          reac[No] = target;
+          max_value[No] = Math.abs(max_d);
+          value_range[No] = values;
+        }
+      } catch (e) {
+        error = e;
+      }
+    
+      return{ reac, error, max_value, value_range };
     }
 
 

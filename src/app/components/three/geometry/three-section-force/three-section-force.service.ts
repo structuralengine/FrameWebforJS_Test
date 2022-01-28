@@ -188,7 +188,7 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
-          this.scene.getMaxMinValue(this.max, this.min, this.currentRadio);
+          this.scene.getMaxMinValue2(this.max, this.min, 'some', 'some', this.currentRadio);
           this.onResize();
           this.scene.render();
         });

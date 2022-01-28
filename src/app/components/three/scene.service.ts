@@ -43,12 +43,17 @@ export class SceneService {
 
   public max_Three: string;
   public min_Three: string;
+  public max_Three_m: string;
+  public min_Three_m: string;
+  public maxminFlag: boolean;
 
   public Three_unit: string;
   public ModeName: any;
   public index: any;
   public max: any;
   public min: any;
+  public max_m: any;
+  public min_m: any;
   public radio: any;
 
 
@@ -413,10 +418,23 @@ export class SceneService {
     this.getMaxMin();
   }
 
-  public getMaxMinValue(max, min, radio) {
-    this.max = max;
-    this.min = min;
+  public getMaxMinValue(value_range, radio) {
+    this.max = (value_range.max_d != undefined) ? value_range.max_d : 0;
+    this.min = (value_range.min_d != undefined) ? value_range.min_d : 0;
+    this.max_m = (value_range.max_d_m != undefined) ? value_range.max_d_m : 0;
+    this.min_m = (value_range.min_d_m != undefined) ? value_range.min_d_m : 0;
     this.radio = radio;
+    this.maxminFlag = false;
+    this.getMaxMin();
+  }
+
+  public getMaxMinValue2(max, min, max_m, min_m, radio) {
+    this.max = (max != undefined) ? max : 0;
+    this.min = (min != undefined) ? min : 0;
+    this.max_m = (max_m != undefined) ? max_m : 0;
+    this.min_m = (min_m != undefined) ? min_m : 0;
+    this.radio = radio;
+    this.maxminFlag = false;
     this.getMaxMin();
   }
 
@@ -433,15 +451,19 @@ export class SceneService {
       }
       this.max_Three = Number(this.max).toFixed(2);
       this.min_Three = Number(this.min).toFixed(2);
+      this.max_Three_m = this.max_m;
+      this.min_Three_m = this.min_m;
       document.getElementById("max-min").style.display = "block";
     } else if (
       this.ModeName === "disg" ||
       this.ModeName === "comb_disg" ||
       this.ModeName === "pik_disg"
     ) {
-      this.Three_unit = "kN";
-      this.max_Three = "50";
-      this.min_Three = "1";
+      this.Three_unit = "mm";
+      this.max_Three = Number(this.max).toFixed(4);
+      this.min_Three = Number(this.min).toFixed(4);
+      this.max_Three_m = (this.max_m !== undefined) ? this.max_m.toString() + '部材' : '';
+      this.min_Three_m = (this.min_m !== undefined) ? this.min_m.toString() + '部材' : '';
       document.getElementById("max-min").style.display = "block";
     } else if (
       this.ModeName === "reac" ||
@@ -449,8 +471,10 @@ export class SceneService {
       this.ModeName === "pik_reac"
     ) {
       this.Three_unit = "kN";
-      this.max_Three = "50";
-      this.min_Three = "1";
+      this.max_Three = Number(this.max).toFixed(4);
+      this.min_Three = Number(this.min).toFixed(4);
+      this.max_Three_m = (this.max_m !== undefined) ? this.max_m.toString() + '節点' : '';
+      this.min_Three_m = (this.min_m !== undefined) ? this.min_m.toString() + '節点' : '';
       document.getElementById("max-min").style.display = "block";
     }
   }

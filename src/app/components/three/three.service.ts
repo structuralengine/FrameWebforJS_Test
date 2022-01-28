@@ -236,29 +236,33 @@ export class ThreeService {
 
       case "disg":
         this.disg.changeData(currentPage);
-        break;
-
       case "comb_disg":
-        break;
       case "pik_disg":
+        this.scene.getMaxMinValue(
+          this.disg.value_range[currentPage],
+          'momentY'
+        );
         break;
 
       case "reac":
         this.reac.changeData(currentPage);
-        break;
-
       case "comb_reac":
-        break;
       case "pik_reac":
+        this.scene.getMaxMinValue(
+          this.reac.value_range[currentPage],
+          'momentY'
+        );
         break;
 
       case "fsec":
       case "comb_fsec":
       case "pik_fsec":
         this.fsec.changeData(currentPage, this.mode);
-        this.scene.getMaxMinValue(
+        this.scene.getMaxMinValue2(
           this.secForce.max,
           this.secForce.min,
+          'some',
+          'some',
           this.secForce.currentRadio
         );
         break;
@@ -465,9 +469,11 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange(ModeName);
-      this.scene.getMaxMinValue(
+      this.scene.getMaxMinValue2(
         this.secForce.max,
         this.secForce.min,
+        'some',
+        'some',
         this.secForce.currentRadio
       );
     }

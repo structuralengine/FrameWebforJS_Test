@@ -35,6 +35,7 @@ export class ThreeDisplacementService {
   private panelData: any
   private allDisgData: any;
   private max_values: any;
+  public value_range: any;
 
   // アニメーションのオブジェクト
   private animationObject: any;
@@ -101,6 +102,7 @@ export class ThreeDisplacementService {
     this.panelData = {};
     this.allDisgData = {};
     this.max_values = {};
+    this.value_range = {};
 
     // アニメーションのオブジェクト
     if (this.animationObject !== null) {
@@ -131,7 +133,7 @@ export class ThreeDisplacementService {
   }
 
   // 解析結果をセットする
-  public setResultData(getDisgJson: any, max_values: any): void {
+  public setResultData(getDisgJson: any, max_values: any, value_range: any): void {
 
     this.nodeData = this.node.getNodeJson(0);
     this.membData = this.member.getMemberJson(0);
@@ -164,6 +166,7 @@ export class ThreeDisplacementService {
     this.panelData = this.panel.getPanelJson(0);
     this.allDisgData = getDisgJson;
     this.max_values = max_values;
+    this.value_range = value_range;
     // this.changeData(1);
   }
 
