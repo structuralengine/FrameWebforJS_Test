@@ -31,7 +31,7 @@ import { LanguagesService } from "src/app/providers/languages.service";
 })
 export class MenuComponent implements OnInit {
   loginUserName: string;
-  fileName: string;
+  public fileName: string;
 
   constructor(
     private modalService: NgbModal,
@@ -50,10 +50,12 @@ export class MenuComponent implements OnInit {
     public language: LanguagesService
   ) {
     this.fileName = "";
+    this.three.fileName = "";
   }
 
   ngOnInit() {
     this.fileName = "";
+    this.three.fileName = "";
     this.helper.isContentsDailogShow = false;
     this.setDimension(2);
   }
@@ -67,6 +69,8 @@ export class MenuComponent implements OnInit {
     this.CustomFsecData.clear();
     this.three.ClearData();
     this.fileName = "";
+    this.three.fileName = "";
+    this.three.mode = "";
   }
 
   // ファイルを開く
@@ -82,6 +86,7 @@ export class MenuComponent implements OnInit {
 
     const file = evt.target.files[0];
     this.fileName = file.name;
+    this.three.fileName = file.name;
     evt.target.value = "";
     this.fileToText(file)
       .then((text) => {
@@ -90,20 +95,22 @@ export class MenuComponent implements OnInit {
         const old = this.helper.dimension;
         const jsonData: {} = JSON.parse(text);
         let resultData: {} = null;
-        if ('result' in jsonData) {
-          resultData = jsonData['result'];
-          delete jsonData['result'];
+        if ("result" in jsonData) {
+          resultData = jsonData["result"];
+          delete jsonData["result"];
         }
         this.InputData.loadInputData(jsonData); // データを読み込む
         if (resultData !== null) {
           this.ResultData.loadResultData(resultData); // 解析結果を読み込む
+          this.ResultData.isCalculated = true;
+        } else {
+          this.ResultData.isCalculated = false;
         }
         if (old !== this.helper.dimension) {
           this.setDimension(this.helper.dimension);
         }
         this.three.fileload();
         modalRef.close();
-        this.ResultData.isCalculated = false;
       })
       .catch((err) => {
         alert(err);
@@ -130,6 +137,7 @@ export class MenuComponent implements OnInit {
     const blob = new window.Blob([inputJson], { type: "text/plain" });
     if (this.fileName.length === 0) {
       this.fileName = "frameWebForJS.json";
+      this.three.fileName = "frameWebForJS.json";
     }
     let ext = "";
     if (this.helper.getExt(this.fileName) !== "json") {
@@ -339,6 +347,7 @@ export class MenuComponent implements OnInit {
 
     const file = evt.target.files[0];
     this.fileName = file.name;
+    this.three.fileName = file.name;
     evt.target.value = "";
 
     this.fileToText(file)
