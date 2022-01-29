@@ -115,6 +115,36 @@
             "z_moment":"z軸回りの\n曲げモーメント\n(kN m)",
             "shear":"せん断力\n(kN)",
             "moment":"曲げモーメント\n(kN m)"
+        },
+        "result-combine-fsec":{
+            "basicCase":"基本ケース",
+            "memberNo":"部材No",
+            "nodeNo":"節点No",
+            "stationLocation":"着目位置\n(m)",
+            "axialForce":"軸方向力\n(kN)",
+            "y_shear":" y軸方向の\nせん断力\n(kN)",
+            "z_shear":" z軸方向の\nせん断力\n(kN)",
+            "x_torsion":"ねじり\nモーメント\n(kN m)",
+            "y_moment":"y軸回りの\n曲げモーメント\n(kN m)",
+            "z_moment":"z軸回りの\n曲げモーメント\n(kN m)",
+            "shear":"せん断力\n(kN)",
+            "moment":"曲げモーメント\n(kN m)",
+            "comb":"組み合わせ"
+        },
+        "result-pickup-fsec":{
+            "basicCase":"基本ケース",
+            "memberNo":"部材No",
+            "nodeNo":"節点No",
+            "stationLocation":"着目位置\n(m)",
+            "axialForce":"軸方向力\n(kN)",
+            "y_shear":" y軸方向の\nせん断力\n(kN)",
+            "z_shear":" z軸方向の\nせん断力\n(kN)",
+            "x_torsion":"ねじり\nモーメント\n(kN m)",
+            "y_moment":"y軸回りの\n曲げモーメント\n(kN m)",
+            "z_moment":"z軸回りの\n曲げモーメント\n(kN m)",
+            "shear":"せん断力\n(kN)",
+            "moment":"曲げモーメント\n(kN m)",
+            "comb":"組み合わせ"
         }
     }
 }

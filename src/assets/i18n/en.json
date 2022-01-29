@@ -115,6 +115,36 @@
             "z_moment":"Z Moment\n(kN m)",
             "shear":"Shear\n(kN)",
             "moment":"Moment\n(kN m)"            
+        },
+        "result-combine-fsec":{
+            "basicCase":"Basic Case",
+            "memberNo":"Member\nNo",
+            "nodeNo":"Node\nNo",
+            "stationLocation":"Station Location\n(m)",
+            "axialForce":"Axial Force\n(kN)",
+            "y_shear":"Y Shear\n(kN)",
+            "z_shear":"Z Shear\n(kN)",
+            "x_torsion":"X Torsion\n(kN m)",
+            "y_moment":"Y Momemt\n(kN m)",
+            "z_moment":"Z Moment\n(kN m)",
+            "shear":"Shear\n(kN)",
+            "moment":"Moment\n(kN m)", 
+            "comb":"Comb."
+        },
+        "result-pickup-fsec":{
+            "basicCase":"Basic Case",
+            "memberNo":"Member\nNo",
+            "nodeNo":"Node\nNo",
+            "stationLocation":"Station Location\n(m)",
+            "axialForce":"Axial Force\n(kN)",
+            "y_shear":"Y Shear\n(kN)",
+            "z_shear":"Z Shear\n(kN)",
+            "x_torsion":"X Torsion\n(kN m)",
+            "y_moment":"Y Momemt\n(kN m)",
+            "z_moment":"Z Moment\n(kN m)",
+            "shear":"Shear\n(kN)",
+            "moment":"Moment\n(kN m)", 
+            "comb":"Comb."
         }
     }
 }
