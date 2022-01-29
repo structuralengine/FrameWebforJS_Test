@@ -1,7 +1,9 @@
 <div class="floaterMenu">
     <div class="btn-group">
         <nav>
-            <a routerLink="/result-disg" class="btn-change">基本ケース</a>
+            <a routerLink="/result-disg" class="btn-change">
+                <p translate>result.result-combine-disg.basicCase</p>
+            </a>
             <a routesrLink="/result-comb_disg" class="btn-change active">COMBINE</a>
             <a routerLink="/result-pic_disg" [class]="btnPickup">PICKUP</a>
         </nav>
@@ -39,22 +41,44 @@
                                     <div *ngIf="dimension===3">
                                         <tr>
                                             <th class="result-sm">No</th>
-                                            <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
-                                            <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
-                                            <th class="result-lg">z方向の<br />移動量<br />(mm)</th>
-                                            <th class="result-lg">x軸回りの<br />回転量<br />(‰rad)</th>
-                                            <th class="result-lg">y軸回りの<br />回転量<br />(‰rad)</th>
-                                            <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
-                                            <th class="result-lg">組み合わせ</th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.x_movement</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.y_movement</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.z_movement</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.x_rotation</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.y_rotation</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.z_rotation</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.comb</p>
+                                            </th>
                                         </tr>
                                     </div>
                                     <div *ngIf="dimension===2">
                                         <tr>
                                             <th class="result-sm">No</th>
-                                            <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
-                                            <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
-                                            <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
-                                            <th class="result-lg">組み合わせ</th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.x_movement</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.y_movement</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.z_rotation</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-disg.comb</p>
+                                            </th>
                                         </tr>
                                     </div>
                                 </thead>

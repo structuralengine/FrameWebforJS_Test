@@ -145,6 +145,35 @@
             "shear":"せん断力\n(kN)",
             "moment":"曲げモーメント\n(kN m)",
             "comb":"組み合わせ"
+        },
+        "result-disg":{
+            "basicCase":"基本ケース",
+            "x_movement":"x方向の\n移動量\n(mm)",
+            "y_movement":"y方向の\n移動量\n(mm)",
+            "z_movement":"z方向の\n移動量\n(mm)",
+            "x_rotation":"x軸回りの\n回転量\n(‰rad)",
+            "y_rotation":"y軸回りの\n回転量\n(‰rad)",
+            "z_rotation":"z軸回りの\n回転量\n(‰rad)"            
+        },
+        "result-combine-disg":{
+            "basicCase":"基本ケース",
+            "x_movement":"x方向の\n移動量\n(mm)",
+            "y_movement":"y方向の\n移動量\n(mm)",
+            "z_movement":"z方向の\n移動量\n(mm)",
+            "x_rotation":"x軸回りの\n回転量\n(‰rad)",
+            "y_rotation":"y軸回りの\n回転量\n(‰rad)",
+            "z_rotation":"z軸回りの\n回転量\n(‰rad)",
+            "comb":"組み合わせ" 
+        },
+        "result-pickup-disg":{
+            "basicCase":"基本ケース",
+            "x_movement":"x方向の\n移動量\n(mm)",
+            "y_movement":"y方向の\n移動量\n(mm)",
+            "z_movement":"z方向の\n移動量\n(mm)",
+            "x_rotation":"x軸回りの\n回転量\n(‰rad)",
+            "y_rotation":"y軸回りの\n回転量\n(‰rad)",
+            "z_rotation":"z軸回りの\n回転量\n(‰rad)",
+            "comb":"組み合わせ" 
         }
     }
 }
