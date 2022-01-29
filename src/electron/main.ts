@@ -13,7 +13,7 @@ function createWindow () {
       contextIsolation: false
     }
   });
-
+  mainWindow.webContents.openDevTools();
   mainWindow.loadFile('index.html');
 }
 

@@ -9,7 +9,7 @@
         "lint": "ng lint",
         "e2e": "ng e2e",
         "build:dev": "concurrently \"ng build --delete-output-path=false --watch\" \"webpack --config webpack.electron.dev.config.js --watch\"",
-        "start:electron": "ng build --base-href ./ && tsc -p tsconfig.electron.json && electron ."
+        "start:dev": "electron dist/shell.js"
     },
     "main": "main.js",
     "description": "立体骨組構造解析ソフト",
