@@ -80,7 +80,9 @@
             "fixNode":"支点",
             "crossSection":"断面",
             "fixMember":"バネ",
-            "joint":"結合"
+            "joint":"結合",
+            "load_Name":"荷重名称",
+            "loadStrength":"荷重強度"           
         },
         "input-load":{
             "memberLoad":"要素荷重",
@@ -88,13 +90,31 @@
             "direction":"方向",
             "mark":"マーク",
             "nodeLoad":"節点荷重",
-            "node": "節点"
+            "node": "節点",
+            "load_Name":"荷重名称",
+            "loadStrength":"荷重強度"
         },
         "input-combine":{
             "name": "名称　　　　　　　　　　　　　　"
         },
         "input-pickup":{
             "name": "名称　　　　　　　　　　　　　　"
+        }
+    },
+    "result":{
+        "result-fsec":{
+            "basicCase":"基本ケース",
+            "memberNo":"部材No",
+            "nodeNo":"節点No",
+            "stationLocation":"着目位置\n(m)",
+            "axialForce":"軸方向力\n(kN)",
+            "y_shear":" y軸方向の\nせん断力\n(kN)",
+            "z_shear":" z軸方向の\nせん断力\n(kN)",
+            "x_torsion":"ねじり\nモーメント\n(kN m)",
+            "y_moment":"y軸回りの\n曲げモーメント\n(kN m)",
+            "z_moment":"z軸回りの\n曲げモーメント\n(kN m)",
+            "shear":"せん断力\n(kN)",
+            "moment":"曲げモーメント\n(kN m)"
         }
     }
 }
