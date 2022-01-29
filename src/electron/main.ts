@@ -21,12 +21,6 @@ app.whenReady().then(() => {
   createWindow();
 });
 
-// Electron -> Angular
-ipcMain.handle('getPirates', () => {
-  const result = fs.readFileSync(__dirname + '/assets/pirates.json');
-  return JSON.parse(result.toString());
-});
-
 // Angular -> Electron
 ipcMain.on('selectPirate', async (event: Electron.IpcMainEvent, name: string) => {
     await dialog.showMessageBox({ message: 'You selected: ' + name });

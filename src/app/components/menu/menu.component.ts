@@ -21,8 +21,8 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { UserInfoService } from "src/app/providers/user-info.service";
 import { environment } from "src/environments/environment";
 import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-custom-fsec.service";
-import { PrintCustomService } from "../print/custom/print-custom.service";
 import { LanguagesService } from "src/app/providers/languages.service";
+import { ElectronService } from 'ngx-electron';
 
 @Component({
   selector: "app-menu",
@@ -47,7 +47,8 @@ export class MenuComponent implements OnInit {
     public printService: PrintService,
     public auth: AngularFireAuth,
     public user: UserInfoService,
-    public language: LanguagesService
+    public language: LanguagesService,
+    private electronService: ElectronService
   ) {
     this.fileName = "";
     this.three.fileName = "";
@@ -71,6 +72,10 @@ export class MenuComponent implements OnInit {
     this.fileName = "";
     this.three.fileName = "";
     this.three.mode = "";
+  
+    if(this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.sendSync('selectPirate', 'aaaaaaaaaaaa');
+    }
   }
 
   // ファイルを開く
