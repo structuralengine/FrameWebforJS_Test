@@ -9,9 +9,10 @@
         "lint": "ng lint",
         "e2e": "ng e2e",
         "build:dev": "concurrently \"ng build --delete-output-path=false --watch\" \"webpack --config webpack.electron.dev.config.js --watch\"",
-        "start:dev": "electron dist/shell.js"
+        "start:dev": "electron dist/shell.js",
+        "build:prod": "ng build --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js",
+        "start:prod": "electron dist/main.js"
     },
-    "main": "main.js",
     "description": "立体骨組構造解析ソフト",
     "author": {
         "name": "sasaco",

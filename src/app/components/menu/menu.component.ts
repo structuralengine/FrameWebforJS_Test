@@ -48,7 +48,7 @@ export class MenuComponent implements OnInit {
     public auth: AngularFireAuth,
     public user: UserInfoService,
     public language: LanguagesService,
-    private electronService: ElectronService
+    public electronService: ElectronService
   ) {
     this.fileName = "";
     this.three.fileName = "";
@@ -73,9 +73,7 @@ export class MenuComponent implements OnInit {
     this.three.fileName = "";
     this.three.mode = "";
   
-    if(this.electronService.isElectronApp) {
-      this.electronService.ipcRenderer.sendSync('selectPirate', 'aaaaaaaaaaaa');
-    }
+
   }
 
   // ファイルを開く
@@ -121,6 +119,15 @@ export class MenuComponent implements OnInit {
         alert(err);
         modalRef.close();
       });
+  }
+
+  // 上書き保存
+  public overWrite(): void{
+    // if(this.electronService.isElectronApp) {
+    // 上書き保存のメニューが表示されるのは electron のときだけ
+    const inputJson: string = JSON.stringify(this.InputData.getInputJson());
+    this.electronService.ipcRenderer.sendSync('selectPirate', inputJson);
+    // }
   }
 
   private fileToText(file): any {
