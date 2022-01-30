@@ -15,7 +15,7 @@
                             </span>
                         </label>
                         <button ngbDropdownItem (click)="save()">ファイルを保存</button>
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="save()">
+                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()">
                             上書き保存
                         </button>
 
