@@ -217,5 +217,12 @@
             "comb":"組み合わせ",
             "rotationalRestraint":"回転\n拘束力\n(kN m)"
         }
+    },
+    "login-dialog":{
+        "createAccount":"ユーザー登録がお済みでない方はこちらから",
+        "email":"メールアドレス",
+        "password":"パスワード",
+        "login":"ログイン",
+        "cancel":"キャンセル"
     }
 }

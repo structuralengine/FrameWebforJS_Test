@@ -217,5 +217,12 @@
             "comb":"Comb.",
             "rotationalRestraint":"Rotational Restraint\n(kN m)"
         }
+    },
+    "login-dialog":{
+        "createAccount":"Creat account",
+        "email":"Email",
+        "password":"Password",
+        "login":"Login",
+        "cancel":"Cancel"
     }
 }
