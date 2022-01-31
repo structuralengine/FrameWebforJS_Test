@@ -17,7 +17,13 @@
         "output":"Output"
     },
     "menu": {
-        "softName": "FrameWebForJS ver1.10.3"
+        "softName": "FrameWebForJS ver1.10.3",
+        "newEntry":"Create a new file",
+        "openFile":"Open file",
+        "saveFile":"Save a file",
+        "outputFile":"Pickup file output",
+        "logout":"Logout",
+        "login":"Login"
     },
     "input": {
         "input-fix-node": {
