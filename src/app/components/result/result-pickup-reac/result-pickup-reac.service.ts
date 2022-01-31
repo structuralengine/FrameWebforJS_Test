@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class ResultPickupReacService {
 
   public reacPickup: any;
+  public value_range: any;
   public isCalculated : boolean;
   private worker1: Worker;
   private worker2: Worker;
@@ -39,6 +40,7 @@ export class ResultPickupReacService {
       // Create a new
       this.worker1.onmessage = ({ data }) => {
         this.reacPickup = data.reacPickup;
+        this.value_range = data.value_range
         console.log('反力reac の ピックアップ PickUp 集計が終わりました', performance.now() - startTime);
 
         // 断面力テーブルの集計

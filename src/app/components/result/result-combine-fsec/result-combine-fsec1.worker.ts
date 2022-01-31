@@ -200,6 +200,127 @@ addEventListener('message', ({ data }) => {
     max_values[combNo] = max_value;
   }
 
-  postMessage({ fsecCombine, max_values });
+  const value_range = {};
+  // CombineNoごとの最大最小を探す
+  for (const combNo of Object.keys(fsecCombine)) {
+    const caseData = fsecCombine[combNo];
+    const key_list = Object.keys(caseData);
+    const values = {};
+    // dx～rzの最大最小をそれぞれ探す
+    for (const key of key_list) {
+      const datas = caseData[key];
+     /* */  let key2: string;
+      if (key.includes('fx')) {
+        key2 = 'fx';
+      } else if (key.includes('fy')) {
+        key2 = 'fy';
+      } else if (key.includes('fz')) {
+        key2 = 'fz';
+      } else if (key.includes('mx')) {
+        key2 = 'mx';
+      } else if (key.includes('my')) {
+        key2 = 'my';
+      } else if (key.includes('mz')) {
+        key2 = 'mz';
+      }
+      let targetValue = (key.includes('max')) ? -65535 : 65535;
+      let targetValue_m = '0';
+      if (key.includes('max')) {  // 最大値を探す
+        //for (const row of Object.keys(datas)) {
+        for (let num = 0; num < datas.length; num++) {
+          const row = num.toString();
+          const data = datas[row][key2];
+          if (data >= targetValue) {
+            targetValue = data;
+            // memberNoがないとき(着目点が最大)の分岐
+            if (datas[row].m === '') {
+              let m_no: string
+              for (let num2 = num - 1; num > 0; num--) {
+                const row2 = num2.toString();
+                if (datas[row2].m !== '') {
+                  m_no = datas[row2].m;
+                  break;
+                }
+              }
+              targetValue_m = m_no;
+            } else {
+              targetValue_m = datas[row].m;
+            }
+          }
+        }
+      } else {  // 最小値を探す
+        // for (const row of Object.keys(datas)) {
+        for (let num = 0; num < datas.length; num++) {
+          const row = num.toString();
+          const data = datas[row][key2];
+          if (data <= targetValue) {
+            targetValue = data;
+            // memberNoがないとき(着目点が最小)の分岐
+            if (datas[row].m === '') {
+              let m_no: string
+              for (let num2 = num - 1; num > 0; num--) {
+                const row2 = num2.toString();
+                if (datas[row2].m !== '') {
+                  m_no = datas[row2].m;
+                  break;
+                }
+              }
+              targetValue_m = m_no;
+            } else {
+              targetValue_m = datas[row].m;
+            }
+          }
+        }
+      }
+      if (Math.abs(targetValue) === 65535) {
+        continue;
+      }
+      values[key] = {max: targetValue, max_m: targetValue_m};
+    }
+    if (Object.keys(values).length === 0) {
+      continue;
+    }
+    const values2 = {
+      max_d : Math.max( values['fx_max'].max, values['fy_max'].max, values['fz_max'].max ),
+      min_d : Math.min( values['fx_min'].max, values['fy_min'].max, values['fz_min'].max ),
+      max_r : Math.max( values['mx_max'].max, values['my_max'].max, values['mz_max'].max ),
+      min_r : Math.min( values['mx_min'].max, values['my_min'].max, values['mz_min'].max ),
+    };
+    // dの最大値の部材番号を探す
+    if (values2.max_d === values['fx_max'].max) {
+      values2['max_d_m'] = values['fx_max'].max_m;
+    } else if (values2.max_d === values['fy_max'].max) {
+      values2['max_d_m'] = values['fy_max'].max_m;
+    } else if (values2.max_d === values['fz_max'].max) {
+      values2['max_d_m'] = values['fz_max'].max_m;
+    } 
+    // dの最小値の部材番号を探す
+    if (values2.max_d === values['fx_max'].max) {
+      values2['min_d_m'] = values['fx_max'].max_m;
+    } else if (values2.max_d === values['fy_max'].max) {
+      values2['min_d_m'] = values['fy_max'].max_m;
+    } else if (values2.max_d === values['fz_max'].max) {
+      values2['min_d_m'] = values['fz_max'].max_m;
+    } 
+    // rの最大値の部材番号を探す
+    if (values2.max_r === values['mx_max'].max) {
+      values2['max_r_m'] = values['mx_max'].max_m;
+    } else if (values2.max_r === values['my_max'].max) {
+      values2['max_r_m'] = values['my_max'].max_m;
+    } else if (values2.max_r === values['mz_max'].max) {
+      values2['max_r_m'] = values['mz_max'].max_m;
+    }
+    // rの最小値の部材番号を探す
+    if (values2.max_r === values['mx_max'].max) {
+      values2['min_r_m'] = values['mx_max'].max_m;
+    } else if (values2.max_r === values['my_max'].max) {
+      values2['min_r_m'] = values['my_max'].max_m;
+    } else if (values2.max_r === values['mz_max'].max) {
+      values2['min_r_m'] = values['mz_max'].max_m;
+    }
+    value_range[combNo] = values2;
+  }
+
+  postMessage({ fsecCombine, max_values, value_range });
 
 });

@@ -6,6 +6,7 @@ import { ThreeSectionForceService } from "../../three/geometry/three-section-for
 })
 export class ResultPickupFsecService {
   public fsecPickup: any;
+  public value_range: any;
   public isCalculated: boolean;
   private worker1: Worker;
   private worker2: Worker;
@@ -95,6 +96,7 @@ export class ResultPickupFsecService {
         );
         this.fsecPickup = data.fsecPickup;
         const max_values = data.max_values;
+        this.value_range = data.value_range;
 
         // 断面力テーブルの集計
         this.worker2.onmessage = ({ data }) => {

@@ -240,7 +240,17 @@ export class ThreeService {
 
       case "disg":
         this.disg.changeData(currentPage);
+        this.scene.getMaxMinValue(
+          this.disg.value_range[currentPage],
+          'momentY'
+        );
+        break;
       case "comb_disg":
+        this.scene.getMaxMinValue(
+          this.disg.value_range[currentPage],
+          'momentY'
+        );
+        break;
       case "pik_disg":
         this.scene.getMaxMinValue(
           this.disg.value_range[currentPage],
@@ -250,7 +260,17 @@ export class ThreeService {
 
       case "reac":
         this.reac.changeData(currentPage);
+        this.scene.getMaxMinValue(
+          this.reac.value_range[currentPage],
+          'momentY'
+        );
+        break;
       case "comb_reac":
+        this.scene.getMaxMinValue(
+          this.reac.value_range[currentPage],
+          'momentY'
+        );
+        break;
       case "pik_reac":
         this.scene.getMaxMinValue(
           this.reac.value_range[currentPage],
@@ -467,9 +487,7 @@ export class ThreeService {
     }
 
     if (
-      ModeName === "fsec" ||
-      ModeName === "comb_fsec" ||
-      ModeName === "pik_fsec"
+      ModeName === "fsec"
     ) {
       this.node.visibleChange(true, false, false);
       this.member.visibleChange(true, true, false);
@@ -496,6 +514,37 @@ export class ThreeService {
         this.secForce.value_ranges[ModeName]['1'][key],
         this.secForce.currentRadio
       );
+    }
+
+    if (
+      ModeName === "comb_fsec" ||
+      ModeName === "pik_fsec"
+    ) {
+      this.node.visibleChange(true, false, false);
+      this.member.visibleChange(true, true, false);
+      this.fixNode.visibleChange(false);
+      this.fixMember.visibleChange(false);
+      this.joint.visibleChange(false);
+      this.panel.visibleChange(false);
+      this.load.visibleChange(false, false);
+      this.disg.visibleChange(false);
+      this.reac.visibleChange(false);
+      this.fsec.visibleChange(ModeName);
+      let key: string;
+      if ( this.secForce.currentRadio === 'axialForce' || 
+           this.secForce.currentRadio === 'torsionalMorment') {
+        key = 'x';
+      } else if ( this.secForce.currentRadio === 'shearForceY' || 
+                  this.secForce.currentRadio === 'momentY') {
+        key = 'y';
+      } else if ( this.secForce.currentRadio === 'shearForceZ' || 
+                  this.secForce.currentRadio === 'momentY') {
+        key = 'z';
+      }
+      /* this.scene.getMaxMinValue(
+        this.secForce.value_ranges[ModeName]['1'][key],
+        this.secForce.currentRadio
+      ); */
     }
 
     this.mode = ModeName;
