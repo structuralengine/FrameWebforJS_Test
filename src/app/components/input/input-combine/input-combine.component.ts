@@ -7,6 +7,7 @@ import { DataHelperModule } from "../../../providers/data-helper.module";
 import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-combine",
@@ -29,7 +30,9 @@ export class InputCombineComponent implements OnInit {
     private load: InputLoadService,
     private result: ResultDataService,
     private helper: DataHelperModule,
-    private app: AppComponent) {
+    private app: AppComponent,
+    private translate: TranslateService
+    ) {
     let head = "D";
     this.COLUMNS_COUNT = this.define.getDefineCaseCount();
     if (this.COLUMNS_COUNT <= 0) {
@@ -52,7 +55,7 @@ export class InputCombineComponent implements OnInit {
       });
     }
     this.columnHeaders.push({
-      title: "名称　　　　　　　　　　　　　　",
+      title: this.translate.instant("input.input-combine.name"),
       dataType: "string",
       dataIndx: "name",
       sortable: false,

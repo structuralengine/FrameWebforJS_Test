@@ -8,6 +8,7 @@ import { AppComponent } from "src/app/app.component";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ThreeLoadService } from "../../three/geometry/three-load/three-load.service";
 import { SceneService } from "../../three/scene.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-load",
@@ -28,11 +29,11 @@ export class InputLoadComponent implements OnInit {
   private dataset = [];
   private columnHeaders3D = [
     {
-      title: "要素荷重",
+      title: this.translate.instant("input.input-load.memberLoad"),
       align: "center",
       colModel: [
         {
-          title: "部材No",
+          title: this.translate.instant("input.input-load.memberNo"),
           align: "center",
           colModel: [
             {
@@ -54,7 +55,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "方向",
+          title: this.translate.instant("input.input-load.direction"),
           align: "center",
           colModel: [
             {
@@ -67,7 +68,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "マーク",
+          title: this.translate.instant("input.input-load.mark"),
           align: "center",
           colModel: [
             {
@@ -148,11 +149,11 @@ export class InputLoadComponent implements OnInit {
       ],
     },
     {
-      title: "節点荷重",
+      title: this.translate.instant("input.input-load.nodeLoad"),
       align: "center",
       colModel: [
         {
-          title: "節点",
+          title: this.translate.instant("input.input-load.node"),
           align: "center",
           colModel: [
             {
@@ -254,11 +255,11 @@ export class InputLoadComponent implements OnInit {
   ];
   private columnHeaders2D = [
     {
-      title: "要素荷重",
+      title: this.translate.instant("input.input-load.memberLoad"),
       align: "center",
       colModel: [
         {
-          title: "部材No",
+          title: this.translate.instant("input.input-load.memberNo"),
           colModel: [
             {
               title: "1",
@@ -279,7 +280,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "方向",
+          title: this.translate.instant("input.input-load.direction"),
           align: "center",
           colModel: [
             {
@@ -292,7 +293,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "マーク",
+          title: this.translate.instant("input.input-load.mark"),
           align: "center",
           colModel: [
             {
@@ -373,12 +374,12 @@ export class InputLoadComponent implements OnInit {
       ],
     },
     {
-      title: "節点荷重",
+      title: this.translate.instant("input.input-load.nodeLoad"),
       align: "center",
       dataIndx: "ddd",
       colModel: [
         {
-          title: "節点",
+          title: this.translate.instant("input.input-load.node"),
           align: "center",
           colModel: [
             {
@@ -439,11 +440,11 @@ export class InputLoadComponent implements OnInit {
   // 3次元の連行荷重
   private columnHeaders3D_LL = [
     {
-      title: "要素荷重",
+      title: this.translate.instant("input.input-load.memberLoad"),
       align: "center",
       colModel: [
         {
-          title: "部材No",
+          title: this.translate.instant("input.input-load.memberNo"),
           align: "center",
           colModel: [
             {
@@ -465,7 +466,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "方向",
+          title: this.translate.instant("input.input-load.direction"),
           align: "center",
           colModel: [
             {
@@ -478,7 +479,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "マーク",
+          title: this.translate.instant("input.input-load.mark"),
           align: "center",
           colModel: [
             {
@@ -562,11 +563,11 @@ export class InputLoadComponent implements OnInit {
   // 2次元の連行荷重
   private columnHeaders2D_LL = [
     {
-      title: "要素荷重",
+      title: this.translate.instant("input.input-load.memberLoad"),
       align: "center",
       colModel: [
         {
-          title: "部材No",
+          title: this.translate.instant("input.input-load.memberNo"),
           colModel: [
             {
               title: "1",
@@ -587,7 +588,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "方向",
+          title: this.translate.instant("input.input-load.direction"),
           align: "center",
           colModel: [
             {
@@ -600,7 +601,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "マーク",
+          title: this.translate.instant("input.input-load.mark"),
           align: "center",
           colModel: [
             {
@@ -691,7 +692,8 @@ export class InputLoadComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private threeLoad: ThreeLoadService,
-    private scene: SceneService
+    private scene: SceneService,
+    private translate: TranslateService
   ) {
     // グリッドの設定
     this.options = {

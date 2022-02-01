@@ -6,6 +6,7 @@ import { ThreeService } from '../../three/three.service';
 import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'app-input-panel',
@@ -18,8 +19,17 @@ export class InputPanelComponent {
   private dataset = [];
   private columnHeaders: any =[
     //{ title: "パネルID", dataType: "integer", dataIndx: "panelID",  sortable: false, width: 40 },
-    { title: "材料No", dataType: "integer", dataIndx: "e",  sortable: false, width: 40 },
-    { title: '頂点No.', colModel: [] }
+    {
+      title: this.translate.instant("input.input-panel.materialNo"),
+      dataType: "integer", 
+      dataIndx: "e",  
+      sortable: false, 
+      width: 40 
+    },
+    {
+      title: this.translate.instant("input.input-panel.nodeNo"),
+      colModel: [] 
+    }
   ];
 
   private ROWS_COUNT = 15;
@@ -28,7 +38,9 @@ export class InputPanelComponent {
               private node: InputNodesService,
               private helper: DataHelperModule,
               private app: AppComponent,
-              private three: ThreeService) {
+              private three: ThreeService,        
+              private translate: TranslateService
+            ) {
 
     for (let i = 1; i <= this.data.PANEL_VERTEXS_COUNT; i++) {
       //const id = "point-" + i;

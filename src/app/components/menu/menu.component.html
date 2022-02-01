@@ -6,22 +6,17 @@
                     <a class="icon file" id="dropdownBasic1" ngbDropdownToggle onfocus="this.blur();"><i
                             class="far fa-file"></i></a>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <button ngbDropdownItem (click)="renew()">新規作成</button>
+                        <button ngbDropdownItem (click)="renew()"translate>menu.newEntry</button>
                         <label style="width: 100%; margin: 0px">
-                            <span ngbDropdownItem style="padding: 8px">
-                                ファイルを開く
-                                <input type="file" accept="application/json" (change)="open($event)"
-                                    style="display: none" />
+                            <span ngbDropdownItem style="padding: 8px" translate>menu.openFile
+                                <input type="file" accept="application/json" (change)="open($event)" style="display: none" />
                             </span>
                         </label>
-                        <button ngbDropdownItem (click)="save()">ファイルを保存</button>
+                        <button ngbDropdownItem (click)="save()"translate>menu.saveFile</button>
                         <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()">
                             上書き保存
                         </button>
-
-                        <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()">
-                            ピックアップファイル出力
-                        </button>
+                        <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()"translate>menu.outputFile</button>
 
                         <!-- テスト用テスト用
             <label style="width: 100%; margin: 0px">
@@ -85,14 +80,15 @@
                     <a class="icon file" id="dropdownBasic1" class="menu-btn" ngbDropdownToggle
                         onfocus="this.blur();"><i class="far fa-user-circle"></i>{{ user.displayName }}</a>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <a (click)="auth.signOut()" (click)="logOut()" class="menu-btn logOut">ログアウト</a>
+                        <a (click)="auth.signOut()" (click)="logOut()" class="menu-btn logOut"translate>menu.logout</a>
                     </div>
                 </div>
             </div>
         </div>
         <ng-template #showLogin>
             <a (click)="logIn()" class="menu-btn">
-                <i class="fas fa-sign-in-alt"></i> ログイン
+                <i class="fas fa-sign-in-alt"></i> 
+                <p translate>menu.login</p>
             </a>
         </ng-template>
     </div>

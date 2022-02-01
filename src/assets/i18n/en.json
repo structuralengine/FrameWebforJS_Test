@@ -1,10 +1,29 @@
 {
     "app": {
         "node": "Node",
-        "fixNode": "FixNode"
+        "fixNode": "Support",
+        "member":"Member",
+        "element":"Material",
+        "panel":"Panel",
+        "joint":"Joint",
+        "noticePoint":"Location",
+        "fixMember":"Spring",
+        "loadName":"Load",
+        "inputDefine":"Combination",
+        "input":"Input",
+        "displacement":"Displacement",
+        "reaction":"Reaction",
+        "memberSectionForce":"MemberSectionForce",
+        "output":"Output"
     },
     "menu": {
-        "softName": "FrameWebForJS ver1.10.6"
+        "softName": "FrameWebForJS ver1.10.6",
+        "newEntry":"Create a new file",
+        "openFile":"Open file",
+        "saveFile":"Save a file",
+        "outputFile":"Pickup file output",
+        "logout":"Logout",
+        "login":"Login"
     },
     "input": {
         "input-fix-node": {
@@ -17,6 +36,193 @@
             "x_around": "MX",
             "y_around": "MY",
             "z_around": "MZ"
+        },
+        "input-members":{
+            "node":"Node",
+            "node_i":"Node-I",
+            "node_j":"Node-J",
+            "distance":"Distance",
+            "material":"Material",
+            "codeAngle":"Angle of Rocation",
+            "material_name":"Name of Material"
+        },
+        "input-elements":{
+            "elastic":"Elastic",
+            "shear_elastic":"Shear Elastic",
+            "cte":"CTE",
+            "area":"Area",
+            "torsionConstant":"Torsion Constant",
+            "inertia":"Inertia",
+            "material_name":"Name of Material"
+        },
+        "input-panel":{
+            "materialNo":"Material No",
+            "nodeNo":"Node No."
+        },
+        "input-joint":{
+            "member":"Member",
+            "node_i":"Node-I",
+            "node_j":"Node-J",
+            "memberNo":"MemberNo"
+        },
+        "input-notice-points":{
+            "memberNo":"Member\nNo",
+            "distance":"Distance\n(m)",
+            "distance_from_node_i":"Distance from Node-I (m)"
+        },
+        "input-fix-member":{
+            "member":"Member",
+            "displacementRestraint":"Displacement Restraint (kN/m/m)",
+            "v_axis":"Kv",
+            "y_axis":"Ky",
+            "z_axis":"Kz",
+            "rotationalRestraint":"Rotational Restraint",
+            "r_axis":"Kr"
+        },
+        "input-load-name":{
+            "cf":"C.F",
+            "symbol":"Symbol",
+            "name":"Name",
+            "fixNode":"Support",
+            "crossSection":"Section",
+            "fixMember":"Spring",
+            "joint":"Joint",
+            "load_Name":"Name of Load",
+            "loadStrength":"Load Strength"
+        },
+        "input-load":{
+            "memberLoad":"Member Load",
+            "memberNo":"MemberNo",
+            "direction":"Direction",
+            "mark":"Mark",
+            "nodeLoad":"Node Load",
+            "node": "Node",
+            "load_Name":"Name of Load",
+            "loadStrength":"Load Strength"
+        },
+        "input-combine":{
+            "name": "Name of Load"
+        },
+        "input-pickup":{
+            "name": "Name of Load"
         }
+    },
+    "result":{
+        "result-fsec":{
+            "basicCase":"Basic Case",
+            "memberNo":"Member\nNo",
+            "nodeNo":"Node\nNo",
+            "stationLocation":"Station Location\n(m)",
+            "axialForce":"Axial Force\n(kN)",
+            "y_shear":"Y Shear\n(kN)",
+            "z_shear":"Z Shear\n(kN)",
+            "x_torsion":"X Torsion\n(kN m)",
+            "y_moment":"Y Momemt\n(kN m)",
+            "z_moment":"Z Moment\n(kN m)",
+            "shear":"Shear\n(kN)",
+            "moment":"Moment\n(kN m)"            
+        },
+        "result-combine-fsec":{
+            "basicCase":"Basic Case",
+            "memberNo":"Member\nNo",
+            "nodeNo":"Node\nNo",
+            "stationLocation":"Station Location\n(m)",
+            "axialForce":"Axial Force\n(kN)",
+            "y_shear":"Y Shear\n(kN)",
+            "z_shear":"Z Shear\n(kN)",
+            "x_torsion":"X Torsion\n(kN m)",
+            "y_moment":"Y Momemt\n(kN m)",
+            "z_moment":"Z Moment\n(kN m)",
+            "shear":"Shear\n(kN)",
+            "moment":"Moment\n(kN m)", 
+            "comb":"Comb."
+        },
+        "result-pickup-fsec":{
+            "basicCase":"Basic Case",
+            "memberNo":"Member\nNo",
+            "nodeNo":"Node\nNo",
+            "stationLocation":"Station Location\n(m)",
+            "axialForce":"Axial Force\n(kN)",
+            "y_shear":"Y Shear\n(kN)",
+            "z_shear":"Z Shear\n(kN)",
+            "x_torsion":"X Torsion\n(kN m)",
+            "y_moment":"Y Momemt\n(kN m)",
+            "z_moment":"Z Moment\n(kN m)",
+            "shear":"Shear\n(kN)",
+            "moment":"Moment\n(kN m)", 
+            "comb":"Comb."
+        },
+        "result-disg":{
+            "basicCase":"Basic Case",
+            "x_movement":"X Movement\n(mm)",
+            "y_movement":"Y Movement\n(mm)",
+            "z_movement":"Z Movement\n(mm)",
+            "x_rotation":"X Rocation\n(%rad)",
+            "y_rotation":"Y Rocation\n(%rad)",
+            "z_rotation":"Z Rocation\n(%rad)"
+        },
+        "result-combine-disg":{
+            "basicCase":"Basic Case",
+            "x_movement":"X Movement\n(mm)",
+            "y_movement":"Y Movement\n(mm)",
+            "z_movement":"Z Movement\n(mm)",
+            "x_rotation":"X Rocation\n(%rad)",
+            "y_rotation":"Y Rocation\n(%rad)",
+            "z_rotation":"Z Rocation\n(%rad)",
+            "comb":"Comb."
+        },
+        "result-pickup-disg":{
+            "basicCase":"Basic Case",
+            "x_movement":"X Movement\n(mm)",
+            "y_movement":"Y Movement\n(mm)",
+            "z_movement":"Z Movement\n(mm)",
+            "x_rotation":"X Rocation\n(%rad)",
+            "y_rotation":"Y Rocation\n(%rad)",
+            "z_rotation":"Z Rocation\n(%rad)",
+            "comb":"Comb."
+        },
+        "result-reac":{
+            "basicCase":"Basic Case",
+            "nodeNo":"Node\nNo",
+            "x_SupportReaction":"X Supporting Reaction\n(kN)",
+            "y_SupportReaction":"Y Supporting Reaction\n(kN)",
+            "z_SupportReaction":"Z Supporting Reaction\n(kN)",
+            "x_RotationalReaction":"X Rotational Reaction\n(kN m)",
+            "y_RotationalReaction":"Y Rotational Reaction\n(kN m)",
+            "z_RotationalReaction":"Z Rotational Reaction\n(kN m)",
+            "comb":"Comb.",
+            "rotationalRestraint":"Rotational Restraint\n(kN m)"
+        },
+        "result-combine-reac":{
+            "basicCase":"Basic Case",
+            "nodeNo":"Node\nNo",
+            "x_SupportReaction":"X Supporting Reaction\n(kN)",
+            "y_SupportReaction":"Y Supporting Reaction\n(kN)",
+            "z_SupportReaction":"Z Supporting Reaction\n(kN)",
+            "x_RotationalReaction":"X Rotational Reaction\n(kN m)",
+            "y_RotationalReaction":"Y Rotational Reaction\n(kN m)",
+            "z_RotationalReaction":"Z Rotational Reaction\n(kN m)",
+            "comb":"Comb.",
+            "rotationalRestraint":"Rotational Restraint\n(kN m)"
+        },
+        "result-pickup-reac":{
+            "basicCase":"Basic Case",
+            "nodeNo":"Node\nNo",
+            "x_SupportReaction":"X Supporting Reaction\n(kN)",
+            "y_SupportReaction":"Y Supporting Reaction\n(kN)",
+            "z_SupportReaction":"Z Supporting Reaction\n(kN)",
+            "x_RotationalReaction":"X Rotational Reaction\n(kN m)",
+            "y_RotationalReaction":"Y Rotational Reaction\n(kN m)",
+            "z_RotationalReaction":"Z Rotational Reaction\n(kN m)",
+            "comb":"Comb.",
+            "rotationalRestraint":"Rotational Restraint\n(kN m)"
+        }
+    },
+    "login-dialog":{
+        "createAccount":"Creat account",
+        "email":"Email",
+        "password":"Password",
+        "login":"Login",
+        "cancel":"Cancel"
     }
 }
