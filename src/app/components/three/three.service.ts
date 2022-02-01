@@ -240,40 +240,22 @@ export class ThreeService {
 
       case "disg":
         this.disg.changeData(currentPage);
-        this.scene.getMaxMinValue(
-          this.disg.value_range[currentPage],
-          'momentY'
-        );
-        break;
       case "comb_disg":
-        this.scene.getMaxMinValue(
-          this.disg.value_range[currentPage],
-          'momentY'
-        );
-        break;
       case "pik_disg":
         this.scene.getMaxMinValue(
-          this.disg.value_range[currentPage],
+          this.disg.value_range[this.mode][currentPage],
+          this.mode,
           'momentY'
         );
         break;
 
       case "reac":
         this.reac.changeData(currentPage);
-        this.scene.getMaxMinValue(
-          this.reac.value_range[currentPage],
-          'momentY'
-        );
-        break;
       case "comb_reac":
-        this.scene.getMaxMinValue(
-          this.reac.value_range[currentPage],
-          'momentY'
-        );
-        break;
       case "pik_reac":
         this.scene.getMaxMinValue(
-          this.reac.value_range[currentPage],
+          this.reac.value_range[this.mode][currentPage],
+          this.mode,
           'momentY'
         );
         break;
@@ -295,6 +277,7 @@ export class ThreeService {
         }
         this.scene.getMaxMinValue(
           this.secForce.value_ranges[this.mode][currentPage][key],
+          this.mode,
           this.secForce.currentRadio
         );
         break;
@@ -512,6 +495,7 @@ export class ThreeService {
       }
       this.scene.getMaxMinValue(
         this.secForce.value_ranges[ModeName]['1'][key],
+        ModeName, 
         this.secForce.currentRadio
       );
     }
@@ -541,10 +525,11 @@ export class ThreeService {
                   this.secForce.currentRadio === 'momentY') {
         key = 'z';
       }
-      /* this.scene.getMaxMinValue(
+      this.scene.getMaxMinValue(
         this.secForce.value_ranges[ModeName]['1'][key],
+        ModeName,
         this.secForce.currentRadio
-      ); */
+      );
     }
 
     this.mode = ModeName;

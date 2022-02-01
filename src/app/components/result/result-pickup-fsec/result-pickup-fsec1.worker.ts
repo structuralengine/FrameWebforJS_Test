@@ -154,42 +154,24 @@ addEventListener('message', ({ data }) => {
       continue;
     }
     const values2 = {
-      max_d : Math.max( values['fx_max'].max, values['fy_max'].max, values['fz_max'].max ),
-      min_d : Math.min( values['fx_min'].max, values['fy_min'].max, values['fz_min'].max ),
-      max_r : Math.max( values['mx_max'].max, values['my_max'].max, values['mz_max'].max ),
-      min_r : Math.min( values['mx_min'].max, values['my_min'].max, values['mz_min'].max ),
-    };
-    // dの最大値の部材番号を探す
-    if (values2.max_d === values['fx_max'].max) {
-      values2['max_d_m'] = values['fx_max'].max_m;
-    } else if (values2.max_d === values['fy_max'].max) {
-      values2['max_d_m'] = values['fy_max'].max_m;
-    } else if (values2.max_d === values['fz_max'].max) {
-      values2['max_d_m'] = values['fz_max'].max_m;
-    } 
-    // dの最小値の部材番号を探す
-    if (values2.max_d === values['fx_max'].max) {
-      values2['min_d_m'] = values['fx_max'].max_m;
-    } else if (values2.max_d === values['fy_max'].max) {
-      values2['min_d_m'] = values['fy_max'].max_m;
-    } else if (values2.max_d === values['fz_max'].max) {
-      values2['min_d_m'] = values['fz_max'].max_m;
-    } 
-    // rの最大値の部材番号を探す
-    if (values2.max_r === values['mx_max'].max) {
-      values2['max_r_m'] = values['mx_max'].max_m;
-    } else if (values2.max_r === values['my_max'].max) {
-      values2['max_r_m'] = values['my_max'].max_m;
-    } else if (values2.max_r === values['mz_max'].max) {
-      values2['max_r_m'] = values['mz_max'].max_m;
-    }
-    // rの最小値の部材番号を探す
-    if (values2.max_r === values['mx_max'].max) {
-      values2['min_r_m'] = values['mx_max'].max_m;
-    } else if (values2.max_r === values['my_max'].max) {
-      values2['min_r_m'] = values['my_max'].max_m;
-    } else if (values2.max_r === values['mz_max'].max) {
-      values2['min_r_m'] = values['mz_max'].max_m;
+      x: {
+        max_d: values['fx_max'].max, max_d_m: values['fx_max'].max_m,
+        min_d: values['fx_min'].max, min_d_m: values['fx_min'].max_m,
+        max_r: values['mx_max'].max, max_r_m: values['mx_max'].max_m,
+        min_r: values['mx_min'].max, min_r_m: values['mx_min'].max_m,
+      }, 
+      y: {
+        max_d: values['fy_max'].max, max_d_m: values['fy_max'].max_m,
+        min_d: values['fy_min'].max, min_d_m: values['fy_min'].max_m,
+        max_r: values['my_max'].max, max_r_m: values['my_max'].max_m,
+        min_r: values['my_min'].max, min_r_m: values['my_min'].max_m,
+      }, 
+      z: {
+        max_d: values['fz_max'].max, max_d_m: values['fz_max'].max_m,
+        min_d: values['fz_min'].max, min_d_m: values['fz_min'].max_m,
+        max_r: values['mz_max'].max, max_r_m: values['mz_max'].max_m,
+        min_r: values['mz_min'].max, min_r_m: values['mz_min'].max_m,
+      }
     }
     value_range[combNo] = values2;
   }

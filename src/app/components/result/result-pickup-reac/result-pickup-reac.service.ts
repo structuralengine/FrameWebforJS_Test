@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ThreeReactService } from '../../three/geometry/three-react.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ResultPickupReacService {
   private worker2: Worker;
   private columns: any;
 
-  constructor() { 
+  constructor(private three: ThreeReactService) { 
     this.clear();
     this.isCalculated  = false;
     this.worker1 = new Worker(new URL('./result-pickup-reac1.worker', import.meta.url), { name: 'pickup-reac1', type: 'module' });
@@ -50,8 +51,8 @@ export class ResultPickupReacService {
           this.isCalculated = true;
         };
         this.worker2.postMessage({ reacPickup: this.reacPickup });
+        this.three.setCombPickResultData(this.value_range, 'pik_reac');
         //this.columns = this.work2_test({ reacPickup: this.reacPickup });
-
       };
       this.worker1.postMessage({ pickList, reacCombine });
     } else {

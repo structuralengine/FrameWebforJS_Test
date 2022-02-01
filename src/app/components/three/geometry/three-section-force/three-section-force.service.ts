@@ -189,7 +189,14 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
-          this.scene.getMaxMinValue(this.value_ranges['1'], this.currentRadio);
+          const key1: string =
+          ( key === 'axialForce' || key === 'torsionalMorment' ) ? 'x' :
+          ( key === 'shearForceY' || key === 'momentY' ) ? 'y' : 'z';
+          this.scene.getMaxMinValue(
+            this.value_ranges[this.currentMode][this.currentIndex][key1], 
+            'fsec',
+            this.currentRadio
+          );
           this.onResize();
           this.scene.render();
         });
@@ -248,14 +255,16 @@ export class ThreeSectionForceService {
     this.currentMode = "";
   }
   // combine
-  public setCombResultData(fsecJson: any, max_values: any): void {
+  public setCombResultData(fsecJson: any, max_values: any, value_range: any): void {
     this.fsecData.comb_fsec = fsecJson;
     this.max_values.comb_fsec = max_values;
+    this.value_ranges.comb_fsec = value_range;
   }
   // pick up
-  public setPickupResultData(fsecJson: any, max_values: any): void {
+  public setPickupResultData(fsecJson: any, max_values: any, value_range: any): void {
     this.fsecData.pik_fsec = fsecJson;
     this.max_values.pik_fsec = max_values;
+    this.value_ranges.pik_fsec = value_range;
   }
 
   private changeMesh(): void {

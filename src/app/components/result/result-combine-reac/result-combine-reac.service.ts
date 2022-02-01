@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ResultReacService } from '../result-reac/result-reac.service';
 import { ResultPickupReacService } from '../result-pickup-reac/result-pickup-reac.service';
+import { ThreeReactService } from '../../three/geometry/three-react.service';
 import { DataHelperModule } from 'src/app/providers/data-helper.module';
 
 @Injectable({
@@ -63,6 +64,7 @@ export class ResultCombineReacService {
   private columns: any;
 
   constructor(private pickreac: ResultPickupReacService,
+              private three: ThreeReactService,
               private helper: DataHelperModule) {
     this.clear();
     this.isCalculated = false;
@@ -106,6 +108,7 @@ export class ResultCombineReacService {
           this.isCalculated = true;
         };
         this.worker2.postMessage({ reacCombine: this.reacCombine });
+        this.three.setCombPickResultData(this.value_range, 'comb_reac');
       };
       this.worker1.postMessage({ defList, combList, reac, reacKeys: this.reacKeys });
       // this.worker1_test({ defList, combList, reac, reacKeys: this.reacKeys });
@@ -114,6 +117,12 @@ export class ResultCombineReacService {
       // You should add a fallback so that your program still executes correctly.
     }
 
+  }
+
+  public getCombPickData () {
+    const CombRange = this.value_range;
+    const PickRange = this.pickreac.value_range;
+    return {CombRange, PickRange};
   }
 
 

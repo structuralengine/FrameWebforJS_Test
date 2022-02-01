@@ -97,10 +97,13 @@ export class ResultDisgService {
           );
           const disg = data.disg;
           const max_values = data.max_value;
-          const value_range = data.value_range;
+          const value_range = {};
+          value_range['disg'] = data.value_range;
 
           // 組み合わせの集計処理を実行する
           this.comb.setDisgCombineJson(disg, defList, combList, pickList);
+          value_range['comb_disg'] = this.comb.value_range;
+          value_range['pik_disg'] = this.comb.value_range;
 
           // 変位量テーブルの集計
           this.worker2.onmessage = ({ data }) => {
@@ -110,7 +113,7 @@ export class ResultDisgService {
                 performance.now() - startTime
               );
               this.columns = data.table;
-              this.set_LL_columns(disg, Object.keys(jsonData), max_values, value_range);
+              this.set_LL_columns(disg, Object.keys(jsonData), max_values, value_range['disg']);
             } else {
               console.log("変位量テーブルの集計に失敗しました", data.error);
             }
@@ -180,7 +183,7 @@ export class ResultDisgService {
     }
 
     // 集計が終わったら three.js に通知
-    this.three.setResultData(disg, max_values, value_range);
+    this.three.setResultData(disg, max_values, value_range, 'disg');
     this.printCustomService.LL_flg = this.LL_flg;
     this.printCustomService.LL();
     if (flg === false) {

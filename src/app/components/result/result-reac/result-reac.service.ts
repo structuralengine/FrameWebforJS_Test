@@ -166,7 +166,10 @@ export class ResultReacService {
       const defList: any = {};
       const combList: any = {};
       const max_values: any = {};
-      const value_range: any = {};
+      const value_range: any = { reac: {},
+                                 comb_reac: {},
+                                 pik_reac: {}
+                                };
       const three_reac: any = {};
 
       let flg = false;
@@ -176,7 +179,7 @@ export class ResultReacService {
         if(!caseLoad.symbol.includes("LL")){
           this.LL_flg.push(false);
           max_values[caseNo] = org_max_values[caseNo];
-          value_range[caseNo] = org_value_range[caseNo];
+          value_range['reac'][caseNo] = org_value_range[caseNo];
           three_reac[caseNo] = reac[caseNo];
         } else {
   
@@ -226,7 +229,7 @@ export class ResultReacService {
       }
 
       // 集計が終わったら three.js に通知
-      this.three.setResultData(three_reac, max_values, value_range);
+      this.three.setResultData(three_reac, max_values, value_range, 'reac');
   
       if(flg === false){
         this.isCalculated = true;
