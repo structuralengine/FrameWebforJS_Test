@@ -120,6 +120,7 @@ export class ResultReacService {
           );
           const reac = data.reac;
           const max_values = data.max_value;
+          const value_range = data.value_range;
 
           // 組み合わせの集計処理を実行する
           this.comb.setReacCombineJson(reac, defList, combList, pickList);
@@ -132,7 +133,7 @@ export class ResultReacService {
                 performance.now() - startTime
               );
               this.columns = data.table;
-              this.set_LL_columns(reac, Object.keys(jsonData), max_values);
+              this.set_LL_columns(reac, Object.keys(jsonData), max_values, value_range);
             } else {
               console.log("反力テーブルの集計に失敗しました", data.error);
             }
@@ -148,6 +149,7 @@ export class ResultReacService {
         }
       };
       this.worker1.postMessage({ jsonData });
+      //const a = this.woker1_test({ jsonData })
     } else {
       console.log("反力の生成に失敗しました");
       // Web workers are not supported in this environment.
@@ -156,7 +158,7 @@ export class ResultReacService {
   }
 
     // 連行荷重の断面力を集計する
-    private set_LL_columns(reac: any, load_keys: string[], org_max_values: {}){
+    private set_LL_columns(reac: any, load_keys: string[], org_max_values: {}, org_value_range: {}){
 
       this.LL_flg = new Array();
   
@@ -164,6 +166,10 @@ export class ResultReacService {
       const defList: any = {};
       const combList: any = {};
       const max_values: any = {};
+      const value_range: any = { reac: {},
+                                 comb_reac: {},
+                                 pik_reac: {}
+                                };
       const three_reac: any = {};
 
       let flg = false;
@@ -173,6 +179,7 @@ export class ResultReacService {
         if(!caseLoad.symbol.includes("LL")){
           this.LL_flg.push(false);
           max_values[caseNo] = org_max_values[caseNo];
+          value_range['reac'][caseNo] = org_value_range[caseNo];
           three_reac[caseNo] = reac[caseNo];
         } else {
   
@@ -222,7 +229,7 @@ export class ResultReacService {
       }
 
       // 集計が終わったら three.js に通知
-      this.three.setResultData(three_reac, max_values);
+      this.three.setResultData(three_reac, max_values, value_range, 'reac');
   
       if(flg === false){
         this.isCalculated = true;

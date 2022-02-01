@@ -242,29 +242,44 @@ export class ThreeService {
 
       case "disg":
         this.disg.changeData(currentPage);
-        break;
-
       case "comb_disg":
-        break;
       case "pik_disg":
+        this.scene.getMaxMinValue(
+          this.disg.value_range[this.mode][currentPage],
+          this.mode,
+          'momentY'
+        );
         break;
 
       case "reac":
         this.reac.changeData(currentPage);
-        break;
-
       case "comb_reac":
-        break;
       case "pik_reac":
+        this.scene.getMaxMinValue(
+          this.reac.value_range[this.mode][currentPage],
+          this.mode,
+          'momentY'
+        );
         break;
 
       case "fsec":
       case "comb_fsec":
       case "pik_fsec":
         this.fsec.changeData(currentPage, this.mode);
+        let key: string;
+        if ( this.secForce.currentRadio === 'axialForce' || 
+             this.secForce.currentRadio === 'torsionalMorment') {
+          key = 'x';
+        } else if ( this.secForce.currentRadio === 'shearForceY' || 
+                    this.secForce.currentRadio === 'momentY') {
+          key = 'y';
+        } else if ( this.secForce.currentRadio === 'shearForceZ' || 
+                    this.secForce.currentRadio === 'momentY') {
+          key = 'z';
+        }
         this.scene.getMaxMinValue(
-          this.secForce.max,
-          this.secForce.min,
+          this.secForce.value_ranges[this.mode][currentPage][key],
+          this.mode,
           this.secForce.currentRadio
         );
         break;
@@ -457,7 +472,37 @@ export class ThreeService {
     }
 
     if (
-      ModeName === "fsec" ||
+      ModeName === "fsec"
+    ) {
+      this.node.visibleChange(true, false, false);
+      this.member.visibleChange(true, true, false);
+      this.fixNode.visibleChange(false);
+      this.fixMember.visibleChange(false);
+      this.joint.visibleChange(false);
+      this.panel.visibleChange(false);
+      this.load.visibleChange(false, false);
+      this.disg.visibleChange(false);
+      this.reac.visibleChange(false);
+      this.fsec.visibleChange(ModeName);
+      let key: string;
+      if ( this.secForce.currentRadio === 'axialForce' || 
+           this.secForce.currentRadio === 'torsionalMorment') {
+        key = 'x';
+      } else if ( this.secForce.currentRadio === 'shearForceY' || 
+                  this.secForce.currentRadio === 'momentY') {
+        key = 'y';
+      } else if ( this.secForce.currentRadio === 'shearForceZ' || 
+                  this.secForce.currentRadio === 'momentY') {
+        key = 'z';
+      }
+      this.scene.getMaxMinValue(
+        this.secForce.value_ranges[ModeName]['1'][key],
+        ModeName, 
+        this.secForce.currentRadio
+      );
+    }
+
+    if (
       ModeName === "comb_fsec" ||
       ModeName === "pik_fsec"
     ) {
@@ -471,9 +516,20 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange(ModeName);
+      let key: string;
+      if ( this.secForce.currentRadio === 'axialForce' || 
+           this.secForce.currentRadio === 'torsionalMorment') {
+        key = 'x';
+      } else if ( this.secForce.currentRadio === 'shearForceY' || 
+                  this.secForce.currentRadio === 'momentY') {
+        key = 'y';
+      } else if ( this.secForce.currentRadio === 'shearForceZ' || 
+                  this.secForce.currentRadio === 'momentY') {
+        key = 'z';
+      }
       this.scene.getMaxMinValue(
-        this.secForce.max,
-        this.secForce.min,
+        this.secForce.value_ranges[ModeName]['1'][key],
+        ModeName,
         this.secForce.currentRadio
       );
     }
