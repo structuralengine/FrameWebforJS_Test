@@ -21,8 +21,8 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { UserInfoService } from "src/app/providers/user-info.service";
 import { environment } from "src/environments/environment";
 import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-custom-fsec.service";
-import { PrintCustomService } from "../print/custom/print-custom.service";
 import { LanguagesService } from "src/app/providers/languages.service";
+import { ElectronService } from 'ngx-electron';
 
 @Component({
   selector: "app-menu",
@@ -31,7 +31,7 @@ import { LanguagesService } from "src/app/providers/languages.service";
 })
 export class MenuComponent implements OnInit {
   loginUserName: string;
-  fileName: string;
+  public fileName: string;
 
   constructor(
     private modalService: NgbModal,
@@ -47,13 +47,16 @@ export class MenuComponent implements OnInit {
     public printService: PrintService,
     public auth: AngularFireAuth,
     public user: UserInfoService,
-    public language: LanguagesService
+    public language: LanguagesService,
+    public electronService: ElectronService
   ) {
     this.fileName = "";
+    this.three.fileName = "";
   }
 
   ngOnInit() {
     this.fileName = "";
+    this.three.fileName = "";
     this.helper.isContentsDailogShow = false;
     this.setDimension(2);
   }
@@ -67,6 +70,10 @@ export class MenuComponent implements OnInit {
     this.CustomFsecData.clear();
     this.three.ClearData();
     this.fileName = "";
+    this.three.fileName = "";
+    this.three.mode = "";
+  
+
   }
 
   // ファイルを開く
@@ -82,23 +89,45 @@ export class MenuComponent implements OnInit {
 
     const file = evt.target.files[0];
     this.fileName = file.name;
+    this.three.fileName = file.name;
     evt.target.value = "";
     this.fileToText(file)
       .then((text) => {
         this.app.dialogClose(); // 現在表示中の画面を閉じる
+        this.ResultData.clear(); // 解析結果を削除
         const old = this.helper.dimension;
-        this.InputData.loadInputData(text); // データを読み込む
+        const jsonData: {} = JSON.parse(text);
+        let resultData: {} = null;
+        if ("result" in jsonData) {
+          resultData = jsonData["result"];
+          delete jsonData["result"];
+        }
+        this.InputData.loadInputData(jsonData); // データを読み込む
+        if (resultData !== null) {
+          this.ResultData.loadResultData(resultData); // 解析結果を読み込む
+          this.ResultData.isCalculated = true;
+        } else {
+          this.ResultData.isCalculated = false;
+        }
         if (old !== this.helper.dimension) {
           this.setDimension(this.helper.dimension);
         }
         this.three.fileload();
         modalRef.close();
-        this.ResultData.isCalculated = false;
       })
       .catch((err) => {
         alert(err);
         modalRef.close();
       });
+  }
+
+  // 上書き保存
+  public overWrite(): void{
+    // if(this.electronService.isElectronApp) {
+    // 上書き保存のメニューが表示されるのは electron のときだけ
+    const inputJson: string = JSON.stringify(this.InputData.getInputJson());
+    this.electronService.ipcRenderer.sendSync('selectPirate', inputJson);
+    // }
   }
 
   private fileToText(file): any {
@@ -120,6 +149,7 @@ export class MenuComponent implements OnInit {
     const blob = new window.Blob([inputJson], { type: "text/plain" });
     if (this.fileName.length === 0) {
       this.fileName = "frameWebForJS.json";
+      this.three.fileName = "frameWebForJS.json";
     }
     let ext = "";
     if (this.helper.getExt(this.fileName) !== "json") {
@@ -211,6 +241,7 @@ export class MenuComponent implements OnInit {
               }
             }
 
+            this.InputData.getResult(jsonData);
             // テスト ---------------------------------------------
             // this.saveResult(json);
             // --------------------------------------------- テスト*/
@@ -328,6 +359,7 @@ export class MenuComponent implements OnInit {
 
     const file = evt.target.files[0];
     this.fileName = file.name;
+    this.three.fileName = file.name;
     evt.target.value = "";
 
     this.fileToText(file)

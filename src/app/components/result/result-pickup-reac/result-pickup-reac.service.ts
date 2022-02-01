@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ThreeReactService } from '../../three/geometry/three-react.service';
 
 @Injectable({
   providedIn: 'root'
@@ -6,12 +7,13 @@ import { Injectable } from '@angular/core';
 export class ResultPickupReacService {
 
   public reacPickup: any;
+  public value_range: any;
   public isCalculated : boolean;
   private worker1: Worker;
   private worker2: Worker;
   private columns: any;
 
-  constructor() { 
+  constructor(private three: ThreeReactService) { 
     this.clear();
     this.isCalculated  = false;
     this.worker1 = new Worker(new URL('./result-pickup-reac1.worker', import.meta.url), { name: 'pickup-reac1', type: 'module' });
@@ -39,6 +41,7 @@ export class ResultPickupReacService {
       // Create a new
       this.worker1.onmessage = ({ data }) => {
         this.reacPickup = data.reacPickup;
+        this.value_range = data.value_range
         console.log('反力reac の ピックアップ PickUp 集計が終わりました', performance.now() - startTime);
 
         // 断面力テーブルの集計
@@ -48,8 +51,8 @@ export class ResultPickupReacService {
           this.isCalculated = true;
         };
         this.worker2.postMessage({ reacPickup: this.reacPickup });
+        this.three.setCombPickResultData(this.value_range, 'pik_reac');
         //this.columns = this.work2_test({ reacPickup: this.reacPickup });
-
       };
       this.worker1.postMessage({ pickList, reacCombine });
     } else {

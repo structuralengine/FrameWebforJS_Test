@@ -97,9 +97,13 @@ export class ResultDisgService {
           );
           const disg = data.disg;
           const max_values = data.max_value;
+          const value_range = {};
+          value_range['disg'] = data.value_range;
 
           // 組み合わせの集計処理を実行する
           this.comb.setDisgCombineJson(disg, defList, combList, pickList);
+          value_range['comb_disg'] = this.comb.value_range;
+          value_range['pik_disg'] = this.comb.value_range;
 
           // 変位量テーブルの集計
           this.worker2.onmessage = ({ data }) => {
@@ -109,7 +113,7 @@ export class ResultDisgService {
                 performance.now() - startTime
               );
               this.columns = data.table;
-              this.set_LL_columns(disg, Object.keys(jsonData), max_values);
+              this.set_LL_columns(disg, Object.keys(jsonData), max_values, value_range['disg']);
             } else {
               console.log("変位量テーブルの集計に失敗しました", data.error);
             }
@@ -125,6 +129,7 @@ export class ResultDisgService {
         }
       };
       this.worker1.postMessage({ jsonData });
+      // const a = this.woker1_test({ jsonData })
     } else {
       console.log("変位量の生成に失敗しました");
       // Web workers are not supported in this environment.
@@ -133,13 +138,14 @@ export class ResultDisgService {
   }
 
   // 連行荷重の断面力を集計する
-  private set_LL_columns(disg: any, load_keys: string[], org_max_values: {}) {
+  private set_LL_columns(disg: any, load_keys: string[], org_max_values: {}, org_value_range: {}) {
     this.LL_flg = new Array();
 
     const load_name = this.load.getLoadNameJson(0);
     const defList: any = {};
     const combList: any = {};
     const max_values: any = {};
+    const value_range: any = {};
 
     let flg = false;
 
@@ -148,6 +154,7 @@ export class ResultDisgService {
       if (caseLoad.symbol !== "LL") {
         this.LL_flg.push(false);
         max_values[caseNo] = org_max_values[caseNo];
+        value_range[caseNo] = org_value_range[caseNo];
       } else {
         // 連行荷重の場合
         flg = true;
@@ -176,7 +183,7 @@ export class ResultDisgService {
     }
 
     // 集計が終わったら three.js に通知
-    this.three.setResultData(disg, max_values);
+    this.three.setResultData(disg, max_values, value_range, 'disg');
     this.printCustomService.LL_flg = this.LL_flg;
     this.printCustomService.LL();
     if (flg === false) {
@@ -208,4 +215,6 @@ export class ResultDisgService {
       disgKeys: this.comb.disgKeys,
     });
   }
+
+
 }

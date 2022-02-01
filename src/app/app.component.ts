@@ -8,6 +8,9 @@ import { ResultFsecService } from "./components/result/result-fsec/result-fsec.s
 import { ResultDisgService } from "./components/result/result-disg/result-disg.service";
 import { ResultReacService } from "./components/result/result-reac/result-reac.service";
 import { DataHelperModule } from "./providers/data-helper.module";
+import { TranslateService } from "@ngx-translate/core";
+
+import html2canvas from "html2canvas";
 
 @Component({
   selector: "app-root",
@@ -15,7 +18,7 @@ import { DataHelperModule } from "./providers/data-helper.module";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  btnReac: string;
+  btnReac!: string;
   constructor(
     private _router: Router,
     private ResultData: ResultDataService,
@@ -24,8 +27,11 @@ export class AppComponent implements OnInit {
     public fsec: ResultFsecService,
     public disg: ResultDisgService,
     public reac: ResultReacService,
-    public print: PrintService
-  ) {}
+    public print: PrintService,
+    private translate: TranslateService,
+  ) {
+    this.translate.setDefaultLang("ja");
+  }
 
   ngOnInit() {
     this.helper.isContentsDailogShow = false;
@@ -101,3 +107,13 @@ export class AppComponent implements OnInit {
     this.printService.printDocument("invoice", invoiceIds);
   }
 }
+
+window.onload = function () {
+  //HTML内に画像を表示
+  html2canvas(document.getElementById("target")).then(function (canvas) {
+    //imgタグのsrcの中に、html2canvasがレンダリングした画像を指定する。
+    var imgData = canvas.toDataURL();
+    var pic = document.getElementById("result");
+    pic.setAttribute("src", "imgData");
+  });
+};

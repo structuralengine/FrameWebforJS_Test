@@ -11,6 +11,11 @@ $border-color: #428bca; // ボーダーライン
     }
 }
 
+html,
+body {
+    overflow: hidden;
+}
+
 .header {
     display: flex;
     color: #fff;

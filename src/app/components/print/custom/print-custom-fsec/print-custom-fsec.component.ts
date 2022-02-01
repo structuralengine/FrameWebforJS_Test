@@ -18,7 +18,6 @@ import { PrintCustomService } from "../print-custom.service";
 })
 export class PrintCustomFsecComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
-
   private columnHeaders: any = [
     //{ title: "パネルID", dataType: "integer", dataIndx: "panelID",  sortable: false, width: 40 },
     {
@@ -72,6 +71,9 @@ export class PrintCustomFsecComponent implements OnInit {
 
   ngOnInit(): void {
     this.printCustomFsecService.clear();
+    if (!this.printCustomFsecService.flg) {
+      this.printCustomFsecService.checkReverse();
+    }
   }
 
   // 表の高さを計算する
@@ -112,6 +114,10 @@ export class PrintCustomFsecComponent implements OnInit {
     colModel: this.columnHeaders,
     dataModel: {
       data: this.printCustomFsecService.dataset,
+    },
+
+    change: (evt, ui) => {
+      this.printCustomFsecService.flg = true;
     },
   };
 

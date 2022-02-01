@@ -86,6 +86,11 @@ import { PrintCustomReacComponent } from "./components/print/custom/print-custom
 import { PrintCustomDisgComponent } from "./components/print/custom/print-custom-disg/print-custom-disg.component";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { ElectronService, NgxElectronModule } from "ngx-electron";
+
+const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
+  new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+
 
 @NgModule({
   imports: [
@@ -104,11 +109,11 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
+        useFactory: httpLoaderFactory,
         deps: [HttpClient],
       },
-      defaultLanguage: "ja",
     }),
+    NgxElectronModule
   ],
   declarations: [
     AppComponent,
@@ -183,10 +188,14 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
     UserInfoService,
     SceneService,
+
+    ElectronService
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
+
