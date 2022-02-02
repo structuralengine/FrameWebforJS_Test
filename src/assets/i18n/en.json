@@ -224,5 +224,21 @@
         "password":"Password",
         "login":"Login",
         "cancel":"Cancel"
+    },
+    "print":{
+        "SelectPrintData":"Select print data",
+        "inputData":"Input data",
+        "displacement":"Amount of displacement",
+        "combine_displacement":"Amount of displacement (COMBINE)",
+        "pickup_displacement":"Amount of displacement (PICKUP)",
+        "reaction":"Reaction",
+        "combine_reaction":"COMBINE Reaction",
+        "pickup_reaction":"PICKUP Reaction",
+        "SectionForce":"SectionForce",
+        "combine_SectionForce":"COMBINR SectionForce",
+        "pickup_SectionForce":"PICKUP SectionForce",
+        "PrintScreen":"Print screen",
+        "noDataFound":"No Data Found",
+        "about1000":"Please limit the number of pages to about 1000"
     }
 }

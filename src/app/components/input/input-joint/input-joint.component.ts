@@ -69,14 +69,6 @@ export class InputJointComponent implements OnInit {
       this.three.ChangePage(1);
     }
 
-
-  ngOnInit() {
-    this.ROWS_COUNT = this.rowsCount();
-    this.loadPage(1, this.ROWS_COUNT);
-    this.three.ChangeMode("joints");
-    this.three.ChangePage(1);
-  }
-
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
     this.dataset.splice(0);

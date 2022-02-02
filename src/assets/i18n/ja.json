@@ -17,7 +17,7 @@
         "output":"出力"
     },
     "menu": {
-       "softName": "立体骨組構造解析ソフトver1.10.6",
+        "softName": "立体骨組構造解析ソフトver1.10.3",
         "newEntry":"新規作成",
         "openFile":"ファイルを開く",
         "saveFile":"ファイルを保存",
@@ -224,5 +224,21 @@
         "password":"パスワード",
         "login":"ログイン",
         "cancel":"キャンセル"
+    },
+    "print":{
+        "SelectPrintData":"印刷データを選択",
+        "inputData":"入力データ",
+        "displacement":"変位量",
+        "combine_displacement":"COMBINE 変位量",
+        "pickup_displacement":"PICKUP 変位量",
+        "reaction":"反力",
+        "combine_reaction":"COMBINE 反力",
+        "pickup_reaction":"PICKUP 反力",
+        "SectionForce":"断面力",
+        "combine_SectionForce":"COMBINE 断面力",
+        "pickup_SectionForce":"PICKUP 断面力",
+        "PrintScreen":"画面印刷",
+        "noDataFound":"印刷データが\n存在しません",
+        "about1000":"ページ枚数を1000枚\n程度に抑えて下さい"
     }
 }

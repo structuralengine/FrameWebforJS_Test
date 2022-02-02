@@ -1,6 +1,6 @@
 <div class="print">
   <div class="printdata-choice">
-    <h2>印刷データを選択</h2>
+    <h2 translate>print.SelectPrintData</h2>
     <div class="print-choice">
       <ul>
         <li>
@@ -13,7 +13,7 @@
               id="result0"
               (click)="printService.selectRadio(0)"
             />
-            <span class="radio-parts">入力データ</span>
+            <span class="radio-parts" translate>print.inputData</span>
           </label>
         </li>
         <ng-container *ngIf="ResultData.isCalculated">
@@ -26,7 +26,7 @@
                 id="print1"
                 (click)="printService.selectRadio(1)"
               />
-              <span class="radio-parts">変位量</span>
+              <span class="radio-parts" translate>print.displacement</span>
             </label>
           </li>
           <li>
@@ -38,7 +38,7 @@
                 id="print2"
                 (click)="printService.selectRadio(2)"
               />
-              <span class="radio-parts">COMBINE 変位量</span>
+              <span class="radio-parts" translate>print.combine_displacement</span>
             </label>
           </li>
           <li>
@@ -50,7 +50,7 @@
                 id="print3"
                 (click)="printService.selectRadio(3)"
               />
-              <span class="radio-parts">PICKUP 変位量</span>
+              <span class="radio-parts" translate>print.pickup_displacement</span>
             </label>
           </li>
           <li>
@@ -62,7 +62,7 @@
                 id="print4"
                 (click)="printService.selectRadio(4)"
               />
-              <span class="radio-parts">反力</span>
+              <span class="radio-parts" translate>print.reaction</span>
             </label>
           </li>
           <li>
@@ -74,7 +74,7 @@
                 id="print5"
                 (click)="printService.selectRadio(5)"
               />
-              <span class="radio-parts">COMBINE 反力</span>
+              <span class="radio-parts" translate>print.combine_reaction</span>
             </label>
           </li>
           <li>
@@ -86,7 +86,7 @@
                 id="print6"
                 (click)="printService.selectRadio(6)"
               />
-              <span class="radio-parts">PICKUP 反力</span>
+              <span class="radio-parts" translate>print.pickup_reaction</span>
             </label>
           </li>
           <li>
@@ -98,7 +98,7 @@
                 id="print7"
                 (click)="printService.selectRadio(7)"
               />
-              <span class="radio-parts">断面力</span>
+              <span class="radio-parts" translate>print.SectionForce</span>
             </label>
           </li>
           <li>
@@ -110,7 +110,7 @@
                 id="print8"
                 (click)="printService.selectRadio(8)"
               />
-              <span class="radio-parts">COMBINE 断面力</span>
+              <span class="radio-parts" translate>print.combine_SectionForce</span>
             </label>
           </li>
           <li>
@@ -122,7 +122,7 @@
                 id="print9"
                 (click)="printService.selectRadio(9)"
               />
-              <span class="radio-parts">PICKUP 断面力</span>
+              <span class="radio-parts" translate>print.pickup_SectionForce</span>
             </label>
           </li>
         </ng-container>
@@ -135,7 +135,7 @@
               id="print10"
               (click)="printService.selectRadio(10)"
             />
-            <span class="radio-parts">画面印刷</span>
+            <span class="radio-parts" translate>print.PrintScreen</span>
           </label>
         </li>
       </ul>
@@ -153,14 +153,14 @@
       </label>
 
       <div class="message">
-        <p *ngIf="printService.pageDisplay">
+        <p *ngIf="printService.pageDisplay" translate>
           想定枚数:{{ printService.pageCount }}枚程度
         </p>
-        <p *ngIf="printService.pageError" class="caution">
-          印刷データが<br />存在しません
+        <p *ngIf="printService.pageError" class="caution" translate>
+          print.noDataFound
         </p>
-        <p *ngIf="printService.pageOver" class="caution">
-          ページ枚数を1000枚<br />程度に抑えて下さい
+        <p *ngIf="printService.pageOver" class="caution" translate>
+          print.about1000
         </p>
       </div>
     </div>
