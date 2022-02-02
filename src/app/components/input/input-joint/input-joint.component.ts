@@ -62,14 +62,6 @@ export class InputJointComponent implements OnInit {
     private translate: TranslateService
     ) {}
 
-    ngOnInit() {
-      this.ROWS_COUNT = this.rowsCount();
-      this.loadPage(1, this.ROWS_COUNT);
-      this.three.ChangeMode("joints");
-      this.three.ChangePage(1);
-    }
-
-
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
     this.loadPage(1, this.ROWS_COUNT);
