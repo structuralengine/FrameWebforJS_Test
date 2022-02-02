@@ -40,8 +40,6 @@ addEventListener('message', ({ data }) => {
         continue;
       }
 
-      let max_d = 0;
-      let max_r = 0;
       let values = {max_d: -65535, max_r: -65535,
                     min_d:  65535, min_r:  65535,
                     max_d_m: '0' , max_r_m: '0' ,
@@ -70,9 +68,6 @@ addEventListener('message', ({ data }) => {
             
         // 最大値を記録する three.js で使う
         for (const v of [tx, ty, tz]) {
-          if (Math.abs(max_d) < Math.abs(v)) {
-            max_d = v;
-          }
           if (values.max_d < v) {
             values.max_d = v;
             values.max_d_m = n;
@@ -83,9 +78,6 @@ addEventListener('message', ({ data }) => {
           }
         }
         for (const v of [mx, my, mz]) {
-          if (Math.abs(max_r) < Math.abs(v)) {
-            max_r = v;
-          }
           if (values.max_r < v) {
             values.max_r = v;
             values.max_r_m = n;
@@ -99,7 +91,7 @@ addEventListener('message', ({ data }) => {
       }
       const No: string = caseNo.replace("Case", "");
       reac[No] = target;
-      max_value[No] = Math.abs(max_d);
+      max_value[No] = Math.max(Math.abs(values.max_d), Math.abs(values.min_d));
       value_range[No] = values;
     }
   } catch (e) {

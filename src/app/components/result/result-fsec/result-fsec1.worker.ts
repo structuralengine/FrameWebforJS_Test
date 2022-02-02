@@ -162,13 +162,6 @@ addEventListener('message', ({ data }) => {
           target.push(result);
           counter++;
 
-          max_value.fx = Math.max(Math.abs(fxi), Math.abs(fxj), max_value.fx);
-          max_value.fy = Math.max(Math.abs(fyi), Math.abs(fyj), max_value.fy);
-          max_value.fz = Math.max(Math.abs(fzi), Math.abs(fzj), max_value.fz);
-          max_value.mx = Math.max(Math.abs(mxi), Math.abs(mxj), max_value.mx);
-          max_value.my = Math.max(Math.abs(myi), Math.abs(myj), max_value.my);
-          max_value.mz = Math.max(Math.abs(mzi), Math.abs(mzj), max_value.mz);
-
           // 断面力の最大最小とその部材番号を調べる
           // fx //
           value_range.x.max_d = Math.max(fxi, fxj, value_range.x.max_d);
@@ -201,6 +194,12 @@ addEventListener('message', ({ data }) => {
           if (value_range.z.max_r === mzi || value_range.z.max_r === mzj) value_range.z.max_r_m = m;
           if (value_range.z.min_r === mzi || value_range.z.min_r === mzj) value_range.z.min_r_m = m;
         }
+        max_value.fx = Math.max(Math.abs(value_range.x.max_d), Math.abs(value_range.x.min_d));
+        max_value.fy = Math.max(Math.abs(value_range.y.max_d), Math.abs(value_range.y.min_d));
+        max_value.fz = Math.max(Math.abs(value_range.z.max_d), Math.abs(value_range.z.min_d));
+        max_value.mx = Math.max(Math.abs(value_range.x.max_r), Math.abs(value_range.x.min_r));
+        max_value.my = Math.max(Math.abs(value_range.y.max_r), Math.abs(value_range.y.min_r));
+        max_value.mz = Math.max(Math.abs(value_range.z.max_r), Math.abs(value_range.z.min_r));
       }
       const key = caseNo.replace('Case', '');
       fsec[key] = target;
