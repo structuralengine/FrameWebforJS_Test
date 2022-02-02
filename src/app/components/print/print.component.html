@@ -147,14 +147,16 @@
           id="printButton"
           type="button"
           name="printButton"
-          value="印刷する"
+          value="{{'print.prt'| translate }}"
           (click)="onPrintPDF()"
         />
       </label>
 
       <div class="message">
-        <p *ngIf="printService.pageDisplay" translate>
-          想定枚数:{{ printService.pageCount }}枚程度
+        <p *ngIf="printService.pageDisplay">
+          {{'print.pages'| translate }}
+          {{ printService.pageCount }}
+          {{'print.about'| translate }}
         </p>
         <p *ngIf="printService.pageError" class="caution" translate>
           print.noDataFound
