@@ -14,7 +14,8 @@
         "displacement":"変位",
         "reaction":"支点反力",
         "memberSectionForce":"部材断面力",
-        "output":"出力"
+        "output":"出力",
+        "preparing":"印刷の準備中"
     },
     "menu": {
         "softName": "立体骨組構造解析ソフトver1.10.3",

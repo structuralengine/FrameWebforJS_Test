@@ -14,7 +14,8 @@
         "displacement":"Displacement",
         "reaction":"Reaction",
         "memberSectionForce":"MemberSectionForce",
-        "output":"Output"
+        "output":"Output",
+        "preparing":"Preparing for printing"
     },
     "menu": {
         "softName": "FrameWebForJS ver1.10.6",
