@@ -7,6 +7,7 @@ import { InputMembersService } from "src/app/components/input/input-members/inpu
 import { InputElementsService } from "src/app/components/input/input-elements/input-elements.service";
 import { PrintCustomFsecService } from "./print-custom-fsec.service";
 import { PrintCustomService } from "../print-custom.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-print-custom-fsec",
@@ -21,7 +22,7 @@ export class PrintCustomFsecComponent implements OnInit {
   private columnHeaders: any = [
     //{ title: "パネルID", dataType: "integer", dataIndx: "panelID",  sortable: false, width: 40 },
     {
-      title: "部材長",
+      title: this.translate.instant("print.custom.print-custom-fsec.distance"),
       align: "center",
       dataType: "float",
       format: "#.000",
@@ -32,7 +33,7 @@ export class PrintCustomFsecComponent implements OnInit {
       style: { background: "#dae6f0" },
     },
     {
-      title: "材料名称",
+      title: this.translate.instant("print.custom.print-custom-fsec.material_name"),
       align: "center",
       dataType: "string",
       dataIndx: "n",
@@ -42,7 +43,7 @@ export class PrintCustomFsecComponent implements OnInit {
       style: { background: "#dae6f0" },
     },
     {
-      title: "印刷対象",
+      title: this.translate.instant("print.custom.print-custom-fsec.target"),
       width: 100,
       dataIndx: "check",
       align: "center",
@@ -66,7 +67,8 @@ export class PrintCustomFsecComponent implements OnInit {
     private app: AppComponent,
     public printCustomFsecService: PrintCustomFsecService,
     public printCustomService: PrintCustomService,
-    public printService: PrintService
+    public printService: PrintService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {

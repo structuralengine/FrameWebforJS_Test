@@ -238,13 +238,12 @@ export class PrintService {
       this.pageOver = this.pageCount > this.printPossible ? true : false;
 
       // 概算ページ数が50いかない場合と，入力データ，画像データの時には，概算ページ数を非表示にする．
-      if (
-        this.pageCount > 50 &&
-        !(this.contentEditable1[0] == true || this.contentEditable1[10] == true)
-      ) {
-        this.pageDisplay = true;
-      } else {
-        this.pageDisplay = false;
+      if (!(this.contentEditable1[0] == true || this.contentEditable1[10] == true)) {
+        if(this.pageCount > 50 ){
+          this.pageDisplay = true;
+        } else {
+          this.pageDisplay = false;
+        }
       }
 
       // 印刷するボタンのactive/非active化

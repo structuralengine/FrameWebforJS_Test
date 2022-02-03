@@ -14,10 +14,11 @@
         "displacement":"変位",
         "reaction":"支点反力",
         "memberSectionForce":"部材断面力",
-        "output":"出力"
+        "output":"出力",
+        "preparing":"印刷の準備中"
     },
     "menu": {
-       "softName": "立体骨組構造解析ソフトver1.10.6",
+        "softName": "立体骨組構造解析ソフトver1.10.3",
         "newEntry":"新規作成",
         "openFile":"ファイルを開く",
         "saveFile":"ファイルを保存",
@@ -224,5 +225,69 @@
         "password":"パスワード",
         "login":"ログイン",
         "cancel":"キャンセル"
+    },
+    "print":{
+        "SelectPrintData":"印刷データを選択",
+        "inputData":"入力データ",
+        "displacement":"変位量",
+        "combine_displacement":"COMBINE 変位量",
+        "pickup_displacement":"PICKUP 変位量",
+        "reaction":"反力",
+        "combine_reaction":"COMBINE 反力",
+        "pickup_reaction":"PICKUP 反力",
+        "SectionForce":"断面力",
+        "combine_SectionForce":"COMBINE 断面力",
+        "pickup_SectionForce":"PICKUP 断面力",
+        "PrintScreen":"画面印刷",
+        "prt":"印刷する",
+        "pages":"想定枚数:",
+        "about":"枚程度",
+        "noDataFound":"印刷データが\n存在しません",
+        "about1000":"ページ枚数を1000枚\n程度に抑えて下さい",
+        "custom":{
+            "print-custom-disg":{
+                "max":"最大",
+                "min":"最小",
+                "x_movement":"x方向の移動量",
+                "y_movement":"y方向の移動量",
+                "z_movement":"z方向の移動量",
+                "x_rotationalAngle":"x軸回りの回転角",
+                "y_rotationalAngle":"y軸回りの回転角",
+                "z_rotationalAngle":"z軸回りの回転角"
+            },
+            "print-custom-fsec":{
+                "selectArea":"印刷範囲の選択",
+                "max":"最大",
+                "min":"最小",
+                "axialForce":"軸方向力",
+                "y_shear":" y軸方向のせん断力",
+                "z_shear":" z軸方向のせん断力",
+                "x_torsion":"ねじりモーメント",
+                "y_moment":"y軸回りのモーメント",
+                "z_moment":"z軸回りのモーメント",
+                "distance":"部材長",
+                "material_name":"材料名称",
+                "target":"印刷対象"
+            },
+            "print-custom-reac":{
+                "max":"最大",
+                "min":"最小",
+                "x_SupportReaction":"x方向の支点反力",
+                "y_SupportReaction":"y方向の支点反力",
+                "z_SupportReaction":"z方向の支点反力",
+                "x_RotationalReaction":"x軸回りの回転反力",
+                "y_RotationalReaction":"y軸回りの回転反力",
+                "z_RotationalReaction":"z軸回りの回転反力"
+            },
+            "print-custom-three":{
+                "selectTarget":"印刷対象を選択",
+                "axialForce":"軸方向力",
+                "y_shear":" y軸方向のせん断力",
+                "z_shear":" z軸方向のせん断力",
+                "x_torsion":"ねじりモーメント",
+                "y_moment":"y軸回りのモーメント",
+                "z_moment":"z軸回りのモーメント"
+            }
+        }
     }
 }
