@@ -235,7 +235,7 @@ addEventListener('message', ({ data }) => {
             // memberNoがないとき(着目点が最大)の分岐
             if (datas[row].m === '') {
               let m_no: string
-              for (let num2 = num - 1; num > 0; num--) {
+              for (let num2 = num - 1; num2 > 0; num2--) {
                 const row2 = num2.toString();
                 if (datas[row2].m !== '') {
                   m_no = datas[row2].m;
@@ -258,7 +258,7 @@ addEventListener('message', ({ data }) => {
             // memberNoがないとき(着目点が最小)の分岐
             if (datas[row].m === '') {
               let m_no: string
-              for (let num2 = num - 1; num > 0; num--) {
+              for (let num2 = num - 1; num2 > 0; num2--) {
                 const row2 = num2.toString();
                 if (datas[row2].m !== '') {
                   m_no = datas[row2].m;

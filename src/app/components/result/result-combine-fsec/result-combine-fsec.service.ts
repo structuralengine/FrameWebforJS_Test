@@ -118,7 +118,7 @@ export class ResultCombineFsecService {
       };
       // this.fsecCombine = this.worker1_test({ defList, combList, fsec, fsecKeys: this.fsecKeys});
       this.worker1.postMessage({ defList, combList, fsec, fsecKeys: this.fsecKeys});
-      this.worker1_test({ defList, combList, fsec, fsecKeys: this.fsecKeys});
+      // this.worker1_test({ defList, combList, fsec, fsecKeys: this.fsecKeys});
 
     } else {
       // Web workers are not supported in this environment.
@@ -131,6 +131,9 @@ export class ResultCombineFsecService {
 
 
   private worker1_test(data){
+
+      //return { fsecCombine, max_values, value_range };
+    
   }
 
 }
