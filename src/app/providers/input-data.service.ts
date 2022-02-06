@@ -14,6 +14,7 @@ import { InputPickupService } from "../components/input/input-pickup/input-picku
 
 import { SceneService } from "../components/three/scene.service";
 import { DataHelperModule } from "./data-helper.module";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable({
   providedIn: "root",
@@ -33,7 +34,8 @@ export class InputDataService {
     public node: InputNodesService,
     public notice: InputNoticePointsService,
     public pickup: InputPickupService,
-    private three: SceneService
+    private three: SceneService,
+    private translate: TranslateService
   ) {
     this.clear();
   }
@@ -293,16 +295,16 @@ export class InputDataService {
   private checkError(jsonData: object): string {
     // 存在しない節点を使っているかチェックする
     if (!("node" in jsonData)) {
-      return "node データがありません";
+      return this.translate.instant("providers.input-data.node_nodata");
     }
     const nodes: object = jsonData["node"];
     if (Object.keys(nodes).length <= 0) {
-      return "node データがありません";
+      return this.translate.instant("providers.input-data.node_nodata");
     }
 
     if (!("member" in jsonData)) {
       if (!("shell" in jsonData)) {
-        return "member データがありません";
+        return this.translate.instant("providers.input-data.member_nodata");
       }
     }
     const members: object = jsonData["member"];
@@ -316,7 +318,7 @@ export class InputDataService {
       shellKeys = Object.keys(shells);
     }
     if (memberKeys.length + shellKeys.length <= 0) {
-      return "member データがありません";
+      return this.translate.instant("providers.input-data.member_nodata");
     }
 
     // 部材で使われている 節点番号が存在するか調べる
@@ -349,12 +351,12 @@ export class InputDataService {
     jsonData["node"] = n;
 
     if (!("load" in jsonData)) {
-      return "load データがありません";
+      return this.translate.instant("providers.input-data.load_nodata");
     }
     const loads: object = jsonData["load"];
     const loadKeys = Object.keys(loads);
     if (loadKeys.length <= 0) {
-      return "load データがありません";
+      return this.translate.instant("providers.input-data.load_nodata");
     }
 
     // 荷重ケース毎にエラーチェック

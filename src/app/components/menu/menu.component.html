@@ -13,9 +13,7 @@
                             </span>
                         </label>
                         <button ngbDropdownItem (click)="save()"translate>menu.saveFile</button>
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()">
-                            上書き保存
-                        </button>
+                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()" translate>menu.overwrite</button>
                         <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()"translate>menu.outputFile</button>
 
                         <!-- テスト用テスト用
