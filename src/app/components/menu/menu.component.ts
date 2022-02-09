@@ -23,6 +23,7 @@ import { environment } from "src/environments/environment";
 import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-custom-fsec.service";
 import { LanguagesService } from "src/app/providers/languages.service";
 import { ElectronService } from 'ngx-electron';
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-menu",
@@ -48,7 +49,8 @@ export class MenuComponent implements OnInit {
     public auth: AngularFireAuth,
     public user: UserInfoService,
     public language: LanguagesService,
-    public electronService: ElectronService
+    public electronService: ElectronService,
+    private translate: TranslateService
   ) {
     this.fileName = "";
     this.three.fileName = "";
@@ -165,7 +167,7 @@ export class MenuComponent implements OnInit {
     this.auth.currentUser.then((user) => {
       if (user === null) {
         modalRef.close();
-        alert("ログインしてください");
+        alert(this.translate.instant("menu.P_login"));
         return;
       }
 
@@ -208,7 +210,7 @@ export class MenuComponent implements OnInit {
       .subscribe(
         (response) => {
           // 通信成功時の処理（成功コールバック）
-          console.log("通信成功!!");
+          console.log(this.translate.instant("menu.success"));
           try {
             if (response.includes("error")) {
               throw response;
@@ -254,10 +256,10 @@ export class MenuComponent implements OnInit {
           } finally {
             modalRef.close(); // モーダルダイアログを消す
             alert(
-              this.user.deduct_points +
-                "ポイント消費しました。本日の使用量は、" +
-                this.user.new_points +
-                "です."
+              this.user.deduct_points 
+              + this.translate.instant("menu.deduct_points") 
+              + this.user.new_points 
+              + this.translate.instant("menu.new_points")
             );
           }
         },

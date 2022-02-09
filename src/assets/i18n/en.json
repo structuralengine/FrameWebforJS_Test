@@ -22,9 +22,14 @@
         "newEntry":"Create a new file",
         "openFile":"Open file",
         "saveFile":"Save a file",
+        "overwrite":"overwrite save",
         "outputFile":"Pickup file output",
         "logout":"Logout",
-        "login":"Login"
+        "login":"Login",
+        "P_login":"Please login",
+        "success":"Communication success!!",
+        "deduct_points":"points consumed. Today's usage is",
+        "new_points":"points." 
     },
     "input": {
         "input-fix-node": {
@@ -224,7 +229,9 @@
         "email":"Email",
         "password":"Password",
         "login":"Login",
-        "cancel":"Cancel"
+        "cancel":"Cancel",
+        "mail_check":"Cannot check your email address.",
+        "fail":"The login attempt failed.\n"
     },
     "print":{
         "SelectPrintData":"Select print data",
@@ -288,6 +295,13 @@
                 "y_moment":"Y Momemt",
                 "z_moment":"Z Moment"
             }
+        }
+    },
+    "providers":{
+        "input-data":{
+            "node_nodata":"There is no node data",
+            "member_nodata":"There is no member data",
+            "load_nodata":"There is no load data"
         }
     }
 }
