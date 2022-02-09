@@ -75,7 +75,12 @@ export class ResultPickupDisgComponent implements OnInit {
     }
     this.dataset = new Array();
     for (const key of this.KEYS) {
-      this.dataset.push(this.data.getPickupDisgColumns(this.page, key));
+      const d = this.data.getPickupDisgColumns(this.page, key);
+      if(d==null){
+        this.dataset = new Array();
+        break;
+      }
+      this.dataset.push(d);
     }
     this.load_name = this.pickup.getPickUpName(currentPage);
 
