@@ -32,7 +32,7 @@ addEventListener('message', ({ data }) => {
             max_value.mx = Math.max(Math.abs(value.mx), max_value.mx);
             max_value.my = Math.max(Math.abs(value.my), max_value.my);
             max_value.mz = Math.max(Math.abs(value.mz), max_value.mz);
-          }  
+          }
         }
         continue;
       }
@@ -65,7 +65,7 @@ addEventListener('message', ({ data }) => {
           max_value.mx = Math.max(Math.abs(value.mx), max_value.mx);
           max_value.my = Math.max(Math.abs(value.my), max_value.my);
           max_value.mz = Math.max(Math.abs(value.mz), max_value.mz);
-        }  
+        }
       }
     }
     fsecPickup[pickNo] = tmp;
@@ -96,7 +96,7 @@ addEventListener('message', ({ data }) => {
       } else if (key.includes('mz')) {
         key2 = 'mz';
       }
-      let targetValue = (key.includes('max')) ? -65535 : 65535;
+      let targetValue = (key.includes('max')) ? Number.MIN_VALUE: Number.MAX_VALUE;
       let targetValue_m = '0';
       if (key.includes('max')) {  // 最大値を探す
         //for (const row of Object.keys(datas)) {
@@ -145,7 +145,7 @@ addEventListener('message', ({ data }) => {
           }
         }
       }
-      if (Math.abs(targetValue) === 65535) {
+      if (Math.abs(targetValue) === Number.MAX_VALUE) {
         continue;
       }
       values[key] = {max: targetValue, max_m: targetValue_m};
@@ -153,29 +153,52 @@ addEventListener('message', ({ data }) => {
     if (Object.keys(values).length === 0) {
       continue;
     }
+
     const values2 = {
       x: {
-        max_d: values['fx_max'].max, max_d_m: values['fx_max'].max_m,
-        min_d: values['fx_min'].max, min_d_m: values['fx_min'].max_m,
-        max_r: values['mx_max'].max, max_r_m: values['mx_max'].max_m,
-        min_r: values['mx_min'].max, min_r_m: values['mx_min'].max_m,
-      }, 
+        max_d: 0, max_d_m: 0,
+        min_d: 0, min_d_m: 0,
+        max_r: 0, max_r_m: 0,
+        min_r: 0, min_r_m: 0,
+      },
       y: {
-        max_d: values['fy_max'].max, max_d_m: values['fy_max'].max_m,
-        min_d: values['fy_min'].max, min_d_m: values['fy_min'].max_m,
-        max_r: values['my_max'].max, max_r_m: values['my_max'].max_m,
-        min_r: values['my_min'].max, min_r_m: values['my_min'].max_m,
-      }, 
+        max_d: 0, max_d_m: 0,
+        min_d: 0, min_d_m: 0,
+        max_r: 0, max_r_m: 0,
+        min_r: 0, min_r_m: 0,
+      },
       z: {
-        max_d: values['fz_max'].max, max_d_m: values['fz_max'].max_m,
-        min_d: values['fz_min'].max, min_d_m: values['fz_min'].max_m,
-        max_r: values['mz_max'].max, max_r_m: values['mz_max'].max_m,
-        min_r: values['mz_min'].max, min_r_m: values['mz_min'].max_m,
+        max_d: 0, max_d_m: 0,
+        min_d: 0, min_d_m: 0,
+        max_r: 0, max_r_m: 0,
+        min_r: 0, min_r_m: 0,
       }
     }
+    for(const key of Object.keys(values2)){
+      let kf = 'f' + key + '_max';
+      if(kf in values){
+        values2[key].max_d = values[kf].max;
+        values2[key].max_d_m = values[kf].max_m
+      }
+      kf = 'f' + key + '_min';
+      if(kf in values){
+        values2[key].min_d = values[kf].max;
+        values2[key].min_d_m = values[kf].max_m
+      }
+      let km = 'm' + key + '_max';
+      if(km in values){
+        values2[key].max_r = values[km].max;
+        values2[key].max_r_m = values[km].max_m
+      }
+      km = 'm' + key + '_min';
+      if(km in values){
+        values2[key].min_r = values[km].max;
+        values2[key].min_r_m = values[km].max_m
+      }
+    }
+
     value_range[combNo] = values2;
   }
-
 
   postMessage({ fsecPickup, max_values, value_range });
 });

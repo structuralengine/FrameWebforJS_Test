@@ -39,8 +39,8 @@ addEventListener('message', ({ data }) => {
       }
       const json: {} = caseData["disg"];
 
-      let values = {max_d: -65535, max_r: Math.PI * -1000,
-                    min_d:  65535, min_r: Math.PI *  1000,
+      let values = {max_d: Number.MIN_VALUE, max_r: Math.PI * -1000,
+                    min_d: Number.MAX_VALUE, min_r: Math.PI *  1000,
                     max_d_m: '0' , max_r_m: '0' ,
                     min_d_m: '0' , min_r_m: '0' ,}
 

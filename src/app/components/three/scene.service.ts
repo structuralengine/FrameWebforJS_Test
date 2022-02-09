@@ -423,12 +423,16 @@ export class SceneService {
         this.max_m !== undefined && this.min_m !== undefined &&
         this.max2 !== undefined && this.min2 !== undefined &&
         this.max2_m !== undefined && this.min2_m !== undefined) {
-      this.getMaxMin( this.max, this.min, this.max_m, this.min_m, 
+      this.getMaxMin( this.max, this.min, this.max_m, this.min_m,
                       this.max2, this.min2, this.max2_m, this.min2_m);
     }
   }
 
   public getMaxMinValue(value_range, mode, radio) {
+    if(value_range===undefined){
+      this.maxMinClear();
+      return;
+    }
     this.max = (value_range.max_d != undefined) ? value_range.max_d : 0;
     this.min = (value_range.min_d != undefined) ? value_range.min_d : 0;
     this.max_m = (value_range.max_d_m != undefined) ? value_range.max_d_m : '0';
@@ -438,7 +442,7 @@ export class SceneService {
     this.max2_m = (value_range.max_r_m != undefined) ? value_range.max_r_m : '0';
     this.min2_m = (value_range.min_r_m != undefined) ? value_range.min_r_m : '0';
     this.radio = radio;
-    this.getMaxMin( this.max, this.min, this.max_m, this.min_m, 
+    this.getMaxMin( this.max, this.min, this.max_m, this.min_m,
                     this.max2, this.min2, this.max2_m, this.min2_m);
   }
 
@@ -450,25 +454,22 @@ export class SceneService {
     ) {
       if (this.radio.includes("Force")) {
         this.Three_unit = "kN";
-        this.max_Three = Number(max).toFixed(2) 
-                       + this.Three_unit
-                       + '(' + max_m.toString() + '部材)';
-        this.min_Three = Number(min).toFixed(2) 
+        this.max_Three = Number(max).toFixed(2)
+                        + this.Three_unit
+                        + '(' + max_m.toString() + '部材)';
+        this.min_Three = Number(min).toFixed(2)
                       + this.Three_unit
                       + '(' + min_m.toString() + '部材)';
       } else if (this.radio.includes("oment")) {
         this.Three_unit = "kN・m";
-        this.max_Three = Number(max2).toFixed(2) 
-                       + this.Three_unit
-                       + '(' + max2_m.toString() + '部材)';
-        this.min_Three = Number(min2).toFixed(2) 
-                       + this.Three_unit
-                       + '(' + min2_m.toString() + '部材)';
+        this.max_Three = Number(max2).toFixed(2)
+                        + this.Three_unit
+                        + '(' + max2_m.toString() + '部材)';
+        this.min_Three = Number(min2).toFixed(2)
+                        + this.Three_unit
+                        + '(' + min2_m.toString() + '部材)';
       }
-      // this.max_Three = Number(this.max).toFixed(2);
-      // this.min_Three = Number(this.min).toFixed(2);
-      // this.max_Three_m = (max_m !== undefined) ? max_m.toString() + '部材' : '';
-      // this.min_Three_m = (min_m !== undefined) ? min_m.toString() + '部材' : '';
+
       document.getElementById("max-min").style.display = "block";
     } else if (
       this.ModeName === "disg" ||
@@ -476,22 +477,18 @@ export class SceneService {
       this.ModeName === "pik_disg"
     ) {
       this.Three_unit = "mm";
-      this.max_Three = Number(max).toFixed(4) 
-                     + this.Three_unit
-                     + '(' + max_m.toString() + '節点), '
-                     + Number(max2).toFixed(4) 
-                     + '‰rad'
-                     + '(' + max2_m.toString() + '節点)';
-      this.min_Three = Number(min).toFixed(4) 
+      this.max_Three = Number(max).toFixed(4)
+                      + this.Three_unit
+                      + '(' + max_m.toString() + '節点), '
+                      + Number(max2).toFixed(4)
+                      + '‰rad'
+                      + '(' + max2_m.toString() + '節点)';
+      this.min_Three = Number(min).toFixed(4)
                     + this.Three_unit
                     + '(' + min_m.toString() + '節点), '
-                    + Number(min2).toFixed(4) 
+                    + Number(min2).toFixed(4)
                     + '‰rad'
                     + '(' + min2_m.toString() + '節点)';
-      // this.max_Three = Number(max).toFixed(4);
-      // this.min_Three = Number(min).toFixed(4);
-      // this.max_Three_m = (max_m !== undefined) ? max_m.toString() + '部材' : '';
-      // this.min_Three_m = (min_m !== undefined) ? min_m.toString() + '部材' : '';
 
       document.getElementById("max-min").style.display = "block";
     } else if (
@@ -500,26 +497,20 @@ export class SceneService {
       this.ModeName === "pik_reac"
     ) {
       this.Three_unit = "kN";
-      this.max_Three = Number(max).toFixed(2) 
-                     + this.Three_unit
-                     + '(' + max_m.toString() + '節点), '
-                     + Number(max2).toFixed(2) 
-                     + 'kN・m'
-                     + '(' + max2_m.toString() + '節点)';
-      this.min_Three = Number(min).toFixed(2) 
+      this.max_Three = Number(max).toFixed(2)
+                      + this.Three_unit
+                      + '(' + max_m.toString() + '節点), '
+                      + Number(max2).toFixed(2)
+                      + 'kN・m'
+                      + '(' + max2_m.toString() + '節点)';
+      this.min_Three = Number(min).toFixed(2)
                     + this.Three_unit
                     + '(' + min_m.toString() + '節点), '
-                    + Number(min2).toFixed(2) 
+                    + Number(min2).toFixed(2)
                     + 'kN・m'
                     + '(' + min2_m.toString() + '節点)';
-      // this.max_Three = Number(max).toFixed(4);
-      // this.min_Three = Number(min).toFixed(4);
-      // this.max_Three_m = (max_m !== undefined) ? max_m.toString() + '節点' : '';
-      // this.min_Three_m = (min_m !== undefined) ? min_m.toString() + '節点' : '';
       document.getElementById("max-min").style.display = "block";
     }
-    // this.maxmin['maxminFlag'] = this.maxminFlag;
-    // this.maxmin['column'] = [];
   }
 
   public maxMinClear() {

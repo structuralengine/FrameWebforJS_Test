@@ -52,17 +52,22 @@ addEventListener('message', ({ data }) => {
   for (const combNo of Object.keys(disgPickup)) {
     const caseData = disgPickup[combNo];
     const key_list = Object.keys(caseData);
-    const values = {};
+    const values_d = {};
+    const values_r = {};
     // dx～rzの最大最小をそれぞれ探す
     for (const key of key_list) {
       const datas = caseData[key];
       let key2: string;
+      let is_d = false;
       if (key.includes('dx')) {
         key2 = 'dx';
+        is_d = true;
       } else if (key.includes('dy')) {
         key2 = 'dy';
+        is_d = true;
       } else if (key.includes('dz')) {
         key2 = 'dz';
+        is_d = true;
       } else if (key.includes('rx')) {
         key2 = 'rx';
       } else if (key.includes('ry')) {
@@ -70,7 +75,7 @@ addEventListener('message', ({ data }) => {
       } else if (key.includes('rz')) {
         key2 = 'rz';
       }
-      let targetValue = (key.includes('max')) ? -65535 : 65535;
+      let targetValue = (key.includes('max')) ? Number.MIN_VALUE : Number.MAX_VALUE;
       let targetValue_m = '0';
       if (key.includes('max')) {
         for (const row of Object.keys(datas)) {
@@ -89,54 +94,45 @@ addEventListener('message', ({ data }) => {
           }
         }
       }
-      if (Math.abs(targetValue) === 65535) {
+      if (Math.abs(targetValue) === Number.MAX_VALUE) {
         continue;
       }
-      values[key] = {max: targetValue, max_m: targetValue_m};
+      if(is_d){
+        values_d[key] = {max: targetValue, max_m: targetValue_m};
+      } else{
+        values_r[key] = {max: targetValue, max_m: targetValue_m};
+      }
     }
-    if (Object.keys(values).length === 0) {
+    if (Object.keys(values_d).length === 0) {
       continue;
     }
     const values2 = {
-      max_d : Math.max( values['dx_max'].max, values['dy_max'].max, values['dz_max'].max ),
-      min_d : Math.min( values['dx_min'].max, values['dy_min'].max, values['dz_min'].max ),
-      max_r : Math.max( values['rx_max'].max, values['ry_max'].max, values['rz_max'].max ),
-      min_r : Math.min( values['rx_min'].max, values['ry_min'].max, values['rz_min'].max ),
+      max_d : Number.MIN_VALUE, max_d_m: 0,
+      min_d : Number.MAX_VALUE, min_d_m: 0,
+      max_r : Number.MIN_VALUE, max_r_m: 0,
+      min_r : Number.MAX_VALUE, min_r_m: 0
     };
-    // dの最大値の部材番号を探す
-    if (values2.max_d === values['dx_max'].max) {
-      values2['max_d_m'] = values['dx_max'].max_m;
-    } else if (values2.max_d === values['dy_max'].max) {
-      values2['max_d_m'] = values['dy_max'].max_m;
-    } else if (values2.max_d === values['dz_max'].max) {
-      values2['max_d_m'] = values['dz_max'].max_m;
-    } 
-    // dの最小値の部材番号を探す
-    if (values2.max_d === values['dx_max'].max) {
-      values2['min_d_m'] = values['dx_max'].max_m;
-    } else if (values2.max_d === values['dy_max'].max) {
-      values2['min_d_m'] = values['dy_max'].max_m;
-    } else if (values2.max_d === values['dz_max'].max) {
-      values2['min_d_m'] = values['dz_max'].max_m;
-    } 
-    // rの最大値の部材番号を探す
-    if (values2.max_r === values['rx_max'].max) {
-      values2['max_r_m'] = values['rx_max'].max_m;
-    } else if (values2.max_r === values['ry_max'].max) {
-      values2['max_r_m'] = values['ry_max'].max_m;
-    } else if (values2.max_r === values['rz_max'].max) {
-      values2['max_r_m'] = values['rz_max'].max_m;
+    for(const key of Object.keys(values_d)){
+      const value = values_d[key];
+      if(value.max > values2.max_d){
+        values2.max_d = value.max;
+        values2.max_d_m = value.max_m;
+      } else if(value.max < values2.min_d){
+        values2.min_d = value.max;
+        values2.min_d_m = value.max_m;
+      }
     }
-    // rの最小値の部材番号を探す
-    if (values2.max_r === values['rx_max'].max) {
-      values2['min_r_m'] = values['rx_max'].max_m;
-    } else if (values2.max_r === values['ry_max'].max) {
-      values2['min_r_m'] = values['ry_max'].max_m;
-    } else if (values2.max_r === values['rz_max'].max) {
-      values2['min_r_m'] = values['rz_max'].max_m;
+    for(const key of Object.keys(values_r)){
+      const value = values_r[key];
+      if(value.max > values2.max_r){
+        values2.max_r = value.max;
+        values2.max_r_m = value.max_m;
+      } else if(value.max < values2.min_r){
+        values2.min_r = value.max;
+        values2.min_r_m = value.max_m;
+      }
     }
     value_range[combNo] = values2;
   }
-
   postMessage({ disgPickup, value_range });
 });

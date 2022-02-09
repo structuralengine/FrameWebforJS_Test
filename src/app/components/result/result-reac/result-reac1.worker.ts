@@ -40,8 +40,8 @@ addEventListener('message', ({ data }) => {
         continue;
       }
 
-      let values = {max_d: -65535, max_r: -65535,
-                    min_d:  65535, min_r:  65535,
+      let values = {max_d: Number.MIN_VALUE, max_r: Number.MIN_VALUE,
+                    min_d:  Number.MAX_VALUE, min_r:  Number.MAX_VALUE,
                     max_d_m: '0' , max_r_m: '0' ,
                     min_d_m: '0' , min_r_m: '0' , }
 
