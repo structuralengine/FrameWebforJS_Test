@@ -8,6 +8,7 @@ import { AppComponent } from "src/app/app.component";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ThreeLoadService } from "../../three/geometry/three-load/three-load.service";
 import { SceneService } from "../../three/scene.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-load",
@@ -22,14 +23,17 @@ export class InputLoadComponent implements OnInit {
 
   public LL_pitch: number;
 
+  public options: pq.gridT.options;
+  public width: number;
+
   private dataset = [];
   private columnHeaders3D = [
     {
-      title: "要素荷重",
+      title: this.translate.instant("input.input-load.memberLoad"),
       align: "center",
       colModel: [
         {
-          title: "部材No",
+          title: this.translate.instant("input.input-load.memberNo"),
           align: "center",
           colModel: [
             {
@@ -51,7 +55,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "方向",
+          title: this.translate.instant("input.input-load.direction"),
           align: "center",
           colModel: [
             {
@@ -64,7 +68,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "マーク",
+          title: this.translate.instant("input.input-load.mark"),
           align: "center",
           colModel: [
             {
@@ -145,11 +149,11 @@ export class InputLoadComponent implements OnInit {
       ],
     },
     {
-      title: "節点荷重",
+      title: this.translate.instant("input.input-load.nodeLoad"),
       align: "center",
       colModel: [
         {
-          title: "節点",
+          title: this.translate.instant("input.input-load.node"),
           align: "center",
           colModel: [
             {
@@ -251,11 +255,11 @@ export class InputLoadComponent implements OnInit {
   ];
   private columnHeaders2D = [
     {
-      title: "要素荷重",
+      title: this.translate.instant("input.input-load.memberLoad"),
       align: "center",
       colModel: [
         {
-          title: "部材No",
+          title: this.translate.instant("input.input-load.memberNo"),
           colModel: [
             {
               title: "1",
@@ -276,7 +280,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "方向",
+          title: this.translate.instant("input.input-load.direction"),
           align: "center",
           colModel: [
             {
@@ -289,7 +293,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "マーク",
+          title: this.translate.instant("input.input-load.mark"),
           align: "center",
           colModel: [
             {
@@ -370,12 +374,12 @@ export class InputLoadComponent implements OnInit {
       ],
     },
     {
-      title: "節点荷重",
+      title: this.translate.instant("input.input-load.nodeLoad"),
       align: "center",
       dataIndx: "ddd",
       colModel: [
         {
-          title: "節点",
+          title: this.translate.instant("input.input-load.node"),
           align: "center",
           colModel: [
             {
@@ -436,11 +440,11 @@ export class InputLoadComponent implements OnInit {
   // 3次元の連行荷重
   private columnHeaders3D_LL = [
     {
-      title: "要素荷重",
+      title: this.translate.instant("input.input-load.memberLoad"),
       align: "center",
       colModel: [
         {
-          title: "部材No",
+          title: this.translate.instant("input.input-load.memberNo"),
           align: "center",
           colModel: [
             {
@@ -462,7 +466,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "方向",
+          title: this.translate.instant("input.input-load.direction"),
           align: "center",
           colModel: [
             {
@@ -475,7 +479,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "マーク",
+          title: this.translate.instant("input.input-load.mark"),
           align: "center",
           colModel: [
             {
@@ -559,11 +563,11 @@ export class InputLoadComponent implements OnInit {
   // 2次元の連行荷重
   private columnHeaders2D_LL = [
     {
-      title: "要素荷重",
+      title: this.translate.instant("input.input-load.memberLoad"),
       align: "center",
       colModel: [
         {
-          title: "部材No",
+          title: this.translate.instant("input.input-load.memberNo"),
           colModel: [
             {
               title: "1",
@@ -584,7 +588,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "方向",
+          title: this.translate.instant("input.input-load.direction"),
           align: "center",
           colModel: [
             {
@@ -597,7 +601,7 @@ export class InputLoadComponent implements OnInit {
           ],
         },
         {
-          title: "マーク",
+          title: this.translate.instant("input.input-load.mark"),
           align: "center",
           colModel: [
             {
@@ -688,8 +692,89 @@ export class InputLoadComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private threeLoad: ThreeLoadService,
-    private scene: SceneService
-  ) {}
+    private scene: SceneService,
+    private translate: TranslateService
+  ) {
+    // グリッドの設定
+    this.options = {
+      showTop: false,
+      reactive: true,
+      sortable: false,
+      locale: "jp",
+      height: this.tableHeight(),
+      numberCell: {
+        show: false, // 行番号
+      },
+      colModel: this.columnHeaders3D,
+      dataModel: {
+        data: this.dataset,
+      },
+      beforeTableView: (evt, ui) => {
+        const finalV = ui.finalV;
+        const dataV = this.dataset.length;
+        if (ui.initV == null) {
+          return;
+        }
+        if (finalV >= dataV - 1) {
+          this.loadPage(this.page, dataV + this.ROWS_COUNT);
+          this.grid.refreshDataAndView();
+        }
+      },
+      selectEnd: (evt, ui) => {
+        const range = ui.selection.iCells.ranges;
+        const row = range[0].r1 + 1;
+        const column = range[0].c1;
+        this.three.selectChange("load_values", row, column);
+      },
+      change: (evt, ui) => {
+        for (const range of ui.updateList) {
+          // L1行に 数字ではない入力がされていたら削除する
+          const L1 = this.helper.toNumber(range.rowData["L1"]);
+          if (L1 === null) {
+            range.rowData["L1"] = null;
+          }
+          const direction = range.rowData["direction"];
+          if (direction !== undefined && direction !== null) {
+            range.rowData["direction"] = direction.trim().toLowerCase();
+          }
+          const row = range.rowIndx + 1;
+          this.three.changeData("load_values", row);
+        }
+        for (const target of ui.addList) {
+          const no: number = target.rowIndx;
+          const newRow = target.newRow;
+          const load = this.data.getLoadColumns(this.page, no + 1);
+          // 不適切をはじく処理
+          const L1 = this.helper.toNumber(newRow["L1"]);
+          if (L1 === null) {
+            newRow["L1"] = null;
+          }
+          const direction = newRow["direction"];
+          if (direction !== undefined && direction !== null) {
+            newRow["direction"] = direction.trim().toLowerCase();
+          }
+          // this.datasetに代入
+          load['m1'] = (newRow.m1 != undefined) ? newRow.m1 : '';
+          load['m2'] = (newRow.m2 != undefined) ? newRow.m2 : '';
+          load['direction'] = (newRow.direction != "") ? newRow.direction : '';
+          load['mark'] = (newRow.mark != undefined) ? newRow.mark : '';
+          load['L1'] = (newRow.L1 != undefined) ? newRow.L1 : '';
+          load['L2'] = (newRow.L2 != undefined) ? newRow.L2 : '';
+          load['P1'] = (newRow.P1 != undefined) ? newRow.P1 : '';
+          load['P2'] = (newRow.P2 != undefined) ? newRow.P2 : '';
+          load['n']  = (newRow.n  != undefined) ? newRow.n  : '';
+          load['tx'] = (newRow.tx != undefined) ? newRow.tx : '';
+          load['ty'] = (newRow.ty != undefined) ? newRow.ty : '';
+          load['tz'] = (newRow.tz != undefined) ? newRow.tz : '';
+          load['rx'] = (newRow.rx != undefined) ? newRow.rx : '';
+          load['ry'] = (newRow.ry != undefined) ? newRow.ry : '';
+          load['rz'] = (newRow.rz != undefined) ? newRow.rz : '';
+          this.dataset.splice(no, 1, load);
+          this.three.changeData("load_values", no + 1);
+        }
+      },
+    };
+  }
 
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
@@ -698,6 +783,7 @@ export class InputLoadComponent implements OnInit {
     this.checkLL(load_name.symbol);
 
     this.loadPage(1, this.ROWS_COUNT);
+    this.sheetChange(this.helper.dimension, this.LL_flg);
 
     this.three.ChangeMode("load_values");
     this.three.ChangePage(1);
@@ -712,6 +798,7 @@ export class InputLoadComponent implements OnInit {
 
     this.page = eventData;
     this.loadPage(eventData, this.ROWS_COUNT);
+    this.sheetChange(this.helper.dimension, this.LL_flg);
     this.grid.refreshDataAndView();
     this.three.ChangePage(eventData);
   }
@@ -742,108 +829,6 @@ export class InputLoadComponent implements OnInit {
     return Math.round(containerHeight / 30);
   }
 
-  // グリッドの設定
-  options1: pq.gridT.options = {
-    showTop: false,
-    reactive: true,
-    sortable: false,
-    locale: "jp",
-    height: this.tableHeight(),
-    numberCell: {
-      show: false, // 行番号
-    },
-    colModel:
-      this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
-    dataModel: {
-      data: this.dataset,
-    },
-    beforeTableView: (evt, ui) => {
-      const finalV = ui.finalV;
-      const dataV = this.dataset.length;
-      if (ui.initV == null) {
-        return;
-      }
-      if (finalV >= dataV - 1) {
-        this.loadPage(this.page, dataV + this.ROWS_COUNT);
-        this.grid.refreshDataAndView();
-      }
-    },
-    selectEnd: (evt, ui) => {
-      const range = ui.selection.iCells.ranges;
-      const row = range[0].r1 + 1;
-      const column = range[0].c1;
-      this.three.selectChange("load_values", row, column);
-    },
-    change: (evt, ui) => {
-      for (const range of ui.updateList) {
-        // L1行に 数字ではない入力がされていたら削除する
-        const L1 = this.helper.toNumber(range.rowData["L1"]);
-        if (L1 === null) {
-          range.rowData["L1"] = null;
-        }
-        const direction = range.rowData["direction"];
-        if (direction !== undefined && direction !== null) {
-          range.rowData["direction"] = direction.trim().toLowerCase();
-        }
-        const row = range.rowIndx + 1;
-        this.three.changeData("load_values", row);
-      }
-    },
-  };
-  width1 = this.helper.dimension === 3 ? 1020 : 810;
-
-  // グリッドの設定
-  options2: pq.gridT.options = {
-    showTop: false,
-    reactive: true,
-    sortable: false,
-    locale: "jp",
-    height: this.tableHeight(),
-    numberCell: {
-      show: false, // 行番号
-    },
-    colModel:
-      this.helper.dimension === 3
-        ? this.columnHeaders3D_LL
-        : this.columnHeaders2D_LL,
-    dataModel: {
-      data: this.dataset,
-    },
-    beforeTableView: (evt, ui) => {
-      const finalV = ui.finalV;
-      const dataV = this.dataset.length;
-      if (ui.initV == null) {
-        return;
-      }
-      if (finalV >= dataV - 1) {
-        this.loadPage(this.page, dataV + this.ROWS_COUNT);
-        this.grid.refreshDataAndView();
-      }
-    },
-    selectEnd: (evt, ui) => {
-      const range = ui.selection.iCells.ranges;
-      const row = range[0].r1 + 1;
-      const column = range[0].c1;
-      this.three.selectChange("load_values", row, column);
-    },
-    change: (evt, ui) => {
-      for (const range of ui.updateList) {
-        // L1行に 数字ではない入力がされていたら削除する
-        const L1 = this.helper.toNumber(range.rowData["L1"]);
-        if (L1 === null) {
-          range.rowData["L1"] = null;
-        }
-        const direction = range.rowData["direction"];
-        if (direction !== undefined && direction !== null) {
-          range.rowData["direction"] = direction.trim().toLowerCase();
-        }
-        const row = range.rowIndx + 1;
-        this.three.changeData("load_values", row);
-      }
-    },
-  };
-  width2 = this.helper.dimension === 3 ? 550 : 445;
-
   // 連行荷重のピッチを変えた場合
   public change_pich() {
 
@@ -859,10 +844,36 @@ export class InputLoadComponent implements OnInit {
   }
 
   private checkLL(symbol: string): void{
+    if (symbol === undefined) {
+      this.LL_flg = false;
+      return
+    }
     if (symbol.includes("LL")) {
       this.LL_flg = true;
     } else {
       this.LL_flg = false;
     }
   }
+
+  private sheetChange(dim: number, LL: boolean) {
+    if (dim === 3) {
+      if (LL) {
+        this.options.colModel = this.columnHeaders3D_LL;
+        this.width = 550;
+      } else {
+        this.options.colModel = this.columnHeaders3D;
+        this.width = 1020;
+      }
+    } else {
+      if (LL) {
+        this.options.colModel = this.columnHeaders2D_LL;
+        this.width = 550;
+      } else {
+        this.options.colModel = this.columnHeaders2D;
+        this.width = 810;
+      }
+    }
+
+  }
+
 }

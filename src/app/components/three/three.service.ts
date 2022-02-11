@@ -31,6 +31,11 @@ export class ThreeService {
 
   public selectedNumber: number;
 
+  public canvasWidth: string;
+  public canvasHeight: string;
+
+  public fileName: string;
+
   constructor(
     public scene: SceneService,
     private node: ThreeNodesService,
@@ -191,6 +196,8 @@ export class ThreeService {
     this.fsec.ClearData();
 
     // 再描画
+    this.scene.maxMinClear(); //max,min表示消す
+    this.scene.setNewHelper(100);
     this.scene.render();
   }
 
@@ -235,34 +242,77 @@ export class ThreeService {
 
       case "disg":
         this.disg.changeData(currentPage);
-        break;
-
       case "comb_disg":
-        break;
       case "pik_disg":
+        this.getMaxMinValue(
+          this.disg.value_range,
+          this.mode,
+          currentPage,
+          'momentY'
+        );
         break;
 
       case "reac":
         this.reac.changeData(currentPage);
-        break;
-
       case "comb_reac":
-        break;
       case "pik_reac":
+        this.getMaxMinValue(
+          this.reac.value_range,
+          this.mode,
+          currentPage,
+          'momentY'
+        );
         break;
 
       case "fsec":
       case "comb_fsec":
       case "pik_fsec":
         this.fsec.changeData(currentPage, this.mode);
+        let key: string;
+        if (this.secForce.currentRadio === 'axialForce' ||
+            this.secForce.currentRadio === 'torsionalMorment') {
+          key = 'x';
+        } else if ( this.secForce.currentRadio === 'shearForceY' ||
+                    this.secForce.currentRadio === 'momentY') {
+          key = 'y';
+        } else if ( this.secForce.currentRadio === 'shearForceZ' ||
+                    this.secForce.currentRadio === 'momentZ') {
+          key = 'z';
+        }
+        this.getMaxMinValue(
+          this.secForce.value_ranges,
+          this.mode,
+          currentPage,
+          this.secForce.currentRadio,
+          key
+        );
         break;
     }
     this.currentIndex = currentPage;
 
-    // 再描画
+    this.scene.getStatus(this.mode, this.currentIndex); // 再描画
     this.scene.render();
   }
 
+  private getMaxMinValue(value_range, mode, currentPage, key1, key2=null): void {
+    if(!(mode in value_range)){
+      return
+    }
+    const a = value_range[mode];
+    if(!(currentPage in a)){
+      return
+    }
+    const b = a[currentPage];
+    const c = key2==null ? b : b[key2];
+    if(c === undefined){
+      return
+    }
+    this.scene.getMaxMinValue(
+      c,
+      mode,
+      key1
+    );
+  }
   //////////////////////////////////////////////////////
   // 編集モードの変更通知を処理する
   public ChangeMode(ModeName: string): void {
@@ -445,7 +495,39 @@ export class ThreeService {
     }
 
     if (
-      ModeName === "fsec" ||
+      ModeName === "fsec"
+    ) {
+      this.node.visibleChange(true, false, false);
+      this.member.visibleChange(true, true, false);
+      this.fixNode.visibleChange(false);
+      this.fixMember.visibleChange(false);
+      this.joint.visibleChange(false);
+      this.panel.visibleChange(false);
+      this.load.visibleChange(false, false);
+      this.disg.visibleChange(false);
+      this.reac.visibleChange(false);
+      this.fsec.visibleChange(ModeName);
+      let key: string;
+      if ( this.secForce.currentRadio === 'axialForce' ||
+            this.secForce.currentRadio === 'torsionalMorment') {
+        key = 'x';
+      } else if ( this.secForce.currentRadio === 'shearForceY' ||
+                  this.secForce.currentRadio === 'momentY') {
+        key = 'y';
+      } else if ( this.secForce.currentRadio === 'shearForceZ' ||
+                  this.secForce.currentRadio === 'momentZ') {
+        key = 'z';
+      }
+      this.getMaxMinValue(
+        this.secForce.value_ranges,
+        ModeName,
+        '1',
+        this.secForce.currentRadio,
+        key
+      );
+    }
+
+    if (
       ModeName === "comb_fsec" ||
       ModeName === "pik_fsec"
     ) {
@@ -459,11 +541,31 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange(ModeName);
+      let key: string;
+      if ( this.secForce.currentRadio === 'axialForce' ||
+            this.secForce.currentRadio === 'torsionalMorment') {
+        key = 'x';
+      } else if ( this.secForce.currentRadio === 'shearForceY' ||
+                  this.secForce.currentRadio === 'momentY') {
+        key = 'y';
+      } else if ( this.secForce.currentRadio === 'shearForceZ' ||
+                  this.secForce.currentRadio === 'momentZ') {
+        key = 'z';
+      }
+      this.getMaxMinValue(
+        this.secForce.value_ranges,
+        ModeName,
+        '1',
+        this.secForce.currentRadio,
+        key
+      );
     }
 
     this.mode = ModeName;
     this.currentIndex = -1;
 
+    document.getElementById("max-min").style.display = "none";
+    this.scene.getStatus(this.mode, this.currentIndex); // 再描画
     // 再描画
     this.scene.render();
   }
@@ -536,9 +638,12 @@ export class ThreeService {
       const title1: string = captureInfo.title1;
       const title2: string = captureInfo.title2;
       const title3: string[] = captureInfo.title3;
+      const screenArea = document.getElementById("screenArea");
+      screenArea.style.width = this.canvasWidth;
+      screenArea.style.height = this.canvasHeight;
 
       if (captureCase.length === 0) {
-        html2canvas(this.canvasElement).then((canvas) => {
+        html2canvas(screenArea).then((canvas) => {
           result.push({
             title: title2,
             src: canvas.toDataURL(),
@@ -576,7 +681,7 @@ export class ThreeService {
 
               // this.ChangePage(number,this.mode).finally(() => {
               this.secForce.changeRadioButtons(loadType);
-              html2canvas(this.canvasElement).then((canvas) => {
+              html2canvas(screenArea).then((canvas) => {
                 result.push({
                   title: title2 + name,
                   type: loadTypeJa,
@@ -594,6 +699,7 @@ export class ThreeService {
         }
       } else {
         let counter = 0;
+        this.currentIndex = -1; // this.ChangePageの冒頭ではじかれるため、this.currentIndexを調整
         for (let i = 0; i < captureCase.length; i++) {
           const key = captureCase[i];
 
@@ -611,7 +717,7 @@ export class ThreeService {
 
           this.ChangePage(number);
 
-          html2canvas(this.canvasElement).then((canvas) => {
+          html2canvas(screenArea).then((canvas) => {
             result.push({
               title: title2 + name,
               src: canvas.toDataURL(),
@@ -636,6 +742,8 @@ export class ThreeService {
     let title4: string[] = new Array();
     let title5: string[] = new Array();
     let title6: string[] = new Array();
+
+    this.printService.setprintDocument();
 
     switch (this.mode) {
       case "fix_member":

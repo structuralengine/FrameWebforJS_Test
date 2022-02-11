@@ -14,6 +14,7 @@ import { InputPickupService } from "../components/input/input-pickup/input-picku
 
 import { SceneService } from "../components/three/scene.service";
 import { DataHelperModule } from "./data-helper.module";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable({
   providedIn: "root",
@@ -33,10 +34,21 @@ export class InputDataService {
     public node: InputNodesService,
     public notice: InputNoticePointsService,
     public pickup: InputPickupService,
-    private three: SceneService
+    private three: SceneService,
+    private translate: TranslateService
   ) {
     this.clear();
   }
+  public result: object;
+  public getResult(jsonData): void {
+    
+    const result = jsonData;
+    delete result['old_points'];
+    delete result['deduct_points'];
+    delete result['new_points'];
+
+    this.result = result
+  };
 
   // データをクリアする ///////////////////////////////////////////////////////////////
   public clear(): void {
@@ -52,12 +64,12 @@ export class InputDataService {
     this.define.clear();
     this.combine.clear();
     this.pickup.clear();
+    this.result = null
   }
 
   // ファイルを読み込む ///////////////////////////////////////////////////////////////
-  public loadInputData(inputText: string): void {
+  public loadInputData(jsonData: object): void {
     this.clear();
-    const jsonData: {} = JSON.parse(inputText);
     this.node.setNodeJson(jsonData);
     this.fixnode.setFixNodeJson(jsonData);
     this.member.setMemberJson(jsonData);
@@ -98,7 +110,7 @@ export class InputDataService {
     // empty = 1: 印刷時
     let isPrint = false;
     if (empty === 1) {
-      empty = 0; // 印刷時 は 計算時と同じ
+      empty = null; // 印刷時 は 計算時と同じ
       isPrint = true;
     }
 
@@ -170,8 +182,12 @@ export class InputDataService {
       if (Object.keys(pickup).length > 0) {
         jsonData["pickup"] = pickup;
       }
-
-      jsonData["three"] = this.three.getSettingJson();
+      if (!isPrint) {
+        jsonData["three"] = this.three.getSettingJson();
+      }
+      if (!(this.result == null)) {
+        jsonData["result"] = this.result;
+      }
     }
 
     // 解析するモードの場合
@@ -187,7 +203,9 @@ export class InputDataService {
       }
     }
 
-    jsonData["dimension"] = this.helper.dimension;
+    if (!isPrint) {
+      jsonData["dimension"] = this.helper.dimension;
+    }
 
     return jsonData;
   }
@@ -277,16 +295,16 @@ export class InputDataService {
   private checkError(jsonData: object): string {
     // 存在しない節点を使っているかチェックする
     if (!("node" in jsonData)) {
-      return "node データがありません";
+      return this.translate.instant("providers.input-data.node_nodata");
     }
     const nodes: object = jsonData["node"];
     if (Object.keys(nodes).length <= 0) {
-      return "node データがありません";
+      return this.translate.instant("providers.input-data.node_nodata");
     }
 
     if (!("member" in jsonData)) {
       if (!("shell" in jsonData)) {
-        return "member データがありません";
+        return this.translate.instant("providers.input-data.member_nodata");
       }
     }
     const members: object = jsonData["member"];
@@ -300,7 +318,7 @@ export class InputDataService {
       shellKeys = Object.keys(shells);
     }
     if (memberKeys.length + shellKeys.length <= 0) {
-      return "member データがありません";
+      return this.translate.instant("providers.input-data.member_nodata");
     }
 
     // 部材で使われている 節点番号が存在するか調べる
@@ -333,12 +351,12 @@ export class InputDataService {
     jsonData["node"] = n;
 
     if (!("load" in jsonData)) {
-      return "load データがありません";
+      return this.translate.instant("providers.input-data.load_nodata");
     }
     const loads: object = jsonData["load"];
     const loadKeys = Object.keys(loads);
     if (loadKeys.length <= 0) {
-      return "load データがありません";
+      return this.translate.instant("providers.input-data.load_nodata");
     }
 
     // 荷重ケース毎にエラーチェック

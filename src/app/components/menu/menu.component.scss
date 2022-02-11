@@ -163,7 +163,7 @@ i.fas {
     align-items: center;
 }
 
-.login-btn {
+.menu-btn {
     display: block;
     width: 100%;
     &:hover {
@@ -175,6 +175,14 @@ i.fas {
 .logOut {
     padding: 4px;
     text-align: center;
+}
+
+.rightArea {
+    display: flex;
+    align-items: center;
+    .language-area {
+        margin-right: 16px;
+    }
 }
 
 @media screen and (max-width: 767px) {
@@ -430,10 +438,6 @@ $toggle-textColor: #fff;
                 li {
                     font-size: 24px;
                     margin-right: 12px;
-                    &:nth-child(3) {
-                        display: none;
-                        margin: 0;
-                    }
                 }
             }
         }

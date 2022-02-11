@@ -1,7 +1,9 @@
 <div class="floaterMenu">
     <div class="btn-group">
         <nav>
-            <a routerLink="/result-disg" routerLinkActive="selected-item" class="btn-change active">基本ケース</a>
+            <a routerLink="/result-disg" routerLinkActive="selected-item" class="btn-change active">
+                <p translate>result.result-disg.basicCase</p>
+            </a>
             <a routerLink="/result-comb_disg" routerLinkActive="selected-item" class="btn-change">COMBINE</a>
             <a routerLink="/result-pic_disg" routerLinkActive="selected-item" class="btn-change">PICKUP</a>
         </nav>
@@ -22,20 +24,38 @@
                     <div *ngIf="dimension===3">
                         <tr>
                             <th class="result-sm">No</th>
-                            <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
-                            <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
-                            <th class="result-lg">z方向の<br />移動量<br />(mm)</th>
-                            <th class="result-lg">x軸回りの<br />回転量<br />(‰rad)</th>
-                            <th class="result-lg">y軸回りの<br />回転量<br />(‰rad)</th>
-                            <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.x_movement</p>
+                            </th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.y_movement</p>
+                            </th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.z_movement</p>
+                            </th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.x_rotation</p>
+                            </th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.y_rotation</p>
+                            </th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.z_rotation</p>
+                            </th>
                         </tr>
                     </div>
                     <div *ngIf="dimension===2">
                         <tr>
                             <th class="result-sm">No</th>
-                            <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
-                            <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
-                            <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.x_movement</p>
+                            </th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.y_movement</p>
+                            </th>
+                            <th class="result-lg">
+                                <p translate>result.result-disg.z_rotation</p>
+                            </th>
                         </tr>
                     </div>
                 </thead>
@@ -92,20 +112,38 @@
                                         <div *ngIf="dimension===3">
                                             <tr>
                                                 <th class="result-sm">No</th>
-                                                <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
-                                                <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
-                                                <th class="result-lg">z方向の<br />移動量<br />(mm)</th>
-                                                <th class="result-lg">x軸回りの<br />回転量<br />(‰rad)</th>
-                                                <th class="result-lg">y軸回りの<br />回転量<br />(‰rad)</th>
-                                                <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.x_movement</p>
+                                                </th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.y_movement</p>
+                                                </th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.z_movement</p>
+                                                </th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.x_rotation</p>
+                                                </th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.y_rotation</p>
+                                                </th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.z_rotation</p>
+                                                </th>
                                             </tr>
                                         </div>
                                         <div *ngIf="dimension===2">
                                             <tr>
                                                 <th class="result-sm">No</th>
-                                                <th class="result-lg">x方向の<br />移動量<br />(mm)</th>
-                                                <th class="result-lg">y方向の<br />移動量<br />(mm)</th>
-                                                <th class="result-lg">z軸回りの<br />回転量<br />(‰rad)</th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.x_movement</p>
+                                                </th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.y_movement</p>
+                                                </th>
+                                                <th class="result-lg">
+                                                    <p translate>result.result-disg.z_rotation</p>
+                                                </th>
                                             </tr>
                                         </div>
                                     </thead>

@@ -44,6 +44,9 @@ export class ThreePanelService {
   }
 
   public visibleChange(flag: boolean, opacity: number = 0.7): void {
+
+    this.selectChange(-1);
+
     if (this.isVisible === flag && this.opacity === opacity) {
       return;
     }

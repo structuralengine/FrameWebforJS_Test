@@ -20,6 +20,7 @@ addEventListener('message', ({ data }) => {
   const jsonData = data.jsonData;
   const reac = {};
   const max_value = {};
+  const value_range = {};
   let error: any = null;
 
   try {
@@ -39,8 +40,10 @@ addEventListener('message', ({ data }) => {
         continue;
       }
 
-      let max_d = 0;
-      let max_r = 0;
+      let values = {max_d: Number.MIN_VALUE, max_r: Number.MIN_VALUE,
+                    min_d:  Number.MAX_VALUE, min_r:  Number.MAX_VALUE,
+                    max_d_m: '0' , max_r_m: '0' ,
+                    min_d_m: '0' , min_r_m: '0' , }
 
       for (const n of Object.keys(json)) {
         const item: {} = json[n];
@@ -65,24 +68,35 @@ addEventListener('message', ({ data }) => {
             
         // 最大値を記録する three.js で使う
         for (const v of [tx, ty, tz]) {
-          if (Math.abs(max_d) < Math.abs(v)) {
-            max_d = v;
+          if (values.max_d < v) {
+            values.max_d = v;
+            values.max_d_m = n;
+          }
+          if (values.min_d > v) {
+            values.min_d = v;
+            values.min_d_m = n;
           }
         }
         for (const v of [mx, my, mz]) {
-          if (Math.abs(max_r) < Math.abs(v)) {
-            max_r = v;
+          if (values.max_r < v) {
+            values.max_r = v;
+            values.max_r_m = n;
+          }
+          if (values.min_r > v) {
+            values.min_r = v;
+            values.min_r_m = n;
           }
         }
 
       }
       const No: string = caseNo.replace("Case", "");
       reac[No] = target;
-      max_value[No] = Math.abs(max_d);
+      max_value[No] = Math.max(Math.abs(values.max_d), Math.abs(values.min_d));
+      value_range[No] = values;
     }
   } catch (e) {
     error = e;
   }
 
-  postMessage({ reac, error, max_value  });
+  postMessage({ reac, error, max_value, value_range });
 });

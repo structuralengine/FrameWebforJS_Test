@@ -9,30 +9,38 @@ import { ArrayCamera } from "three";
 export class PrintCustomFsecService {
   public dataset: any[];
   public fsecEditable: boolean[];
+  public flg: boolean;
+
   constructor(
     private member: InputMembersService,
-
     private element: InputElementsService
   ) {
     this.fsecEditable = [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
     ];
   }
 
   clear() {
     this.dataset = new Array();
     this.loadData();
+  }
+
+  // 断面力部材番号の選択をすべてtrueにする
+  checkReverse() {
+    for (const index of this.dataset) {
+      index["check"] = true;
+    }
   }
 
   // 指定行row 以降のデータを読み取る

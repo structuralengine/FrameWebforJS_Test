@@ -47,13 +47,15 @@ export class ThreeLoadMemberMoment {
     pL2: number,
     P1: number,
     P2: number,
-    row: number
+    row: number,
+    count: number
   ): THREE.Group {
 
     const offset: number = 0;
     const height: number = 1;
 
-    const child = new THREE.Group();
+    // const child = new THREE.Group(); // 荷重の原本
+    const group = new THREE.Group(); // 荷重を動かす
 
     // 長さを決める
     const p = this.getPoints(
@@ -62,22 +64,31 @@ export class ThreeLoadMemberMoment {
     const L1 = p.L1;
     const L2 = p.L2;
 
-    // 矢印
-    for (const arrow of this.getArrow(direction, [P1, P2], [L1, L2])) {
-      child.add(arrow);
+    let P: number;
+    let L: number;
+    if (count === 1) {
+      P = P1;
+      L = L1;
+    } else {
+      P = P2;
+      L = L2;
     }
 
-    // 全体
-    child.name = "child";
-    child.position.y = offset;
 
-    const group0 = new THREE.Group();
-    group0.add(child);
-    group0.name = "group";
+    // 矢印
+    const arrow: THREE.Group = this.getArrow(direction, P, L);
+    arrow.position.y = offset;
+
+    // 全体
+    // child.name = "child";
+    // child.position.y = offset;
+    // child.add(arrow)
+    // group.add(child)
+
+    group.add(arrow);
+    group.name = "group";
 
     // 全体の位置を修正する
-    const group = new THREE.Group();
-    group.add(group0);
     group["points"] = p.points;
     group["L1"] = p.L1;
     group["L"] = p.LL;
@@ -89,7 +100,7 @@ export class ThreeLoadMemberMoment {
     group["direction"] = direction;
     group["localAxis"] = localAxis;
     group["editor"] = this;
-    group['value'] = p.Pmax; // 大きい方の値を保存　
+    group['value'] = P; // 値を保存
 
     group.position.set(nodei.x, nodei.y, nodei.z);
 
@@ -179,33 +190,28 @@ export class ThreeLoadMemberMoment {
   // 両端の矢印
   private getArrow(
     direction: string,
-    value: number[],
-    points: number[]): THREE.Group[] {
+    value: number,
+    points: number): THREE.Group {
 
-    const result: THREE.Group[] = new Array();
+    const result: THREE.Group = new THREE.Group();
 
     const key: string = 'r' + direction;
 
-    for (let i = 0; i < 2; i++) {
+    const Px = value;
 
-      const Px = value[i];
-      if (Px === 0) {
-        continue;
-      }
+    const pos1 = new THREE.Vector3(points, 0, 0);
 
-      const pos1 = new THREE.Vector3(points[i], 0, 0);
+    const arrow_1 = this.moment.create(pos1, 0, Px, 1, key, 0)
 
-      const arrow_1 = this.moment.create(pos1, 0, Px, 1, key, 0)
+    //モーメントの作成時に向きまで制御しているので，制御不要
+    //if (direction === 'y') {
+    //arrow_1.rotation.z += Math.PI;
+    //} else if (direction === 'z') {
+    //arrow_1.rotation.x += Math.PI / 2;
+    //}
 
-      //モーメントの作成時に向きまで制御しているので，制御不要
-      //if (direction === 'y') {
-      //arrow_1.rotation.z += Math.PI;
-      //} else if (direction === 'z') {
-      //arrow_1.rotation.x += Math.PI / 2;
-      //}
-
-      result.push(arrow_1);
-    }
+    result.add(arrow_1);
+    result.name = "arrow";
 
     return result;
 
@@ -215,16 +221,14 @@ export class ThreeLoadMemberMoment {
   public setSize(group: any, scale: number): void {
 
     for (const item of group.children) {
-      for (const item_child1 of item.children) {
-        if (item_child1.name === 'child') {
-          for (const item_child2 of item_child1.children) {
-            if (item_child2.name.includes('MomentLoad')) {
-              for (const item_child3 of item_child2.children) {
-                if (item_child3.name === 'group') {
-                  for (const item_child4 of item_child3.children) {
-                    if (item_child4.name === 'child') {
-                      item_child4.scale.set(scale, scale, scale);
-                    }
+      if (item.name === 'arrow') {
+        for (const item_child2 of item.children) {
+          if (item_child2.name.includes('MomentLoad')) {
+            for (const item_child3 of item_child2.children) {
+              if (item_child3.name === 'group') {
+                for (const item_child4 of item_child3.children) {
+                  if (item_child4.name === 'child') {
+                    item_child4.scale.set(scale, scale, scale);
                   }
                 }
               }
@@ -254,18 +258,16 @@ export class ThreeLoadMemberMoment {
   public setScale(group: any, scale: number): void {
 
     for (const item of group.children) {
-      for (const item_child1 of item.children) {
-        if (item_child1.name === 'child') {
-          for (const item_child2 of item_child1.children) {
-            if (item_child2.name.includes('MomentLoad')) {
-              for (const item_child3 of item_child2.children) {
-                if (item_child3.name === 'group') {
-                  for (const item_child4 of item_child3.children) {
-                    if (item_child4.name === 'child') {
-                      item_child4.scale.set(scale, scale, scale);
-                    }
-                  }
-                }
+      if (item.name === 'arrow') {
+        for (const item_child2 of item.children) {
+          if (item_child2.name.includes('MomentLoad')) {
+            for (const item_child3 of item_child2.children) {
+              if (item_child3.name === 'group') {
+                // for (const item_child4 of item_child3.children) {
+                  // if (item_child4.name === 'child') {
+                    item_child3.scale.set(scale, scale, scale);
+                  // }
+                // }
               }
             }
           }

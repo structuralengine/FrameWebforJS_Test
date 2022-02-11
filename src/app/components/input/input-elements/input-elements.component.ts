@@ -5,6 +5,7 @@ import { ThreeService } from "../../three/three.service";
 import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-elements",
@@ -17,7 +18,7 @@ export class InputElementsComponent implements OnInit {
   private dataset = [];
   private columnHeaders3D = [
     {
-      title: "弾性係数",
+      title: this.translate.instant("input.input-elements.elastic"),
       align: "center",
       colModel: [
         {
@@ -30,7 +31,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "せん断弾性係数",
+      title: this.translate.instant("input.input-elements.shear_elastic"),
       align: "center",
       colModel: [
         {
@@ -43,7 +44,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "膨張係数",
+      title: this.translate.instant("input.input-elements.cte"),
       align: "center",
       colModel: [
         {
@@ -56,7 +57,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "断面積",
+      title: this.translate.instant("input.input-elements.area"),
       align: "center",
       colModel: [
         {
@@ -70,7 +71,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "ねじり定数",
+      title: this.translate.instant("input.input-elements.torsionConstant"),
       align: "center",
       colModel: [
         {
@@ -84,7 +85,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "断面二次モーメント",
+      title: this.translate.instant("input.input-elements.inertia"),
       align: "center",
       colModel: [
         {
@@ -106,7 +107,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "名称",
+      title: this.translate.instant("input.input-elements.material_name"),
       align: "center",
       dataType: "string",
       format: "#.000000",
@@ -117,7 +118,7 @@ export class InputElementsComponent implements OnInit {
   ];
   private columnHeaders2D = [
     {
-      title: "弾性係数",
+      title: this.translate.instant("input.input-elements.elastic"),
       align: "center",
       colModel: [
         {
@@ -130,7 +131,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "膨張係数",
+      title: this.translate.instant("input.input-elements.cte"),
       align: "center",
       colModel: [
         {
@@ -143,7 +144,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "断面積",
+      title: this.translate.instant("input.input-elements.area"),
       align: "center",
       colModel: [
         {
@@ -157,7 +158,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "断面二次",
+      title: this.translate.instant("input.input-elements.inertia"),
       align: "center",
       colModel: [
         {
@@ -171,7 +172,7 @@ export class InputElementsComponent implements OnInit {
       ],
     },
     {
-      title: "名称",
+      title: this.translate.instant("input.input-elements.material_name"),
       align: "center",
       dataType: "string",
       format: "#.000000",
@@ -189,7 +190,8 @@ export class InputElementsComponent implements OnInit {
     private data: InputElementsService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private three: ThreeService
+    private three: ThreeService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -267,6 +269,21 @@ export class InputElementsComponent implements OnInit {
       this.three.selectChange("elements", row, column);
     },
     change: (evt, ui) => {
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const element = this.data.getElementColumns(this.page, no + 1);
+        element['E']  = (newRow.E  !== undefined) ? newRow.E  : '';
+        element['G']  = (newRow.G  !== undefined) ? newRow.G  : '';
+        element['Xp'] = (newRow.Xp !== undefined) ? newRow.Xp : '';
+        element['A']  = (newRow.A  !== undefined) ? newRow.A  : '';
+        element['J']  = (newRow.J  !== undefined) ? newRow.J  : '';
+        element['Iy'] = (newRow.Iy !== undefined) ? newRow.Iy : '';
+        element['Iz'] = (newRow.Iz !== undefined) ? newRow.Iz : '';
+        element['n']  = (newRow.n  !== undefined) ? newRow.n  : '';
+        this.dataset.splice(no, 1, element)
+      }
       this.three.changeData("elements", this.page);
       // 名称が変更されたら、変更を内部データ全体に反映させる
       if ("n" in ui.updateList[0].newRow) {

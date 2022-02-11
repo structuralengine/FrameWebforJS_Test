@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { InputLoadService } from "../../input/input-load/input-load.service";
+import { PrintCustomService } from "../../print/custom/print-custom.service";
 import { ThreeDisplacementService } from "../../three/geometry/three-displacement.service";
 import { ResultCombineDisgService } from "../result-combine-disg/result-combine-disg.service";
 
@@ -20,7 +21,8 @@ export class ResultDisgService {
   constructor(
     private comb: ResultCombineDisgService,
     private load: InputLoadService,
-    private three: ThreeDisplacementService
+    private three: ThreeDisplacementService,
+    public printCustomService: PrintCustomService
   ) {
     this.clear();
     this.worker1 = new Worker(
@@ -33,11 +35,17 @@ export class ResultDisgService {
     );
     // 連行荷重の集計
     this.worker3 = new Worker(
-      new URL("../result-combine-disg/result-combine-disg1.worker", import.meta.url),
+      new URL(
+        "../result-combine-disg/result-combine-disg1.worker",
+        import.meta.url
+      ),
       { name: "LL-disg1", type: "module" }
     );
     this.worker4 = new Worker(
-      new URL("../result-combine-disg/result-combine-disg2.worker", import.meta.url),
+      new URL(
+        "../result-combine-disg/result-combine-disg2.worker",
+        import.meta.url
+      ),
       { name: "LL-disg2", type: "module" }
     );
     this.LL_flg = new Array();
@@ -49,16 +57,15 @@ export class ResultDisgService {
   }
 
   public getDisgColumns(typNo: number, mode: string = null): any {
-
     const key: string = typNo.toString();
-    if(!(key in this.columns)) {
-      return new Array(); 
+    if (!(key in this.columns)) {
+      return new Array();
     }
     const col = this.columns[key];
-    if(mode === null){
+    if (mode === null) {
       return col;
-    } else{
-      if(mode in col) {
+    } else {
+      if (mode in col) {
         return col[mode]; // 連行荷重の時は combine のようになる
       }
     }
@@ -90,9 +97,13 @@ export class ResultDisgService {
           );
           const disg = data.disg;
           const max_values = data.max_value;
-          
+          const value_range = {};
+          value_range['disg'] = data.value_range;
+
           // 組み合わせの集計処理を実行する
           this.comb.setDisgCombineJson(disg, defList, combList, pickList);
+          value_range['comb_disg'] = this.comb.value_range;
+          value_range['pik_disg'] = this.comb.value_range;
 
           // 変位量テーブルの集計
           this.worker2.onmessage = ({ data }) => {
@@ -102,14 +113,14 @@ export class ResultDisgService {
                 performance.now() - startTime
               );
               this.columns = data.table;
-              this.set_LL_columns(disg, Object.keys(jsonData), max_values);
+              this.set_LL_columns(disg, Object.keys(jsonData), max_values, value_range['disg']);
             } else {
               console.log("変位量テーブルの集計に失敗しました", data.error);
             }
           };
           // 連行荷重の子データは除外する
-          const keys = Object.keys(disg).filter(e => !e.includes('.'));
-          for(const k of keys){
+          const keys = Object.keys(disg).filter((e) => !e.includes("."));
+          for (const k of keys) {
             this.disg[k] = disg[k];
           }
           this.worker2.postMessage({ disg: this.disg });
@@ -118,6 +129,7 @@ export class ResultDisgService {
         }
       };
       this.worker1.postMessage({ jsonData });
+      // const a = this.woker1_test({ jsonData })
     } else {
       console.log("変位量の生成に失敗しました");
       // Web workers are not supported in this environment.
@@ -126,42 +138,41 @@ export class ResultDisgService {
   }
 
   // 連行荷重の断面力を集計する
-  private set_LL_columns(disg: any, load_keys: string[], org_max_values: {}){
-
+  private set_LL_columns(disg: any, load_keys: string[], org_max_values: {}, org_value_range: {}) {
     this.LL_flg = new Array();
 
     const load_name = this.load.getLoadNameJson(0);
     const defList: any = {};
     const combList: any = {};
     const max_values: any = {};
+    const value_range: any = {};
 
     let flg = false;
 
     for (const caseNo of Object.keys(load_name)) {
       const caseLoad: any = load_name[caseNo];
-      if(caseLoad.symbol !== "LL"){
+      if (caseLoad.symbol !== "LL") {
         this.LL_flg.push(false);
         max_values[caseNo] = org_max_values[caseNo];
-
+        value_range[caseNo] = org_value_range[caseNo];
       } else {
-
-        // 連行荷重の場合 
+        // 連行荷重の場合
         flg = true;
         this.LL_flg.push(true);
 
-        const target_LL_Keys: string[] = load_keys.filter(e =>{
+        const target_LL_Keys: string[] = load_keys.filter((e) => {
           return e.indexOf(caseNo + ".") === 0;
-        })
-        const caseList: string[] = [caseNo]; 
+        });
+        const caseList: string[] = [caseNo];
         let tmp_max_values = org_max_values[caseNo];
 
-        for(const k of target_LL_Keys){
+        for (const k of target_LL_Keys) {
           // ケースを追加
           caseList.push(k);
 
           // max_valuesを更新
           const target_max_values = Math.abs(org_max_values[k]);
-          if(tmp_max_values < target_max_values){
+          if (tmp_max_values < target_max_values) {
             tmp_max_values = target_max_values;
           }
         }
@@ -169,13 +180,13 @@ export class ResultDisgService {
         combList[caseNo] = [{ caseNo, coef: 1 }];
         max_values[caseNo] = tmp_max_values;
       }
-
     }
 
     // 集計が終わったら three.js に通知
-    this.three.setResultData(disg, max_values);
-
-    if(flg === false){
+    this.three.setResultData(disg, max_values, value_range, 'disg');
+    this.printCustomService.LL_flg = this.LL_flg;
+    this.printCustomService.LL();
+    if (flg === false) {
       this.isCalculated = true;
       return; // 連行荷重がなければ ここまで
     }
@@ -188,23 +199,22 @@ export class ResultDisgService {
       this.worker4.onmessage = ({ data }) => {
         const LL_columns = data.result;
 
-        for(const k of Object.keys(LL_columns)){
+        for (const k of Object.keys(LL_columns)) {
           this.columns[k] = LL_columns[k];
           this.disg[k] = disgCombine[k];
         }
         this.isCalculated = true;
       };
-      this.worker4.postMessage({disgCombine});
-    }
+      this.worker4.postMessage({ disgCombine });
+    };
 
-    this.worker3.postMessage({ 
-      defList, 
-      combList, 
-      disg: disg, 
-      disgKeys: this.comb.disgKeys
+    this.worker3.postMessage({
+      defList,
+      combList,
+      disg: disg,
+      disgKeys: this.comb.disgKeys,
     });
   }
-
 
 
 }

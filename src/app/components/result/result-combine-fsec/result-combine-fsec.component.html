@@ -1,7 +1,9 @@
 <div class="floaterMenu">
     <div class="btn-group">
         <nav>
-            <a routerLink="/result-fsec" class="btn-change">基本ケース</a>
+            <a routerLink="/result-fsec" class="btn-change">
+                <p translate>result.result-combine-fsec.basicCase</p>
+            </a>
             <a routerLink="/result-comb_fsec" class="btn-change active">COMBINE</a>
             <a routerLink="/result-pic_fsec" [class]="btnPickup">PICKUP</a>
         </nav>
@@ -38,27 +40,61 @@
                                 <thead>
                                     <div *ngIf="dimension===3">
                                         <tr>
-                                            <th class="result-sm">部材No</th>
-                                            <th class="result-sm">節点No</th>
-                                            <th class="result-lg">着目位置<br />(m)</th>
-                                            <th class="result-lg">軸方向力<br />(kN)</th>
-                                            <th class="result-lg">y方向の<br />せん断力<br />(kN)</th>
-                                            <th class="result-lg">z方向の<br />せん断力<br />(kN)</th>
-                                            <th class="result-lg">ねじり<br />モーメント<br />(kN m)</th>
-                                            <th class="result-lg">y軸回りの<br />曲げモーメント<br />(kN m)</th>
-                                            <th class="result-lg">z軸回りの<br />曲げモーメント<br />(kN m)</th>
-                                            <th class="result-lg">組み合わせ</th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-combine-fsec.memberNo</p>
+                                            </th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-combine-fsec.nodeNo</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.stationLocation</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.axialForce</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.y_shear</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.z_shear</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.x_torsion</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.y_moment</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.z_moment</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.comb</p>
+                                            </th>
                                         </tr>
                                     </div>
                                     <div *ngIf="dimension===2">
                                         <tr>
-                                            <th class="result-sm">部材No</th>
-                                            <th class="result-sm">節点No</th>
-                                            <th class="result-lg">着目位置<br />(m)</th>
-                                            <th class="result-lg">軸方向力<br />(kN)</th>
-                                            <th class="result-lg">せん断力<br />(kN)</th>
-                                            <th class="result-lg">曲げモーメント<br />(kN m)</th>
-                                            <th class="result-lg">組み合わせ</th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-combine-fsec.memberNo</p>
+                                            </th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-combine-fsec.nodeNo</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.stationLocation</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.axialForce</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.shear</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.moment</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-combine-fsec.comb</p>
+                                            </th>
                                         </tr>
                                     </div>
                                 </thead>

@@ -1,7 +1,9 @@
 <div class="floaterMenu">
     <div class="btn-group">
         <nav>
-            <a routerLink="/result-reac" routerLinkActive="selected-item" class="btn-change">基本ケース</a>
+            <a routerLink="/result-reac" routerLinkActive="selected-item" class="btn-change">
+                <p translate>result.result-pickup-reac.basicCase</p>
+            </a>
             <a routerLink="/result-comb_reac" routerLinkActive="selected-item" [class]="btnCombine">COMBINE</a>
             <a routerLink="/result-pic_reac" routerLinkActive="selected-item" class="btn-change active">PICKUP</a>
         </nav>
@@ -38,23 +40,49 @@
                                 <thead>
                                     <div *ngIf="dimension===3">
                                         <tr>
-                                            <th class="result-sm">節点No</th>
-                                            <th class="result-lg">x方向の<br />支点反力<br />(kN)</th>
-                                            <th class="result-lg">y方向の<br />支点反力<br />(kN)</th>
-                                            <th class="result-lg">z方向の<br />支点反力<br />(kN)</th>
-                                            <th class="result-lg">x軸回りの<br />回転反力<br />(kN m)</th>
-                                            <th class="result-lg">y軸回りの<br />回転反力<br />(kN m)</th>
-                                            <th class="result-lg">z軸回りの<br />回転反力<br />(kN m)</th>
-                                            <th class="result-lg">組み合わせ</th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-pickup-reac.nodeNo</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.x_SupportReaction</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.y_SupportReaction</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.z_SupportReaction</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.x_RotationalReaction</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.y_RotationalReaction</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.z_RotationalReaction</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.comb</p>
+                                            </th>
                                         </tr>
                                     </div>
                                     <div *ngIf="dimension===2">
                                         <tr>
-                                            <th class="result-sm">節点No</th>
-                                            <th class="result-lg">x方向の<br />支点反力<br />(kN)</th>
-                                            <th class="result-lg">y方向の<br />支点反力<br />(kN)</th>
-                                            <th class="result-lg">回転<br />拘束力<br />(kN m)</th>
-                                            <th class="result-lg">組み合わせ</th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-pickup-reac.nodeNo</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.x_SupportReaction</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.y_SupportReaction</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.rotationalRestraint</p>
+                                            </th>
+                                            <th class="result-lg">
+                                                <p translate>result.result-pickup-reac.comb</p>
+                                            </th>
                                         </tr>
                                     </div>
                                 </thead>

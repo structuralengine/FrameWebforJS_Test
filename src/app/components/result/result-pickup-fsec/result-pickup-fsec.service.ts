@@ -6,6 +6,7 @@ import { ThreeSectionForceService } from "../../three/geometry/three-section-for
 })
 export class ResultPickupFsecService {
   public fsecPickup: any;
+  public value_range: any;
   public isCalculated: boolean;
   private worker1: Worker;
   private worker2: Worker;
@@ -80,6 +81,10 @@ export class ResultPickupFsecService {
   }
 
   public getPickupFsecColumns(combNo: number, mode: string): any {
+    if(!(combNo in this.columns))
+      return null;
+    if(!(mode in this.columns[combNo]))
+      return null;
     return this.columns[combNo][mode];
   }
 
@@ -95,6 +100,7 @@ export class ResultPickupFsecService {
         );
         this.fsecPickup = data.fsecPickup;
         const max_values = data.max_values;
+        this.value_range = data.value_range;
 
         // 断面力テーブルの集計
         this.worker2.onmessage = ({ data }) => {
@@ -107,10 +113,10 @@ export class ResultPickupFsecService {
         };
         // this.columns = this.worker2_test(this.fsecPickup );
         this.worker2.postMessage({ fsecPickup: this.fsecPickup });
-        this.three.setPickupResultData(this.fsecPickup, max_values);
+        this.three.setPickupResultData(this.fsecPickup, max_values, this.value_range);
       };
+      this.worker1_test({ pickList, fsecCombine });
       this.worker1.postMessage({ pickList, fsecCombine });
-      // this.worker1_test({ pickList, fsecCombine });
     } else {
       // Web workers are not supported in this environment.
       // You should add a fallback so that your program still executes correctly.
@@ -118,6 +124,7 @@ export class ResultPickupFsecService {
   }
 
   private worker1_test(data) {
+
     const pickList = data.pickList;
     const fsecCombine = data.fsecCombine;
     const fsecPickup = {};
@@ -126,26 +133,21 @@ export class ResultPickupFsecService {
     // pickupのループ
     for (const pickNo of Object.keys(pickList)) {
       const max_value = {
-        fx: 0,
-        fy: 0,
-        fz: 0,
-        mx: 0,
-        my: 0,
-        mz: 0,
-      };
+        fx: 0, fy: 0, fz: 0,
+        mx: 0, my: 0, mz: 0
+      }
 
       const combines: any[] = pickList[pickNo];
       let tmp: {} = null;
       for (const combNo of combines) {
         const com = JSON.parse(
           JSON.stringify({
-            temp: fsecCombine[combNo],
+            temp: fsecCombine[combNo]
           })
         ).temp;
         if (tmp == null) {
           tmp = com;
-          for (const k of Object.keys(com)) {
-            // 最大値を 集計する
+          for (const k of Object.keys(com)) { // 最大値を 集計する
             for (const value of tmp[k]) {
               max_value.fx = Math.max(Math.abs(value.fx), max_value.fx);
               max_value.fy = Math.max(Math.abs(value.fy), max_value.fy);
@@ -158,7 +160,7 @@ export class ResultPickupFsecService {
           continue;
         }
         for (const k of Object.keys(com)) {
-          const key = k.split("_");
+          const key = k.split('_');
           const target = com[k];
           const comparison = tmp[k];
           for (const id of Object.keys(comparison)) {
@@ -167,7 +169,7 @@ export class ResultPickupFsecService {
               continue;
             }
             const b = target[id];
-            if (key[1] === "max") {
+            if (key[1] === 'max') {
               if (b[key[0]] > a[key[0]]) {
                 tmp[k][id] = com[k][id];
               }
@@ -193,56 +195,134 @@ export class ResultPickupFsecService {
       max_values[pickNo] = max_value;
       tmp = null;
     }
-    return this.worker2_test(fsecPickup);
-  }
 
-  private worker2_test(fsecPickup: any) {
-    const result = {};
+    const value_range = {};
+    // CombineNoごとの最大最小を探す
     for (const combNo of Object.keys(fsecPickup)) {
-      // 組み合わせを探す
-      const target1: object[] = fsecPickup[combNo];
-
-      if (target1 === null) {
+      const caseData = fsecPickup[combNo];
+      const key_list = Object.keys(caseData);
+      const values = {};
+      // dx～rzの最大最小をそれぞれ探す
+      for (const key of key_list) {
+        const datas = caseData[key];
+       /* */  let key2: string;
+        if (key.includes('fx')) {
+          key2 = 'fx';
+        } else if (key.includes('fy')) {
+          key2 = 'fy';
+        } else if (key.includes('fz')) {
+          key2 = 'fz';
+        } else if (key.includes('mx')) {
+          key2 = 'mx';
+        } else if (key.includes('my')) {
+          key2 = 'my';
+        } else if (key.includes('mz')) {
+          key2 = 'mz';
+        }
+        let targetValue = (key.includes('max')) ? Number.MIN_VALUE: Number.MAX_VALUE;
+        let targetValue_m = '0';
+        if (key.includes('max')) {  // 最大値を探す
+          //for (const row of Object.keys(datas)) {
+          for (let num = 0; num < datas.length; num++) {
+            const row = num.toString();
+            const data = datas[row][key2];
+            if (data >= targetValue) {
+              targetValue = data;
+              // memberNoがないとき(着目点が最大)の分岐
+              if (datas[row].m === '') {
+                let m_no: string
+                for (let num2 = num - 1; num2 > 0; num2--) {
+                  const row2 = num2.toString();
+                  if (datas[row2].m !== '') {
+                    m_no = datas[row2].m;
+                    break;
+                  }
+                }
+                targetValue_m = m_no;
+              } else {
+                targetValue_m = datas[row].m;
+              }
+            }
+          }
+        } else {  // 最小値を探す
+          // for (const row of Object.keys(datas)) {
+          for (let num = 0; num < datas.length; num++) {
+            const row = num.toString();
+            const data = datas[row][key2];
+            if (data <= targetValue) {
+              targetValue = data;
+              // memberNoがないとき(着目点が最小)の分岐
+              if (datas[row].m === '') {
+                let m_no: string
+                for (let num2 = num - 1; num2 > 0; num2--) {
+                  const row2 = num2.toString();
+                  if (datas[row2].m !== '') {
+                    m_no = datas[row2].m;
+                    break;
+                  }
+                }
+                targetValue_m = m_no;
+              } else {
+                targetValue_m = datas[row].m;
+              }
+            }
+          }
+        }
+        if (Math.abs(targetValue) === Number.MAX_VALUE) {
+          continue;
+        }
+        values[key] = {max: targetValue, max_m: targetValue_m};
+      }
+      if (Object.keys(values).length === 0) {
         continue;
       }
 
-      const result2 = {};
-      for (const mode of Object.keys(target1)) {
-        // 着目項目を探す
-        let target2 = {};
-        if (mode in target1) {
-          target2 = target1[mode];
+      const values2 = {
+        x: {
+          max_d: 0, max_d_m: 0,
+          min_d: 0, min_d_m: 0,
+          max_r: 0, max_r_m: 0,
+          min_r: 0, min_r_m: 0,
+        },
+        y: {
+          max_d: 0, max_d_m: 0,
+          min_d: 0, min_d_m: 0,
+          max_r: 0, max_r_m: 0,
+          min_r: 0, min_r_m: 0,
+        },
+        z: {
+          max_d: 0, max_d_m: 0,
+          min_d: 0, min_d_m: 0,
+          max_r: 0, max_r_m: 0,
+          min_r: 0, min_r_m: 0,
         }
-
-        const result3: any[] = new Array();
-        let m: string = null;
-        const old = {};
-        for (const k of Object.keys(target2)) {
-          const target3 = target2[k];
-          const item = {
-            m: m === target3["m"] ? "" : target3["m"],
-            n: "n" in target3 ? target3["n"] : "",
-            l: target3["l"].toFixed(3),
-            fx: target3["fx"].toFixed(2),
-            fy: target3["fy"].toFixed(2),
-            fz: target3["fz"].toFixed(2),
-            mx: target3["mx"].toFixed(2),
-            my: target3["my"].toFixed(2),
-            mz: target3["mz"].toFixed(2),
-            case: target3["comb"] + ":" + target3["case"],
-          };
-          // 同一要素内の着目点で、直前の断面力と同じ断面力だったら 読み飛ばす
-          // if (old['n'] !== item['n'] || old['fx'] !== item['fx'] || old['fy'] !== item['fy'] || old['fz'] !== item['fz']
-          //     || old['mx'] !== item['mx'] || old['my'] !== item['my'] || old['mz'] !== item['mz']) {
-          result3.push(item);
-          m = target3["m"];
-          Object.assign(old, item);
-          // }
-        }
-        result2[mode] = result3;
       }
-      result[combNo] = result2;
+      for(const key of Object.keys(values2)){
+        let kf = 'f' + key + '_max';
+        if(kf in values){
+          values2[key].max_d = values[kf].max;
+          values2[key].max_d_m = values[kf].max_m
+        }
+        kf = 'f' + key + '_min';
+        if(kf in values){
+          values2[key].min_d = values[kf].max;
+          values2[key].min_d_m = values[kf].max_m
+        }
+        let km = 'm' + key + '_max';
+        if(km in values){
+          values2[key].max_r = values[km].max;
+          values2[key].max_r_m = values[km].max_m
+        }
+        km = 'm' + key + '_min';
+        if(km in values){
+          values2[key].min_r = values[km].max;
+          values2[key].min_r_m = values[km].max_m
+        }
+      }
+
+      value_range[combNo] = values2;
     }
-    return { result };
+
+    return{ fsecPickup, max_values, value_range };
   }
 }

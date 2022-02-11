@@ -1,87 +1,87 @@
-<div class="fsecChoice">
+<div>
     <div>
-        <p>印刷範囲の選択</p>
-        <app-sheet #grid [options]="options"></app-sheet>
+        <p translate>print.custom.print-custom-fsec.selectArea</p>
+        <app-sheet #grid [options]="options" (click)="printService.newPrintJson()"></app-sheet>
     </div>
-    <div *ngIf="printService.flg == 8 ||printService.flg == 9">
+    <div *ngIf="(printService.flg == 7 && printCustomService.LL_exist === true) || printService.flg == 8 ||printService.flg == 9">
         <div class="print-choice">
             <ul class="fsec">
                 <li>
-                    <p>軸方向力</p>
+                    <p translate>print.custom.print-custom-fsec.axialForce</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus0"
-              [(ngModel)]="printCustomFsecService.fsecEditable[0]" />
-            <span class="checkbox-parts">最大</span>
+              [(ngModel)]="printCustomFsecService.fsecEditable[0]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.max</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus0"
-              [(ngModel)]="printCustomFsecService.fsecEditable[1]" />
-            <span class="checkbox-parts">最小</span>
+              [(ngModel)]="printCustomFsecService.fsecEditable[1]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.min</span>
           </label>
                 </li>
                 <li>
-                    <p>y軸方向のせん断力</p>
+                    <p translate>print.custom.print-custom-fsec.y_shear</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[2]" />
-            <span class="checkbox-parts">最大</span>
+              [(ngModel)]="printCustomFsecService.fsecEditable[2]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.max</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[3]" />
-            <span class="checkbox-parts">最小</span>
-          </label>
-                </li>
-                <li>
-                    <p>z軸方向のせん断力</p>
-                    <label style="width: 100%">
-            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[4]" />
-            <span class="checkbox-parts">最大</span>
-          </label>
-                    <label style="width: 100%">
-            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[5]" />
-            <span class="checkbox-parts">最小</span>
+              [(ngModel)]="printCustomFsecService.fsecEditable[3]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.min</span>
           </label>
                 </li>
                 <li>
-                    <p>ねじりモーメント</p>
+                    <p translate>print.custom.print-custom-fsec.z_shear</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[6]" />
-            <span class="checkbox-parts">最大</span>
+              [(ngModel)]="printCustomFsecService.fsecEditable[4]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.max</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[7]" />
-            <span class="checkbox-parts">最小</span>
-          </label>
-                </li>
-                <li>
-                    <p>y軸周りのモーメント</p>
-                    <label style="width: 100%">
-            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[8]" />
-            <span class="checkbox-parts">最大</span>
-          </label>
-                    <label style="width: 100%">
-            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[9]" />
-            <span class="checkbox-parts">最小</span>
+              [(ngModel)]="printCustomFsecService.fsecEditable[5]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.min</span>
           </label>
                 </li>
                 <li>
-                    <p>z軸周りのモーメント</p>
+                    <p translate>print.custom.print-custom-fsec.x_torsion</p>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[10]" />
-            <span class="checkbox-parts">最大</span>
+              [(ngModel)]="printCustomFsecService.fsecEditable[6]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.max</span>
           </label>
                     <label style="width: 100%">
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
-              [(ngModel)]="printCustomFsecService.fsecEditable[11]" />
-            <span class="checkbox-parts">最小</span>
+              [(ngModel)]="printCustomFsecService.fsecEditable[7]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.min</span>
+          </label>
+                </li>
+                <li>
+                    <p translate>print.custom.print-custom-fsec.y_moment</p>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
+              [(ngModel)]="printCustomFsecService.fsecEditable[8]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.max</span>
+          </label>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
+              [(ngModel)]="printCustomFsecService.fsecEditable[9]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.min</span>
+          </label>
+                </li>
+                <li>
+                    <p translate>print.custom.print-custom-fsec.z_moment</p>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
+              [(ngModel)]="printCustomFsecService.fsecEditable[10]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.max</span>
+          </label>
+                    <label style="width: 100%">
+            <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus1"
+              [(ngModel)]="printCustomFsecService.fsecEditable[11]" (click)=" printService.newPrintJson()" />
+            <span class="checkbox-parts" translate>print.custom.print-custom-fsec.min</span>
           </label>
                 </li>
             </ul>

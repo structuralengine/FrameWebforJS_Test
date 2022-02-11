@@ -1,10 +1,38 @@
 <a class="camera" (click)="downloadImage()"><i class="fas fa-camera"></i></a>
 <div #screen id="screen">
-    <canvas #myCanvas id="myCanvas" style="overflow:hidden; position: absolute;" (mousedown)="onMouseDown($event)"
-        (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)">
+    <div id="screenArea">
+        <div id="max-min">
+            <p>Max:{{ scene.max_Three }}</p>
+            <p>Min:{{ scene.min_Three }}</p>
+            <!--<p>Max:{{ scene.max_Three }}{{scene.Three_unit}}({{ scene.max_Three_m }})</p>
+            <p>Min:{{ scene.min_Three }}{{scene.Three_unit}}({{ scene.min_Three_m }})</p>-->
+            <!-- 
+            <table>
+                <tr>
+                    <td class="center">Max</td>
+                    <td class="center">:</td>
+                    <td class="center">{{ scene.max_Three }}</td>
+                    <td class="center">{{scene.Three_unit}}</td>
+                    <td class="center">({{ scene.max_Three_m }})</td>
+                </tr>
+                <tr>
+                    <td class="center">Min</td>
+                    <td class="center">:</td>
+                    <td class="center">{{ scene.min_Three }}</td>
+                    <td class="center">{{scene.Three_unit}}</td>
+                    <td class="center">({{ scene.min_Three_m }})</td>
+                </tr>
+                4種類出力用(disg & reac)
+                <ng-container *ngIf="scene.maxminFlag === true">
+                </ng-container>
+            </table>
+            -->
+        </div>
+        <canvas #myCanvas id="myCanvas" style="overflow: hidden; position: absolute" (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)">
     </canvas>
+    </div>
 </div>
 <div id="download">
-    <img #img>
+    <img #img />
     <a #downloadLink></a>
 </div>

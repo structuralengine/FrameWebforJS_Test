@@ -6,6 +6,7 @@ import { ThreeService } from "../../three/three.service";
 import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-notice-points",
@@ -21,7 +22,7 @@ export class InputNoticePointsComponent implements OnInit {
   private dataset = [];
   private columnHeaders: any = [
     {
-      title: "部材No",
+      title: this.translate.instant("input.input-notice-points.memberNo"),
       dataType: "string",
       dataIndx: "m",
       sortable: false,
@@ -29,7 +30,7 @@ export class InputNoticePointsComponent implements OnInit {
       width: 10,
     },
     {
-      title: "部材長\n(m)",
+      title: this.translate.instant("input.input-notice-points.distance"),
       dataType: "float",
       format: "#.000",
       dataIndx: "len",
@@ -38,7 +39,9 @@ export class InputNoticePointsComponent implements OnInit {
       editable: false,
       style: { background: "#dae6f0" },
     },
-    { title: "i-端 からの距離(m)", colModel: [] },
+    { 
+      title: this.translate.instant("input.input-notice-points.distance_from_node_i"),
+      colModel: [] },
   ];
 
   private ROWS_COUNT = 15;
@@ -48,7 +51,8 @@ export class InputNoticePointsComponent implements OnInit {
     private member: InputMembersService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private three: ThreeService
+    private three: ThreeService,
+    private translate: TranslateService
   ) {
     for (let i = 1; i <= this.data.NOTICE_POINTS_COUNT; i++) {
       const id = "L" + i;
@@ -143,6 +147,23 @@ export class InputNoticePointsComponent implements OnInit {
           this.dataset[row]["len"] = l != null ? l : null;
         }
         this.grid.refreshDataAndView();
+      }
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const notice_points = this.data.getNoticePointsColumns(no + 1);
+        const newRow = target.newRow;
+        notice_points['m'] = (newRow.m != undefined) ? newRow.m : '';
+        for (let num = 1; num <= this.data.NOTICE_POINTS_COUNT; num++) {
+          const key = "L" + num.toString();
+          notice_points[key] = (newRow[key] != undefined && key in newRow) ? newRow[key] : '';
+        }
+        // 部材長の情報を作成する. 
+        if (newRow.m !== '') {
+          const l: number = this.member.getMemberLength(newRow.m);
+          notice_points['len'] = (l == null) ? null : l.toFixed(3);
+        }
+        this.dataset.splice(no, 1, notice_points);
       }
       this.three.changeData("notice-points");
     },

@@ -6,6 +6,7 @@ import { ThreeService } from "../../three/three.service";
 import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-members",
@@ -18,11 +19,11 @@ export class InputMembersComponent implements OnInit {
   private dataset = [];
   private columnHeaders3D = [
     {
-      title: "節点",
+      title: this.translate.instant("input.input-members.node"),
       align: "center",
       colModel: [
         {
-          title: "i端",
+          title: this.translate.instant("input.input-members.node_i"),
           dataType: "integer",
           dataIndx: "ni",
           sortable: false,
@@ -30,7 +31,7 @@ export class InputMembersComponent implements OnInit {
           width: 10,
         },
         {
-          title: "j端",
+          title: this.translate.instant("input.input-members.node_j"),
           dataType: "integer",
           dataIndx: "nj",
           sortable: false,
@@ -40,7 +41,7 @@ export class InputMembersComponent implements OnInit {
       ],
     },
     {
-      title: "部材長",
+      title: this.translate.instant("input.input-members.distance"),
       align: "center",
       colModel: [
         {
@@ -56,7 +57,7 @@ export class InputMembersComponent implements OnInit {
       ],
     },
     {
-      title: "材料",
+      title: this.translate.instant("input.input-members.material"),
       align: "center",
       colModel: [
         {
@@ -70,7 +71,7 @@ export class InputMembersComponent implements OnInit {
       ],
     },
     {
-      title: "コードアングル",
+      title: this.translate.instant("input.input-members.codeAngle"),
       align: "center",
       colModel: [
         {
@@ -83,7 +84,7 @@ export class InputMembersComponent implements OnInit {
       ],
     },
     {
-      title: "材料名称",
+      title: this.translate.instant("input.input-members.material_name"),
       align: "center",
       dataType: "string",
       dataIndx: "n",
@@ -95,11 +96,11 @@ export class InputMembersComponent implements OnInit {
   ];
   private columnHeaders2D = [
     {
-      title: "節点",
+      title: this.translate.instant("input.input-members.node"),
       align: "center",
       colModel: [
         {
-          title: "i端",
+          title: this.translate.instant("input.input-members.node_i"),
           dataType: "integer",
           dataIndx: "ni",
           sortable: false,
@@ -107,7 +108,7 @@ export class InputMembersComponent implements OnInit {
           width: 10,
         },
         {
-          title: "j端",
+          title: this.translate.instant("input.input-members.node_j"),
           dataType: "integer",
           dataIndx: "nj",
           sortable: false,
@@ -117,7 +118,7 @@ export class InputMembersComponent implements OnInit {
       ],
     },
     {
-      title: "部材長",
+      title: this.translate.instant("input.input-members.distance"),
       align: "center",
       colModel: [
         {
@@ -133,7 +134,7 @@ export class InputMembersComponent implements OnInit {
       ],
     },
     {
-      title: "材料",
+      title: this.translate.instant("input.input-members.material"),
       align: "center",
       colModel: [
         {
@@ -147,7 +148,7 @@ export class InputMembersComponent implements OnInit {
       ],
     },
     {
-      title: "材料名称",
+      title: this.translate.instant("input.input-members.material_name"),
       align: "center",
       dataType: "string",
       dataIndx: "n",
@@ -165,7 +166,8 @@ export class InputMembersComponent implements OnInit {
     private element: InputElementsService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private three: ThreeService
+    private three: ThreeService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -179,7 +181,7 @@ export class InputMembersComponent implements OnInit {
     for (let i = this.dataset.length + 1; i <= row; i++) {
       const member = this.data.getMemberColumns(i);
       const m: string = member["id"];
-      const e = member.e;
+      const e = (member.e !== null) ? member.e : undefined;
       if (m !== "") {
         const l: any = this.data.getMemberLength(m);
         member["L"] = l != null ? l.toFixed(3) : l;
@@ -269,6 +271,26 @@ export class InputMembersComponent implements OnInit {
           this.dataset[row]["n"] = n;
           this.grid.refreshDataAndView();
         }
+      }
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const member = this.data.getMemberColumns(no + 1);
+        member['ni'] = (newRow.ni !== undefined) ? newRow.ni : '';
+        member['nj'] = (newRow.nj !== undefined) ? newRow.nj : '';
+        member['e']  = (newRow.e  !== undefined) ? newRow.e  : '';
+        member['cg'] = (newRow.cg !== undefined) ? newRow.cg : '';
+
+        // 入力によって反映される値を設定
+        if ( member['ni'] !== '' || member['nj'] !== '' ) {
+          const l: number = this.data.getMemberLength(no.toString());
+          member["L"] = (l == null) ? null : l.toFixed(3);
+        }
+        if (member['e'] !== '') {
+          const EleName = this.element.getElementName(newRow.e);
+          member["n"] = (EleName == '') ? '' : EleName;
+        }
+        this.dataset.splice(no, 1, member)
       }
       this.three.changeData("members");
     },

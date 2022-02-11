@@ -7,6 +7,7 @@ import { DataHelperModule } from '../../../providers/data-helper.module';
 import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'app-input-pickup',
@@ -29,7 +30,9 @@ export class InputPickupComponent implements OnInit {
     private comb: InputCombineService,
     private result: ResultDataService,
     private helper: DataHelperModule,
-    private app: AppComponent) {
+    private app: AppComponent,
+    private translate: TranslateService
+  ) {
 
       this.COLUMNS_COUNT = this.comb.getCombineCaseCount();
       if (this.COLUMNS_COUNT <= 0) {
@@ -49,7 +52,7 @@ export class InputPickupComponent implements OnInit {
         });
       }
       this.columnHeaders.push({
-        title: "名称　　　　　　　　　　　　　　",
+        title: this.translate.instant("input.input-pickup.name"),
         dataType: "string",
         dataIndx: "name",
         sortable: false,
@@ -108,6 +111,19 @@ export class InputPickupComponent implements OnInit {
       if (finalV >= dataV - 1) {
         this.loadData(dataV + this.ROWS_COUNT);
         this.grid.refreshDataAndView();
+      }
+    },
+    change: (evt, ui) => {
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const pickup = this.data.getPickUpDataColumns(no + 1, this.COLUMNS_COUNT);
+        pickup['name'] = (newRow['name'] != undefined) ? newRow['name'] : '';
+        for (let i = 1; i <= this.COLUMNS_COUNT; i++) { 
+          const key = "C" + i.toString();
+          pickup[key] = (newRow[key] != undefined) ? newRow[key] : null;
+        }
+        this.dataset.splice(no, 1, pickup);
       }
     }
   };

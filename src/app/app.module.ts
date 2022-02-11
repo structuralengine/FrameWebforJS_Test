@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from "@angular/material/radio";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -74,36 +74,23 @@ import { PrintComponent } from "./components/print/print.component";
 import { PrintService } from "./components/print/print.service";
 import { PrintLayoutComponent } from "./components/print/print-layout/print-layout.component";
 import { InvoiceComponent } from "./components/print/invoice/invoice.component";
-import { PrintInputCombineComponent } from "./components/print/invoice/print-input-combine/print-input-combine.component";
-import { PrintInputDefineComponent } from "./components/print/invoice/print-input-define/print-input-define.component";
-import { PrintInputElementsComponent } from "./components/print/invoice/print-input-elements/print-input-elements.component";
-import { PrintInputFixMemberComponent } from "./components/print/invoice/print-input-fix-member/print-input-fix-member.component";
-import { PrintInputFixNodeComponent } from "./components/print/invoice/print-input-fix-node/print-input-fix-node.component";
-import { PrintInputJointComponent } from "./components/print/invoice/print-input-joint/print-input-joint.component";
-import { PrintInputLoadComponent } from "./components/print/invoice/print-input-load/print-input-load.component";
-import { PrintInputMembersComponent } from "./components/print/invoice/print-input-members/print-input-members.component";
-import { PrintInputNodesComponent } from "./components/print/invoice/print-input-nodes/print-input-nodes.component";
-import { PrintInputNoticePointsComponent } from "./components/print/invoice/print-input-notice-points/print-input-notice-points.component";
-import { PrintInputPanelComponent } from "./components/print/invoice/print-input-panel/print-input-panel.component";
-import { PrintInputPickupComponent } from "./components/print/invoice/print-input-pickup/print-input-pickup.component";
-import { PrintResultCombineDisgComponent } from "./components/print/invoice/print-result-combine-disg/print-result-combine-disg.component";
-import { PrintResultCombineFsecComponent } from "./components/print/invoice/print-result-combine-fsec/print-result-combine-fsec.component";
-import { PrintResultCombineReacComponent } from "./components/print/invoice/print-result-combine-reac/print-result-combine-reac.component";
-import { PrintResultDisgComponent } from "./components/print/invoice/print-result-disg/print-result-disg.component";
-import { PrintResultFsecComponent } from "./components/print/invoice/print-result-fsec/print-result-fsec.component";
-import { PrintResultReacComponent } from "./components/print/invoice/print-result-reac/print-result-reac.component";
-import { PrintResultPickupDisgComponent } from "./components/print/invoice/print-result-pickup-disg/print-result-pickup-disg.component";
-import { PrintResultPickupFsecComponent } from "./components/print/invoice/print-result-pickup-fsec/print-result-pickup-fsec.component";
-import { PrintResultPickupReacComponent } from "./components/print/invoice/print-result-pickup-reac/print-result-pickup-reac.component";
-import { PrintInputLoadNameComponent } from "./components/print/invoice/print-input-load-name/print-input-load-name.component";
+
 import { PrintThreeComponent } from "./components/print/invoice/print-three/print-three.component";
-import { DataCountService } from "./components/print/invoice/dataCount.service";
 
 import { PagerComponent } from "./components/input/pager/pager.component";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
 import { PrintCustomFsecComponent } from "./components/print/custom/print-custom-fsec/print-custom-fsec.component";
 import { PrintCustomThreeComponent } from "./components/print/custom/print-custom-three/print-custom-three.component";
 import { PrintCustomComponent } from "./components/print/custom/print-custom.component";
+import { PrintCustomReacComponent } from "./components/print/custom/print-custom-reac/print-custom-reac.component";
+import { PrintCustomDisgComponent } from "./components/print/custom/print-custom-disg/print-custom-disg.component";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { ElectronService, NgxElectronModule } from "ngx-electron";
+
+const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
+  new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+
 
 @NgModule({
   imports: [
@@ -119,6 +106,14 @@ import { PrintCustomComponent } from "./components/print/custom/print-custom.com
     MatInputModule,
     MatRadioModule,
     AngularFireModule.initializeApp(environment.firebase),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
+    NgxElectronModule
   ],
   declarations: [
     AppComponent,
@@ -154,35 +149,15 @@ import { PrintCustomComponent } from "./components/print/custom/print-custom.com
     PrintComponent,
     PrintLayoutComponent,
     InvoiceComponent,
-    PrintInputCombineComponent,
-    PrintInputDefineComponent,
-    PrintInputElementsComponent,
-    PrintInputFixMemberComponent,
-    PrintInputFixNodeComponent,
-    PrintInputJointComponent,
-    PrintInputLoadComponent,
-    PrintInputMembersComponent,
-    PrintInputNodesComponent,
-    PrintInputNoticePointsComponent,
-    PrintInputPanelComponent,
-    PrintInputPickupComponent,
-    PrintResultCombineDisgComponent,
-    PrintResultCombineFsecComponent,
-    PrintResultCombineReacComponent,
-    PrintResultDisgComponent,
-    PrintResultFsecComponent,
-    PrintResultReacComponent,
-    PrintResultPickupDisgComponent,
-    PrintResultPickupFsecComponent,
-    PrintResultPickupReacComponent,
 
     PagerComponent,
     SheetComponent,
-    PrintInputLoadNameComponent,
     PrintThreeComponent,
     PrintCustomFsecComponent,
     PrintCustomThreeComponent,
     PrintCustomComponent,
+    PrintCustomReacComponent,
+    PrintCustomDisgComponent,
   ],
   entryComponents: [LoginDialogComponent, WaitDialogComponent],
   providers: [
@@ -211,11 +186,16 @@ import { PrintCustomComponent } from "./components/print/custom/print-custom.com
     ResultPickupFsecService,
     ResultCombineFsecService,
 
-    DataCountService,
-
     UserInfoService,
     SceneService,
+
+    ElectronService
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
+

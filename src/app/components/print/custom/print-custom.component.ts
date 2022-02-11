@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { PrintService } from "../print.service";
+import { PrintCustomService } from "./print-custom.service";
 
 @Component({
   selector: "app-print-custom",
@@ -9,8 +10,11 @@ import { PrintService } from "../print.service";
 export class PrintCustomComponent implements OnInit {
   // public flg: number;
   public flg = this.printService.flg;
-  
-  constructor(public printService: PrintService) {}
+
+  constructor(
+    public printService: PrintService,
+    public printCustomService: PrintCustomService
+  ) {}
 
   ngOnInit(): void {
     this.onSelectChange(this.printService.flg);
@@ -18,8 +22,5 @@ export class PrintCustomComponent implements OnInit {
 
   public onSelectChange(value) {
     this.printService.flg = Number(value);
-    //  let v = parseInt(value);
-    //  const data = this.fileIndex.FEMlist[v - 1];
-    //  this.InputData.initModel(data.file);　//FemMainServiceのinitModel()にdata.fileを送る
   }
 }

@@ -212,6 +212,10 @@ export class ThreeNodesService {
       this.baseScale = Math.max(this.maxDistance / 500, this.minDistance / 50);
     }
 
+    // グリッドヘルパーのサイズを変更する
+    this.scene.setNewHelper(this.maxDistance);
+    
+
     // 重心位置を計算する
     let counter: number = 0;
     this.center = new THREE.Vector3();
@@ -245,6 +249,8 @@ export class ThreeNodesService {
 
   // 表示設定を変更する
   public visibleChange(flag: boolean, text: boolean, gui: boolean): void {
+
+    this.selectChange(-1)
 
     // 表示設定
     if (this.objVisible !== flag) {

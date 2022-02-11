@@ -5,6 +5,7 @@ import { ThreeService } from '../../three/three.service';
 import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from 'src/app/app.component';
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'app-input-fix-member',
@@ -17,26 +18,47 @@ export class InputFixMemberComponent implements OnInit {
 
   private dataset = [];
   private columnHeaders3D =[
-    { title: '部材', align: 'center', colModel: [
-      { title: "No", align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
+    { 
+      title: this.translate.instant("input.input-fix-member.member"),
+      align: 'center', colModel: [
+      { 
+        title: "No", align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
     ]},
-    { title: '変位拘束 (kN/m/m)', align: 'center', colModel: [
-      { title: "部材軸方向", dataType: "float",   dataIndx: "tx", sortable: false, width: 100 },
-      { title: "部材Y軸", dataType: "float",   dataIndx: "ty", sortable: false, width: 100 },
-      { title: "部材Z軸", dataType: "float",   dataIndx: "tz", sortable: false, width: 100 },
+    { 
+      title: this.translate.instant("input.input-fix-member.displacementRestraint"),
+
+      align: 'center', colModel: [
+      { 
+        title: this.translate.instant("input.input-fix-member.v_axis"),
+        dataType: "float",   dataIndx: "tx", sortable: false, width: 100 },
+      { 
+        title: this.translate.instant("input.input-fix-member.y_axis"),
+        dataType: "float",   dataIndx: "ty", sortable: false, width: 100 },
+      { 
+        title: this.translate.instant("input.input-fix-member.z_axis"),
+        dataType: "float",   dataIndx: "tz", sortable: false, width: 100 },
     ]},
-    { title: '回転拘束', align: 'center', colModel: [
-      { title: "(kNm/rad/m)",  dataType: "float",   dataIndx: "tr", sortable: false, width: 100 }
+    { 
+      title: this.translate.instant("input.input-fix-member.rotationalRestraint"),
+      align: 'center', colModel: [
+      { 
+        title: "(kNm/rad/m)",  dataType: "float",   dataIndx: "tr", sortable: false, width: 100 }
     ]},
   ];
   private columnHeaders2D =[
-    { title: '部材', align: 'center', colModel: [
+    { 
+      title: this.translate.instant("input.input-fix-member.member"),
+      align: 'center', colModel: [
       { title: "No", align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
     ]},
-    { title: '部材軸方向', align: 'center', colModel: [
+    { 
+      title: this.translate.instant("input.input-fix-member.v_axis"),
+      align: 'center', colModel: [
       { title: "(kN/m/m)", dataType: "float",   dataIndx: "tx", sortable: false, width: 100 },
     ]},
-    { title: '軸直角方向', align: 'center', colModel: [
+    { 
+      title: this.translate.instant("input.input-fix-member.r_axis"),
+      align: 'center', colModel: [
       { title: "(kN/m/m)", dataType: "float",   dataIndx: "ty", sortable: false, width: 100 },
     ]},
 ];
@@ -48,7 +70,9 @@ export class InputFixMemberComponent implements OnInit {
     private data: InputFixMemberService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private three: ThreeService) {}
+    private three: ThreeService,
+    private translate: TranslateService
+  ) {}
 
 
     ngOnInit() {
@@ -122,6 +146,18 @@ export class InputFixMemberComponent implements OnInit {
       this.three.selectChange('fix_member', row, column);
     },
     change: (evt, ui) => {
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const fixmember = this.data.getFixMemberColumns(this.page, no + 1);
+        fixmember['m']  = (newRow.m  != undefined) ? newRow.m  : '';
+        fixmember['tx'] = (newRow.tx != undefined) ? newRow.tx : '';
+        fixmember['ty'] = (newRow.ty != undefined) ? newRow.ty : '';
+        fixmember['tz'] = (newRow.tz != undefined) ? newRow.tz : '';
+        fixmember['tr'] = (newRow.tr != undefined) ? newRow.tr : '';
+        this.dataset.splice(no, 1, fixmember)
+      }
       this.three.changeData('fix_member', this.page);
     }
   };

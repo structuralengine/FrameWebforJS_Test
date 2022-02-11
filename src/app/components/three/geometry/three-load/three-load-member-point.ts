@@ -48,7 +48,8 @@ export class ThreeLoadMemberPoint {
     pL2: number,
     P1: number,
     P2: number,
-    row: number
+    row: number,
+    count: number
   ): THREE.Group {
 
     const offset: number = 0;
@@ -64,6 +65,16 @@ export class ThreeLoadMemberPoint {
     const length = nodei.distanceTo(nodej);
     const L1 = p.L1;
     const L2 = p.L2;
+
+    let P: number;
+    let L: number;
+    if (count === 1) {
+      P = P1;
+      L = L1;
+    } else {
+      P = P2;
+      L = L2;
+    }
     /* 同じようなことを getPoints でもやってるのでコメントアウト
     if (pL1 < 0 || length < pL1) {
       P1 = 0;
@@ -73,21 +84,23 @@ export class ThreeLoadMemberPoint {
     }
     */
     // 矢印
-    for (const arrow of this.getArrow(direction, length,[P1, P2], [L1, L2])) {
-      child.add(arrow);
-    }
+    const arrow: THREE.Group = this.getArrow(direction, length, P, L);
+    arrow.position.y = offset;
+    arrow.name = "arrow"
 
      // 全体
-    child.name = "child";
-    child.position.y = offset;
+    //child.name = "child";
+    //child.position.y = offset;
+    //child.add(arrow);
+    //group.add(child);
 
-    const group0 = new THREE.Group();
-    group0.add(child);
-    group0.name = "group";
+    // const group0 = new THREE.Group();
+    // group0.add(arrow);
+    // group0.name = "group";
 
     // 全体の位置を修正する
     const group = new THREE.Group();
-    group.add(group0);
+    group.add(arrow);
     group["points"] = p.points;
     group["L1"] = p.L1;
     group["L"] = p.len;
@@ -99,7 +112,7 @@ export class ThreeLoadMemberPoint {
     group["direction"] = direction;
     group["localAxis"] = localAxis;
     group["editor"] = this;
-    group['value'] = p.Pmax; // 大きい方の値を保存
+    group['value'] = P; // 値を保存
 
     // 全体の向きを修正する
     this.setRotate(direction, group, localAxis);
@@ -182,49 +195,44 @@ export class ThreeLoadMemberPoint {
   private getArrow(
     direction: string,
     length: number,
-    value: number[],
-    points: number[]): THREE.Group[] {
+    value: number,
+    points: number): THREE.Group {
 
-    const result: THREE.Group[] = new Array();
+    const result: THREE.Group = new THREE.Group();
 
     const key: string = 't' + direction;
 
-    for (let i = 0; i < 2; i++) {
+    const Px = value;
 
-      const Px = value[i];
-      if (Px === 0) {
-        continue;
-      }
-
-      const pos1 = new THREE.Vector3(points[i], 0, 0);
-      if (direction === 'x') {
-        pos1.y = 0.1;
-      }
-
-      //6番目の代入値は不適切
-      const arrow_1 = this.point.create(pos1, 0, Px, 1, key, 0);
-
-      if (direction === 'y') {
-        arrow_1.rotation.z += Math.PI;
-      } else if (direction === 'z') {
-        arrow_1.rotation.x += Math.PI / 2;
-      } else if (direction === "gx") {
-        const arrowhelper = arrow_1.getObjectByName('arrow');
-        // 仕様の位置に届かせるための微調整
-        arrowhelper.position.y += 1;
-      } else if (direction === "gy" || direction === "gz") {
-        const arrowhelper = arrow_1.getObjectByName('arrow');
-        // 仕様の位置に届かせるための微調整
-        if (value[i] > 0) {
-          arrowhelper.position.x += 1;
-        } else {
-          arrowhelper.position.x -= 1;
-        }
-      }
-      arrow_1.rotateX(Math.PI)
-
-      result.push(arrow_1);
+    const pos1 = new THREE.Vector3(points, 0, 0);
+    if (direction === 'x') {
+      pos1.y = 0.1;
     }
+
+    //6番目の代入値は不適切
+    const arrow_1 = this.point.create(pos1, 0, Px, 1, key, 0);
+
+    if (direction === 'y') {
+      arrow_1.rotation.z += Math.PI;
+    } else if (direction === 'z') {
+      arrow_1.rotation.x += Math.PI / 2;
+    } else if (direction === "gx") {
+      const arrowhelper = arrow_1.getObjectByName('arrow');
+      // 仕様の位置に届かせるための微調整
+      arrowhelper.position.y += 1;
+    } else if (direction === "gy" || direction === "gz") {
+      const arrowhelper = arrow_1.getObjectByName('arrow');
+      // 仕様の位置に届かせるための微調整
+      // if (value[i] > 0) {
+      if (value > 0) {
+        arrowhelper.position.x += 1;
+      } else {
+        arrowhelper.position.x -= 1;
+      }
+    }
+    arrow_1.rotateX(Math.PI)
+
+    result.add(arrow_1);
 
     return result;
 
@@ -233,14 +241,26 @@ export class ThreeLoadMemberPoint {
   // 大きさを反映する
   public setSize(group: any, scale: number): void {
     for (const item of group.children) {
-      item.scale.set(1, scale, scale);
+      if (item.name === 'arrow') {
+        for (const item_child1 of item.children) {
+          if (item_child1.name.includes('PointLoad')) {
+            for (const item_child2 of item_child1.children) {
+              item_child2.scale.set(scale, scale, scale);
+            }
+          }
+        }
+      }
     }
   }
 
   // オフセットを反映する
   public setOffset(group: THREE.Group, offset: number): void {
     for (const item of group.children) {
-      item.position.y = offset;
+      if (item.name === 'arrow') {
+        for (const item_child1 of item.children) {
+          item_child1.position.y = offset;
+        }
+      }
     }
   }
 
@@ -254,7 +274,15 @@ export class ThreeLoadMemberPoint {
 
   // 大きさを反映する
   public setScale(group: any, scale: number): void {
-    group.scale.set(1, scale, scale);
+    for (const item of group.children) {
+      //if (item.name === 'arrow') {
+        //for (const item_child1 of item.children) {
+          item.scale.set(1, scale, scale);
+          // コーンの先が細く、または太くなる。
+          //item.children[0].scale.x = scale;
+        //}
+      //}
+    }
   }
 
   // ハイライトを反映させる

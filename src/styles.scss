@@ -6,12 +6,19 @@ body {
     // font-family: 'Lato', 'Noto Sans JP', 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
 }
 
+html,
+body {
+    overflow: hidden;
+}
+
 .pq-resize-iframe {
     display: none;
 }
+
 a[href="http://paramquery.com/pro"] {
     display: none;
 }
+
 a[href="https://paramquery.com/pro"] {
     display: none;
 }
@@ -33,11 +40,9 @@ a[href="https://paramquery.com/pro"] {
     a[href="https://paramquery.com/pro"] {
         display: none;
     }
-    
     .obit-controls-gizmo {
         display: none;
     }
-    
 }
 
 @media print {
@@ -52,17 +57,19 @@ a[href="https://paramquery.com/pro"] {
     size: A4;
 }
 
+
 /* Importing Bootstrap SCSS file. */
 
 @import "~bootstrap/scss/bootstrap";
 @media print {
-    .isPrinting > * {
+    .isPrinting>* {
         display: none;
     }
     .isPrinting app-print-layout {
         display: block;
     }
 }
+
 
 /* Add application styles & imports to this file! */
 

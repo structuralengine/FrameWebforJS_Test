@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ResultDisgService } from '../result-disg/result-disg.service';
 import { ResultPickupDisgService } from '../result-pickup-disg/result-pickup-disg.service';
+import { ThreeDisplacementService } from '../../three/geometry/three-displacement.service';
 import { DataHelperModule } from '../../../providers/data-helper.module';
+import { data } from 'jquery';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +11,7 @@ import { DataHelperModule } from '../../../providers/data-helper.module';
 export class ResultCombineDisgService {
 
   public disgCombine: any;
+  public value_range: any;
   public isCalculated: boolean;
   private worker1: Worker;
   private worker2: Worker;
@@ -62,6 +65,7 @@ export class ResultCombineDisgService {
   private columns: any;
 
   constructor(private pickdisg: ResultPickupDisgService,
+              private three: ThreeDisplacementService,
               private helper: DataHelperModule,) {
     this.clear();
     this.isCalculated = false;
@@ -79,6 +83,10 @@ export class ResultCombineDisgService {
   }
 
   public getCombineDisgColumns(combNo: number, mode: string): any {
+    if(!(combNo in this.columns))
+      return null;
+    if(!(mode in this.columns[combNo]))
+      return null;
     return this.columns[combNo][mode];
   }
 
@@ -92,6 +100,7 @@ export class ResultCombineDisgService {
       // Create a new
       this.worker1.onmessage = ({ data }) => {
         this.disgCombine = data.disgCombine;
+        this.value_range = data.value_range;
         console.log('変位disg の 組み合わせ Combine 集計が終わりました', performance.now() - startTime);
 
         // ピックアップの集計処理を実行する
@@ -104,9 +113,10 @@ export class ResultCombineDisgService {
           this.isCalculated = true;
         };
         this.worker2.postMessage({ disgCombine: this.disgCombine });
+        this.three.setCombPickResultData(this.value_range, 'comb_disg');
 
       };
-      // this.disgCombine = this.worker1_test(defList, combList, disg, this.disgKeys );
+      // const a = this.worker1_test({ defList, combList, disg, disgKeys: this.disgKeys } );
       this.worker1.postMessage({ defList, combList, disg, disgKeys: this.disgKeys });
     } else {
       // Web workers are not supported in this environment.
@@ -115,17 +125,26 @@ export class ResultCombineDisgService {
 
   }
 
-  private worker1_test(defList: any, combList: any, disg: any, disgKeys: string[]) {
-  
+  worker1_test( data) {
+    const defList = data.defList;
+    const combList = data.combList;
+    const disg = data.disg;
+    const disgKeys = data.disgKeys;
+
     // defineのループ
     const disgDefine = {};
     for(const defNo of Object.keys(defList)) {
       const temp = {};
       //
       for(const caseInfo of defList[defNo]) {
-        const baseNo: string = Math.abs(caseInfo).toString();
+        let baseNo: string = '';
+        if(typeof caseInfo === "number"){
+          baseNo = Math.abs(caseInfo).toString();
+        } else {
+          baseNo = caseInfo;
+        }
         const coef: number = Math.sign(caseInfo);
-  
+
         if (!(baseNo in disg)) {
           if(caseInfo === 0 ){
             // 値が全て0 の case 0 という架空のケースを用意する
@@ -135,7 +154,7 @@ export class ResultCombineDisgService {
             continue;
           }
         }
-  
+
         // カレントケースを集計する
         for (const key of disgKeys) {
           // 節点番号のループ
@@ -167,7 +186,7 @@ export class ResultCombineDisgService {
                 }
               }
             }
-  
+
           } else {
             temp[key] = obj;
           }
@@ -175,8 +194,8 @@ export class ResultCombineDisgService {
       }
       disgDefine[defNo] = temp;
     }
-  
-  
+
+
     // combineのループ
     const disgCombine = {};
     for (const combNo of Object.keys(combList)) {
@@ -186,14 +205,14 @@ export class ResultCombineDisgService {
         const caseNo = Number(caseInfo.caseNo);
         const defNo: string = caseInfo.caseNo.toString();
         const coef: number = caseInfo.coef;
-  
+
         if (!(defNo in disgDefine)) {
           continue;
         }
         if (coef === 0) {
           continue;
         }
-  
+
         const disgs = disgDefine[defNo];
         if(Object.keys(disgs).length < 1) continue;
 
@@ -219,14 +238,14 @@ export class ResultCombineDisgService {
               case: caseStr
             };
           }
-  
+
           if (key in temp) {
             for (const nodeNo of Object.keys(disgs[key])) {
                 for(const k of Object.keys(obj[nodeNo])){
                   temp[key][nodeNo][k] += obj[nodeNo][k];
                 }
                 temp[key][nodeNo]['comb']= combNo;
-            }
+              }
           } else {
             for (const nodeNo of Object.keys(obj)) {
               obj[nodeNo]['comb']= combNo;
@@ -237,8 +256,99 @@ export class ResultCombineDisgService {
       }
       disgCombine[combNo] = temp;
     }
-  
-    return{ disgCombine };
+
+    const value_range = {};
+    // CombineNoごとの最大最小を探す
+    for (const combNo of Object.keys(disgCombine)) {
+      const caseData = disgCombine[combNo];
+      const key_list = Object.keys(caseData);
+      const values_d = {};
+      const values_r = {};
+      // dx～rzの最大最小をそれぞれ探す
+      for (const key of key_list) {
+        const datas = caseData[key];
+        let key2: string;
+        let is_d = false;
+        if (key.includes('dx')) {
+          key2 = 'dx';
+          is_d = true;
+        } else if (key.includes('dy')) {
+          key2 = 'dy';
+          is_d = true;
+        } else if (key.includes('dz')) {
+          key2 = 'dz';
+          is_d = true;
+        } else if (key.includes('rx')) {
+          key2 = 'rx';
+        } else if (key.includes('ry')) {
+          key2 = 'ry';
+        } else if (key.includes('rz')) {
+          key2 = 'rz';
+        }
+        let targetValue = (key.includes('max')) ? Number.MIN_VALUE : Number.MAX_VALUE;
+        let targetValue_m = '0';
+        if (key.includes('max')) {
+          for (const row of Object.keys(datas)) {
+            const data = datas[row][key2];
+            if (data >= targetValue) {
+              targetValue = data;
+              targetValue_m = row;
+            }
+          }
+        } else {
+          for (const row of Object.keys(datas)) {
+            const data = datas[row][key2];
+            if (data <= targetValue) {
+              targetValue = data;
+              targetValue_m = row;
+            }
+          }
+        }
+        if (Math.abs(targetValue) === Number.MAX_VALUE) {
+          continue;
+        }
+        if(is_d){
+          values_d[key] = {max: targetValue, max_m: targetValue_m};
+        } else{
+          values_r[key] = {max: targetValue, max_m: targetValue_m};
+        }
+      }
+      if (Object.keys(values_d).length === 0) {
+        continue;
+      }
+      const values2 = {
+        max_d : Number.MIN_VALUE, max_d_m: 0,
+        min_d : Number.MAX_VALUE, min_d_m: 0,
+        max_r : Number.MIN_VALUE, max_r_m: 0,
+        min_r : Number.MAX_VALUE, min_r_m: 0
+      };
+      for(const key of Object.keys(values_d)){
+        const value = values_d[key];
+        if(value.max > values2.max_d){
+          values2.max_d = value.max;
+          values2.max_d_m = value.max_m;
+        } else if(value.max < values2.min_d){
+          values2.min_d = value.max;
+          values2.min_d_m = value.max_m;
+        }
+      }
+      for(const key of Object.keys(values_r)){
+        const value = values_r[key];
+        if(value.max > values2.max_r){
+          values2.max_r = value.max;
+          values2.max_r_m = value.max_m;
+        } else if(value.max < values2.min_r){
+          values2.min_r = value.max;
+          values2.min_r_m = value.max_m;
+        }
+      }
+
+      value_range[combNo] = values2;
+    }
+
+    return{ disgCombine, value_range };
   }
+
+
 
 }

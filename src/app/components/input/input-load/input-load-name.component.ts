@@ -6,6 +6,7 @@ import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { ThreeLoadService } from "../../three/geometry/three-load/three-load.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-input-load-name",
@@ -21,7 +22,7 @@ export class InputLoadNameComponent implements OnInit {
   private dataset = [];
   private columnHeaders = [
     {
-      title: "割増し係数",
+      title: this.translate.instant("input.input-load-name.cf"),
       dataType: "float",
       format: "#.000",
       dataIndx: "rate",
@@ -30,7 +31,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "right",
     },
     {
-      title: "記号",
+      title: this.translate.instant("input.input-load-name.symbol"),
       dataType: "string",
       dataIndx: "symbol",
       sortable: false,
@@ -38,7 +39,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "left",
     },
     {
-      title: "名称",
+      title: this.translate.instant("input.input-load-name.name"),
       dataType: "string",
       dataIndx: "name",
       sortable: false,
@@ -46,7 +47,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "left",
     },
     {
-      title: "支点",
+      title: this.translate.instant("input.input-load-name.fixNode"),
       dataType: "integer",
       dataIndx: "fix_node",
       sortable: false,
@@ -54,7 +55,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "right",
     },
     {
-      title: "断面",
+      title: this.translate.instant("input.input-load-name.crossSection"),
       dataType: "integer",
       dataIndx: "element",
       sortable: false,
@@ -62,7 +63,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "right",
     },
     {
-      title: "バネ",
+      title: this.translate.instant("input.input-load-name.fixMember"),
       dataType: "integer",
       dataIndx: "fix_member",
       sortable: false,
@@ -70,7 +71,7 @@ export class InputLoadNameComponent implements OnInit {
       align: "right",
     },
     {
-      title: "結合",
+      title: this.translate.instant("input.input-load-name.joint"),
       dataType: "integer",
       dataIndx: "joint",
       sortable: false,
@@ -86,7 +87,8 @@ export class InputLoadNameComponent implements OnInit {
     private three: ThreeService,
     private app: AppComponent,
     private helper: DataHelperModule,
-    private threeload: ThreeLoadService
+    private threeload: ThreeLoadService,
+    private translate: TranslateService
   ) {
     this.loadData(this.ROWS_COUNT);
   }
@@ -188,6 +190,33 @@ export class InputLoadNameComponent implements OnInit {
           this.setNewList(target.rowIndx + 1);
         }
       }
+      // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
+      for (const target of ui.addList) {
+        const no: number = target.rowIndx;
+        const newRow = target.newRow;
+        const load_name = this.data.getLoadNameColumns(no + 1);
+        load_name['rate']  = (newRow.rate != undefined) ? newRow.rate  : null;
+        load_name['symbol'] = (newRow.symbol != "") ? newRow.symbol : null;
+        load_name['name'] = (newRow.name != "") ? newRow.name : '';
+        load_name['fix_node'] = (newRow.fix_node != undefined) ? newRow.fix_node : null;
+        load_name['element'] = (newRow.element != undefined) ? newRow.element : null;
+        load_name['fix_member'] = (newRow.fix_member != undefined) ? newRow.fix_member : null;
+        load_name['joint'] = (newRow.joint != undefined) ? newRow.joint : null;
+        this.dataset.splice(no, 1, load_name);
+
+        if (
+          load_name['rate'] === null &&
+          load_name['symbol'] === null &&
+          (load_name['name'] === "" || load_name['name'] === undefined) &&
+          load_name['fix_node'] === null &&
+          load_name['element'] === null &&
+          load_name['fix_member'] === null &&
+          load_name['joint'] === null
+        ) {
+          this.setNewList(no + 1);
+        }
+      }
+
       if (target !== null) {
         this.three.changeData("load_names", target.rowIndx + 1);
       }
