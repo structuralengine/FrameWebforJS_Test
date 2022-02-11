@@ -74,8 +74,6 @@ export class MenuComponent implements OnInit {
     this.fileName = "";
     this.three.fileName = "";
     this.three.mode = "";
-  
-
   }
 
   // ファイルを開く
@@ -124,12 +122,14 @@ export class MenuComponent implements OnInit {
   }
 
   // 上書き保存
-  public overWrite(): void{
-    // if(this.electronService.isElectronApp) {
-    // 上書き保存のメニューが表示されるのは electron のときだけ
+  // 上書き保存のメニューが表示されるのは electron のときだけ
+  public overWrite(): void {
+    if (this.fileName === ""){
+      this.save();
+      return;
+    }
     const inputJson: string = JSON.stringify(this.InputData.getInputJson());
-    this.electronService.ipcRenderer.sendSync('selectPirate', inputJson);
-    // }
+    this.electronService.ipcRenderer.sendSync('overWrite', this.fileName, inputJson);
   }
 
   private fileToText(file): any {
@@ -157,7 +157,13 @@ export class MenuComponent implements OnInit {
     if (this.helper.getExt(this.fileName) !== "json") {
       ext = ".json";
     }
+    // if(this.electronService.isElectronApp) {
+    //   this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson).then((data) => {
+    //     this.fileName = data;
+    //   });
+    // } else {
     FileSaver.saveAs(blob, this.fileName + ext);
+    // }
   }
 
   // 計算
