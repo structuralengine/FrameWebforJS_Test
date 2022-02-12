@@ -55,7 +55,7 @@ export class MenuComponent implements OnInit {
   ) {
     this.fileName = "";
     this.three.fileName = "";
-    this.version = process.env.npm_package_version;
+    this.version = "";//process.env.npm_package_version;
   }
 
   ngOnInit() {
@@ -150,7 +150,6 @@ export class MenuComponent implements OnInit {
   // ファイルを保存
   save(): void {
     const inputJson: string = JSON.stringify(this.InputData.getInputJson());
-    const blob = new window.Blob([inputJson], { type: "text/plain" });
     if (this.fileName.length === 0) {
       this.fileName = "frameWebForJS.json";
       this.three.fileName = "frameWebForJS.json";
@@ -162,6 +161,7 @@ export class MenuComponent implements OnInit {
     if(this.electronService.isElectronApp) {
       this.fileName = this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson);
     } else {
+      const blob = new window.Blob([inputJson], { type: "text/plain" });
       FileSaver.saveAs(blob, this.fileName);
     }
   }
