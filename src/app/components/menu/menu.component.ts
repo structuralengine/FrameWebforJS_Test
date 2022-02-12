@@ -250,9 +250,6 @@ export class MenuComponent implements OnInit {
             }
 
             this.InputData.getResult(jsonData);
-            // テスト ---------------------------------------------
-            // this.saveResult(json);
-            // --------------------------------------------- テスト*/
 
             // 解析結果を集計する
             this.ResultData.loadResultData(_jsonData);
@@ -298,8 +295,12 @@ export class MenuComponent implements OnInit {
       filename = this.fileName.split(".").slice(0, -1).join(".");
       filename += ext;
     }
-
-    FileSaver.saveAs(blob, filename);
+    // 保存する
+    if(this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.sendSync('saveFile', filename, pickupJson);
+    } else {
+      FileSaver.saveAs(blob, filename);
+    }
   }
 
   // ログイン関係
