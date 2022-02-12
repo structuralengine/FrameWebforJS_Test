@@ -15,16 +15,6 @@
                         <button ngbDropdownItem (click)="save()"translate>menu.saveFile</button>
                         <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()" translate>menu.overwrite</button>
                         <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()"translate>menu.outputFile</button>
-
-                        <!-- テスト用テスト用
-            <label style="width: 100%; margin: 0px">
-              <span ngbDropdownItem style="padding: 8px">
-                解析結果ファイルを開く
-                <input type="file" accept="application/json" (change)="resultopen($event)" style="display: none" />
-              </span>
-            </label>
-            -->
-
                     </div>
                 </div>
             </li>

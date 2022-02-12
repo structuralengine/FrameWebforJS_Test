@@ -19,8 +19,17 @@
     "!tsconfig.json",
     "!tslint.json"
   ],
+  "extraResources": [
+    {
+      "from": "dist",
+      "to": "app",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
   "win": {
-    "icon": "dist",
+    "icon": "dist/assets/icons",
     "target": [
       "nsis"
     ],
