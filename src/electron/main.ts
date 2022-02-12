@@ -14,7 +14,7 @@ function createWindow () {
   });
   mainWindow.maximize();
   mainWindow.setMenuBarVisibility(false);
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   mainWindow.loadFile('index.html');
 }
 
@@ -29,13 +29,11 @@ ipcMain.on('overWrite', async (event: Electron.IpcMainEvent, path: string, data:
   fs.writeFile(path, data, function (error) {
     if (error != null) {
       dialog.showMessageBox({ message: 'error : ' + error });
-      return;
     }
   });
-  event.returnValue = true;
+  event.returnValue = path;
 });
 
-/*
 // 名前を付けて保存
 ipcMain.on('saveFile', async (event: Electron.IpcMainEvent, filename: string, data: string) => {
   // 場所とファイル名を選択
@@ -49,19 +47,19 @@ ipcMain.on('saveFile', async (event: Electron.IpcMainEvent, filename: string, da
       'createDirectory',  // ディレクトリの作成を許可 (macOS)
     ]
   });
+
   // キャンセルで閉じた場合
   if( path === undefined ){
-    return('');
+    event.returnValue = '';
   }
 
   // ファイルの内容を返却
   try {
     fs.writeFileSync(path, data);
-    return(path);
+    event.returnValue = path;
   }
   catch(error) {
     dialog.showMessageBox({ message: 'error : ' + error });
-    return('');
+    event.returnValue = '';
   }
 });
-*/

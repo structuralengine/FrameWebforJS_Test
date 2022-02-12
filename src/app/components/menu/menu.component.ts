@@ -33,6 +33,7 @@ import { TranslateService } from "@ngx-translate/core";
 export class MenuComponent implements OnInit {
   loginUserName: string;
   public fileName: string;
+  public version: string;
 
   constructor(
     private modalService: NgbModal,
@@ -54,6 +55,7 @@ export class MenuComponent implements OnInit {
   ) {
     this.fileName = "";
     this.three.fileName = "";
+    this.version = process.env.npm_package_version;
   }
 
   ngOnInit() {
@@ -129,7 +131,7 @@ export class MenuComponent implements OnInit {
       return;
     }
     const inputJson: string = JSON.stringify(this.InputData.getInputJson());
-    this.electronService.ipcRenderer.sendSync('overWrite', this.fileName, inputJson);
+    this.fileName = this.electronService.ipcRenderer.sendSync('overWrite', this.fileName, inputJson);
   }
 
   private fileToText(file): any {
@@ -153,17 +155,15 @@ export class MenuComponent implements OnInit {
       this.fileName = "frameWebForJS.json";
       this.three.fileName = "frameWebForJS.json";
     }
-    let ext = "";
     if (this.helper.getExt(this.fileName) !== "json") {
-      ext = ".json";
+      this.fileName += ".json";
     }
-    // if(this.electronService.isElectronApp) {
-    //   this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson).then((data) => {
-    //     this.fileName = data;
-    //   });
-    // } else {
-    FileSaver.saveAs(blob, this.fileName + ext);
-    // }
+    // 保存する
+    if(this.electronService.isElectronApp) {
+      this.fileName = this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson);
+    } else {
+      FileSaver.saveAs(blob, this.fileName);
+    }
   }
 
   // 計算
