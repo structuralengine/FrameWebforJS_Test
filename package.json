@@ -1,6 +1,6 @@
 {
     "name": "frame-web-for-js",
-    "version": "1.2.2",
+    "version": "1.10.6",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --open",
@@ -10,8 +10,9 @@
         "e2e": "ng e2e",
         "build:dev": "concurrently \"ng build --delete-output-path=false --watch\" \"webpack --config webpack.electron.dev.config.js --watch\"",
         "start:dev": "electron dist/shell.js",
+        "electron:windows": "npm run build:prod && npx electron-builder build --windows",
         "build:prod": "ng build --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js",
-        "start:prod": "electron dist/main.js"
+        "start:prod": "electron dist/index.js"
     },
     "description": "立体骨組構造解析ソフト",
     "author": {
@@ -79,6 +80,7 @@
         "codelyzer": "^6.0.0",
         "concurrently": "^6.2.1",
         "electron": "^13.2.0",
+        "electron-builder": "^22.14.13",
         "electron-log": "4.4.1",
         "electron-packager": "^15.3.0",
         "jasmine-core": "~3.8.0",

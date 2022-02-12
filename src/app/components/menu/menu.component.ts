@@ -33,6 +33,7 @@ import { TranslateService } from "@ngx-translate/core";
 export class MenuComponent implements OnInit {
   loginUserName: string;
   public fileName: string;
+  public version: string;
 
   constructor(
     private modalService: NgbModal,
@@ -54,6 +55,7 @@ export class MenuComponent implements OnInit {
   ) {
     this.fileName = "";
     this.three.fileName = "";
+    this.version = process.env.npm_package_version;
   }
 
   ngOnInit() {
@@ -74,8 +76,6 @@ export class MenuComponent implements OnInit {
     this.fileName = "";
     this.three.fileName = "";
     this.three.mode = "";
-  
-
   }
 
   // ファイルを開く
@@ -124,12 +124,14 @@ export class MenuComponent implements OnInit {
   }
 
   // 上書き保存
-  public overWrite(): void{
-    // if(this.electronService.isElectronApp) {
-    // 上書き保存のメニューが表示されるのは electron のときだけ
+  // 上書き保存のメニューが表示されるのは electron のときだけ
+  public overWrite(): void {
+    if (this.fileName === ""){
+      this.save();
+      return;
+    }
     const inputJson: string = JSON.stringify(this.InputData.getInputJson());
-    this.electronService.ipcRenderer.sendSync('selectPirate', inputJson);
-    // }
+    this.fileName = this.electronService.ipcRenderer.sendSync('overWrite', this.fileName, inputJson);
   }
 
   private fileToText(file): any {
@@ -153,11 +155,15 @@ export class MenuComponent implements OnInit {
       this.fileName = "frameWebForJS.json";
       this.three.fileName = "frameWebForJS.json";
     }
-    let ext = "";
     if (this.helper.getExt(this.fileName) !== "json") {
-      ext = ".json";
+      this.fileName += ".json";
     }
-    FileSaver.saveAs(blob, this.fileName + ext);
+    // 保存する
+    if(this.electronService.isElectronApp) {
+      this.fileName = this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson);
+    } else {
+      FileSaver.saveAs(blob, this.fileName);
+    }
   }
 
   // 計算
@@ -244,9 +250,6 @@ export class MenuComponent implements OnInit {
             }
 
             this.InputData.getResult(jsonData);
-            // テスト ---------------------------------------------
-            // this.saveResult(json);
-            // --------------------------------------------- テスト*/
 
             // 解析結果を集計する
             this.ResultData.loadResultData(_jsonData);
@@ -292,8 +295,12 @@ export class MenuComponent implements OnInit {
       filename = this.fileName.split(".").slice(0, -1).join(".");
       filename += ext;
     }
-
-    FileSaver.saveAs(blob, filename);
+    // 保存する
+    if(this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.sendSync('saveFile', filename, pickupJson);
+    } else {
+      FileSaver.saveAs(blob, filename);
+    }
   }
 
   // ログイン関係

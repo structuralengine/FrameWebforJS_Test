@@ -7,7 +7,6 @@ module.exports = {
   devtool: 'source-map',
   output: {
     path: path.join(process.cwd(), 'dist'),
-    // avoid conflicts with the `main.js` file generated from the Angular CLI
     filename: 'shell.js'
   }
 };
