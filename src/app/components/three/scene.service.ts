@@ -116,9 +116,6 @@ export class SceneService {
     // コントロール
     this.addControls();
 
-    // 床面を生成する
-    this.createHelper();
-
     //
     this.gui = new GUI();
     this.gui.domElement.id = "gui_css";
@@ -163,20 +160,7 @@ export class SceneService {
     this.render();
   }
 
-  // 床面を生成する
-  private createHelper() {
-    this.axisHelper = new THREE.AxesHelper(200);
-    this.axisHelper.name = "axisHelper";
-    this.scene.add(this.axisHelper);
-    this.GridHelper = new THREE.GridHelper(200, 20);
-    this.GridHelper.geometry.rotateX(Math.PI / 2);
-    this.GridHelper.material["opacity"] = 0.2;
-    this.GridHelper.material["transparent"] = true;
-    this.GridHelper.name = "GridHelper";
-    this.scene.add(this.GridHelper);
-  }
-
-  public setNewHelper(max: number) {
+   public setNewHelper(max: number) {
     // GridHelperの範囲の最大値は最大長さを切り上げた長さ.
     const Distance = Math.ceil(max / 10) * 10;
     if (this.GridDistance !== Distance) {
