@@ -328,7 +328,12 @@ export class InputDataService {
       for (const name of [m.ni, m.nj]) {
         if (!(name in nodes)) {
           return (
-            "member" + key + "で使われている node " + name + "は、存在しません"
+            this.translate.instant("providers.input-data.member")
+            + key 
+            + "で使われている"
+            +  this.translate.instant("providers.input-data.node") 
+            + name 
+            + "は、存在しません"
           );
         }
         n[name] = nodes[name];
@@ -342,7 +347,12 @@ export class InputDataService {
       for (const name of shells[key].nodes) {
         if (!(name in nodes)) {
           return (
-            "panel" + key + "で使われている node " + name + "は、存在しません"
+            this.translate.instant("providers.input-data.panel")
+            + key 
+            + "で使われている" 
+            + this.translate.instant("providers.input-data.node")
+            + name 
+            + "は、存在しません"
           );
         }
         n[name] = nodes[name];
@@ -369,7 +379,14 @@ export class InputDataService {
       // 断面のチェック
       const e = load.element.toString();
       if (!(e in elements)) {
-        return "荷重No." + key + "における断面番号" + e + "は存在しません。";
+        return (
+        this.translate.instant("providers.input-data.memberNo")
+        + key 
+        + "における"
+        + this.translate.instant("providers.input-data.sectionNo")
+        + e 
+        + "は存在しません。"
+        );
       }
 
       // バネ支点のチェック
@@ -380,16 +397,23 @@ export class InputDataService {
       const fix_member = fm in fix_members ? fix_members[fm] : [];
 
       if (fix_node.length + fix_member.length <= 0) {
-        return "荷重No." + key + "は、支点もバネもありません。";
+        return (
+        this.translate.instant("providers.input-data.loadNo")
+        + key 
+        + this.translate.instant("providers.input-data.SupSpr")
+        );
       }
 
       let nFlg = false;
       for (const ffn of fix_node) {
         if (!(ffn["n"] in nodes)) {
           return (
-            "支点TYPE." +
+            this.translate.instant("providers.input-data.SupType")
+            +
             fn +
-            "の入力において 節点No." +
+            "の入力において"+
+            this.translate.instant("providers.input-data.nodeNo")
+            +
             ffn["n"] +
             "は存在しません。"
           );
@@ -409,9 +433,12 @@ export class InputDataService {
         for (const ffm of fix_member) {
           if (!(ffm["m"] in members)) {
             return (
-              "バネTYPE." +
+              this.translate.instant("providers.input-data.SprType")
+              +
               fm +
-              "の入力において 要素No." +
+              "の入力において"+
+              this.translate.instant("providers.input-data.elementNo")
+              +
               ffm["m"] +
               "は存在しません。"
             );
@@ -429,7 +456,11 @@ export class InputDataService {
         }
       }
       if (nFlg === false) {
-        return "荷重No." + key + "は、支点もバネもありません。";
+        return (
+        this.translate.instant("providers.input-data.loadNo")
+        + key 
+        + this.translate.instant("providers.input-data.SupSpr")
+        );
       }
 
       // 節点荷重の確認
@@ -437,11 +468,14 @@ export class InputDataService {
         for (const ln of load.load_node) {
           if (!(ln["n"] in nodes)) {
             return (
-              "荷重No." +
+              this.translate.instant("providers.input-data.loadNo")
+              +
               key +
               "の" +
               ln["row"] +
-              "行目の入力において 節点No." +
+              "行目の入力において"+
+              this.translate.instant("providers.input-data.nodeNo")
+              +
               ln["n"] +
               "は存在しません。"
             );
@@ -454,11 +488,14 @@ export class InputDataService {
         for (const lm of load.load_member) {
           if (!(lm["m"] in members)) {
             return (
-              "荷重No." +
+              this.translate.instant("providers.input-data.loadNo")
+              +
               key +
               "の" +
               lm["row"] +
-              "行目の入力において 要素No." +
+              "行目の入力において"+
+              this.translate.instant("providers.input-data.elementNo")
+              +
               lm["m"] +
               "は存在しません。"
             );
