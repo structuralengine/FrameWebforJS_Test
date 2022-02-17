@@ -330,10 +330,10 @@ export class InputDataService {
           return (
             this.translate.instant("providers.input-data.member")
             + key 
-            + "で使われている"
+            + "で使われている" //翻訳保留
             +  this.translate.instant("providers.input-data.node") 
             + name 
-            + "は、存在しません"
+            + "は、存在しません" //翻訳保留
           );
         }
         n[name] = nodes[name];
@@ -349,10 +349,10 @@ export class InputDataService {
           return (
             this.translate.instant("providers.input-data.panel")
             + key 
-            + "で使われている" 
+            + "で使われている" //翻訳保留
             + this.translate.instant("providers.input-data.node")
             + name 
-            + "は、存在しません"
+            + "は、存在しません" //翻訳保留
           );
         }
         n[name] = nodes[name];
@@ -382,10 +382,10 @@ export class InputDataService {
         return (
         this.translate.instant("providers.input-data.memberNo")
         + key 
-        + "における"
+        + "における" //翻訳保留
         + this.translate.instant("providers.input-data.sectionNo")
         + e 
-        + "は存在しません。"
+        + "は存在しません。" //翻訳保留
         );
       }
 
@@ -411,11 +411,11 @@ export class InputDataService {
             this.translate.instant("providers.input-data.SupType")
             +
             fn +
-            "の入力において"+
+            "の入力において"+ //翻訳保留
             this.translate.instant("providers.input-data.nodeNo")
             +
             ffn["n"] +
-            "は存在しません。"
+            "は存在しません。" //翻訳保留
           );
         }
         for (const k of ["rx", "ry", "rz", "tx", "ty", "tz"]) {
@@ -436,11 +436,11 @@ export class InputDataService {
               this.translate.instant("providers.input-data.SprType")
               +
               fm +
-              "の入力において"+
-              this.translate.instant("providers.input-data.elementNo")
+              "の入力において" //翻訳保留
+              +this.translate.instant("providers.input-data.elementNo")
               +
               ffm["m"] +
-              "は存在しません。"
+              "は存在しません。" //翻訳保留
             );
           }
           for (const k of ["tx", "ty", "tz", "tr"]) {
@@ -471,13 +471,13 @@ export class InputDataService {
               this.translate.instant("providers.input-data.loadNo")
               +
               key +
-              "の" +
+              "の" + //翻訳保留
               ln["row"] +
-              "行目の入力において"+
+              "行目の入力において"+ //翻訳保留
               this.translate.instant("providers.input-data.nodeNo")
               +
               ln["n"] +
-              "は存在しません。"
+              "は存在しません。" //翻訳保留
             );
           }
         }
@@ -491,13 +491,13 @@ export class InputDataService {
               this.translate.instant("providers.input-data.loadNo")
               +
               key +
-              "の" +
+              "の" + //翻訳保留
               lm["row"] +
-              "行目の入力において"+
+              "行目の入力において"+ //翻訳保留
               this.translate.instant("providers.input-data.elementNo")
               +
               lm["m"] +
-              "は存在しません。"
+              "は存在しません。" //翻訳保留
             );
           }
         }
