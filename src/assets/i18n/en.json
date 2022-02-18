@@ -18,7 +18,7 @@
         "preparing":"Preparing for printing"
     },
     "menu": {
-        "softName": "FrameWebForJS ver1.10.6",
+        "softName": "FrameWebForJS",
         "newEntry":"Create a new file",
         "openFile":"Open file",
         "saveFile":"Save a file",

@@ -24,6 +24,7 @@ import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-
 import { LanguagesService } from "src/app/providers/languages.service";
 import { ElectronService } from 'ngx-electron';
 import { TranslateService } from "@ngx-translate/core";
+import packageJson from '../../../../package.json';
 
 @Component({
   selector: "app-menu",
@@ -55,7 +56,7 @@ export class MenuComponent implements OnInit {
   ) {
     this.fileName = "";
     this.three.fileName = "";
-    this.version = "";//process.env.npm_package_version;
+    this.version = packageJson.version;
   }
 
   ngOnInit() {
