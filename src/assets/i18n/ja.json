@@ -18,7 +18,7 @@
         "preparing":"印刷の準備中"
     },
     "menu": {
-        "softName": "立体骨組構造解析ソフトver1.10.3",
+        "softName": "立体骨組構造解析ソフト",
         "newEntry":"新規作成",
         "openFile":"ファイルを開く",
         "saveFile":"ファイルを保存",
@@ -301,7 +301,18 @@
         "input-data":{
             "node_nodata":"節点データがありません",
             "member_nodata":"部材データがありません",
-            "load_nodata":"荷重データがありません"
+            "load_nodata":"荷重データがありません",
+            "member":"部材",
+            "node":"節点",
+            "panel":"パネル",
+            "memberNo":"部材No",
+            "sectionNo":"断面番号",
+            "loadNo":"荷重No",
+            "nodeNo":"節点No",
+            "elementNo":"要素No",
+            "SupType":"支点TYPE.",
+            "SprType":"バネTYPE.",
+            "SupSpr":"は、支点もバネもありません。"
         }
     }
 }

@@ -18,7 +18,7 @@
         "preparing":"Preparing for printing"
     },
     "menu": {
-        "softName": "FrameWebForJS ver1.10.6",
+        "softName": "FrameWebForJS",
         "newEntry":"Create a new file",
         "openFile":"Open file",
         "saveFile":"Save a file",
@@ -301,7 +301,18 @@
         "input-data":{
             "node_nodata":"There is no node data",
             "member_nodata":"There is no member data",
-            "load_nodata":"There is no load data"
+            "load_nodata":"There is no load data",
+            "member":"Member",
+            "node":"Node",
+            "panel":"Panel",
+            "memberNo":"MemberNo",
+            "sectionNo":"SectionNo",
+            "loadNo":"LoadNo",
+            "nodeNo":"NodeNo",
+            "elementNo":"ElementNo",
+            "SupType":"Support TYPE.",
+            "SprType":"Spring TYPE.",
+            "SupSpr":"has neither a Support nor a Spring."
         }
     }
 }
