@@ -61,7 +61,7 @@ export class InputMembersComponent implements OnInit {
       align: "center",
       colModel: [
         {
-          title: "No",
+          title: this.translate.instant("input.input-members.No"),
           dataType: "integer",
           dataIndx: "e",
           sortable: false,
@@ -138,7 +138,7 @@ export class InputMembersComponent implements OnInit {
       align: "center",
       colModel: [
         {
-          title: "No",
+          title: this.translate.instant("input.input-members.No"),
           dataType: "integer",
           dataIndx: "e",
           sortable: false,

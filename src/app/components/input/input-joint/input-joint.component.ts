@@ -21,7 +21,9 @@ export class InputJointComponent implements OnInit {
     { 
       title: this.translate.instant("input.input-joint.member"),
       align: 'center', colModel: [
-      { title: "No", dataType: "string", dataIndx: "m", sortable: false },
+      { 
+        title: this.translate.instant("input.input-joint.No"),
+        dataType: "string", dataIndx: "m", sortable: false },
     ]},      
     { 
       title: this.translate.instant("input.input-joint.node_i"),
