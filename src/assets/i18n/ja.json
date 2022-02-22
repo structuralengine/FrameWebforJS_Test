@@ -41,7 +41,8 @@
             "rotationalRestraint": "回転拘束",
             "x_around": "X軸回り",
             "y_around": "Y軸回り",
-            "z_around": "Z軸回り"
+            "z_around": "Z軸回り",
+            "No":"No"
         },
         "input-members":{
             "node":"節点",
@@ -50,7 +51,8 @@
             "distance":"部材長",
             "material":"材料",
             "codeAngle":"コードアングル",
-            "material_name":"材料名称"
+            "material_name":"材料名称",
+            "No":"No"
         },
         "input-elements":{
             "elastic":"弾性係数",
@@ -69,7 +71,8 @@
             "member":"部材",
             "node_i":"i端",
             "node_j":"j端",
-            "memberNo":"部材No"
+            "memberNo":"部材No",
+            "No":"No"
         },
         "input-notice-points":{
             "memberNo":"部材No",
@@ -83,7 +86,8 @@
             "y_axis":"部材Y軸",
             "z_axis":"部材Z軸",
             "rotationalRestraint":"回転拘束",
-            "r_axis":"軸直角方向"
+            "r_axis":"軸直角方向",
+            "No":"No"
         },
         "input-load-name":{
             "cf":"割増し係数",
@@ -104,16 +108,30 @@
             "nodeLoad":"節点荷重",
             "node": "節点",
             "load_Name":"荷重名称",
-            "loadStrength":"荷重強度"
+            "loadStrength":"荷重強度",
+            "No":"No"
+        },
+        "input-define":{
+            "DEFINE":"DEFINE",
+            "COMBINE":"COMBINE",
+            "PICKUP":"PICKUP"
         },
         "input-combine":{
-            "name": "名称　　　　　　　　　　　　　　"
+            "name": "名称　　　　　　　　　　　　　　",
+            "DEFINE":"DEFINE",
+            "COMBINE":"COMBINE",
+            "PICKUP":"PICKUP"
         },
         "input-pickup":{
-            "name": "名称　　　　　　　　　　　　　　"
+            "name": "名称　　　　　　　　　　　　　　",
+            "DEFINE":"DEFINE",
+            "COMBINE":"COMBINE",
+            "PICKUP":"PICKUP"
         }
     },
     "result":{
+            "COMBINE":"COMBINE",
+            "PICKUP":"PICKUP",
         "result-fsec":{
             "basicCase":"基本ケース",
             "memberNo":"部材No",
@@ -165,7 +183,8 @@
             "z_movement":"z方向の\n移動量\n(mm)",
             "x_rotation":"x軸回りの\n回転量\n(‰rad)",
             "y_rotation":"y軸回りの\n回転量\n(‰rad)",
-            "z_rotation":"z軸回りの\n回転量\n(‰rad)"            
+            "z_rotation":"z軸回りの\n回転量\n(‰rad)",
+            "No":"No"            
         },
         "result-combine-disg":{
             "basicCase":"基本ケース",
@@ -175,7 +194,8 @@
             "x_rotation":"x軸回りの\n回転量\n(‰rad)",
             "y_rotation":"y軸回りの\n回転量\n(‰rad)",
             "z_rotation":"z軸回りの\n回転量\n(‰rad)",
-            "comb":"組み合わせ" 
+            "comb":"組み合わせ", 
+            "No":"No"            
         },
         "result-pickup-disg":{
             "basicCase":"基本ケース",
@@ -185,7 +205,8 @@
             "x_rotation":"x軸回りの\n回転量\n(‰rad)",
             "y_rotation":"y軸回りの\n回転量\n(‰rad)",
             "z_rotation":"z軸回りの\n回転量\n(‰rad)",
-            "comb":"組み合わせ" 
+            "comb":"組み合わせ",
+            "No":"No" 
         },
         "result-reac":{
             "basicCase":"基本ケース",

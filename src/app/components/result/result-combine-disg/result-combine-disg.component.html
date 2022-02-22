@@ -4,8 +4,12 @@
             <a routerLink="/result-disg" class="btn-change">
                 <p translate>result.result-combine-disg.basicCase</p>
             </a>
-            <a routesrLink="/result-comb_disg" class="btn-change active">COMBINE</a>
-            <a routerLink="/result-pic_disg" [class]="btnPickup">PICKUP</a>
+            <a routesrLink="/result-comb_disg" class="btn-change active">
+                <p translate>result.COMBINE</p>
+            </a>
+            <a routerLink="/result-pic_disg" [class]="btnPickup">
+                <p translate>result.PICKUP</p>
+            </a>
         </nav>
     </div>
 
@@ -40,7 +44,9 @@
                                 <thead>
                                     <div *ngIf="dimension===3">
                                         <tr>
-                                            <th class="result-sm">No</th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-combine-disg.No</p>
+                                            </th>
                                             <th class="result-lg">
                                                 <p translate>result.result-combine-disg.x_movement</p>
                                             </th>
@@ -66,7 +72,9 @@
                                     </div>
                                     <div *ngIf="dimension===2">
                                         <tr>
-                                            <th class="result-sm">No</th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-combine-disg.No</p>
+                                            </th>
                                             <th class="result-lg">
                                                 <p translate>result.result-combine-disg.x_movement</p>
                                             </th>

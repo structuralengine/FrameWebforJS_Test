@@ -25,7 +25,7 @@ export class InputFixNodeComponent implements OnInit {
       align: "center",
       colModel: [
         {
-          title: "No",
+          title: this.translate.instant("input.input-fix-node.No"),
           align: "center",
           dataType: "string",
           dataIndx: "n",
@@ -97,7 +97,7 @@ export class InputFixNodeComponent implements OnInit {
       align: "center",
       colModel: [
         {
-          title: "No",
+          title: this.translate.instant("input.input-fix-node.No"),
           align: "center",
           dataType: "string",
           dataIndx: "n",
