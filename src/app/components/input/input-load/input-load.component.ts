@@ -157,7 +157,7 @@ export class InputLoadComponent implements OnInit {
           align: "center",
           colModel: [
             {
-              title: "No",
+              title: this.translate.instant("input.input-load.No"),
               align: "center",
               dataType: "string",
               dataIndx: "n",
@@ -383,7 +383,7 @@ export class InputLoadComponent implements OnInit {
           align: "center",
           colModel: [
             {
-              title: "No",
+              title: this.translate.instant("input.input-load.No"),
               align: "center",
               dataType: "string",
               dataIndx: "n",

@@ -11,6 +11,7 @@ export class LanguagesService {
   public languageIndex = {
     ja: "日本語",
     en: "English",
+    cn: "中文"
   };
 
   constructor(

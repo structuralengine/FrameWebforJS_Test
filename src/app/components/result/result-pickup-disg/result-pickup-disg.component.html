@@ -4,8 +4,12 @@
             <a routerLink="/result-disg" routerLinkActive="selected-item" class="btn-change">
                 <p translate>result.result-pickup-disg.basicCase</p>
             </a>
-            <a routerLink="/result-comb_disg" routerLinkActive="selected-item" [class]="btnCombine">COMBINE</a>
-            <a routerLink="/result-pic_disg" routerLinkActive="selected-item" class="btn btn-change active">PICKUP</a>
+            <a routerLink="/result-comb_disg" routerLinkActive="selected-item" [class]="btnCombine">
+                <p translate>result.COMBINE</p>
+            </a>
+            <a routerLink="/result-pic_disg" routerLinkActive="selected-item" class="btn btn-change active">
+                <p translate>result.PICKUP</p>
+            </a>
         </nav>
     </div>
 
@@ -40,7 +44,9 @@
                                 <thead>
                                     <div *ngIf="dimension===3">
                                         <tr>
-                                            <th class="result-sm">No</th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-pickup-disg.No</p>
+                                            </th>
                                             <th class="result-lg">
                                                 <p translate>result.result-pickup-disg.x_movement</p>
                                             </th>
@@ -66,7 +72,9 @@
                                     </div>
                                     <div *ngIf="dimension===2">
                                         <tr>
-                                            <th class="result-sm">No</th>
+                                            <th class="result-sm">
+                                                <p translate>result.result-pickup-disg.No</p>
+                                            </th>
                                             <th class="result-lg">
                                                 <p translate>result.result-pickup-disg.x_movement</p>
                                             </th>

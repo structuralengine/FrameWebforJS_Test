@@ -41,7 +41,8 @@
             "rotationalRestraint": "Rotational Restraint",
             "x_around": "MX",
             "y_around": "MY",
-            "z_around": "MZ"
+            "z_around": "MZ",
+            "No":"No"
         },
         "input-members":{
             "node":"Node",
@@ -50,7 +51,8 @@
             "distance":"Distance",
             "material":"Material",
             "codeAngle":"Angle of Rocation",
-            "material_name":"Name of Material"
+            "material_name":"Name of Material",
+            "No":"No"
         },
         "input-elements":{
             "elastic":"Elastic",
@@ -69,7 +71,8 @@
             "member":"Member",
             "node_i":"Node-I",
             "node_j":"Node-J",
-            "memberNo":"MemberNo"
+            "memberNo":"MemberNo",
+            "No":"No"
         },
         "input-notice-points":{
             "memberNo":"Member\nNo",
@@ -83,7 +86,8 @@
             "y_axis":"Ky",
             "z_axis":"Kz",
             "rotationalRestraint":"Rotational Restraint",
-            "r_axis":"Kr"
+            "r_axis":"Kr",
+            "No":"No"
         },
         "input-load-name":{
             "cf":"C.F",
@@ -104,16 +108,30 @@
             "nodeLoad":"Node Load",
             "node": "Node",
             "load_Name":"Name of Load",
-            "loadStrength":"Load Strength"
+            "loadStrength":"Load Strength",
+            "No":"No"
+        },
+        "input-define":{
+            "DEFINE":"DEFINE",
+            "COMBINE":"COMBINE",
+            "PICKUP":"PICKUP"
         },
         "input-combine":{
-            "name": "Name of Load"
+            "name": "Name of Load",
+            "DEFINE":"DEFINE",
+            "COMBINE":"COMBINE",
+            "PICKUP":"PICKUP"
         },
         "input-pickup":{
-            "name": "Name of Load"
+            "name": "Name of Load",
+            "DEFINE":"DEFINE",
+            "COMBINE":"COMBINE",
+            "PICKUP":"PICKUP"
         }
     },
     "result":{
+            "COMBINE":"COMBINE",
+            "PICKUP":"PICKUP",
         "result-fsec":{
             "basicCase":"Basic Case",
             "memberNo":"Member\nNo",
@@ -165,7 +183,8 @@
             "z_movement":"Z Movement\n(mm)",
             "x_rotation":"X Rocation\n(%rad)",
             "y_rotation":"Y Rocation\n(%rad)",
-            "z_rotation":"Z Rocation\n(%rad)"
+            "z_rotation":"Z Rocation\n(%rad)",
+            "No":"No"            
         },
         "result-combine-disg":{
             "basicCase":"Basic Case",
@@ -175,7 +194,8 @@
             "x_rotation":"X Rocation\n(%rad)",
             "y_rotation":"Y Rocation\n(%rad)",
             "z_rotation":"Z Rocation\n(%rad)",
-            "comb":"Comb."
+            "comb":"Comb.",
+            "No":"No"            
         },
         "result-pickup-disg":{
             "basicCase":"Basic Case",
@@ -185,7 +205,8 @@
             "x_rotation":"X Rocation\n(%rad)",
             "y_rotation":"Y Rocation\n(%rad)",
             "z_rotation":"Z Rocation\n(%rad)",
-            "comb":"Comb."
+            "comb":"Comb.",
+            "No":"No"            
         },
         "result-reac":{
             "basicCase":"Basic Case",

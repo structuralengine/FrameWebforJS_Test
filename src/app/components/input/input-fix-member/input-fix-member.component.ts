@@ -22,7 +22,8 @@ export class InputFixMemberComponent implements OnInit {
       title: this.translate.instant("input.input-fix-member.member"),
       align: 'center', colModel: [
       { 
-        title: "No", align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
+        title: this.translate.instant("input.input-fix-member.No"),
+        align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
     ]},
     { 
       title: this.translate.instant("input.input-fix-member.displacementRestraint"),
@@ -49,7 +50,9 @@ export class InputFixMemberComponent implements OnInit {
     { 
       title: this.translate.instant("input.input-fix-member.member"),
       align: 'center', colModel: [
-      { title: "No", align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
+      { 
+        title: this.translate.instant("input.input-fix-member.No"),
+        align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
     ]},
     { 
       title: this.translate.instant("input.input-fix-member.v_axis"),
