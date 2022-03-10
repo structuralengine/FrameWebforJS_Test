@@ -79,6 +79,51 @@ export class MenuComponent implements OnInit {
     this.three.mode = "";
   }
 
+  // Electron でファイルを開く
+  open_electron(){
+
+    const response = this.electronService.ipcRenderer.sendSync('open');
+
+    if(response.status!==true){
+      alert('ファイルを開くことに失敗しました, status:'+ response.status);
+      return;
+    }
+    this.app.dialogClose(); // 現在表示中の画面を閉じる
+    this.InputData.clear();
+    this.ResultData.clear();
+    this.PrintData.clear();
+    this.CustomFsecData.clear();
+    this.three.ClearData();
+    // this.countArea.clear();
+    const modalRef = this.modalService.open(WaitDialogComponent);
+
+    this.fileName = response.path;
+    this.three.fileName = response.path;
+
+    this.app.dialogClose(); // 現在表示中の画面を閉じる
+    this.ResultData.clear(); // 解析結果を削除
+    const old = this.helper.dimension;
+    const jsonData: {} = JSON.parse(response.text);
+    let resultData: {} = null;
+    if ("result" in jsonData) {
+      resultData = jsonData["result"];
+      delete jsonData["result"];
+    }
+    this.InputData.loadInputData(jsonData); // データを読み込む
+    if (resultData !== null) {
+      this.ResultData.loadResultData(resultData); // 解析結果を読み込む
+      this.ResultData.isCalculated = true;
+    } else {
+      this.ResultData.isCalculated = false;
+    }
+    if (old !== this.helper.dimension) {
+      this.setDimension(this.helper.dimension);
+    }
+    this.three.fileload();
+    modalRef.close();
+
+  }
+
   // ファイルを開く
   open(evt) {
     this.app.dialogClose(); // 現在表示中の画面を閉じる
