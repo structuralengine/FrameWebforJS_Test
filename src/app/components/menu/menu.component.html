@@ -14,10 +14,10 @@
                                 </span>
                             </label>
                         </ng-container>
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="open_electron()">
+                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="open_electron()" translate>
                             menu.openFile
-                          </button> 
-                        <button ngbDropdownItem (click)="save()"translate>menu.saveFile</button>
+                        </button> 
+                        <button ngbDropdownItem (click)="save()" translate>menu.saveFile</button>
                         <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()" translate>menu.overwrite</button>
                         <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()"translate>menu.outputFile</button>
                     </div>
