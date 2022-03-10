@@ -100,3 +100,22 @@ ipcMain.on('saveFile', async (event: Electron.IpcMainEvent, filename: string, da
     event.returnValue = '';
   }
 });
+
+// base64 PDF を表示する
+ipcMain.on('printPDF', async (event: Electron.IpcMainEvent, fileURL: string) => {
+
+  const child = new BrowserWindow({
+    parent: mainWindow,
+    modal: true,
+    show: false
+  })
+
+  child.setMenuBarVisibility(false);
+
+  child.loadURL(fileURL);
+
+  child.once('ready-to-show',()=>{
+    child.show()
+  })
+
+});

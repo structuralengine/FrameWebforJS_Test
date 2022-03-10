@@ -11,6 +11,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { WaitDialogComponent } from "../wait-dialog/wait-dialog.component";
 import * as pako from "pako";
 import { throwIfEmpty } from "rxjs/operators";
+import { ElectronService } from "ngx-electron";
 
 @Component({
   selector: "app-print",
@@ -28,7 +29,8 @@ export class PrintComponent implements OnInit {
     public ResultData: ResultDataService,
     private three: ThreeService,
     private http: HttpClient,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    public electronService: ElectronService,
   ) {}
 
   ngOnInit() {
@@ -54,6 +56,7 @@ export class PrintComponent implements OnInit {
   public options = {
     headers: new HttpHeaders({
       "Content-Type": "application/json",
+      responseType: 'text',
       Accept: "*/*",
     }),
   };
@@ -102,22 +105,41 @@ export class PrintComponent implements OnInit {
                   return;
                 }
               }
+              this.loadind_desable();
               alert(err);
             }
-          )
-          .add(() => {
-            // finally的な処理
-            // loadingの表示終了
-            document.getElementById("print-loading").style.display = "none";
-            const id = document.getElementById("printButton");
-            this.id.removeAttribute("disabled");
-            this.id.style.opacity = "";
-          });
+          );
       }
     }
   }
 
+  // finally的な処理
+  // loadingの表示終了
+  private loadind_desable() {
+    document.getElementById("print-loading").style.display = "none";
+    const id = document.getElementById("printButton");
+    this.id.removeAttribute("disabled");
+    this.id.style.opacity = "";
+  }
+
   private showPDF(base64: string) {
-    printJS({ printable: base64, type: "pdf", base64: true });
+    this.loadind_desable();
+
+    if(this.electronService.isElectronApp) {
+      // electron の場合
+      const byteCharacters = atob(base64);
+      let byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      let byteArray = new Uint8Array(byteNumbers);
+      let file = new Blob([byteArray], {type: 'application/pdf;base64'});
+      let fileURL = URL.createObjectURL(file);
+      this.electronService.ipcRenderer.sendSync('printPDF', fileURL);
+
+    } else {
+      printJS({ printable: base64, type: "pdf", base64: true });
+    }
+
   }
 }
