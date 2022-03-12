@@ -138,6 +138,7 @@ export class PrintComponent implements OnInit {
       this.electronService.ipcRenderer.sendSync('printPDF', fileURL);
 
     } else {
+      //Webアプリの場合
       printJS({ printable: base64, type: "pdf", base64: true });
     }
 

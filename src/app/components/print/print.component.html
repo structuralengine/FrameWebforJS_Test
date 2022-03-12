@@ -152,7 +152,7 @@
         />
       </label>
 
-      <div class="message">
+      <div *ngIf="printService.pageCount>0" class="message">
         <p *ngIf="printService.pageDisplay">
           {{'print.pages'| translate }}
           {{ printService.pageCount }}

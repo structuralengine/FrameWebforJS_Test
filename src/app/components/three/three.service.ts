@@ -886,7 +886,7 @@ export class ThreeService {
     for (const key of Object.keys(this.printService.combineJson)) {
       const current = comb[key];
       let str: string = key;
-      if (current.name in current) {
+      if ('name' in current) {
         str += current.name.trim().length > 0 ? " " + current.name : "";
       } else {
         str += "";
@@ -903,7 +903,7 @@ export class ThreeService {
     for (const key of Object.keys(this.printService.pickupJson)) {
       const current = pik[key];
       let str: string = key;
-      if (current.name in current) {
+      if ('name' in current) {
         str += current.name.trim().length > 0 ? " " + current.name : "";
       } else {
         str += "";

@@ -4,6 +4,7 @@ import log from 'electron-log';
 
 log.info(`${app.name} ${app.getVersion()}`);
 let mainWindow;
+let pdfWindow;
 
 function createWindow () {
   mainWindow = new BrowserWindow({
@@ -17,6 +18,7 @@ function createWindow () {
   mainWindow.setMenuBarVisibility(false);
   // mainWindow.webContents.openDevTools();
   mainWindow.loadFile('index.html');
+
 }
 
 app.whenReady().then(() => {
@@ -104,18 +106,18 @@ ipcMain.on('saveFile', async (event: Electron.IpcMainEvent, filename: string, da
 // base64 PDF を表示する
 ipcMain.on('printPDF', async (event: Electron.IpcMainEvent, fileURL: string) => {
 
-  const child = new BrowserWindow({
+  pdfWindow = new BrowserWindow({
     parent: mainWindow,
-    modal: true,
-    show: false
+    modal: true
   })
 
-  child.setMenuBarVisibility(false);
+  pdfWindow.setMenuBarVisibility(false);
 
-  child.loadURL(fileURL);
+  pdfWindow.loadURL(fileURL);
+  pdfWindow.show();
 
-  child.once('ready-to-show',()=>{
-    child.show()
+  pdfWindow.on('close', function() {
+    pdfWindow = null
   })
 
 });
