@@ -7,12 +7,17 @@
                             class="far fa-file"></i></a>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                         <button ngbDropdownItem (click)="renew()"translate>menu.newEntry</button>
-                        <label style="width: 100%; margin: 0px">
-                            <span ngbDropdownItem style="padding: 8px" translate>menu.openFile
-                                <input type="file" accept="application/json" (change)="open($event)" style="display: none" />
-                            </span>
-                        </label>
-                        <button ngbDropdownItem (click)="save()"translate>menu.saveFile</button>
+                        <ng-container  *ngIf="!electronService.isElectronApp">
+                            <label style="width: 100%; margin: 0px">
+                                <span ngbDropdownItem style="padding: 8px" translate>menu.openFile
+                                    <input type="file" accept="application/json" (change)="open($event)" style="display: none" />
+                                </span>
+                            </label>
+                        </ng-container>
+                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="open_electron()" translate>
+                            menu.openFile
+                        </button> 
+                        <button ngbDropdownItem (click)="save()" translate>menu.saveFile</button>
                         <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()" translate>menu.overwrite</button>
                         <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()"translate>menu.outputFile</button>
                     </div>
