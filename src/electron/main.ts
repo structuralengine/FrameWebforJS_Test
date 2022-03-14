@@ -37,7 +37,6 @@ autoUpdater.on('error', message => {
 // 起動 --------------------------------------------------------------
 
 let mainWindow;
-let pdfWindow;
 
 function createWindow () {
   mainWindow = new BrowserWindow({
@@ -134,23 +133,4 @@ ipcMain.on('saveFile', async (event: Electron.IpcMainEvent, filename: string, da
     dialog.showMessageBox({ message: 'error : ' + error });
     event.returnValue = '';
   }
-});
-
-// base64 PDF を表示する
-ipcMain.on('printPDF', async (event: Electron.IpcMainEvent, fileURL: string) => {
-
-  pdfWindow = new BrowserWindow({
-    parent: mainWindow,
-    modal: true
-  })
-
-  // pdfWindow.setMenuBasrVisibility(false);
-
-  pdfWindow.loadURL(fileURL);
-  pdfWindow.show();
-
-  pdfWindow.on('close', function() {
-    pdfWindow = null
-  })
-
 });
