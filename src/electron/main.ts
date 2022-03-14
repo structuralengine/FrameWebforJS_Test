@@ -1,20 +1,28 @@
 import { app, BrowserWindow, ipcMain, dialog, autoUpdater } from 'electron';
-// import * as up from 'update-electron-app';
+import 'electron-squirrel-startup';
 import * as fs from 'fs';
 import log from 'electron-log';
 
-/*/ アップデート --------------------------------------------------
+// アップデート --------------------------------------------------
 log.info(`${app.name} ${app.getVersion()}`);
 
-const server = 'https://github.com/structuralengine/FrameWebforJS'
-const url = `${server}/update/${process.platform}/${app.getVersion()}`
+const server = 'https://update.electronjs.org'
+const url = `${server}/structuralengine/FrameWebforJS/${process.platform}-${process.arch}/${app.getVersion()}`
 
 autoUpdater.setFeedURL({ url })
-setInterval(() => {
-  autoUpdater.checkForUpdates()
-}, 60000)
+
+// 起動時に1回だけ
+dialog.showErrorBox("情報1", url);
+autoUpdater.checkForUpdates();
+// setInterval(() => {
+//   dialog.showErrorBox("情報1", "autoUpdater.checkForUpdates")
+//   autoUpdater.checkForUpdates()
+// }, 10 * 60 * 1000)
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+
+  dialog.showErrorBox("情報2", "update-downloaded")
+
   const dialogOpts = {
     type: 'info',
     buttons: ['Restart', 'Later'],
@@ -29,10 +37,12 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 })
 
 autoUpdater.on('error', message => {
+  dialog.showErrorBox("情報3", 'error-' + message.message)
+
   console.error('There was a problem updating the application')
   console.error(message)
 })
-*/
+
 
 // 起動 --------------------------------------------------------------
 

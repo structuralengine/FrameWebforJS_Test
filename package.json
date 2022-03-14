@@ -1,6 +1,6 @@
 {
     "name": "frame-web-for-js",
-    "version": "1.11.5",
+    "version": "1.11.4",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --open",
@@ -14,7 +14,7 @@
         "build:prod": "ng build --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js",
         "start:prod": "electron dist/index.js"
     },
-    "description": "立体骨組構造解析ソフト",
+    "description": "FrameWebforJS",
     "author": {
         "name": "sasaco",
         "email": "sasaicco@gmail.com"
