@@ -1,6 +1,6 @@
 {
     "name": "frame-web-for-js",
-    "version": "1.11.4",
+    "version": "1.11.5",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --open",
@@ -64,6 +64,7 @@
         "troika-three-text": "^0.42.0",
         "ts-loader": "^9.2.5",
         "tslib": "^2.0.0",
+        "update-electron-app": "^2.0.1",
         "zone.js": "~0.11.4"
     },
     "devDependencies": {
