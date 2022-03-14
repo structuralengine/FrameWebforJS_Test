@@ -1,8 +1,41 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog, autoUpdater } from 'electron';
+// import * as up from 'update-electron-app';
 import * as fs from 'fs';
 import log from 'electron-log';
 
+/*/ アップデート --------------------------------------------------
 log.info(`${app.name} ${app.getVersion()}`);
+
+const server = 'https://github.com/structuralengine/FrameWebforJS'
+const url = `${server}/update/${process.platform}/${app.getVersion()}`
+
+autoUpdater.setFeedURL({ url })
+setInterval(() => {
+  autoUpdater.checkForUpdates()
+}, 60000)
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+
+autoUpdater.on('error', message => {
+  console.error('There was a problem updating the application')
+  console.error(message)
+})
+*/
+
+// 起動 --------------------------------------------------------------
+
 let mainWindow;
 let pdfWindow;
 
@@ -111,7 +144,7 @@ ipcMain.on('printPDF', async (event: Electron.IpcMainEvent, fileURL: string) => 
     modal: true
   })
 
-  pdfWindow.setMenuBarVisibility(false);
+  // pdfWindow.setMenuBasrVisibility(false);
 
   pdfWindow.loadURL(fileURL);
   pdfWindow.show();
