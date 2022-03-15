@@ -1,48 +1,7 @@
-import { app, BrowserWindow, ipcMain, dialog, autoUpdater } from 'electron';
-import 'electron-squirrel-startup';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import * as fs from 'fs';
 import log from 'electron-log';
-
-// アップデート --------------------------------------------------
-log.info(`${app.name} ${app.getVersion()}`);
-
-const server = 'https://update.electronjs.org'
-const url = `${server}/structuralengine/FrameWebforJS/${process.platform}-${process.arch}/${app.getVersion()}`
-
-autoUpdater.setFeedURL({ url })
-
-// 起動時に1回だけ
-dialog.showErrorBox("情報1", url);
-autoUpdater.checkForUpdates();
-// setInterval(() => {
-//   dialog.showErrorBox("情報1", "autoUpdater.checkForUpdates")
-//   autoUpdater.checkForUpdates()
-// }, 10 * 60 * 1000)
-
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-
-  dialog.showErrorBox("情報2", "update-downloaded")
-
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
-  }
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
-  })
-})
-
-autoUpdater.on('error', message => {
-  dialog.showErrorBox("情報3", 'error-' + message.message)
-
-  console.error('There was a problem updating the application')
-  console.error(message)
-})
-
 
 // 起動 --------------------------------------------------------------
 
@@ -65,9 +24,42 @@ function createWindow () {
 
 app.whenReady().then(() => {
   createWindow();
+
+  // 起動時に1回だけ
+  const server = 'https://update.electronjs.org'
+  const url = `${server}/structuralengine/FrameWebforJS/${process.platform}-${process.arch}/${app.getVersion()}`
+
+  log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
+  log.info(url);
+
+  autoUpdater.setFeedURL(url);
+  autoUpdater.checkForUpdates();
 });
 
-// Angular -> Electron
+// アップデート --------------------------------------------------
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+
+  log.info('アップデートを開始します。')
+
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+
+autoUpdater.on('error', message => {
+  log.warn('There was a problem updating the application');
+  log.warn(message);
+})
+
+// Angular -> Electron --------------------------------------------------
 // ファイルを開く
 ipcMain.on('open', async (event: Electron.IpcMainEvent) => {
   // ファイルを選択
