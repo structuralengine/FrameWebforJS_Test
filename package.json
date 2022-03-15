@@ -14,7 +14,7 @@
         "build:prod": "ng build --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js",
         "start:prod": "electron dist/index.js"
     },
-    "description": "立体骨組構造解析ソフト",
+    "description": "FrameWebforJS",
     "author": {
         "name": "sasaco",
         "email": "sasaicco@gmail.com"
@@ -48,6 +48,9 @@
         "@types/jqueryui": "1.12.7",
         "angular-cli-ghpages": "^0.6.0",
         "bootstrap": "^4.4.0",
+        "electron-nsis": "0.0.1-alpha",
+        "electron-squirrel-startup": "^1.0.0",
+        "electron-updater": "^4.6.5",
         "file-saver": "^2.0.2",
         "firebase": "^8.3.1",
         "fontisto": "^3.0.4",
