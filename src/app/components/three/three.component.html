@@ -1,10 +1,7 @@
 <a class="camera" (click)="downloadImage()"><i class="fas fa-camera"></i></a>
 <div #screen id="screen">
     <div id="screenArea">
-        <div id="max-min">
-            <p>Max:{{ scene.max_Three }}</p>
-            <p>Min:{{ scene.min_Three }}</p>
-        </div>
+        <app-max-min></app-max-min>
         <canvas #myCanvas id="myCanvas" style="overflow: hidden; position: absolute" (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)">
     </canvas>
     </div>

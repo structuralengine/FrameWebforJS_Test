@@ -1,24 +1,20 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
-import html2canvas from "html2canvas";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { InputDataService } from "src/app/providers/input-data.service";
 import { ResultDataService } from "src/app/providers/result-data.service";
 import { ThreeService } from "../three/three.service";
 import { PrintService } from "./print.service";
 import printJS from "print-js";
-import * as FileSaver from "file-saver";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { WaitDialogComponent } from "../wait-dialog/wait-dialog.component";
 import * as pako from "pako";
-import { throwIfEmpty } from "rxjs/operators";
 import { ElectronService } from "ngx-electron";
+import { MaxMinService } from "../three/max-min/max-min.service";
 
 @Component({
   selector: "app-print",
   templateUrl: "./print.component.html",
   styleUrls: ["./print.component.scss", "../../app.component.scss"],
 })
-export class PrintComponent implements OnInit {
+export class PrintComponent implements OnInit, OnDestroy {
   public contentEditable2;
   public combineJson: any;
   public pickupJson: any;
@@ -29,29 +25,23 @@ export class PrintComponent implements OnInit {
     public ResultData: ResultDataService,
     private three: ThreeService,
     private http: HttpClient,
-    private modalService: NgbModal,
+    public max_min: MaxMinService,
     public electronService: ElectronService,
   ) {}
 
+  private a: boolean;
   ngOnInit() {
     this.printService.selectRadio(0);
     this.printService.flg = 0;
     this.id = document.getElementById("printButton");
+    this.a = this.max_min.visible;
+    this.max_min.visible = false;
   }
 
-  public onPrintInvoice() {
-    this.printService.setprintDocument();
-
-    if (this.printService.contentEditable1[10]) {
-      // 図の印刷
-      this.three.getCaptureImage().then((print_target) => {
-        this.printService.print_target = print_target;
-        this.printService.printDocument("invoice", [""]);
-      });
-    } else {
-      this.printService.printDocument("invoice", [""]);
-    }
+  ngOnDestroy(): void {
+    this.max_min.visible = this.a;
   }
+
 
   public options = {
     headers: new HttpHeaders({
@@ -68,14 +58,10 @@ export class PrintComponent implements OnInit {
         this.printService.print_target = print_target;
         this.printService.printDocument("invoice", [""]);
       });
+
     } else {
       const json = this.printService.json;
       if (Object.keys(json).length !== 0) {
-        // resultデータの印刷
-        // const blob = new window.Blob([JSON.stringify(json)], {
-        //   type: "text/plain",
-        // });
-        // FileSaver.saveAs(blob, "test.json");
 
         // loadingの表示
         document.getElementById("print-loading").style.display = "block";
