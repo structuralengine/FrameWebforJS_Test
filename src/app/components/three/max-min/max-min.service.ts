@@ -1,9 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MaxMinService {
+
+  private parent: any; // MaxMinComponent に通知する用
+  setParent(arg0: any) {
+    this.parent = arg0;
+  }
 
   public visible: boolean = false;
 
@@ -26,7 +32,7 @@ export class MaxMinService {
   public min2_m: any;
   public radio: any;
 
-  constructor() { }
+  constructor(private ngZone: NgZone) { }
 
 
   public getStatus(mode, currentIndex) {
@@ -106,7 +112,7 @@ export class MaxMinService {
                         + '(' + min2_m.toString() + '部材)';
       }
       this.visible = true;
-      // document.getElementById("max-min").style.display = "block";
+
     } else if (
       this.ModeName === "disg" ||
       this.ModeName === "comb_disg" ||
@@ -127,7 +133,7 @@ export class MaxMinService {
                     + '(' + min2_m.toString() + '節点)';
 
       this.visible = true;
-      // document.getElementById("max-min").style.display = "block";
+
     } else if (
       this.ModeName === "reac" ||
       this.ModeName === "comb_reac" ||
@@ -147,8 +153,8 @@ export class MaxMinService {
                     + 'kN・m'
                     + '(' + min2_m.toString() + '節点)';
       this.visible = true;
-      // document.getElementById("max-min").style.display = "block";
     }
+    this.parent.setValue(this.max_Three, this.min_Three)
   }
 
   public maxMinClear() {

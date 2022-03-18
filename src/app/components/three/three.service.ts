@@ -21,6 +21,7 @@ import { PrintService } from "../print/print.service";
 import { PrintCustomThreeService } from "../print/custom/print-custom-three/print-custom-three.service";
 import { ResultCombineFsecService } from "../result/result-combine-fsec/result-combine-fsec.service";
 import { MaxMinService } from "./max-min/max-min.service";
+import { MaxMinComponent } from "./max-min/max-min.component";
 
 @Injectable({
   providedIn: "root",
@@ -296,28 +297,6 @@ export class ThreeService {
     this.scene.render();
   }
 
-  // private getMaxMinValue(value_range, mode, currentPage, key1, key2=null): void {
-  //   if(!(mode in value_range)){
-  //     return
-  //   }
-  //   const a = value_range[mode];
-  //   if(!(currentPage in a)){
-  //     return
-  //   }
-  //   const b = a[currentPage];
-  //   if(b == undefined){
-  //     return
-  //   }
-  //   const c = key2==null ? b : b[key2];
-  //   if(c === undefined){
-  //     return
-  //   }
-  //   this.max_min.getMaxMinValue(
-  //     c,
-  //     mode,
-  //     key1
-  //   );
-  // }
   //////////////////////////////////////////////////////
   // 編集モードの変更通知を処理する
   public ChangeMode(ModeName: string): void {
@@ -636,6 +615,7 @@ export class ThreeService {
   // 印刷する図を収集する
   public async getCaptureImage(): Promise<any> {
     return new Promise((resolve, reject) => {
+
       const result = [];
       const captureInfo = this.getCaptureCase();
       const captureCase: string[] = captureInfo.captureCase;

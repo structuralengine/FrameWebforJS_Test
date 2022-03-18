@@ -2,10 +2,6 @@
 <div #screen id="screen">
     <div id="screenArea">
         <app-max-min></app-max-min>
-        <!-- <div id="max-min">
-            <p>Max:{{ scene.max_Three }}</p>
-            <p>Min:{{ scene.min_Three }}</p>
-        </div> -->
         <canvas #myCanvas id="myCanvas" style="overflow: hidden; position: absolute" (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)">
     </canvas>
     </div>
