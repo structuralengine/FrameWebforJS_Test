@@ -20,6 +20,8 @@ import html2canvas from "html2canvas";
 import { PrintService } from "../print/print.service";
 import { PrintCustomThreeService } from "../print/custom/print-custom-three/print-custom-three.service";
 import { ResultCombineFsecService } from "../result/result-combine-fsec/result-combine-fsec.service";
+import { MaxMinService } from "./max-min/max-min.service";
+import { MaxMinComponent } from "./max-min/max-min.component";
 
 @Injectable({
   providedIn: "root",
@@ -38,6 +40,7 @@ export class ThreeService {
 
   constructor(
     public scene: SceneService,
+    private max_min: MaxMinService,
     private node: ThreeNodesService,
     private member: ThreeMembersService,
     private fixNode: ThreeFixNodeService,
@@ -196,7 +199,7 @@ export class ThreeService {
     this.fsec.ClearData();
 
     // 再描画
-    this.scene.maxMinClear(); //max,min表示消す
+    this.max_min.maxMinClear(); //max,min表示消す
     this.scene.setNewHelper(100);
     this.scene.render();
   }
@@ -244,7 +247,7 @@ export class ThreeService {
         this.disg.changeData(currentPage);
       case "comb_disg":
       case "pik_disg":
-        this.getMaxMinValue(
+        this.max_min.getMaxMinValue(
           this.disg.value_range,
           this.mode,
           currentPage,
@@ -256,7 +259,7 @@ export class ThreeService {
         this.reac.changeData(currentPage);
       case "comb_reac":
       case "pik_reac":
-        this.getMaxMinValue(
+        this.max_min.getMaxMinValue(
           this.reac.value_range,
           this.mode,
           currentPage,
@@ -279,7 +282,7 @@ export class ThreeService {
                     this.secForce.currentRadio === 'momentZ') {
           key = 'z';
         }
-        this.getMaxMinValue(
+        this.max_min.getMaxMinValue(
           this.secForce.value_ranges,
           this.mode,
           currentPage,
@@ -290,29 +293,10 @@ export class ThreeService {
     }
     this.currentIndex = currentPage;
 
-    this.scene.getStatus(this.mode, this.currentIndex); // 再描画
+    this.max_min.getStatus(this.mode, this.currentIndex); // 再描画
     this.scene.render();
   }
 
-  private getMaxMinValue(value_range, mode, currentPage, key1, key2=null): void {
-    if(!(mode in value_range)){
-      return
-    }
-    const a = value_range[mode];
-    if(!(currentPage in a)){
-      return
-    }
-    const b = a[currentPage];
-    const c = key2==null ? b : b[key2];
-    if(c === undefined){
-      return
-    }
-    this.scene.getMaxMinValue(
-      c,
-      mode,
-      key1
-    );
-  }
   //////////////////////////////////////////////////////
   // 編集モードの変更通知を処理する
   public ChangeMode(ModeName: string): void {
@@ -518,7 +502,7 @@ export class ThreeService {
                   this.secForce.currentRadio === 'momentZ') {
         key = 'z';
       }
-      this.getMaxMinValue(
+      this.max_min.getMaxMinValue(
         this.secForce.value_ranges,
         ModeName,
         '1',
@@ -552,7 +536,7 @@ export class ThreeService {
                   this.secForce.currentRadio === 'momentZ') {
         key = 'z';
       }
-      this.getMaxMinValue(
+      this.max_min.getMaxMinValue(
         this.secForce.value_ranges,
         ModeName,
         '1',
@@ -564,8 +548,8 @@ export class ThreeService {
     this.mode = ModeName;
     this.currentIndex = -1;
 
-    document.getElementById("max-min").style.display = "none";
-    this.scene.getStatus(this.mode, this.currentIndex); // 再描画
+    this.max_min.maxMinClear();
+    this.max_min.getStatus(this.mode, this.currentIndex); // 再描画
     // 再描画
     this.scene.render();
   }
@@ -631,6 +615,7 @@ export class ThreeService {
   // 印刷する図を収集する
   public async getCaptureImage(): Promise<any> {
     return new Promise((resolve, reject) => {
+
       const result = [];
       const captureInfo = this.getCaptureCase();
       const captureCase: string[] = captureInfo.captureCase;
