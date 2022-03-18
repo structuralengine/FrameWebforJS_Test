@@ -14,6 +14,7 @@ import { ThreeService } from "./three.service";
 import html2canvas from "html2canvas";
 import { TranslateService } from "@ngx-translate/core";
 import { MenuComponent } from "../menu/menu.component";
+import { MaxMinService } from "./max-min/max-min.service";
 
 @Component({
   selector: "app-three",
@@ -64,6 +65,7 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     public scene: SceneService,
+    private max_min: MaxMinService,
     private three: ThreeService,
     private translate: TranslateService
   ) {
@@ -71,7 +73,6 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    document.getElementById("max-min").style.display = "none";
     this.scene.OnInit(
       this.getAspectRatio(),
       this.canvas,
@@ -169,12 +170,12 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
       const figureType = "_" + this.contentsDialog[this.three.mode];
       let index = "";
       if (!(mode == "nodes" || "members" || "panel" || "notice_points")) {
-        index = "_" + "Case" + this.scene.index;
+        index = "_" + "Case" + this.max_min.index;
       }
 
       let radio = "";
       if (mode !== "" && mode.includes("fsec")) {
-        radio = "_" + this.direction[this.scene.radio];
+        radio = "_" + this.direction[this.max_min.radio];
       }
 
       this.downloadLink.nativeElement.download =

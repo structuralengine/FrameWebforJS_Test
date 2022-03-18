@@ -87,6 +87,7 @@ import { PrintCustomDisgComponent } from "./components/print/custom/print-custom
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { ElectronService, NgxElectronModule } from "ngx-electron";
+import { MaxMinComponent } from './components/three/max-min/max-min.component';
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -158,6 +159,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     PrintCustomComponent,
     PrintCustomReacComponent,
     PrintCustomDisgComponent,
+    MaxMinComponent,
   ],
   entryComponents: [LoginDialogComponent, WaitDialogComponent],
   providers: [

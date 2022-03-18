@@ -11,6 +11,7 @@ import { ThreeMembersService } from "../three-members.service";
 import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
 import { ThreeService } from "../../three.service";
+import { MaxMinService } from "../../max-min/max-min.service";
 
 @Injectable({
   providedIn: "root",
@@ -51,6 +52,7 @@ export class ThreeSectionForceService {
 
   constructor(
     private scene: SceneService,
+    private max_min: MaxMinService,
     private helper: DataHelperModule,
     private node: InputNodesService,
     private member: InputMembersService,
@@ -192,7 +194,7 @@ export class ThreeSectionForceService {
           const key1: string =
           ( key === 'axialForce' || key === 'torsionalMorment' ) ? 'x' :
           ( key === 'shearForceY' || key === 'momentY' ) ? 'y' : 'z';
-          this.scene.getMaxMinValue(
+          this.max_min._getMaxMinValue(
             this.value_ranges[this.currentMode][this.currentIndex][key1], 
             'fsec',
             this.currentRadio
