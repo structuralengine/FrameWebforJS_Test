@@ -30,6 +30,20 @@ export class DataHelperModule {
     }
     return result;
   }
+  
+  // 文字列の配列を数字の小さい順に並べ替える
+  public numberSort(strList: string[]): string[]{
+    // 数値型の配列に変換する
+    const toNumbers = strList.map(Number);
+    
+    toNumbers.sort((a, b) => {
+      return a - b
+    })
+
+    return toNumbers.map(String);
+  }
+
+
 
   // ２つのオブジェクトが同じものかどうか判定する
   public objectEquals(a: any, b: any): boolean {

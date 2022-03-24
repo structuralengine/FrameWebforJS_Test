@@ -735,6 +735,7 @@ export class ThreeService {
         if ("fix_member" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.fix_member);
         }
+        result = this.helper.numberSort(result);
         title1 = "部材バネ";
         title2 = "TYPE";
         break;
@@ -743,6 +744,7 @@ export class ThreeService {
         if ("fix_node" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.fix_node);
         }
+        result = this.helper.numberSort(result);
         title1 = "支点";
         title2 = "TYPE";
         break;
@@ -751,6 +753,7 @@ export class ThreeService {
         if ("joint" in this.printService.inputJson) {
           result = Object.keys(this.printService.inputJson.joint);
         }
+        result = this.helper.numberSort(result);
         title1 = "結合";
         title2 = "TYPE";
         break;
@@ -761,6 +764,7 @@ export class ThreeService {
           result = Object.keys(this.printService.inputJson.load);
           title3 = this.getLoadTitle();
         }
+        result = this.helper.numberSort(result);
         title1 = "荷重";
         title2 = "Case";
         break;
@@ -769,6 +773,7 @@ export class ThreeService {
           result = Object.keys(this.printService.inputJson.load);
           title3 = this.getLoadTitle();
         }
+        result = this.helper.numberSort(result);
         title1 = "変位";
         title2 = "Case";
         break;
@@ -777,6 +782,7 @@ export class ThreeService {
           result = Object.keys(this.printService.inputJson.load);
           title3 = this.getLoadTitle();
         }
+        result = this.helper.numberSort(result);
         title1 = "断面力";
         title2 = "Case";
         title4 = this.printService.fescIndex;
@@ -787,18 +793,21 @@ export class ThreeService {
           result = Object.keys(this.printService.inputJson.load);
           title3 = this.getLoadTitle();
         }
+        result = this.helper.numberSort(result);
         title1 = "反力";
         title2 = "Case";
         break;
 
       case "comb_disg":
         result = Object.keys(this.printService.combineJson);
+        result = this.helper.numberSort(result);
         title1 = "組み合わせ 変位量";
         title2 = "Comb";
         title3 = this.getCombTitle();
         break;
       case "comb_fsec":
         result = Object.keys(this.printService.combineJson);
+        result = this.helper.numberSort(result);
         title1 = "組み合わせ 断面力";
         title2 = "Comb";
         title3 = this.getCombTitle();
@@ -807,6 +816,7 @@ export class ThreeService {
         break;
       case "comb_reac":
         result = Object.keys(this.printService.combineJson);
+        result = this.helper.numberSort(result);
         title1 = "組み合わせ 反力";
         title2 = "Comb";
         title3 = this.getCombTitle();
@@ -814,12 +824,14 @@ export class ThreeService {
 
       case "pik_disg":
         result = Object.keys(this.printService.pickupJson);
+        result = this.helper.numberSort(result);
         title1 = "ピックアップ 変位量";
         title2 = "PickUp";
         title3 = this.getPickupTitle();
         break;
       case "pik_fsec":
         result = Object.keys(this.printService.pickupJson);
+        result = this.helper.numberSort(result);
         title1 = "ピックアップ 断面力";
         title2 = "PickUp";
         title3 = this.getPickupTitle();
@@ -828,6 +840,7 @@ export class ThreeService {
         break;
       case "pik_reac":
         result = Object.keys(this.printService.pickupJson);
+        result = this.helper.numberSort(result);
         title1 = "ピックアップ 反力";
         title2 = "PickUp";
         title3 = this.getPickupTitle();
