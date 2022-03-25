@@ -32,7 +32,9 @@ export class InputCombineComponent implements OnInit {
     private helper: DataHelperModule,
     private app: AppComponent,
     private translate: TranslateService
-    ) {
+    ) { }
+
+  ngOnInit() {
     let head = "D";
     this.COLUMNS_COUNT = this.define.getDefineCaseCount();
     if (this.COLUMNS_COUNT <= 0) {
@@ -62,9 +64,6 @@ export class InputCombineComponent implements OnInit {
       align: 'left',
       width: 250,
     });
-  }
-
-  ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
   }
 

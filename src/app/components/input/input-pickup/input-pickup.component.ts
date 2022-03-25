@@ -32,7 +32,9 @@ export class InputPickupComponent implements OnInit {
     private helper: DataHelperModule,
     private app: AppComponent,
     private translate: TranslateService
-  ) {
+  ) { }
+
+    ngOnInit() {
 
       this.COLUMNS_COUNT = this.comb.getCombineCaseCount();
       if (this.COLUMNS_COUNT <= 0) {
@@ -59,9 +61,7 @@ export class InputPickupComponent implements OnInit {
         align: 'left',
         width: 250,
       });
-    }
-
-    ngOnInit() {
+      
       this.ROWS_COUNT = this.rowsCount();
     }
 
