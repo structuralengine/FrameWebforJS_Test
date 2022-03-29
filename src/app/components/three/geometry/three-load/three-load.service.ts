@@ -655,7 +655,7 @@ export class ThreeLoadService {
           break;
         }
         // 要素荷重を変更
-        this.changeMemberLode(tmLoad[i].row1, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+        this.changeMemberLode(tmLoad[i].row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
         row1++;
         i = tmLoad.findIndex((e) => e.row === row1);
       }
