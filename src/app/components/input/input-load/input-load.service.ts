@@ -631,6 +631,9 @@ export class InputLoadService {
 
           }
         }
+        if (load_member[targetCase] === undefined) {
+          load_member[targetCase] = new Array();
+        }
       }
     }
     return load_member;
