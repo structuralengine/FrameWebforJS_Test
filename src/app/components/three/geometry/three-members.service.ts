@@ -20,7 +20,7 @@ export class ThreeMembersService {
   private memberList: THREE.Object3D;
   private axisList: THREE.Group[]; // 軸は、メンバーのスケールと関係ないので、分けて管理する
   private selectionItem: THREE.Object3D; // 選択中のアイテム
-  private currentIndex: string;
+  // private currentIndex: string;
 
   // 大きさを調整するためのスケール
   private scale: number;
@@ -40,7 +40,7 @@ export class ThreeMembersService {
     this.axisList = new Array();
     this.ClearData();
     this.scene.add(this.memberList);
-    this.currentIndex = null;
+    // this.currentIndex = null;
 
     this.objVisible = true;
     this.txtVisible = false;
@@ -178,10 +178,10 @@ export class ThreeMembersService {
   //シートの選択行が指すオブジェクトをハイライトする
   public selectChange(index, mode = "members"): void{
 
-    if (this.currentIndex === index){
-      //選択行の変更がないとき，何もしない
-      return
-    }
+    // if (this.currentIndex === index){
+    //   //選択行の変更がないとき，何もしない
+    //   return
+    // }
 
     const axisKey_list = [];
 
@@ -220,7 +220,7 @@ export class ThreeMembersService {
       }
     }
 
-    this.currentIndex = index;
+    // this.currentIndex = index;
 
     this.scene.render();
   }

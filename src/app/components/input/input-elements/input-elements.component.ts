@@ -186,13 +186,19 @@ export class InputElementsComponent implements OnInit {
   private page = 1;
   private before_page = 1;
 
+  private currentRow: string;
+
   constructor(
     private data: InputElementsService,
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService
-  ) {}
+  ) {
+
+    this.currentRow = null;
+
+  }
 
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
@@ -266,7 +272,11 @@ export class InputElementsComponent implements OnInit {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = range[0].c1;
-      this.three.selectChange("elements", row, column);
+      if (this.currentRow !== row){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange("elements", row, column);
+      }
+      this.currentRow = row;
     },
     change: (evt, ui) => {
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.

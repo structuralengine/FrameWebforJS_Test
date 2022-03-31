@@ -108,10 +108,10 @@ export class ThreeNoticePointsService {
   //シートの選択行が指すオブジェクトをハイライトする
   public selectChange(index): void{
 
-    if (this.currentIndex === index){
-      //選択行の変更がないとき，何もしない
-      return
-    }
+    // if (this.currentIndex === index){
+    //   //選択行の変更がないとき，何もしない
+    //   return
+    // }
     const jsonData = this.noticePoint.getNoticePointsJson();
     if (Object.keys(jsonData).length <= 0) {
       return;
@@ -141,11 +141,6 @@ export class ThreeNoticePointsService {
     // this.scene.render();
 
     this.scene.render();
-  }
-
-  // changeData後に、currentIndexをリセットする
-  public resetCurrentIndex(): void {
-    this.currentIndex = null;
   }
 
   // データをクリアする

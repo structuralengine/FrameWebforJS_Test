@@ -143,13 +143,25 @@ export class InputFixNodeComponent implements OnInit {
     },
   ];
 
+  private columnList3D: string[];
+  private columnList2D: string[];
+  private currentRow: number;
+  private currentColumn: string;
+
   constructor(
     private data: InputFixNodeService,
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService
-  ) {}
+  ) {
+
+    this.columnList3D = ['n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
+    this.columnList2D = ['n', 'tx', 'ty', 'rz'];
+    this.currentRow = null;
+    this.currentColumn = null;
+
+  }
 
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
@@ -219,8 +231,15 @@ export class InputFixNodeComponent implements OnInit {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = range[0].c1;
-      this.three.selectChange("fix_nodes", row, column);
+      const column = (this.helper.dimension === 3) ? 
+                    this.columnList3D[range[0].c1] : 
+                    this.columnList2D[range[0].c1] ;
+      if (this.currentRow !== row || this.currentColumn !== column ){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange("fix_nodes", row, column);
+      }
+      this.currentRow = row;
+      this.currentColumn = column;
     },
     change: (evt, ui) => {
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
@@ -240,14 +259,14 @@ export class InputFixNodeComponent implements OnInit {
 
       // ハイライトの処理を再度実行する
       const row = ui.updateList[0].rowIndx + 1;
-      let column: number = 0;
-      for (const key of ['n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz']) {
+      let column: string;
+      const columnList = (this.helper.dimension === 3) ? this.columnList3D : this.columnList2D;
+      for (const key of columnList) {
         if (key in ui.updateList[0].newRow) {
+          column = key;
           break;
         }
-        column++;
       }
-      this.three.resetCurrentIndex("fix_nodes");
       this.three.selectChange("fix_nodes", row, column);
     },
   };

@@ -144,7 +144,7 @@ export class ThreeService {
 
   //////////////////////////////////////////////////////
   // データの選択を処理する
-  public selectChange(mode: string, index: number, index_sub: number): void {
+  public selectChange(mode: string, index: number, index_sub: any): void {
     //console.log("selectChange", mode, index, index_sub);
 
     switch (mode) {
@@ -188,33 +188,6 @@ export class ThreeService {
         this.load.selectChange(index, index_sub);
         break;
     }
-  }
-
-  // currentIndexを初期化する
-  public resetCurrentIndex(mode: string): void {
-
-    switch(mode){
-      case "joints":
-        this.joint.resetCurrentIndex();
-        break;
-
-      case "fix_nodes":
-        this.fixNode.resetCurrentIndex();
-        break;
-
-      case "fix_member":
-        this.fixMember.resetCurrentIndex();
-        break;
-
-      case "notice-points":
-        this.points.resetCurrentIndex();
-        break;
-
-      case "load_values":
-        this.load.resetCurrentIndex();
-        break;
-    }
-
   }
 
   //////////////////////////////////////////////////////

@@ -135,12 +135,7 @@ export class ThreePanelService {
   public selectChange(index_row): void {
 
     //[0]はハイライト用のカラー、[1]はデフォルトカラー
-    this.selectcolors = [0x00AFAF, 0x7F8F9F]
-
-    if (this.currentIndex === index_row) {
-      //選択行及び列の変更がないとき，何もしない
-      return
-    }
+    this.selectcolors = [0x00AFAF, 0x7F8F9F];
 
     //全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
     for (let item of this.panelList) {
@@ -152,8 +147,6 @@ export class ThreePanelService {
         item['material']['color'].setHex(this.selectcolors[0]); //処理の変更あり
       }
     }
-
-    this.currentIndex = index_row;
 
     this.scene.render();
   }

@@ -30,10 +30,16 @@ export class InputNodesComponent implements OnInit {
   private ROWS_COUNT = 15;
   public inner_width = 290;
 
+  private currentRow: string;
+
   constructor( private data: InputNodesService,
               private helper: DataHelperModule,
               private app: AppComponent,
-              private three: ThreeService) { }
+              private three: ThreeService) {
+
+    this.currentRow = null;
+
+  }
 
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
@@ -90,9 +96,14 @@ export class InputNodesComponent implements OnInit {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = range[0].c1;
-      this.three.selectChange('nodes', row, column);
+      if (this.currentRow !== row){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange('nodes', row, '');
+      }
+      this.currentRow = row;
     },
     change: (evt, ui) => {
+      const changes = ui.updateList;
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
       for (const target of ui.addList) {
         const no: number = target.rowIndx;
@@ -103,7 +114,11 @@ export class InputNodesComponent implements OnInit {
         this.dataset.splice(no, 1, node)
       }
       this.three.changeData('nodes');
-    }
+
+      // ハイライト処理を再度実行する
+      const row = changes[0].rowIndx + 1;
+      this.three.selectChange("nodes", row, '');
+      }
   };
 
   width = (this.helper.dimension === 3) ? 380 : 290 ;

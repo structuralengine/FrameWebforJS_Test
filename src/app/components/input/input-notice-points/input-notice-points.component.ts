@@ -46,6 +46,9 @@ export class InputNoticePointsComponent implements OnInit {
 
   private ROWS_COUNT = 15;
 
+  private columnList: string[];
+  private currentIndex: string;
+
   constructor(
     private data: InputNoticePointsService,
     private member: InputMembersService,
@@ -65,6 +68,11 @@ export class InputNoticePointsComponent implements OnInit {
         width: 80,
       });
     }
+    this.columnList = ['m', 'len'];
+    for (let i = 1; i < this.data.NOTICE_POINTS_COUNT; i++) {
+      this.columnList.push('L' + i.toString());
+    }
+    this.currentIndex = null;
   }
 
   ngOnInit() {
@@ -128,8 +136,12 @@ export class InputNoticePointsComponent implements OnInit {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = range[0].c1;
-      this.three.selectChange("notice-points", row, column);
+      const column = this.columnList[range[0].c1];
+      if (this.currentIndex !== row){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange("notice-points", row, column);
+      }
+      this.currentIndex = row;
     },
     change: (evt, ui) => {
       const changes = ui.updateList;
@@ -169,19 +181,13 @@ export class InputNoticePointsComponent implements OnInit {
 
       // ハイライト処理を再度実行する
       const row = changes[0].rowIndx + 1;
-      let column: number; // 複数の時は左上に合わせる
-      if ('m' in changes[0].newRow) {
-        column = 0;
-      } else {
-        for (let i = 1; i <= this.data.NOTICE_POINTS_COUNT; i++) {
-          const key = 'L' + i.toString();
-          if (key in changes[0].newRow) {
-            column = 1 + i;
-            break;
-          }
+      let column: string; // 複数の時は左上に合わせる
+      for (const key of this.columnList) {
+        if (key in ui.updateList[0].newRow) {
+          column = key;
+          break;
         }
       }
-      this.three.resetCurrentIndex("notice-points");
       this.three.selectChange("notice-points", row, column);
 
     },

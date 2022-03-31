@@ -16,8 +16,8 @@ export class ThreeJointService {
 
   private jointList: any[];
   private isVisible: boolean;
-  private currentIndex: string;
-  private currentIndex_sub: string;
+  // private currentIndex: string;
+  // private currentIndex_sub: string;
 
   private selectionItem: THREE.Mesh;     // 選択中のアイテム
 
@@ -29,8 +29,6 @@ export class ThreeJointService {
               private three_member: ThreeMembersService){
       this.jointList = new Array();
       this.isVisible = null;
-      this.currentIndex = null;
-      this.currentIndex_sub = null;
     }
 
   public visibleChange(flag: boolean): void {
@@ -107,30 +105,8 @@ export class ThreeJointService {
   //シートの選択行が指すオブジェクトをハイライトする
   public selectChange(index_row, index_column): void{
     
-    if (this.currentIndex === index_row && this.currentIndex_sub === index_column){
-      //選択行及び列の変更がないとき，何もしない
-      return
-    }
-
     //数字(列数)を記号に変換
-    let column = "";
-    if (index_column === 0){
-      //column = "xi"
-    } else if (index_column === 1){
-      column = "xi"
-    } else if (index_column === 2) {
-      column = "yi"
-    } else if (index_column === 3) {
-      column = "zi"
-    } else if (index_column === 4) {
-      column = "xj"
-    } else if (index_column === 5) {
-      column = "yj"
-    } else if (index_column === 6) {
-      column = "zj"
-    } else {
-      console.log("-----error-----three-joint.service.ts-----error-----");
-    }
+    const column = index_column;
 
     //全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
     for (let item of this.jointList){
@@ -143,16 +119,7 @@ export class ThreeJointService {
       }
     }
 
-    this.currentIndex = index_row;
-    this.currentIndex_sub = index_column;
-
     this.scene.render();
-  }
-
-  // changeData後に、currentIndexをリセットする
-  public resetCurrentIndex(): void {
-    this.currentIndex = null;
-    this.currentIndex_sub = null
   }
 
   // ピンを示すドーナッツを描く

@@ -686,6 +686,11 @@ export class InputLoadComponent implements OnInit {
   private ROWS_COUNT = 15;
   private page = 1;
 
+  private columnList3D: string[];
+  private columnList2D: string[];
+  private currentRow: number; // 現在 選択中の行番号
+  private currentCol: string; // 現在 選択中の列記号
+
   constructor(
     private data: InputLoadService,
     private helper: DataHelperModule,
@@ -695,6 +700,13 @@ export class InputLoadComponent implements OnInit {
     private scene: SceneService,
     private translate: TranslateService
   ) {
+
+    this.columnList3D = ['m1', 'm2', 'direction', 'mark', 'L1', 'L2', 'P1', 'P2', 'n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
+    this.columnList2D = ['m1', 'm2', 'direction', 'mark', 'L1', 'L2', 'P1', 'P2', 'n', 'tx', 'ty', 'rz'];
+    console.log(this.columnList3D);
+    this.currentRow = null;
+    this.currentCol = null;
+
     // グリッドの設定
     this.options = {
       showTop: false,
@@ -723,8 +735,15 @@ export class InputLoadComponent implements OnInit {
       selectEnd: (evt, ui) => {
         const range = ui.selection.iCells.ranges;
         const row = range[0].r1 + 1;
-        const column = range[0].c1;
-        this.three.selectChange("load_values", row, column);
+        const column = (this.helper.dimension === 3) ? 
+                      this.columnList3D[range[0].c1] : 
+                      this.columnList2D[range[0].c1] ;
+        if (this.currentRow !== row || this.currentCol !== column){
+          //選択行の変更があるとき，ハイライトを実行する
+          this.three.selectChange("load_values", row, column);
+        }
+        this.currentRow = row;
+        this.currentCol = column;
       },
       change: (evt, ui) => {
         for (const range of ui.updateList) {
@@ -775,17 +794,19 @@ export class InputLoadComponent implements OnInit {
 
         // ハイライトの処理を再度実行する
         const row = ui.updateList[0].rowIndx + 1;
-        let column: number = 0;
-        for (const key of ['m1', 'm2', 'direction', 'mark', 'L1', 'L2', 'P1', 'P2', 'n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz']) {
+        let column: string;
+        const columnList = (this.helper.dimension === 3) ? this.columnList3D : this.columnList2D;
+        for (const key of columnList) {
           if (key in ui.updateList[0].newRow) {
+            column = key;
             break;
           }
-          column++;
         }
-        this.three.resetCurrentIndex("load_values");
         this.three.selectChange("load_values", row, column);
       },
     };
+
+
   }
 
   ngOnInit() {

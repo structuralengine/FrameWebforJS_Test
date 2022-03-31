@@ -19,7 +19,7 @@ export class ThreeNodesService {
   private nodeList: THREE.Object3D;
   private selectionItem: THREE.Object3D;     // 選択中のアイテム
   public center: any; // すべての点の重心位置
-  private currentIndex: string;
+  // private currentIndex: string;
 
   // 大きさを調整するためのスケール
   private scale: number;
@@ -36,7 +36,7 @@ export class ThreeNodesService {
     this.nodeList = new THREE.Object3D();
     this.ClearData();
     this.scene.add(this.nodeList);
-    this.currentIndex = null;
+    // this.currentIndex = null;
 
     this.objVisible = true;
     this.txtVisible = false;
@@ -136,10 +136,10 @@ export class ThreeNodesService {
   //シートの選択行が指すオブジェクトをハイライトする
   public selectChange(index): void{
 
-    if (this.currentIndex === index){
-      //選択行の変更がないとき，何もしない
-      return
-    }
+    // if (this.currentIndex === index){
+    //   //選択行の変更がないとき，何もしない
+    //   return
+    // }
 
     //全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
     for (let item of this.nodeList.children){
@@ -152,7 +152,7 @@ export class ThreeNodesService {
       }
     }
 
-    this.currentIndex = index;
+    // this.currentIndex = index;
 
     this.scene.render();
   }

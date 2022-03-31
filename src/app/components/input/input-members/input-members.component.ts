@@ -161,6 +161,8 @@ export class InputMembersComponent implements OnInit {
 
   private ROWS_COUNT = 15;
 
+  private currentIndex: string;
+
   constructor(
     private data: InputMembersService,
     private element: InputElementsService,
@@ -168,7 +170,11 @@ export class InputMembersComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService
-  ) {}
+  ) {
+
+    this.currentIndex = null;
+
+  }
 
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
@@ -234,7 +240,11 @@ export class InputMembersComponent implements OnInit {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = range[0].c1;
-      this.three.selectChange("members", row, column);
+      if (this.currentIndex !== row){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange("members", row, '');
+      }
+      this.currentIndex = row;
     },
     change: (evt, ui) => {
       const changes = ui.updateList;
@@ -293,6 +303,10 @@ export class InputMembersComponent implements OnInit {
         this.dataset.splice(no, 1, member)
       }
       this.three.changeData("members");
+
+      // ハイライト処理を再度実行する
+      const row = changes[0].rowIndx + 1;
+      this.three.selectChange("members", row, '');
     },
   };
 
