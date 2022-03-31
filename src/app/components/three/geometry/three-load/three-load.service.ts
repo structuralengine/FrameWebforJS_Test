@@ -397,6 +397,12 @@ export class ThreeLoadService {
     this.scene.render();
   }
 
+  // changeData後に、currentIndexをリセットする
+  public resetCurrentIndex(): void {
+    this.currentRow = null;
+    this.currentCol = null;
+  }
+
   // ケースの荷重図を消去する
   public removeCase(id: string, option: boolean = true): void {
     if (!(id in this.AllCaseLoadList)) {
@@ -655,7 +661,7 @@ export class ThreeLoadService {
           break;
         }
         // 要素荷重を変更
-        this.changeMemberLode(tmLoad[i].row1, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+        this.changeMemberLode(tmLoad[i].row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
         row1++;
         i = tmLoad.findIndex((e) => e.row === row1);
       }

@@ -350,6 +350,13 @@ export class ThreeFixMemberService {
     this.scene.render();
   }
 
+  // changeData後に、currentIndexをリセットする
+  public resetCurrentIndex(): void {
+    this.currentIndex = null;
+    this.currentIndex_sub = null
+  }
+
+
   public ClearData(): void {
     for (const mesh of this.fixmemberList) {
       // 文字を削除する

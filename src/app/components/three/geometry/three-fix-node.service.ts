@@ -531,6 +531,12 @@ export class ThreeFixNodeService {
     this.scene.render();
   }
 
+  // changeData後に、currentIndexをリセットする
+  public resetCurrentIndex(): void {
+    this.currentIndex = null;
+    this.currentIndex_sub = null
+  }
+
   // データをクリアする
   public ClearData(): void {
 

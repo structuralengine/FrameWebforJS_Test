@@ -147,6 +147,18 @@ export class InputJointComponent implements OnInit {
         this.dataset.splice(no, 1, joint);
       }
       this.three.changeData("joints", this.page);
+
+      // ハイライトの処理を再度実行する
+      const row = ui.updateList[0].rowIndx + 1;
+      let column: number = 0;
+      for (const key of ['m', 'xi', 'yi', 'zi', 'xj', 'yj', 'zj']) {
+        if (key in ui.updateList[0].newRow) {
+          break;
+        }
+        column++;
+      }
+      this.three.resetCurrentIndex("joints");
+      this.three.selectChange("joints", row, column);
     },
   };
 

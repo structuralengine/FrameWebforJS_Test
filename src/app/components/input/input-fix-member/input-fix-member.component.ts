@@ -162,6 +162,18 @@ export class InputFixMemberComponent implements OnInit {
         this.dataset.splice(no, 1, fixmember)
       }
       this.three.changeData('fix_member', this.page);
+
+      // ハイライトの処理を再度実行する
+      const row = ui.updateList[0].rowIndx + 1;
+      let column: number = 0;
+      for (const key of ['m', 'tx', 'ty', 'tz', 'tr']) {
+        if (key in ui.updateList[0].newRow) {
+          break;
+        }
+        column++;
+      }
+      this.three.resetCurrentIndex("fix_member");
+      this.three.selectChange("fix_member", row, column);
     }
   };
 

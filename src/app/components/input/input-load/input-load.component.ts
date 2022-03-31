@@ -772,6 +772,18 @@ export class InputLoadComponent implements OnInit {
           this.dataset.splice(no, 1, load);
           this.three.changeData("load_values", no + 1);
         }
+
+        // ハイライトの処理を再度実行する
+        const row = ui.updateList[0].rowIndx + 1;
+        let column: number = 0;
+        for (const key of ['m1', 'm2', 'direction', 'mark', 'L1', 'L2', 'P1', 'P2', 'n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz']) {
+          if (key in ui.updateList[0].newRow) {
+            break;
+          }
+          column++;
+        }
+        this.three.resetCurrentIndex("load_values");
+        this.three.selectChange("load_values", row, column);
       },
     };
   }

@@ -237,6 +237,18 @@ export class InputFixNodeComponent implements OnInit {
         this.dataset.splice(no, 1, node);
       }
       this.three.changeData("fix_nodes", this.page);
+
+      // ハイライトの処理を再度実行する
+      const row = ui.updateList[0].rowIndx + 1;
+      let column: number = 0;
+      for (const key of ['n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz']) {
+        if (key in ui.updateList[0].newRow) {
+          break;
+        }
+        column++;
+      }
+      this.three.resetCurrentIndex("fix_nodes");
+      this.three.selectChange("fix_nodes", row, column);
     },
   };
 

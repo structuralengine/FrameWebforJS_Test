@@ -149,6 +149,12 @@ export class ThreeJointService {
     this.scene.render();
   }
 
+  // changeData後に、currentIndexをリセットする
+  public resetCurrentIndex(): void {
+    this.currentIndex = null;
+    this.currentIndex_sub = null
+  }
+
   // ピンを示すドーナッツを描く
   private createJoint(position: any, direction: any, localAxis, Data): void {
 

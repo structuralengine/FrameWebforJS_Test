@@ -166,6 +166,24 @@ export class InputNoticePointsComponent implements OnInit {
         this.dataset.splice(no, 1, notice_points);
       }
       this.three.changeData("notice-points");
+
+      // ハイライト処理を再度実行する
+      const row = changes[0].rowIndx + 1;
+      let column: number; // 複数の時は左上に合わせる
+      if ('m' in changes[0].newRow) {
+        column = 0;
+      } else {
+        for (let i = 1; i <= this.data.NOTICE_POINTS_COUNT; i++) {
+          const key = 'L' + i.toString();
+          if (key in changes[0].newRow) {
+            column = 1 + i;
+            break;
+          }
+        }
+      }
+      this.three.resetCurrentIndex("notice-points");
+      this.three.selectChange("notice-points", row, column);
+
     },
   };
 }

@@ -225,6 +225,19 @@ export class ThreeMembersService {
     this.scene.render();
   }
 
+  // 着目点のselectChange
+  public selectChange_points(m_no: string): void {
+
+    // 全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
+    for (let item of this.memberList.children){
+      item['material']['color'].setHex(0X000000);
+      if (item.name === 'member' + m_no.toString()){
+        item['material']['color'].setHex(0XFF0000);
+      }
+    }
+
+  }
+
   // データをクリアする
   public ClearData(): void {
     // 線を削除する

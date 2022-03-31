@@ -11,6 +11,7 @@ import { ThreeFixNodeService } from "./geometry/three-fix-node.service";
 import { ThreeFixMemberService } from "./geometry/three-fix-member.service";
 import { ThreeJointService } from "./geometry/three-joint.service";
 import { ThreePanelService } from "./geometry/three-panel.service";
+import { ThreeNoticePointsService } from "./geometry/three-notice-points.service";
 import { ThreeLoadService } from "./geometry/three-load/three-load.service";
 
 import { ThreeDisplacementService } from "./geometry/three-displacement.service";
@@ -47,6 +48,7 @@ export class ThreeService {
     private fixMember: ThreeFixMemberService,
     private joint: ThreeJointService,
     private panel: ThreePanelService,
+    private points: ThreeNoticePointsService,
     private load: ThreeLoadService,
     private disg: ThreeDisplacementService,
     private reac: ThreeReactService,
@@ -98,10 +100,11 @@ export class ThreeService {
         break;
 
       case "elements":
-        // nothisng
+        // nothing
         break;
-      case "notice_points":
-        // nothisng
+      case "notice-points":
+        // nothing
+        this.points.changeData();
         break;
 
       case "joints":
@@ -157,6 +160,10 @@ export class ThreeService {
         this.member.selectChange(index, mode);
         break;
 
+      case "notice-points":
+        this.points.selectChange(index);
+        break;
+
       case "joints":
         this.joint.selectChange(index, index_sub);
         break;
@@ -181,6 +188,33 @@ export class ThreeService {
         this.load.selectChange(index, index_sub);
         break;
     }
+  }
+
+  // currentIndexを初期化する
+  public resetCurrentIndex(mode: string): void {
+
+    switch(mode){
+      case "joints":
+        this.joint.resetCurrentIndex();
+        break;
+
+      case "fix_nodes":
+        this.fixNode.resetCurrentIndex();
+        break;
+
+      case "fix_member":
+        this.fixMember.resetCurrentIndex();
+        break;
+
+      case "notice-points":
+        this.points.resetCurrentIndex();
+        break;
+
+      case "load_values":
+        this.load.resetCurrentIndex();
+        break;
+    }
+
   }
 
   //////////////////////////////////////////////////////
