@@ -27,6 +27,8 @@ export class InputLoadComponent implements OnInit {
   public width: number;
 
   private dataset = [];
+  private columnKeys3D = ['m1', 'm2', 'direction', 'mark', 'L1', 'L2', 'P1', 'P2', 'n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
+  private columnKeys2D = ['m1', 'm2', 'direction', 'mark', 'L1', 'L2', 'P1', 'P2', 'n', 'tx', 'ty', 'rz'];
   private columnHeaders3D = [
     {
       title: this.translate.instant("input.input-load.memberLoad"),
@@ -40,7 +42,7 @@ export class InputLoadComponent implements OnInit {
               title: "1",
               align: "center",
               dataType: "string",
-              dataIndx: "m1",
+              dataIndx: this.columnKeys3D[0],
               sortable: false,
               width: 30,
             },
@@ -48,7 +50,7 @@ export class InputLoadComponent implements OnInit {
               title: "2",
               align: "center",
               dataType: "string",
-              dataIndx: "m2",
+              dataIndx: this.columnKeys3D[1],
               sortable: false,
               width: 30,
             },
@@ -61,7 +63,7 @@ export class InputLoadComponent implements OnInit {
             {
               title: "(x,y,z)",
               dataType: "string",
-              dataIndx: "direction",
+              dataIndx: this.columnKeys3D[2],
               sortable: false,
               width: 30,
             },
@@ -74,7 +76,7 @@ export class InputLoadComponent implements OnInit {
             {
               title: "(1,2,9,11)",
               dataType: "integer",
-              dataIndx: "mark",
+              dataIndx: this.columnKeys3D[3],
               sortable: false,
               width: 60,
             },
@@ -88,7 +90,7 @@ export class InputLoadComponent implements OnInit {
               title: "(m)",
               dataType: "string",
               align: "right",
-              dataIndx: "L1",
+              dataIndx: this.columnKeys3D[4],
               sortable: false,
               width: 70,
               format: (val) => {
@@ -112,7 +114,7 @@ export class InputLoadComponent implements OnInit {
               title: "(m)",
               dataType: "float",
               format: "#.000",
-              dataIndx: "L2",
+              dataIndx: this.columnKeys3D[5],
               sortable: false,
               width: 70,
             },
@@ -126,7 +128,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN/m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "P1",
+              dataIndx: this.columnKeys3D[6],
               sortable: false,
               width: 70,
             },
@@ -140,7 +142,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN/m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "P2",
+              dataIndx: this.columnKeys3D[7],
               sortable: false,
               width: 70,
             },
@@ -160,7 +162,7 @@ export class InputLoadComponent implements OnInit {
               title: this.translate.instant("input.input-load.No"),
               align: "center",
               dataType: "string",
-              dataIndx: "n",
+              dataIndx: this.columnKeys3D[8],
               sortable: false,
               width: 30,
             },
@@ -174,7 +176,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "tx",
+              dataIndx: this.columnKeys3D[9],
               sortable: false,
               width: 70,
             },
@@ -188,7 +190,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "ty",
+              dataIndx: this.columnKeys3D[10],
               sortable: false,
               width: 70,
             },
@@ -202,7 +204,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "tz",
+              dataIndx: this.columnKeys3D[11],
               sortable: false,
               width: 70,
             },
@@ -216,7 +218,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "rx",
+              dataIndx: this.columnKeys3D[12],
               sortable: false,
               width: 70,
             },
@@ -230,7 +232,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "ry",
+              dataIndx: this.columnKeys3D[13],
               sortable: false,
               width: 70,
             },
@@ -244,7 +246,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "rz",
+              dataIndx: this.columnKeys3D[14],
               sortable: false,
               width: 70,
             },
@@ -265,7 +267,7 @@ export class InputLoadComponent implements OnInit {
               title: "1",
               align: "center",
               dataType: "string",
-              dataIndx: "m1",
+              dataIndx: this.columnKeys2D[0],
               sortable: false,
               width: 30,
             },
@@ -273,7 +275,7 @@ export class InputLoadComponent implements OnInit {
               title: "2",
               align: "center",
               dataType: "string",
-              dataIndx: "m2",
+              dataIndx: this.columnKeys2D[1],
               sortable: false,
               width: 30,
             },
@@ -286,7 +288,7 @@ export class InputLoadComponent implements OnInit {
             {
               title: "(x,y,z)",
               dataType: "string",
-              dataIndx: "direction",
+              dataIndx: this.columnKeys2D[2],
               sortable: false,
               width: 30,
             },
@@ -299,7 +301,7 @@ export class InputLoadComponent implements OnInit {
             {
               title: "(1,2,9,11)",
               dataType: "integer",
-              dataIndx: "mark",
+              dataIndx: this.columnKeys2D[3],
               sortable: false,
               width: 60,
             },
@@ -313,7 +315,7 @@ export class InputLoadComponent implements OnInit {
               title: "(m)",
               dataType: "string",
               align: "right",
-              dataIndx: "L1",
+              dataIndx: this.columnKeys2D[4],
               sortable: false,
               width: 70,
               format: (val) => {
@@ -337,7 +339,7 @@ export class InputLoadComponent implements OnInit {
               title: "(m)",
               dataType: "float",
               format: "#.000",
-              dataIndx: "L2",
+              dataIndx: this.columnKeys2D[5],
               sortable: false,
               width: 70,
             },
@@ -351,7 +353,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN/m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "P1",
+              dataIndx: this.columnKeys2D[6],
               sortable: false,
               width: 70,
             },
@@ -365,7 +367,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN/m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "P2",
+              dataIndx: this.columnKeys2D[7],
               sortable: false,
               width: 70,
             },
@@ -386,7 +388,7 @@ export class InputLoadComponent implements OnInit {
               title: this.translate.instant("input.input-load.No"),
               align: "center",
               dataType: "string",
-              dataIndx: "n",
+              dataIndx: this.columnKeys2D[8],
               sortable: false,
               width: 30,
             },
@@ -400,7 +402,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "tx",
+              dataIndx: this.columnKeys2D[9],
               sortable: false,
               width: 70,
             },
@@ -414,7 +416,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "ty",
+              dataIndx: this.columnKeys2D[10],
               sortable: false,
               width: 70,
             },
@@ -428,7 +430,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "rz",
+              dataIndx: this.columnKeys2D[11],
               sortable: false,
               width: 70,
             },
@@ -451,7 +453,7 @@ export class InputLoadComponent implements OnInit {
               title: "1",
               align: "center",
               dataType: "string",
-              dataIndx: "m1",
+              dataIndx: this.columnKeys3D[0],
               sortable: false,
               width: 30,
             },
@@ -459,7 +461,7 @@ export class InputLoadComponent implements OnInit {
               title: "2",
               align: "center",
               dataType: "string",
-              dataIndx: "m2",
+              dataIndx: this.columnKeys3D[1],
               sortable: false,
               width: 30,
             },
@@ -472,7 +474,7 @@ export class InputLoadComponent implements OnInit {
             {
               title: "(x,y,z)",
               dataType: "string",
-              dataIndx: "direction",
+              dataIndx: this.columnKeys3D[2],
               sortable: false,
               width: 30,
             },
@@ -485,7 +487,7 @@ export class InputLoadComponent implements OnInit {
             {
               title: "(1,2,9,11)",
               dataType: "integer",
-              dataIndx: "mark",
+              dataIndx: this.columnKeys3D[3],
               sortable: false,
               width: 60,
             },
@@ -499,7 +501,7 @@ export class InputLoadComponent implements OnInit {
               title: "(m)",
               dataType: "string",
               align: "right",
-              dataIndx: "L1",
+              dataIndx: this.columnKeys3D[4],
               sortable: false,
               width: 70,
               format: (val) => {
@@ -523,7 +525,7 @@ export class InputLoadComponent implements OnInit {
               title: "(m)",
               dataType: "float",
               format: "#.000",
-              dataIndx: "L2",
+              dataIndx: this.columnKeys3D[5],
               sortable: false,
               width: 70,
             },
@@ -537,7 +539,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN/m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "P1",
+              dataIndx: this.columnKeys3D[6],
               sortable: false,
               width: 70,
             },
@@ -551,7 +553,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN/m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "P2",
+              dataIndx: this.columnKeys3D[7],
               sortable: false,
               width: 70,
             },
@@ -573,7 +575,7 @@ export class InputLoadComponent implements OnInit {
               title: "1",
               align: "center",
               dataType: "string",
-              dataIndx: "m1",
+              dataIndx: this.columnKeys2D[0],
               sortable: false,
               width: 30,
             },
@@ -581,7 +583,7 @@ export class InputLoadComponent implements OnInit {
               title: "2",
               align: "center",
               dataType: "string",
-              dataIndx: "m2",
+              dataIndx: this.columnKeys2D[1],
               sortable: false,
               width: 30,
             },
@@ -594,7 +596,7 @@ export class InputLoadComponent implements OnInit {
             {
               title: "(x,y,z)",
               dataType: "string",
-              dataIndx: "direction",
+              dataIndx: this.columnKeys2D[2],
               sortable: false,
               width: 30,
             },
@@ -607,7 +609,7 @@ export class InputLoadComponent implements OnInit {
             {
               title: "(1,2,9,11)",
               dataType: "integer",
-              dataIndx: "mark",
+              dataIndx: this.columnKeys2D[3],
               sortable: false,
               width: 60,
             },
@@ -621,7 +623,7 @@ export class InputLoadComponent implements OnInit {
               title: "(m)",
               dataType: "string",
               align: "right",
-              dataIndx: "L1",
+              dataIndx: this.columnKeys2D[4],
               sortable: false,
               width: 70,
               format: (val) => {
@@ -645,7 +647,7 @@ export class InputLoadComponent implements OnInit {
               title: "(m)",
               dataType: "float",
               format: "#.000",
-              dataIndx: "L2",
+              dataIndx: this.columnKeys2D[5],
               sortable: false,
               width: 70,
             },
@@ -659,7 +661,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN/m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "P1",
+              dataIndx: this.columnKeys2D[6],
               sortable: false,
               width: 70,
             },
@@ -673,7 +675,7 @@ export class InputLoadComponent implements OnInit {
               title: "(kN/m)",
               dataType: "float",
               format: "#.00",
-              dataIndx: "P2",
+              dataIndx: this.columnKeys2D[7],
               sortable: false,
               width: 70,
             },
@@ -686,8 +688,6 @@ export class InputLoadComponent implements OnInit {
   private ROWS_COUNT = 15;
   private page = 1;
 
-  private columnList3D: string[];
-  private columnList2D: string[];
   private currentRow: number; // 現在 選択中の行番号
   private currentCol: string; // 現在 選択中の列記号
 
@@ -701,9 +701,6 @@ export class InputLoadComponent implements OnInit {
     private translate: TranslateService
   ) {
 
-    this.columnList3D = ['m1', 'm2', 'direction', 'mark', 'L1', 'L2', 'P1', 'P2', 'n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
-    this.columnList2D = ['m1', 'm2', 'direction', 'mark', 'L1', 'L2', 'P1', 'P2', 'n', 'tx', 'ty', 'rz'];
-    console.log(this.columnList3D);
     this.currentRow = null;
     this.currentCol = null;
 
@@ -735,9 +732,8 @@ export class InputLoadComponent implements OnInit {
       selectEnd: (evt, ui) => {
         const range = ui.selection.iCells.ranges;
         const row = range[0].r1 + 1;
-        const column = (this.helper.dimension === 3) ? 
-                      this.columnList3D[range[0].c1] : 
-                      this.columnList2D[range[0].c1] ;
+        const columnList = this.getColumnList(this.helper.dimension);
+        const column = columnList[range[0].c1];
         if (this.currentRow !== row || this.currentCol !== column){
           //選択行の変更があるとき，ハイライトを実行する
           this.three.selectChange("load_values", row, column);
@@ -795,7 +791,7 @@ export class InputLoadComponent implements OnInit {
         // ハイライトの処理を再度実行する
         const row = ui.updateList[0].rowIndx + 1;
         let column: string;
-        const columnList = (this.helper.dimension === 3) ? this.columnList3D : this.columnList2D;
+        const columnList = this.getColumnList(this.helper.dimension);
         for (const key of columnList) {
           if (key in ui.updateList[0].newRow) {
             column = key;
@@ -907,6 +903,14 @@ export class InputLoadComponent implements OnInit {
       }
     }
 
+  }
+
+  private getColumnList (dimension): string[] {
+    if (dimension === 3) {
+      return this.columnKeys3D;
+    } else {
+      return this.columnKeys2D;
+    }
   }
 
 }

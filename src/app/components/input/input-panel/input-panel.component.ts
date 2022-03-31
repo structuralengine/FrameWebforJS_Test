@@ -17,12 +17,13 @@ export class InputPanelComponent {
   @ViewChild('grid') grid: SheetComponent;
 
   private dataset = [];
+  private columnKeys = ['e'];
   private columnHeaders: any =[
     //{ title: "パネルID", dataType: "integer", dataIndx: "panelID",  sortable: false, width: 40 },
     {
       title: this.translate.instant("input.input-panel.materialNo"),
       dataType: "integer", 
-      dataIndx: "e",  
+      dataIndx: this.columnKeys[0],  
       sortable: false, 
       width: 40 
     },
@@ -34,7 +35,6 @@ export class InputPanelComponent {
 
   private ROWS_COUNT = 15;
 
-  private columnList: string[];
   private currentRow: string;
   private currentColumn: string;
 
@@ -47,7 +47,9 @@ export class InputPanelComponent {
             ) {
 
     for (let i = 1; i <= this.data.PANEL_VERTEXS_COUNT; i++) {
-      //const id = "point-" + i;
+      // this.columnKeysの情報追加
+      this.columnKeys.push('point-' + i.toString());
+      // this.columnHeadersの情報追加
       this.columnHeaders[1].colModel.push({
         title: i.toString(),
         dataType: "integer",
@@ -56,11 +58,6 @@ export class InputPanelComponent {
         minwidth: 30, 
         width: 35
       });
-    }
-
-    this.columnList = ['e'];
-    for (let i = 1; i < this.data.PANEL_VERTEXS_COUNT; i++) {
-      this.columnList.push('point-' + i.toString());
     }
     this.currentRow = null;
   }
@@ -123,7 +120,7 @@ export class InputPanelComponent {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = this.columnList[range[0].c1];
+      const column = this.columnKeys[range[0].c1];
       if (this.currentRow !== row){
         //選択行の変更があるとき，ハイライトを実行する
         this.three.selectChange('panel', row, column);
@@ -159,7 +156,7 @@ export class InputPanelComponent {
       // ハイライト処理を再度実行する
       const row = changes[0].rowIndx + 1;
       let column: string; // 複数の時は左上に合わせる
-      for (const key of this.columnList) {
+      for (const key of this.columnKeys) {
         if (key in ui.updateList[0].newRow) {
           column = key;
           break;

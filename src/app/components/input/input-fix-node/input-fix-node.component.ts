@@ -19,6 +19,8 @@ export class InputFixNodeComponent implements OnInit {
   private page = 1;
   private dataset = [];
 
+  private columnKeys3D: string[] = ['n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
+  private columnKeys2D: string[] = ['n', 'tx', 'ty', 'rz'];
   private columnHeaders3D = [
     {
       title: this.translate.instant("input.input-fix-node.node"),
@@ -28,7 +30,7 @@ export class InputFixNodeComponent implements OnInit {
           title: this.translate.instant("input.input-fix-node.No"),
           align: "center",
           dataType: "string",
-          dataIndx: "n",
+          dataIndx: this.columnKeys3D[0],
           sortable: false,
           width: 30,
         },
@@ -43,21 +45,21 @@ export class InputFixNodeComponent implements OnInit {
         {
           title: this.translate.instant("input.input-fix-node.x_direction"),
           dataType: "float",
-          dataIndx: "tx",
+          dataIndx: this.columnKeys3D[1],
           sortable: false,
           width: 100,
         },
         {
           title: this.translate.instant("input.input-fix-node.y_direction"),
           dataType: "float",
-          dataIndx: "ty",
+          dataIndx: this.columnKeys3D[2],
           sortable: false,
           width: 100,
         },
         {
           title: this.translate.instant("input.input-fix-node.z_direction"),
           dataType: "float",
-          dataIndx: "tz",
+          dataIndx: this.columnKeys3D[3],
           sortable: false,
           width: 100,
         },
@@ -70,21 +72,21 @@ export class InputFixNodeComponent implements OnInit {
         {
           title: this.translate.instant("input.input-fix-node.x_around"),
           dataType: "float",
-          dataIndx: "rx",
+          dataIndx: this.columnKeys3D[4],
           sortable: false,
           width: 100,
         },
         {
           title: this.translate.instant("input.input-fix-node.y_around"),
           dataType: "float",
-          dataIndx: "ry",
+          dataIndx: this.columnKeys3D[5],
           sortable: false,
           width: 100,
         },
         {
           title: this.translate.instant("input.input-fix-node.z_around"),
           dataType: "float",
-          dataIndx: "rz",
+          dataIndx: this.columnKeys3D[6],
           sortable: false,
           width: 100,
         },
@@ -100,7 +102,7 @@ export class InputFixNodeComponent implements OnInit {
           title: this.translate.instant("input.input-fix-node.No"),
           align: "center",
           dataType: "string",
-          dataIndx: "n",
+          dataIndx: this.columnKeys2D[0],
           sortable: false,
           width: 30,
         },
@@ -115,14 +117,14 @@ export class InputFixNodeComponent implements OnInit {
         {
           title: this.translate.instant("input.input-fix-node.x_direction"),
           dataType: "float",
-          dataIndx: "tx",
+          dataIndx: this.columnKeys2D[1],
           sortable: false,
           width: 100,
         },
         {
           title: this.translate.instant("input.input-fix-node.y_direction"),
           dataType: "float",
-          dataIndx: "ty",
+          dataIndx: this.columnKeys2D[2],
           sortable: false,
           width: 100,
         },
@@ -135,7 +137,7 @@ export class InputFixNodeComponent implements OnInit {
         {
           title: " (kN・m/rad)",
           dataType: "float",
-          dataIndx: "rz",
+          dataIndx: this.columnKeys2D[3],
           sortable: false,
           width: 100,
         },
@@ -143,8 +145,6 @@ export class InputFixNodeComponent implements OnInit {
     },
   ];
 
-  private columnList3D: string[];
-  private columnList2D: string[];
   private currentRow: number;
   private currentColumn: string;
 
@@ -155,9 +155,6 @@ export class InputFixNodeComponent implements OnInit {
     private three: ThreeService,
     private translate: TranslateService
   ) {
-
-    this.columnList3D = ['n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
-    this.columnList2D = ['n', 'tx', 'ty', 'rz'];
     this.currentRow = null;
     this.currentColumn = null;
 
@@ -231,9 +228,8 @@ export class InputFixNodeComponent implements OnInit {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = (this.helper.dimension === 3) ? 
-                    this.columnList3D[range[0].c1] : 
-                    this.columnList2D[range[0].c1] ;
+      const columnList = this.getColumnList(this.helper.dimension);
+      const column = columnList[range[0].c1];
       if (this.currentRow !== row || this.currentColumn !== column ){
         //選択行の変更があるとき，ハイライトを実行する
         this.three.selectChange("fix_nodes", row, column);
@@ -260,7 +256,7 @@ export class InputFixNodeComponent implements OnInit {
       // ハイライトの処理を再度実行する
       const row = ui.updateList[0].rowIndx + 1;
       let column: string;
-      const columnList = (this.helper.dimension === 3) ? this.columnList3D : this.columnList2D;
+      const columnList = this.getColumnList(this.helper.dimension);
       for (const key of columnList) {
         if (key in ui.updateList[0].newRow) {
           column = key;
@@ -272,4 +268,12 @@ export class InputFixNodeComponent implements OnInit {
   };
 
   width = this.helper.dimension === 3 ? 712 : 412;
+
+  private getColumnList (dimension): string[] {
+    if (dimension === 3) {
+      return this.columnKeys3D;
+    } else {
+      return this.columnKeys2D;
+    }
+  }
 }

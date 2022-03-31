@@ -17,43 +17,43 @@ export class InputJointComponent implements OnInit {
   @ViewChild("grid") grid!: SheetComponent;
 
   private dataset = [];
+  private columnKeys3D = ['m', 'xi', 'yi', 'zi', 'xj', 'yj', 'zj'];
+  private columnKeys2D = ['m', 'zi', 'zj'];
   private columnHeaders3D =[
     { 
       title: this.translate.instant("input.input-joint.member"),
       align: 'center', colModel: [
       { 
         title: this.translate.instant("input.input-joint.No"),
-        dataType: "string", dataIndx: "m", sortable: false },
+        dataType: "string", dataIndx: this.columnKeys3D[0], sortable: false },
     ]},      
     { 
       title: this.translate.instant("input.input-joint.node_i"),
       align: 'center', colModel: [
-      { title: "x", dataType: "integer", dataIndx: "xi", sortable: false },
-      { title: "y", dataType: "integer", dataIndx: "yi", sortable: false },
-      { title: "z", dataType: "integer", dataIndx: "zi", sortable: false },
+      { title: "x", dataType: "integer", dataIndx: this.columnKeys3D[1], sortable: false },
+      { title: "y", dataType: "integer", dataIndx: this.columnKeys3D[2], sortable: false },
+      { title: "z", dataType: "integer", dataIndx: this.columnKeys3D[3], sortable: false },
     ]},      
     { 
       title: this.translate.instant("input.input-joint.node_j"),
       align: 'center', colModel: [
-      { title: "x", dataType: "integer", dataIndx: "xj", sortable: false },
-      { title: "y", dataType: "integer", dataIndx: "yj", sortable: false },
-      { title: "z", dataType: "integer", dataIndx: "zj", sortable: false }
+      { title: "x", dataType: "integer", dataIndx: this.columnKeys3D[4], sortable: false },
+      { title: "y", dataType: "integer", dataIndx: this.columnKeys3D[5], sortable: false },
+      { title: "z", dataType: "integer", dataIndx: this.columnKeys3D[6], sortable: false }
     ]},      
   ];
   private columnHeaders2D =[
     { 
       title: this.translate.instant("input.input-joint.memberNo"),
-      dataType: "string", dataIndx: "m", sortable: false },
+      dataType: "string", dataIndx: this.columnKeys2D[0], sortable: false },
     { 
       title: this.translate.instant("input.input-joint.node_i"),
-      dataType: "integer", dataIndx: "zi", sortable: false },
+      dataType: "integer", dataIndx: this.columnKeys2D[1], sortable: false },
     { 
       title: this.translate.instant("input.input-joint.node_j"),
-      dataType: "integer", dataIndx: "zj", sortable: false }
+      dataType: "integer", dataIndx: this.columnKeys2D[2], sortable: false }
 
   ];
-  private columnList3D: string[];
-  private columnList2D: string[];
 
   private ROWS_COUNT = 15;
   private page = 1;
@@ -68,8 +68,6 @@ export class InputJointComponent implements OnInit {
     private three: ThreeService,
     private translate: TranslateService
   ) {
-    this.columnList3D = ['m', 'xi', 'yi', 'zi', 'xj', 'yj', 'zj'];
-    this.columnList2D = ['m', 'zi', 'zj'];
 
     this.currentRow = null;
     this.currentColumn = null;
@@ -139,9 +137,8 @@ export class InputJointComponent implements OnInit {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = (this.helper.dimension === 3) ? 
-                    this.columnList3D[range[0].c1] : 
-                    this.columnList2D[range[0].c1] ;
+      const columnList = this.getColumnList(this.helper.dimension);
+      const column = columnList[range[0].c1];
       if (this.currentRow !== row && this.currentColumn !== column){
         //選択行の変更があるとき，ハイライトを実行する
         this.three.selectChange("joints", row, column);
@@ -169,7 +166,7 @@ export class InputJointComponent implements OnInit {
       // ハイライトの処理を再度実行する
       const row = ui.updateList[0].rowIndx + 1;
       let column: string;
-      const columnList = (this.helper.dimension === 3) ? this.columnList3D : this.columnList2D;
+      const columnList = this.getColumnList(this.helper.dimension);
       for (const key of columnList) {
         if (key in ui.updateList[0].newRow) {
           column = key;
@@ -181,4 +178,12 @@ export class InputJointComponent implements OnInit {
   };
 
   width = this.helper.dimension === 3 ? 410 : 410;
+
+  private getColumnList (dimension): string[] {
+    if (dimension === 3) {
+      return this.columnKeys3D;
+    } else {
+      return this.columnKeys2D;
+    }
+  }
 }
