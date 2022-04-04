@@ -25,15 +25,9 @@ app.whenReady().then(async () => {
   await createWindow();
 
   // 起動時に1回だけ
-  const server = 'https://update.electronjs.org';
-  const url = `${server}/structuralengine/FrameWebforJS/${process.platform}-${
-    process.arch
-  }/1.11.5`;
-
+  
   log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
-  log.info(url);
-
-  autoUpdater.setFeedURL(url);
+  
   await autoUpdater.checkForUpdates();
 });
 
