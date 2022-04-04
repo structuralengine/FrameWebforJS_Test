@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as fs from 'fs';
 import log from 'electron-log';
-
+import isDev from 'electron-is-dev';
 // 起動 --------------------------------------------------------------
 
 let mainWindow: BrowserWindow;
@@ -24,11 +24,12 @@ async function createWindow() {
 app.whenReady().then(async () => {
   await createWindow();
 
-  // 起動時に1回だけ
-  
-  log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
-  
-  await autoUpdater.checkForUpdates();
+  if (!isDev) {
+    // 起動時に1回だけ
+    log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
+
+    await autoUpdater.checkForUpdates();
+  }
 });
 
 // アップデート --------------------------------------------------
