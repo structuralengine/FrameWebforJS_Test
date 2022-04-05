@@ -37,7 +37,7 @@ export class InputCombineService {
 //    this.combine = temp; 
 
 
-    console.log(row,col);
+    // console.log(row,col);
     for (let i = 0; i < this.combine.length; i++) {
       const tmp = this.combine[i];
       if (tmp['row'] === row) {
