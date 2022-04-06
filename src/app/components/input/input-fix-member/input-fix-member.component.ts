@@ -17,13 +17,15 @@ export class InputFixMemberComponent implements OnInit {
   @ViewChild('grid') grid: SheetComponent;
 
   private dataset = [];
+  private columnKeys3D = ['m', 'tx', 'ty', 'tz', 'tr'];
+  private columnKeys2D = ['m', 'tx', 'ty'];
   private columnHeaders3D =[
     { 
       title: this.translate.instant("input.input-fix-member.member"),
       align: 'center', colModel: [
       { 
         title: this.translate.instant("input.input-fix-member.No"),
-        align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
+        align: 'center',   dataType: "string", dataIndx: this.columnKeys3D[0],  sortable: false, width: 30 },
     ]},
     { 
       title: this.translate.instant("input.input-fix-member.displacementRestraint"),
@@ -31,19 +33,19 @@ export class InputFixMemberComponent implements OnInit {
       align: 'center', colModel: [
       { 
         title: this.translate.instant("input.input-fix-member.v_axis"),
-        dataType: "float",   dataIndx: "tx", sortable: false, width: 100 },
+        dataType: "float",   dataIndx: this.columnKeys3D[1], sortable: false, width: 100 },
       { 
         title: this.translate.instant("input.input-fix-member.y_axis"),
-        dataType: "float",   dataIndx: "ty", sortable: false, width: 100 },
+        dataType: "float",   dataIndx: this.columnKeys3D[2], sortable: false, width: 100 },
       { 
         title: this.translate.instant("input.input-fix-member.z_axis"),
-        dataType: "float",   dataIndx: "tz", sortable: false, width: 100 },
+        dataType: "float",   dataIndx: this.columnKeys3D[3], sortable: false, width: 100 },
     ]},
     { 
       title: this.translate.instant("input.input-fix-member.rotationalRestraint"),
       align: 'center', colModel: [
       { 
-        title: "(kNm/rad/m)",  dataType: "float",   dataIndx: "tr", sortable: false, width: 100 }
+        title: "(kNm/rad/m)",  dataType: "float",   dataIndx: this.columnKeys3D[4], sortable: false, width: 100 }
     ]},
   ];
   private columnHeaders2D =[
@@ -52,22 +54,25 @@ export class InputFixMemberComponent implements OnInit {
       align: 'center', colModel: [
       { 
         title: this.translate.instant("input.input-fix-member.No"),
-        align: 'center',   dataType: "string", dataIndx: "m",  sortable: false, width: 30 },
+        align: 'center',   dataType: "string", dataIndx: this.columnKeys2D[0],  sortable: false, width: 30 },
     ]},
     { 
       title: this.translate.instant("input.input-fix-member.v_axis"),
       align: 'center', colModel: [
-      { title: "(kN/m/m)", dataType: "float",   dataIndx: "tx", sortable: false, width: 100 },
+      { title: "(kN/m/m)", dataType: "float",   dataIndx: this.columnKeys2D[1], sortable: false, width: 100 },
     ]},
     { 
       title: this.translate.instant("input.input-fix-member.r_axis"),
       align: 'center', colModel: [
-      { title: "(kN/m/m)", dataType: "float",   dataIndx: "ty", sortable: false, width: 100 },
+      { title: "(kN/m/m)", dataType: "float",   dataIndx: this.columnKeys2D[2], sortable: false, width: 100 },
     ]},
-];
+  ];
 
   private ROWS_COUNT = 15;
   private page = 1;
+
+  private currentRow: string;
+  private currentColumn: string;
 
   constructor(
     private data: InputFixMemberService,
@@ -75,7 +80,12 @@ export class InputFixMemberComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService
-  ) {}
+  ) {
+
+    this.currentRow = null;
+    this.currentColumn = null;
+
+  }
 
 
     ngOnInit() {
@@ -145,8 +155,14 @@ export class InputFixMemberComponent implements OnInit {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = range[0].c1;
-      this.three.selectChange('fix_member', row, column);
+      const columnList = this.getColumnList(this.helper.dimension);
+      const column = columnList[range[0].c1];
+      if (this.currentRow !== row || this.currentColumn !== column){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange('fix_member', row, column);
+      }
+      this.currentRow = row;
+      this.currentColumn = column;
     },
     change: (evt, ui) => {
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
@@ -162,9 +178,29 @@ export class InputFixMemberComponent implements OnInit {
         this.dataset.splice(no, 1, fixmember)
       }
       this.three.changeData('fix_member', this.page);
+
+      // ハイライトの処理を再度実行する
+      const row = ui.updateList[0].rowIndx + 1;
+      let column: string;
+      const columnList = this.getColumnList(this.helper.dimension);
+      for (const key of columnList) {
+        if (key in ui.updateList[0].newRow) {
+          column = key;
+          break;
+        }
+      }
+      this.three.selectChange("fix_member", row, column);
     }
   };
 
   width = (this.helper.dimension === 3) ? 510 : 410 ;
+
+  private getColumnList (dimension): string[] {
+    if (dimension === 3) {
+      return this.columnKeys3D;
+    } else {
+      return this.columnKeys2D;
+    }
+  }
 
 }

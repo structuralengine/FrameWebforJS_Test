@@ -11,6 +11,7 @@ import { ThreeFixNodeService } from "./geometry/three-fix-node.service";
 import { ThreeFixMemberService } from "./geometry/three-fix-member.service";
 import { ThreeJointService } from "./geometry/three-joint.service";
 import { ThreePanelService } from "./geometry/three-panel.service";
+import { ThreeNoticePointsService } from "./geometry/three-notice-points.service";
 import { ThreeLoadService } from "./geometry/three-load/three-load.service";
 
 import { ThreeDisplacementService } from "./geometry/three-displacement.service";
@@ -47,6 +48,7 @@ export class ThreeService {
     private fixMember: ThreeFixMemberService,
     private joint: ThreeJointService,
     private panel: ThreePanelService,
+    private points: ThreeNoticePointsService,
     private load: ThreeLoadService,
     private disg: ThreeDisplacementService,
     private reac: ThreeReactService,
@@ -98,10 +100,11 @@ export class ThreeService {
         break;
 
       case "elements":
-        // nothisng
+        // nothing
         break;
-      case "notice_points":
-        // nothisng
+      case "notice-points":
+        // nothing
+        this.points.changeData();
         break;
 
       case "joints":
@@ -141,7 +144,7 @@ export class ThreeService {
 
   //////////////////////////////////////////////////////
   // データの選択を処理する
-  public selectChange(mode: string, index: number, index_sub: number): void {
+  public selectChange(mode: string, index: number, index_sub: any): void {
     //console.log("selectChange", mode, index, index_sub);
 
     switch (mode) {
@@ -155,6 +158,10 @@ export class ThreeService {
 
       case "elements":
         this.member.selectChange(index, mode);
+        break;
+
+      case "notice-points":
+        this.points.selectChange(index);
         break;
 
       case "joints":

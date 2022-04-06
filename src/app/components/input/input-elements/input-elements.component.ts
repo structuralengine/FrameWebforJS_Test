@@ -16,6 +16,7 @@ export class InputElementsComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
 
   private dataset = [];
+  private columnKeys = ["E", "G", 'Xp', 'A', 'j', 'Iy', 'Iz', 'n']
   private columnHeaders3D = [
     {
       title: this.translate.instant("input.input-elements.elastic"),
@@ -24,7 +25,7 @@ export class InputElementsComponent implements OnInit {
         {
           title: "E(kN/m2)",
           dataType: "float",
-          dataIndx: "E",
+          dataIndx: this.columnKeys[0],
           sortable: false,
           width: 120,
         },
@@ -37,7 +38,7 @@ export class InputElementsComponent implements OnInit {
         {
           title: "G(kN/m2)",
           dataType: "float",
-          dataIndx: "G",
+          dataIndx: this.columnKeys[1],
           sortable: false,
           width: 130,
         },
@@ -50,7 +51,7 @@ export class InputElementsComponent implements OnInit {
         {
           title: "",
           dataType: "float",
-          dataIndx: "Xp",
+          dataIndx: this.columnKeys[2],
           sortable: false,
           width: 100,
         },
@@ -64,7 +65,7 @@ export class InputElementsComponent implements OnInit {
           title: "A(m2)",
           dataType: "float",
           format: "#.0000",
-          dataIndx: "A",
+          dataIndx: this.columnKeys[3],
           sortable: false,
           width: 100,
         },
@@ -78,7 +79,7 @@ export class InputElementsComponent implements OnInit {
           title: "J(m4)",
           dataType: "float",
           format: "#.000000",
-          dataIndx: "J",
+          dataIndx: this.columnKeys[4],
           sortable: false,
           width: 100,
         },
@@ -92,7 +93,7 @@ export class InputElementsComponent implements OnInit {
           title: "Iy (m4)",
           dataType: "float",
           format: "#.000000",
-          dataIndx: "Iy",
+          dataIndx: this.columnKeys[5],
           sortable: false,
           width: 100,
         },
@@ -100,7 +101,7 @@ export class InputElementsComponent implements OnInit {
           title: "Iz (m4)",
           dataType: "float",
           format: "#.000000",
-          dataIndx: "Iz",
+          dataIndx: this.columnKeys[6],
           sortable: false,
           width: 100,
         },
@@ -111,7 +112,7 @@ export class InputElementsComponent implements OnInit {
       align: "center",
       dataType: "string",
       format: "#.000000",
-      dataIndx: "n",
+      dataIndx: this.columnKeys[7],
       sortable: false,
       width: 100,
     },
@@ -124,7 +125,7 @@ export class InputElementsComponent implements OnInit {
         {
           title: "E(kN/m2)",
           dataType: "float",
-          dataIndx: "E",
+          dataIndx: this.columnKeys[0],
           sortable: false,
           width: 120,
         },
@@ -137,7 +138,7 @@ export class InputElementsComponent implements OnInit {
         {
           title: "",
           dataType: "float",
-          dataIndx: "Xp",
+          dataIndx: this.columnKeys[2],
           sortable: false,
           width: 100,
         },
@@ -151,7 +152,7 @@ export class InputElementsComponent implements OnInit {
           title: "A(m2)",
           dataType: "float",
           format: "#.0000",
-          dataIndx: "A",
+          dataIndx: this.columnKeys[3],
           sortable: false,
           width: 100,
         },
@@ -165,7 +166,7 @@ export class InputElementsComponent implements OnInit {
           title: "I(m4)",
           dataType: "float",
           format: "#.000000",
-          dataIndx: "Iz",
+          dataIndx: this.columnKeys[6],
           sortable: false,
           width: 100,
         },
@@ -176,7 +177,7 @@ export class InputElementsComponent implements OnInit {
       align: "center",
       dataType: "string",
       format: "#.000000",
-      dataIndx: "n",
+      dataIndx: this.columnKeys[7],
       sortable: false,
       width: 100,
     },
@@ -186,13 +187,19 @@ export class InputElementsComponent implements OnInit {
   private page = 1;
   private before_page = 1;
 
+  private currentRow: string;
+
   constructor(
     private data: InputElementsService,
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService
-  ) {}
+  ) {
+
+    this.currentRow = null;
+
+  }
 
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
@@ -265,8 +272,12 @@ export class InputElementsComponent implements OnInit {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = range[0].c1;
-      this.three.selectChange("elements", row, column);
+      const column = this.columnKeys[range[0].c1];
+      if (this.currentRow !== row){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange("elements", row, '');
+      }
+      this.currentRow = row;
     },
     change: (evt, ui) => {
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.

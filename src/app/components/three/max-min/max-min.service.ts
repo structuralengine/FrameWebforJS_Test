@@ -57,6 +57,7 @@ export class MaxMinService {
     }
     const b = a[currentPage];
     if(b == undefined){
+      this.maxMinClear();
       return
     }
     const c = key2==null ? b : b[key2];
@@ -159,6 +160,15 @@ export class MaxMinService {
 
   public maxMinClear() {
     this.visible = false;
+    
+    this.max = undefined;
+    this.min = undefined;
+    this.max_m = undefined;
+    this.min_m = undefined;
+    this.max2 = undefined;
+    this.min2 = undefined;
+    this.max2_m = undefined;
+    this.min2_m = undefined;
     // document.getElementById("max-min").style.display = "none";
   }
 

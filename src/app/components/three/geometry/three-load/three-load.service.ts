@@ -32,8 +32,6 @@ export class ThreeLoadService {
   // 全ケースの荷重を保存
   private AllCaseLoadList: {};
   private currentIndex: string; // 現在 表示中のケース番号
-  private currentRow: number; // 現在 選択中の行番号
-  private currentCol: number; // 現在 選択中の列番号
 
   // 荷重のテンプレート
   private loadEditor: {};
@@ -85,8 +83,6 @@ export class ThreeLoadService {
     // 全てのケースの荷重情報
     this.AllCaseLoadList = {};
     this.currentIndex = null;
-    this.currentRow = null;
-    this.currentCol = null;
 
     // 節点、部材データ
     this.nodeData = null;
@@ -221,7 +217,7 @@ export class ThreeLoadService {
   public changeCase(changeCase: number, isLL_Load: boolean = false): void {
     
     // 全てのオブジェクトをデフォルトのカラーの状態にする
-    this.selectChange(-1, -1); 
+    this.selectChange(-1, ''); 
 
         // 連行荷重が完成したら 以下のアニメーションを有効にする
     // 荷重名称を調べる
@@ -337,16 +333,16 @@ export class ThreeLoadService {
   }
 
   //シートの選択行が指すオブジェクトをハイライトする
-  public selectChange(index_row: number, index_column: number): void {
+  public selectChange(index_row: number, index_column: string): void {
     // mode: string = "value"): void {
     const id: string = this.currentIndex;
 
-    if (index_row > 0 && this.currentRow === index_row) {
-      if (this.currentCol === index_column) {
-        //選択行の変更がないとき，何もしない
-        return;
-      }
-    }
+    // if (index_row > 0 && this.currentRow === index_row) {
+    //   if (this.currentCol === index_column) {
+    //     //選択行の変更がないとき，何もしない
+    //     return;
+    //   }
+    // }
 
     if (this.AllCaseLoadList[id] === undefined) return;
     const ThreeObject: THREE.Object3D = this.AllCaseLoadList[id].ThreeObject;
@@ -358,17 +354,13 @@ export class ThreeLoadService {
       const editor: any = item["editor"];
 
       let column = ``;
-      if (index_column > 7) {
-        const keys =
-          this.helper.dimension === 3
-            ? ["", "tx", "ty", "tz", "rx", "ry", "rz"]
-            : ["", "tx", "ty", "rz"];
-        column = keys[index_column - 8];
+      if (["n", "tx", "ty", "tz", "rx", "ry", "rz"].includes(index_column)) {
+        column = (index_column === 'n') ? '' : index_column;
       }
 
       const key = editor.id + "-" + index_row.toString() + "-" + column;
 
-      if (index_column < 8) {
+      if (["m1", "m2", "dimension", "mark", "L1", "L2", "P1", "P2"].includes(index_column)) {
         if (editor.id !== "PointLoad" && editor.id !== "MomentLoad") {
           if (item.name.indexOf(key) !== -1) {
             editor.setColor(item, "select");
@@ -390,9 +382,6 @@ export class ThreeLoadService {
         }
       }
     }
-
-    this.currentRow = index_row;
-    this.currentCol = index_column;
 
     this.scene.render();
   }
@@ -655,7 +644,7 @@ export class ThreeLoadService {
           break;
         }
         // 要素荷重を変更
-        this.changeMemberLode(tmLoad[i].row1, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+        this.changeMemberLode(tmLoad[i].row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
         row1++;
         i = tmLoad.findIndex((e) => e.row === row1);
       }
@@ -1298,7 +1287,7 @@ export class ThreeLoadService {
       this.guiDisable();
       // setColor を初期化する
       //console.log('荷重名称の入力です。')
-      this.selectChange(-1, 0);
+      this.selectChange(-1, '');
     }
     this.isVisible.gui = gui;
 
@@ -1873,7 +1862,7 @@ export class ThreeLoadService {
     }
 
     // 全てのハイライトを元に戻す
-    this.selectChange(-1, 0);
+    this.selectChange(-1, '');
 
     //全てのオブジェクトをデフォルトの状態にする
     if (!("editor" in item)) {

@@ -16,8 +16,8 @@ export class ThreeFixMemberService {
 
   private fixmemberList: any[];
   private isVisible: boolean;
-  private currentIndex: string;
-  private currentIndex_sub: string;
+  // private currentIndex: string;
+  // private currentIndex_sub: string;
 
   // 大きさを調整するためのスケール
   private scale: number;
@@ -33,8 +33,8 @@ export class ThreeFixMemberService {
 
     this.fixmemberList = new Array();
     this.isVisible = null;
-    this.currentIndex = null;
-    this.currentIndex_sub = null;
+    // this.currentIndex = null;
+    // this.currentIndex_sub = null;
 
     // gui
     this.scale = 1.0;
@@ -56,7 +56,7 @@ export class ThreeFixMemberService {
 
   public visibleChange(flag: boolean): void {
 
-    this.selectChange(-1, -1)
+    this.selectChange(-1, '');
 
     if (this.isVisible === flag) {
       return;
@@ -314,23 +314,7 @@ export class ThreeFixMemberService {
   //シートの選択行が指すオブジェクトをハイライトする
   public selectChange(index_row, index_column): void{
 
-    if (this.currentIndex === index_row && this.currentIndex_sub === index_column){
-      //選択行の変更がないとき，何もしない
-      return
-    }
-
-    let column = "";
-    if (index_column === 0){
-      //column = "x"
-    } else if (index_column === 1){
-      column = "x"
-    } else if (index_column === 2) {
-      column = "y"
-    } else if (index_column === 3) {
-      column = "z"
-    } else if (index_column === 4) {
-      column = "r"
-    }
+    const column = index_column.slice(1);
 
     //全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
     for (let item of this.fixmemberList){
@@ -343,9 +327,6 @@ export class ThreeFixMemberService {
         }
       }
     }
-
-    this.currentIndex = index_row;
-    this.currentIndex_sub = index_column;
 
     this.scene.render();
   }
