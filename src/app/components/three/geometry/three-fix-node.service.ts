@@ -17,8 +17,8 @@ export class ThreeFixNodeService {
 
   private fixnodeList: any[];
   private isVisible: boolean;
-  private currentIndex: string;
-  private currentIndex_sub: string;
+  // private currentIndex: string;
+  // private currentIndex_sub: string;
 
   private selectionItem: THREE.Mesh;     // 選択中のアイテム
 
@@ -36,8 +36,8 @@ export class ThreeFixNodeService {
 
     this.fixnodeList = new Array();
     this.isVisible = null;
-    this.currentIndex = null;
-    this.currentIndex_sub = null;
+    // this.currentIndex = null;
+    // this.currentIndex_sub = null;
 
     // gui
     this.scale = 1.0;
@@ -488,30 +488,13 @@ export class ThreeFixNodeService {
   //シートの選択行が指すオブジェクトをハイライトする
   public selectChange(index_row, index_column): void {
 
-    if (this.currentIndex === index_row && this.currentIndex_sub === index_column) {
-      //選択行の変更がないとき，何もしない
-      return
-    }
+    // if (this.currentIndex === index_row && this.currentIndex_sub === index_column) {
+    //   //選択行の変更がないとき，何もしない
+    //   return
+    // }
 
-    let column = "";
-    const column_sub = "tp"
-    if (index_column === 0) {
-      //column = "tx"
-    } else if (index_column === 1) {
-      column = "tx"
-    } else if (index_column === 2) {
-      column = "ty"
-    } else if (index_column === 3) {
-      column = "tz"
-    } else if (index_column === 4) {
-      column = "rx"
-    } else if (index_column === 5) {
-      column = "ry"
-    } else if (index_column === 6) {
-      column = "rz"
-    } else {
-      //console.log("-----error-----three-fixnode.service.ts-----error-----");
-    }
+    let column = index_column;
+    const column_sub = "tp";
 
     //全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
     for (let item of this.fixnodeList) {
@@ -525,8 +508,8 @@ export class ThreeFixNodeService {
       }
     }
 
-    this.currentIndex = index_row;
-    this.currentIndex_sub = index_column;
+    // this.currentIndex = index_row;
+    // this.currentIndex_sub = index_column;
 
     this.scene.render();
   }

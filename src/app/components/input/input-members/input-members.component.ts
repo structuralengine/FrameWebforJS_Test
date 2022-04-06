@@ -17,6 +17,7 @@ export class InputMembersComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
 
   private dataset = [];
+  private columnKeys = ['ni', 'nj', 'L', 'e', 'cg', 'n'];
   private columnHeaders3D = [
     {
       title: this.translate.instant("input.input-members.node"),
@@ -25,7 +26,7 @@ export class InputMembersComponent implements OnInit {
         {
           title: this.translate.instant("input.input-members.node_i"),
           dataType: "integer",
-          dataIndx: "ni",
+          dataIndx: this.columnKeys[0],
           sortable: false,
           minwidth: 10,
           width: 10,
@@ -33,7 +34,7 @@ export class InputMembersComponent implements OnInit {
         {
           title: this.translate.instant("input.input-members.node_j"),
           dataType: "integer",
-          dataIndx: "nj",
+          dataIndx: this.columnKeys[1],
           sortable: false,
           minwidth: 10,
           width: 10,
@@ -48,7 +49,7 @@ export class InputMembersComponent implements OnInit {
           title: "(m)",
           dataType: "float",
           format: "#.000",
-          dataIndx: "L",
+          dataIndx: this.columnKeys[2],
           sortable: false,
           width: 100,
           editable: false,
@@ -63,7 +64,7 @@ export class InputMembersComponent implements OnInit {
         {
           title: this.translate.instant("input.input-members.No"),
           dataType: "integer",
-          dataIndx: "e",
+          dataIndx: this.columnKeys[3],
           sortable: false,
           minwidth: 10,
           width: 10,
@@ -77,7 +78,7 @@ export class InputMembersComponent implements OnInit {
         {
           title: "(°)",
           dataType: "float",
-          dataIndx: "cg",
+          dataIndx: this.columnKeys[4],
           sortable: false,
           width: 130,
         },
@@ -87,7 +88,7 @@ export class InputMembersComponent implements OnInit {
       title: this.translate.instant("input.input-members.material_name"),
       align: "center",
       dataType: "string",
-      dataIndx: "n",
+      dataIndx: this.columnKeys[5],
       sortable: false,
       width: 100,
       editable: false,
@@ -102,7 +103,7 @@ export class InputMembersComponent implements OnInit {
         {
           title: this.translate.instant("input.input-members.node_i"),
           dataType: "integer",
-          dataIndx: "ni",
+          dataIndx: this.columnKeys[0],
           sortable: false,
           minwidth: 10,
           width: 10,
@@ -110,7 +111,7 @@ export class InputMembersComponent implements OnInit {
         {
           title: this.translate.instant("input.input-members.node_j"),
           dataType: "integer",
-          dataIndx: "nj",
+          dataIndx: this.columnKeys[1],
           sortable: false,
           minwidth: 10,
           width: 10,
@@ -125,7 +126,7 @@ export class InputMembersComponent implements OnInit {
           title: "(m)",
           dataType: "float",
           format: "#.000",
-          dataIndx: "L",
+          dataIndx: this.columnKeys[2],
           sortable: false,
           width: 100,
           editable: false,
@@ -140,7 +141,7 @@ export class InputMembersComponent implements OnInit {
         {
           title: this.translate.instant("input.input-members.No"),
           dataType: "integer",
-          dataIndx: "e",
+          dataIndx: this.columnKeys[3],
           sortable: false,
           minwidth: 10,
           width: 10,
@@ -151,7 +152,7 @@ export class InputMembersComponent implements OnInit {
       title: this.translate.instant("input.input-members.material_name"),
       align: "center",
       dataType: "string",
-      dataIndx: "n",
+      dataIndx: this.columnKeys[5],
       sortable: false,
       width: 100,
       editable: false,
@@ -161,6 +162,8 @@ export class InputMembersComponent implements OnInit {
 
   private ROWS_COUNT = 15;
 
+  private currentIndex: string;
+
   constructor(
     private data: InputMembersService,
     private element: InputElementsService,
@@ -168,7 +171,11 @@ export class InputMembersComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService
-  ) {}
+  ) {
+
+    this.currentIndex = null;
+
+  }
 
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
@@ -233,8 +240,12 @@ export class InputMembersComponent implements OnInit {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = range[0].c1;
-      this.three.selectChange("members", row, column);
+      const column = this.columnKeys[range[0].c1];
+      if (this.currentIndex !== row){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange("members", row, '');
+      }
+      this.currentIndex = row;
     },
     change: (evt, ui) => {
       const changes = ui.updateList;
@@ -293,6 +304,10 @@ export class InputMembersComponent implements OnInit {
         this.dataset.splice(no, 1, member)
       }
       this.three.changeData("members");
+
+      // ハイライト処理を再度実行する
+      const row = changes[0].rowIndx + 1;
+      this.three.selectChange("members", row, '');
     },
   };
 

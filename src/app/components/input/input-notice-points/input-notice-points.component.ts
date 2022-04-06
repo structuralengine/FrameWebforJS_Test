@@ -20,11 +20,12 @@ export class InputNoticePointsComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
 
   private dataset = [];
+  private columnKeys = ['m', 'len'];
   private columnHeaders: any = [
     {
       title: this.translate.instant("input.input-notice-points.memberNo"),
       dataType: "string",
-      dataIndx: "m",
+      dataIndx: this.columnKeys[0],
       sortable: false,
       minwidth: 10,
       width: 10,
@@ -33,7 +34,7 @@ export class InputNoticePointsComponent implements OnInit {
       title: this.translate.instant("input.input-notice-points.distance"),
       dataType: "float",
       format: "#.000",
-      dataIndx: "len",
+      dataIndx: this.columnKeys[1],
       sortable: false,
       width: 80,
       editable: false,
@@ -46,6 +47,8 @@ export class InputNoticePointsComponent implements OnInit {
 
   private ROWS_COUNT = 15;
 
+  private currentIndex: string;
+
   constructor(
     private data: InputNoticePointsService,
     private member: InputMembersService,
@@ -55,6 +58,9 @@ export class InputNoticePointsComponent implements OnInit {
     private translate: TranslateService
   ) {
     for (let i = 1; i <= this.data.NOTICE_POINTS_COUNT; i++) {
+      // this.columnKeysの情報追加
+      this.columnKeys.push('L' + i.toString());
+      // this.columnHeadersの情報追加
       const id = "L" + i;
       this.columnHeaders[2].colModel.push({
         title: id,
@@ -65,6 +71,7 @@ export class InputNoticePointsComponent implements OnInit {
         width: 80,
       });
     }
+    this.currentIndex = null;
   }
 
   ngOnInit() {
@@ -128,8 +135,12 @@ export class InputNoticePointsComponent implements OnInit {
     selectEnd: (evt, ui) => {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
-      const column = range[0].c1;
-      this.three.selectChange("notice-points", row, column);
+      const column = this.columnKeys[range[0].c1];
+      if (this.currentIndex !== row){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange("notice-points", row, column);
+      }
+      this.currentIndex = row;
     },
     change: (evt, ui) => {
       const changes = ui.updateList;
@@ -166,6 +177,18 @@ export class InputNoticePointsComponent implements OnInit {
         this.dataset.splice(no, 1, notice_points);
       }
       this.three.changeData("notice-points");
+
+      // ハイライト処理を再度実行する
+      const row = changes[0].rowIndx + 1;
+      let column: string; // 複数の時は左上に合わせる
+      for (const key of this.columnKeys) {
+        if (key in ui.updateList[0].newRow) {
+          column = key;
+          break;
+        }
+      }
+      this.three.selectChange("notice-points", row, column);
+
     },
   };
 }
