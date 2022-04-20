@@ -16,7 +16,7 @@ export class InputElementsComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
 
   private dataset = [];
-  private columnKeys = ["E", "G", 'Xp', 'A', 'j', 'Iy', 'Iz', 'n']
+  private columnKeys = ["E", "G", 'Xp', 'A', 'J', 'Iy', 'Iz', 'n']
   private columnHeaders3D = [
     {
       title: this.translate.instant("input.input-elements.elastic"),
