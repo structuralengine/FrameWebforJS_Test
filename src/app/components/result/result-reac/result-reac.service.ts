@@ -94,6 +94,12 @@ export class ResultReacService {
         continue;
       }
       const caseLoad: any = load_name[parseInt(k1, 10)];
+      if(caseLoad==undefined){
+        continue
+      }
+      if(caseLoad.fix_node==undefined){
+        continue
+      }
       const fix_type: string = caseLoad.fix_node.toString();
       if (!(fix_type in fix_node)) {
         caseData.reac = {};

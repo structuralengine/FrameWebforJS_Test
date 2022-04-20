@@ -131,6 +131,9 @@ export class ResultDataService {
           continue;
         }
         const symbol: string = load[strNo].symbol;
+        if(symbol==undefined){
+          continue;
+        }
         if(symbol.includes('LL')){
           // 連行荷重の場合
           const target_LL_Keys: string[] = load_keys.filter(e =>{
