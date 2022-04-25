@@ -8,28 +8,26 @@ import { ArrayCamera } from "three";
 })
 export class PrintCustomFsecService {
   public dataset: any[];
-  public fsecEditable: boolean[];
   public flg: boolean;
+  public fsecEditable = {
+    fx_max: true,
+    fx_min: true,
+    fy_max: true,
+    fy_min: true,
+    fz_max: true,
+    fz_min: true,
+    mx_max: true,
+    mx_min: true,
+    my_max: true,
+    my_min: true,
+    mz_max: true,
+    mz_min: true
+  };
 
   constructor(
     private member: InputMembersService,
     private element: InputElementsService
-  ) {
-    this.fsecEditable = [
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-    ];
-  }
+  ) { }
 
   clear() {
     this.dataset = new Array();

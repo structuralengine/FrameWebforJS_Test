@@ -52,7 +52,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   };
 
   public onPrintPDF(): void {
-    if (this.printService.contentEditable1[10]) {
+    if (this.printService.optionList['captur'].value) {
       // 図の印刷
       this.three.getCaptureImage().then((print_target) => {
         this.printService.print_target = print_target;
@@ -85,14 +85,16 @@ export class PrintComponent implements OnInit, OnDestroy {
               this.showPDF(response.toString());
             },
             (err) => {
-              if ("error" in err) {
-                if ("text" in err.error) {
-                  this.showPDF(err.error.text.toString());
-                  return;
+              try{
+                if ("error" in err) {
+                  if ("text" in err.error) {
+                    this.showPDF(err.error.text.toString());
+                    return;
+                  }
                 }
-              }
+              } catch(e) { }
               this.loadind_desable();
-              alert(err);
+              alert(err['message']);
             }
           );
       }
