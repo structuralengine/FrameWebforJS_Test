@@ -15,7 +15,7 @@ import { PrintCustomThreeService } from "./custom/print-custom-three/print-custo
 })
 export class PrintService {
   public isPrinting = false;
-  public contentEditable1: boolean[];
+  public optionList: {};
   public mode: number;
   public selectedIndex: string;
 
@@ -30,10 +30,10 @@ export class PrintService {
   public printOption = [];
   public printRadio: any;
   public json = {};
-  public priCount: number = 0;
+  private priCount: number = 0;
   public pageCount: number = 0;
   public pageOver: boolean = false; // printPossibleを超えるようなページ数の場合にtrue
-  public printPossible: number = 1000; // ページ数の閾値
+  private printPossible: number = 1000; // ページ数の閾値
   public pageDisplay: boolean = true; //　概算ページ数の表示
   public pageError: boolean = false; // 対象データの存在
   constructor(
@@ -47,64 +47,11 @@ export class PrintService {
     private helper: DataHelperModule,
     private language: LanguagesService
   ) {
-    this.contentEditable1 = [
-      false, // 0-入力データ
-      false, // 1-変位量
-      false, // 2-COMBINE 変位量
-      false, // 3-PICKUP 変位量
-      false, // 4-反力
-      false, // 5-COMBINE 反力
-
-      false, // 6-PICKUP 反力
-      false, // 7-断面力
-      false, // 8-COMBINE 断面力
-      false,
-      false,
-    ];
-
+    this.clear();
     this.printOption = new Array();
   }
 
-  public optionList: any[] = [
-    { id: "0", name: "入力データ" },
-    {
-      id: "1",
-      name: "変位量",
-    },
-    { id: "2", name: "COMBINE 変位量" },
-    {
-      id: "3",
-      name: "PICKUP　変位量",
-    },
-    {
-      id: "4",
-      name: "反力",
-    },
-    {
-      id: "5",
-      name: "COMBINE 反力",
-    },
-    {
-      id: "6",
-      name: "PICKUP　反力",
-    },
-    {
-      id: "7",
-      name: "断面力",
-    },
-    {
-      id: "8",
-      name: "COMBINE 断面力",
-    },
-    {
-      id: "9",
-      name: "PICKUP 断面力",
-    },
-    {
-      id: "10",
-      name: "画面印刷",
-    },
-  ];
+
 
   public fescIndex = [
     "axialForce",
@@ -125,20 +72,19 @@ export class PrintService {
   ];
 
   public clear() {
-    this.contentEditable1 = [
-      false, // 0-入力データ
-      false, // 1-変位量
-      false, // 2-COMBINE 変位量
-      false, // 3-PICKUP 変位量
-      false, // 4-反力
-      false, // 5-COMBINE 反力
-
-      false, // 6-PICKUP 反力a
-      false, // 7-断面力
-      false, // 8-COMBINE 断面力
-      false,
-      false,
-    ];
+    this.optionList = {
+      input:     { id: 0,  value: false, name: "入力データ" },
+      disg:      { id: 1,  value: false, name: "変位量" },
+      comb_disg: { id: 2,  value: false, name: "COMBINE 変位量" },
+      pick_disg: { id: 3,  value: false, name: "PICKUP 変位量" },
+      reac:      { id: 4,  value: false, name: "反力" },
+      comb_reac: { id: 5,  value: false, name: "COMBINE 反力" },
+      pick_reak: { id: 6,  value: false, name: "PICKUP 反力" },
+      fsec:      { id: 7,  value: false, name: "断面力" },
+      comb_fsec: { id: 8,  value: false, name: "COMBINE 断面力" },
+      pick_fsec: { id: 9,  value: false, name: "PICKUP 断面力" },
+      captur:    { id: 10, value: false, name: "画面印刷" }
+    };
   }
 
   public setprintDocument() {
@@ -174,14 +120,13 @@ export class PrintService {
     this.printOption = new Array();
     this.flg = -1;
     setTimeout(() => {
-      for (let i = 0; i < this.contentEditable1.length; i++) {
-        if (
-          this.contentEditable1[i] === true &&
-          (i == 7 || i === 8 || i === 9 || i === 10)
-        ) {
-          this.printOption[n] = this.optionList[String(i)];
-          n += 1;
-        }
+      for(const key of Object.keys(this.optionList)){
+        if ( this.optionList[key].value === true){
+          if (key=='fsec' || key==='comb_fsec' || key==='pick_fsec' || key === 'captur'){
+            this.printOption[n] = this.optionList[key];
+            n += 1;
+          }
+        } 
       }
 
       this.printOption = this.printOption.filter(
@@ -199,22 +144,15 @@ export class PrintService {
   // ラジオボタン選択時に発動．一旦すべてfalseにしてから，trueにする．
   public selectRadio(id: number) {
     this.printOption = new Array();
-    for (let i = 0; i < this.contentEditable1.length; i++) {
-      this.contentEditable1[i] = false;
-      if (i == id) {
-        this.contentEditable1[i] = true;
-        this.flg = i;
-        this.selectedIndex = String(i);
+    for(const key of Object.keys(this.optionList)){
+      this.optionList[key].value = false;
+      if (this.optionList[key].id == id) {
+        this.optionList[key].value = true;
+        this.flg = id;
+        this.selectedIndex = this.optionList[key].id;
       }
     }
 
-    // 変位，反力，断面力の印刷する軸の選択用
-    // 初期値true
-    // for (let j = 0; j < 12; j++) {
-    //   this.customDisg.disgEditable[j] = true;
-    //   this.customFsec.fsecEditable[j] = true;
-    //   this.customReac.reacEditable[j] = true;
-    // }
     this.priCount = 0;
 
     this.newPrintJson();
@@ -226,7 +164,7 @@ export class PrintService {
       // pricount:行数をためる
       this.priCount = 0;
       // 画面の印刷であれば行数のカウント
-      if (!(this.contentEditable1[10] === true)) {
+      if (!(this.optionList['captur'].value=== true)) {
         this.getPrintDatas(); // サーバーに送るデータをつくる
       } else {
         this.pageError = false; // 画像印刷はエラー対象にしない
@@ -238,7 +176,8 @@ export class PrintService {
       this.pageOver = this.pageCount > this.printPossible ? true : false;
 
       // 概算ページ数が50いかない場合と，入力データ，画像データの時には，概算ページ数を非表示にする．
-      if (!(this.contentEditable1[0] == true || this.contentEditable1[10] == true)) {
+      if (!(this.optionList['input'].value == true 
+            || this.optionList['captur'].value == true)) {
         if(this.pageCount > 50 ){
           this.pageDisplay = true;
         } else {
@@ -263,24 +202,22 @@ export class PrintService {
     // データを作りながら，行数をカウントする．
 
     this.json = {}; // サーバーに送るデータ
-    if (
-      this.contentEditable1[0] &&
-      Object.keys(this.InputData.getInputJson(1)).length !== 0
-    ) {
+    
+    if ( this.optionList['input'].value &&
+        Object.keys(this.InputData.getInputJson(1)).length !== 0 ) {
       this.json = this.InputData.getInputJson(1);
     }
+
     if (this.ResultData.isCalculated == true) {
-      if (
-        this.contentEditable1[1] &&
-        Object.keys(this.ResultData.disg.disg).length !== 0
-      ) {
+   
+      if ( this.optionList['disg'].value &&
+          Object.keys(this.ResultData.disg.disg).length !== 0 ) {
         this.json["disg"] = this.dataChoice(this.ResultData.disg.disg);
         this.json["disgName"] = this.getNames(this.json["disg"]);
-      }
-      if (
-        this.contentEditable1[2] &&
-        Object.keys(this.ResultData.combdisg.disgCombine).length !== 0
-      ) {
+      }  
+
+      if ( this.optionList['comb_disg'].value &&
+          Object.keys(this.ResultData.combdisg.disgCombine).length !== 0 ) {
         this.json["disgCombine"] = this.dataChoice(
           this.ResultData.combdisg.disgCombine
         );
@@ -289,10 +226,9 @@ export class PrintService {
           "Combine"
         );
       }
-      if (
-        this.contentEditable1[3] &&
-        Object.keys(this.ResultData.pickdisg.disgPickup).length !== 0
-      ) {
+
+      if ( this.optionList['pick_disg'].value &&
+          Object.keys(this.ResultData.pickdisg.disgPickup).length !== 0 ) {
         this.json["disgPickup"] = this.dataChoice(
           this.ResultData.pickdisg.disgPickup
         );
@@ -301,17 +237,15 @@ export class PrintService {
           "Pickup"
         );
       }
-      if (
-        this.contentEditable1[7] &&
-        Object.keys(this.ResultData.fsec.fsec).length !== 0
-      ) {
+
+      if ( this.optionList['fsec'].value &&
+          Object.keys(this.ResultData.fsec.fsec).length !== 0 ) {
         this.json["fsec"] = this.dataChoiceFsec(this.ResultData.fsec.fsec);
         this.json["fsecName"] = this.getNames(this.json["fsec"]);
       }
-      if (
-        this.contentEditable1[8] &&
-        Object.keys(this.ResultData.combfsec.fsecCombine).length !== 0
-      ) {
+
+      if ( this.optionList['comb_fsec'].value &&
+          Object.keys(this.ResultData.combfsec.fsecCombine).length !== 0 ) {
         this.json["fsecCombine"] = this.dataChoiceFsec(
           this.ResultData.combfsec.fsecCombine
         );
@@ -320,10 +254,10 @@ export class PrintService {
           "Combine"
         );
       }
-      if (
-        this.contentEditable1[9] &&
-        Object.keys(this.ResultData.pickfsec.fsecPickup).length !== 0
-      ) {
+
+
+      if ( this.optionList['pick_fsec'].value &&
+        Object.keys(this.ResultData.pickfsec.fsecPickup).length !== 0 ) {
         this.json["fsecPickup"] = this.dataChoiceFsec(
           this.ResultData.pickfsec.fsecPickup
         );
@@ -332,17 +266,15 @@ export class PrintService {
           "Pickup"
         );
       }
-      if (
-        this.contentEditable1[4] &&
-        Object.keys(this.ResultData.reac.reac).length !== 0
-      ) {
+
+      if ( this.optionList['reac'].value &&
+        Object.keys(this.ResultData.reac.reac).length !== 0 ) {
         this.json["reac"] = this.dataChoice(this.ResultData.reac.reac);
         this.json["reacName"] = this.getNames(this.json["reac"]);
       }
-      if (
-        this.contentEditable1[5] &&
-        Object.keys(this.ResultData.combreac.reacCombine).length !== 0
-      ) {
+
+      if (this.optionList['comb_reac'].value &&
+        Object.keys(this.ResultData.combreac.reacCombine).length !== 0 ) {
         this.json["reacCombine"] = this.dataChoice(
           this.ResultData.combreac.reacCombine
         );
@@ -351,10 +283,8 @@ export class PrintService {
           "Combine"
         );
       }
-      if (
-        this.contentEditable1[6] &&
-        Object.keys(this.ResultData.pickreac.reacPickup).length !== 0
-      ) {
+      if ( this.optionList['pick_reak'].value &&
+        Object.keys(this.ResultData.pickreac.reacPickup).length !== 0 ) {
         this.json["reacPickup"] = this.dataChoice(
           this.ResultData.pickreac.reacPickup
         );
@@ -373,7 +303,7 @@ export class PrintService {
     this.json["dimension"] = this.helper.dimension;
     this.json["language"] = this.language.browserLang;
 
-    return this.json;
+    return;// this.json;
   }
 
   private getNames(json, target = "") {
@@ -441,16 +371,23 @@ export class PrintService {
       let basic: boolean = true;
       this.priCount += 2;
 
-      let i = 0;
+      // let i = 0;
+
+      const body3 = json[type];
+      const keys = Object.keys(body3);
+      const key0 = keys[0];
+      const int0 = Number(key0);
 
       // 各データor軸方向別データ
-      for (const list of Object.keys(json[type])) {
+      for (const list of keys) {
+        const body4 = body3[list];
+
         // 各データか軸方向別データかどうかの分岐
         // key：
         // 各データ＝"1",軸方向別データ:"dx_max" 数値に変えられるかどうか
-        if (isFinite(Number(Object.keys(json[type])[0]))) {
-          const item = json[type][list];
+        if (isFinite(int0)) {
           // 部材番号が空の場合は部材番号が前のものと同じ
+          const item = body4;
           kk = item.m === "" ? kk : Number(item.m) - 1;
           // 指定の部材番号データのみ
           if (choiceMember[kk].check === true) {
@@ -460,11 +397,11 @@ export class PrintService {
         } else {
           let axisArr = new Array();
           basic = false;
-          if (axis[i] === true) {
+          if (axis[list] === true) {
             this.priCount += 2;
 
-            for (const ax of Object.keys(json[type][list])) {
-              const item = json[type][list][ax];
+            for (const ax of Object.keys(body4)) {
+              const item = body4[ax];
               // 部材番号が空の場合は部材番号が前のものと同じ
               kk = item.m === "" ? kk : Number(item.m) - 1;
               // 指定の部材番号データのみ
@@ -475,7 +412,7 @@ export class PrintService {
             }
             body2[list] = axisArr;
           }
-          i++;
+          // i++;
         }
       }
       split[type] = basic ? body1 : body2;
@@ -494,37 +431,43 @@ export class PrintService {
 
       let body1 = new Array(); // 軸指定がないとき
       let body2 = {}; //LL,combine,pickup
-      let i = 0;
+      // let i = 0;
       this.priCount += 2;
 
-      for (const list of Object.keys(json[type])) {
-        if (isFinite(Number(Object.keys(json[type])[0]))) {
-          const item = json[type][list];
-          body1.push(item);
+      const body3 = json[type];
+      const keys = Object.keys(body3);
+      const key0 = keys[0];
+      const int0 = Number(key0);
+
+      for (const list of keys) {
+        const body4 = body3[list];
+
+        if (isFinite(int0)) {
+          body1.push(body4);
           this.priCount += 1;
+
         } else {
           let axisArr = {};
           basic = false;
 
           // LL,combine,Pickup用，反力か変位かをデータ形式から判断する
           // dx_maxがある時：変位量データ
-          const axis =
-            Object.keys(json[type])[0] === "dx_max"
+          const axis = (key0 === "dx_max")
               ? this.customDisg.disgEditable
               : this.customReac.reacEditable;
 
           // 軸方向にチェックがついていた時
-          if (axis[i] === true) {
+          if (axis[list] === true) {
             this.priCount += 2;
 
-            for (const ax of Object.keys(json[type][list])) {
-              const item = json[type][list][ax];
+            for (const ax of Object.keys(body4)) {
+              const item = body4[ax];
               axisArr[ax] = item;
               this.priCount += 1;
             }
             body2[list] = axisArr;
           }
-          i++;
+          // i++;
         }
       }
       split[type] = basic ? body1 : body2;

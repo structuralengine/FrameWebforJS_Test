@@ -109,11 +109,11 @@ ipcMain.on(
 // 名前を付けて保存
 ipcMain.on(
   'saveFile',
-  async (event: Electron.IpcMainEvent, filename: string, data: string) => {
+  async (event: Electron.IpcMainEvent, filename: string, data: string, ext: string) => {
     // 場所とファイル名を選択
     const path = dialog.showSaveDialogSync(mainWindow, {
       buttonLabel: 'save', // ボタンのラベル
-      filters: [{ name: 'json', extensions: ['json'] }],
+      filters: [{ name: ext, extensions: [ext] }],
       defaultPath: filename,
       properties: [
         'createDirectory', // ディレクトリの作成を許可 (macOS)
