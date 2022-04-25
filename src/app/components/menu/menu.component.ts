@@ -205,7 +205,7 @@ export class MenuComponent implements OnInit {
     }
     // 保存する
     if(this.electronService.isElectronApp) {
-      this.fileName = this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson);
+      this.fileName = this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson, "json");
     } else {
       const blob = new window.Blob([inputJson], { type: "text/plain" });
       FileSaver.saveAs(blob, this.fileName);
@@ -343,7 +343,7 @@ export class MenuComponent implements OnInit {
     }
     // 保存する
     if(this.electronService.isElectronApp) {
-      this.electronService.ipcRenderer.sendSync('saveFile', filename, pickupJson);
+      this.electronService.ipcRenderer.sendSync('saveFile', filename, pickupJson, ext);
     } else {
       FileSaver.saveAs(blob, filename);
     }
