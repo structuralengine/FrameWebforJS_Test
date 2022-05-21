@@ -130,6 +130,8 @@ export class ThreeDisplacementService {
     }
     this.scene.gui.remove(this.gui);
     this.gui = null;
+    this.scale = 0.5;
+    this.params.dispScale = 0.5
   }
 
   // 解析結果をセットする
@@ -301,7 +303,7 @@ export class ThreeDisplacementService {
     else{
       this.targetData['scale'] = 1;
     }
-    this.gui_max_scale = maxDistance / minDistance;
+    // this.gui_max_scale = maxDistance / minDistance;
 
     this.onResize();
     
