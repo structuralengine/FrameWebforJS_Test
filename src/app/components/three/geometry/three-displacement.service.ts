@@ -46,6 +46,7 @@ export class ThreeDisplacementService {
               private member: InputMembersService,
               private panel: InputPanelService,
               private load: InputLoadService,
+              private three_node: ThreeNodesService,
               private three_member: ThreeMembersService) {
 
     this.lineList = new THREE.Object3D();
@@ -61,7 +62,7 @@ export class ThreeDisplacementService {
       dispScale: this.scale,
     };
     this.gui = null;
-    this.gui_max_scale = 1;
+    this.gui_max_scale = 2;
 
     // アニメーションのオブジェクト
     this.animationObject = null;
@@ -129,6 +130,8 @@ export class ThreeDisplacementService {
     }
     this.scene.gui.remove(this.gui);
     this.gui = null;
+    this.scale = 0.5;
+    this.params.dispScale = 0.5
   }
 
   // 解析結果をセットする
@@ -295,12 +298,12 @@ export class ThreeDisplacementService {
     }
     const maxValue: number = this.max_values[targetKey2];
     if(maxValue > 0){
-      this.targetData['scale'] = minDistance / maxValue;
+      this.targetData['scale'] = this.three_node.maxDistance * 0.1 / maxValue;
     }
     else{
       this.targetData['scale'] = 1;
     }
-    this.gui_max_scale = maxDistance / minDistance;
+    // this.gui_max_scale = maxDistance / minDistance;
 
     this.onResize();
     
@@ -362,7 +365,7 @@ export class ThreeDisplacementService {
 
   private onResize(): void {
 
-    let scale: number = this.targetData['scale'] * this.scale * 0.7;
+    let scale: number = this.targetData['scale'] * this.scale * 0.2; // 例 : this.scaleが0.5の時, 最大変位量をモデルサイズの5%にして0.2をかける
 
     for (let i = 0; i < this.targetData.length; i++) {
       const target = this.targetData[i];
