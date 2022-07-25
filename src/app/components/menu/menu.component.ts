@@ -330,21 +330,21 @@ export class MenuComponent implements OnInit {
     let ext: string;
     if (this.helper.dimension === 2) {
       pickupJson = this.ResultData.GetPicUpText2D();
-      ext = ".pik";
+      ext = "pik";
     } else {
       pickupJson = this.ResultData.GetPicUpText();
-      ext = ".csv";
+      ext = "csv";
     }
     const blob = new window.Blob([pickupJson], { type: "text/plain" });
-    let filename: string = "frameWebForJS" + ext;
+    let filename: string = "frameWebForJS." + ext;
     if (this.fileName.length > 0) {
       filename = this.fileName.split(".").slice(0, -1).join(".");
-      filename += ext;
     }
     // 保存する
     if(this.electronService.isElectronApp) {
       this.electronService.ipcRenderer.sendSync('saveFile', filename, pickupJson, ext);
     } else {
+      filename += ext;
       FileSaver.saveAs(blob, filename);
     }
   }
