@@ -1,6 +1,6 @@
 {
     "name": "frame-web-for-js",
-    "version": "1.12.1",
+    "version": "1.12.2",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --open",
@@ -60,7 +60,7 @@
         "jquery-ui-pack": "1.12.3",
         "jszip": "^2.5.0",
         "pako": "^2.0.2",
-        "pqgrid": "^7.5.0",
+        "pqgrid": "file:./paramquery-8.4.0/",
         "print-js": "^1.6.0",
         "rxjs": "~6.6.2",
         "rxjs-compat": "^6.5.3",

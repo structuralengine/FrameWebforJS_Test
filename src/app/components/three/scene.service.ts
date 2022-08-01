@@ -358,6 +358,10 @@ export class SceneService {
 
   // 視点を読み込む
   public setSetting(jsonData: {}): void {
+
+    if (this.helper.dimension === 2) {
+      return; // 2Dの場合は、カメラの設定を反映しない
+    }
     if (!("three" in jsonData)) {
       return;
     }

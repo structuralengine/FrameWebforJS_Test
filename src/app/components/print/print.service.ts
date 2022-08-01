@@ -43,7 +43,7 @@ export class PrintService {
     private customFsec: PrintCustomFsecService,
     private customReac: PrintCustomReacService,
     private customDisg: PrintCustomDisgService,
-    private customThree: PrintCustomThreeService,
+    public customThree: PrintCustomThreeService,
     private helper: DataHelperModule,
     private language: LanguagesService
   ) {
@@ -390,10 +390,14 @@ export class PrintService {
           const item = body4;
           kk = item.m === "" ? kk : Number(item.m) - 1;
           // 指定の部材番号データのみ
-          if (choiceMember[kk].check === true) {
-            body1.push(item);
-            this.priCount += 1;
+          if('check' in choiceMember[kk]){
+            if (choiceMember[kk].check === false) {
+              continue;
+            }
           }
+          body1.push(item);
+          this.priCount += 1;
+
         } else {
           let axisArr = new Array();
           basic = false;
@@ -405,10 +409,13 @@ export class PrintService {
               // 部材番号が空の場合は部材番号が前のものと同じ
               kk = item.m === "" ? kk : Number(item.m) - 1;
               // 指定の部材番号データのみ
-              if (choiceMember[kk].check === true) {
-                axisArr.push(item);
-                this.priCount += 1;
+              if('check' in choiceMember[kk]){
+                if (choiceMember[kk].check === false) {
+                  continue;
+                }
               }
+              axisArr.push(item);
+              this.priCount += 1;
             }
             body2[list] = axisArr;
           }

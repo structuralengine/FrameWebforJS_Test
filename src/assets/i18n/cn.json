@@ -308,13 +308,17 @@
                 "z_RotationalReaction":"绕z轴的旋转反力"
             },
             "print-custom-three":{
-                "selectTarget":"打印対象を選択",
+                "selectTarget":"打印対象選択",
                 "axialForce":"轴向力",
                 "y_shear":" y轴方向的剪力",
                 "z_shear":" z轴方向的剪力",
                 "x_torsion":"扭转力矩",
                 "y_moment":"绕y轴的力矩",
-                "z_moment":"绕z轴的力矩"
+                "z_moment":"绕z轴的力矩",
+                "selectLayout":"Select print layout",
+                "splitHorizontal": "Split Horizontal",
+                "splitVertical": "Split Vertical",
+                "single": "Single Layout"                    
             }
         }
     },
