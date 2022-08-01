@@ -95,17 +95,17 @@ export class AppComponent implements OnInit {
     const dialog = document.getElementById("contents-dialog-id");
     let dialogHeight = parseFloat(dialog.style.height); // ヘッダー高さを引く
     if (isNaN(dialogHeight)) {
-      dialogHeight = window.innerHeight - 200; // メニューとヘッダー高さを引く
+      dialogHeight = window.innerHeight - 300; // メニューとヘッダー高さを引く
     } else {
       dialogHeight -= 80;
     }
     return dialogHeight;
   }
 
-  public onPrintInvoice() {
-    const invoiceIds = ["101", "102"];
-    this.printService.printDocument("invoice", invoiceIds);
-  }
+  // public onPrintInvoice() {
+  //   const invoiceIds = ["101", "102"];
+  //   this.printService.printDocument("invoice", invoiceIds);
+  // }
 }
 
 window.onload = function () {

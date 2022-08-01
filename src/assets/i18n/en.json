@@ -314,7 +314,11 @@
                 "z_shear":"Z Shear",
                 "x_torsion":"X Torsion", 
                 "y_moment":"Y Momemt",
-                "z_moment":"Z Moment"
+                "z_moment":"Z Moment",
+                "selectLayout":"Select print layout",
+                "splitHorizontal": "Split Horizontal",
+                "splitVertical": "Split Vertical",
+                "single": "Single Layout"                
             }
         }
     },

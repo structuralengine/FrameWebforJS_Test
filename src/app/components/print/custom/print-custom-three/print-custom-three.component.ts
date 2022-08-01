@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { ResultDataService } from "src/app/providers/result-data.service";
 import { PrintCustomThreeService } from "./print-custom-three.service";
 
@@ -12,12 +13,22 @@ import { PrintCustomThreeService } from "./print-custom-three.service";
   ],
 })
 export class PrintCustomThreeComponent implements OnInit {
+  
   constructor(
     public printCustomThreeService: PrintCustomThreeService,
-    public ResultData: ResultDataService
+    public ResultData: ResultDataService,
+    public helper: DataHelperModule
   ) {}
 
   ngOnInit(): void {
-    // this.printCustomThreeService.clear();
   }
+
+  selectRadio(value: string){
+    // 2次元で印刷する場合のレイアウト
+    /// splitHorizontal: 上, 下,
+    /// splitVertical: 左, 右,
+    /// single: シングル
+    this.printCustomThreeService.print2DThreeLayout = value;
+  }
+
 }

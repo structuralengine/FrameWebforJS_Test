@@ -314,7 +314,11 @@
                 "z_shear":" z軸方向のせん断力",
                 "x_torsion":"ねじりモーメント",
                 "y_moment":"y軸回りのモーメント",
-                "z_moment":"z軸回りのモーメント"
+                "z_moment":"z軸回りのモーメント",
+                "selectLayout":"レイアウトを選択",
+                "splitHorizontal": "上, 下",
+                "splitVertical": "左, 右",
+                "single": "シングル"
             }
         }
     },
