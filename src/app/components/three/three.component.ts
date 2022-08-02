@@ -47,7 +47,7 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
     pik_disg: "PickUp変位量図",
     fsec: "断面力図",
     comb_fsec: "Combine断面力図",
-    pik_fsec: "PickUp断面力図",
+    pick_fsec: "PickUp断面力図",
     reac: "反力図",
     comb_reac: "Combine反力図",
     pik_reac: "PickUp反力図",
