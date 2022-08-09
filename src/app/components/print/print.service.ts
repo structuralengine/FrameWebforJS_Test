@@ -314,7 +314,7 @@ export class PrintService {
       let loadName = "";
       switch (target) {
         // combine名称を取得する
-        case "Combime":
+        case "Combine":
           if (index in this.combineJson) {
             if ("name" in this.combineJson[index]) {
               loadName = this.combineJson[index].name;
