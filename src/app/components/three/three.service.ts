@@ -276,7 +276,7 @@ export class ThreeService {
 
       case "fsec":
       case "comb_fsec":
-      case "pik_fsec":
+      case "pick_fsec":
         this.fsec.changeData(currentPage, this.mode);
         let key: string;
         if (this.secForce.currentRadio === 'axialForce' ||
@@ -520,7 +520,7 @@ export class ThreeService {
 
     if (
       ModeName === "comb_fsec" ||
-      ModeName === "pik_fsec"
+      ModeName === "pick_fsec"
     ) {
       this.node.visibleChange(true, false, false);
       this.member.visibleChange(true, true, false);
@@ -607,7 +607,7 @@ export class ThreeService {
 
       case "fsec":
       case "comb_fsec":
-      case "pik_fsec":
+      case "pick_fsec":
         break;
 
       case "reac":
@@ -645,7 +645,7 @@ export class ThreeService {
       } else if (
         this.mode === "fsec" ||
         this.mode === "comb_fsec" ||
-        this.mode === "pik_fsec"
+        this.mode === "pick_fsec"
       ) {
         let counter = 0;
         const title4: string[] = captureInfo.title4;
@@ -836,7 +836,7 @@ export class ThreeService {
         title2 = "PickUp";
         title3 = this.getPickupTitle();
         break;
-      case "pik_fsec":
+      case "pick_fsec":
         result = Object.keys(this.printService.pickupJson);
         result = this.helper.numberSort(result);
         title1 = "ピックアップ 断面力";

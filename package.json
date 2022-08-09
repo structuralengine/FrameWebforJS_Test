@@ -1,6 +1,6 @@
 {
     "name": "frame-web-for-js",
-    "version": "1.12.2",
+    "version": "1.12.5",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --open",

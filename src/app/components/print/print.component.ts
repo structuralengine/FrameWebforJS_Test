@@ -71,10 +71,23 @@ export class PrintComponent implements OnInit, OnDestroy {
 
         // PDFサーバーに送る
         const json = {};
-        for(var key of ["node", "member", "load", "dimension", "language"] ){
+        for(var key of ["node", "member", "dimension", "language"] ){
           json[key] = this.printService.json[key];
         }
-        json[this.three.mode] = this.printService.json[this.three.mode];
+        if(this.three.mode=='fsec'){
+          json["load"] = this.printService.json["load"];
+          json["fsec"] = this.printService.json["fsec"];
+        }
+        if(this.three.mode==='comb_fsec'){
+          json["combine"] = this.printService.json["combine"];
+          json["fsecCombine"] = this.printService.json["fsecCombine"];
+        }
+        if(this.three.mode==='pick_fsec'){
+          json["pickup"] = this.printService.json["pickup"];
+          json["fsecPickup"] = this.printService.json["fsecPickup"];
+        }
+
+        // 断面力図の種類を指定する
         const output = [];
         if(this.printService.customThree.threeEditable[5])
           output.push("mz");
@@ -136,7 +149,7 @@ export class PrintComponent implements OnInit, OnDestroy {
 
   private getPostJson(json: any): string{
     const jsonStr = JSON.stringify(json);
-
+    console.log(jsonStr);
     // pako を使ってgzip圧縮する
     const compressed = pako.gzip(jsonStr);
     //btoa() を使ってBase64エンコードする

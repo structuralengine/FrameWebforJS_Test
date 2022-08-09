@@ -93,7 +93,7 @@ export class MaxMinService {
     if (
       this.ModeName === "fsec" ||
       this.ModeName === "comb_fsec" ||
-      this.ModeName === "pik_fsec"
+      this.ModeName === "pick_fsec"
     ) {
       if (this.radio.includes("Force")) {
         this.Three_unit = "kN";

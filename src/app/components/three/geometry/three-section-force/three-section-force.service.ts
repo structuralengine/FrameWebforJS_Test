@@ -46,9 +46,9 @@ export class ThreeSectionForceService {
 
   private nodeData: any;
   private memberData: any;
-  private fsecData = { fsec: null, comb_fsec: null, pik_fsec: null };
-  private max_values = { fsec: null, comb_fsec: null, pik_fsec: null };
-  public value_ranges = { fsec: null, comb_fsec: null, pik_fsec: null };
+  private fsecData = { fsec: null, comb_fsec: null, pick_fsec: null };
+  private max_values = { fsec: null, comb_fsec: null, pick_fsec: null };
+  public value_ranges = { fsec: null, comb_fsec: null, pick_fsec: null };
 
   constructor(
     private scene: SceneService,
@@ -264,9 +264,9 @@ export class ThreeSectionForceService {
   }
   // pick up
   public setPickupResultData(fsecJson: any, max_values: any, value_range: any): void {
-    this.fsecData.pik_fsec = fsecJson;
-    this.max_values.pik_fsec = max_values;
-    this.value_ranges.pik_fsec = value_range;
+    this.fsecData.pick_fsec = fsecJson;
+    this.max_values.pick_fsec = max_values;
+    this.value_ranges.pick_fsec = value_range;
   }
 
   private changeMesh(): void {

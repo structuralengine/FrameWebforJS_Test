@@ -81,7 +81,7 @@ export class ResultPickupFsecComponent implements OnInit {
     }
     this.load_name = this.pickup.getPickUpName(currentPage);
 
-    this.three.ChangeMode("pik_fsec");
+    this.three.ChangeMode("pick_fsec");
     this.three.ChangePage(currentPage);
   }
 
