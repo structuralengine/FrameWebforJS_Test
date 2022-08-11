@@ -9,6 +9,7 @@ import * as pako from "pako";
 import { ElectronService } from "ngx-electron";
 import { MaxMinService } from "../three/max-min/max-min.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-print",
@@ -21,6 +22,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   public pickupJson: any;
   public id;
   private url = "https://frameprintpdf.azurewebsites.net/api/Function1";
+  public PrintScreen: string;
 
   constructor(
     public InputData: InputDataService,
@@ -30,7 +32,8 @@ export class PrintComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     public max_min: MaxMinService,
     public electronService: ElectronService,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private translate: TranslateService
   ) {}
 
   private a: boolean;
@@ -40,6 +43,18 @@ export class PrintComponent implements OnInit, OnDestroy {
     this.id = document.getElementById("printButton");
     this.a = this.max_min.visible;
     this.max_min.visible = false;
+    if( this.three.mode=='fsec'){
+      this.PrintScreen = this.translate.instant("print.PrintDiagram");
+    }
+    else if (this.three.mode==='comb_fsec'){
+      this.PrintScreen = this.translate.instant("print.combPrintDiagram");
+    }
+    else if (this.three.mode==='pick_fsec'){
+      this.PrintScreen = this.translate.instant("print.pickPrintDiagram");
+    }
+    else {
+      this.PrintScreen = this.translate.instant("print.PrintScreen");
+    }
   }
 
   ngOnDestroy(): void {
