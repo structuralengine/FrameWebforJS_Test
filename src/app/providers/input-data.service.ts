@@ -248,7 +248,7 @@ export class InputDataService {
 
     // Set_Load のセクション
     const fn = {};
-    if (!("load" in jsonData)) {
+    if ("load" in jsonData) {
       for (const icase of Object.keys(jsonData.load)) {
         if ("load_node" in jsonData.load[icase]) {
           for (const load_node of jsonData.load[icase].load_node) {
