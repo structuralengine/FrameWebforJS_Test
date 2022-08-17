@@ -27,6 +27,7 @@
         "logout":"ログアウト",
         "login":"ログイン",
         "P_login":"ログインしてください",
+        "calc_start":"計算を開始します",
         "success":"通信成功!!",
         "deduct_points":"ポイント消費しました。本日の使用量は、",
         "new_points":"です。" 

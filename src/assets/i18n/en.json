@@ -27,6 +27,7 @@
         "logout":"Logout",
         "login":"Login",
         "P_login":"Please login",
+        "calc_start":"start the calculation",
         "success":"Communication success!!",
         "deduct_points":"points consumed. Today's usage is",
         "new_points":"points." 

@@ -27,6 +27,7 @@
         "logout":"登出",
         "login":"登录",
         "P_login":"请登录",
+        "calc_start":"开始计算",
         "success":"沟通成功!!",
         "deduct_points":"消耗的积分。今天的使用量是",
         "new_points":"分。" 

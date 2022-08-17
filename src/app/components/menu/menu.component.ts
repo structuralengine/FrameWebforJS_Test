@@ -231,6 +231,11 @@ export class MenuComponent implements OnInit {
         return;
       }
 
+      if (!window.confirm(this.translate.instant("menu.calc_start"))) {
+        modalRef.close(); // モーダルダイアログを消す
+        return;
+      }
+
       jsonData["uid"] = user.uid;
       jsonData["production"] = environment.production;
 
