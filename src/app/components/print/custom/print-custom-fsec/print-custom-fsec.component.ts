@@ -8,6 +8,7 @@ import { InputElementsService } from "src/app/components/input/input-elements/in
 import { PrintCustomFsecService } from "./print-custom-fsec.service";
 import { PrintCustomService } from "../print-custom.service";
 import { TranslateService } from "@ngx-translate/core";
+import { DataHelperModule } from "src/app/providers/data-helper.module";
 
 @Component({
   selector: "app-print-custom-fsec",
@@ -68,7 +69,8 @@ export class PrintCustomFsecComponent implements OnInit {
     public printCustomFsecService: PrintCustomFsecService,
     public printCustomService: PrintCustomService,
     public printService: PrintService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public helper: DataHelperModule
   ) {}
 
   ngOnInit(): void {
@@ -76,6 +78,15 @@ export class PrintCustomFsecComponent implements OnInit {
     if (!this.printCustomFsecService.flg) {
       this.printCustomFsecService.checkReverse();
     }
+    if( this.helper.dimension == 2){
+      this.printCustomFsecService.fsecEditable.fz_max = false;
+      this.printCustomFsecService.fsecEditable.fz_max = false;
+      this.printCustomFsecService.fsecEditable.mx_max = false;
+      this.printCustomFsecService.fsecEditable.mx_min = false;
+      this.printCustomFsecService.fsecEditable.my_max = false;
+      this.printCustomFsecService.fsecEditable.my_min = false;
+    }
+
   }
 
   // 表の高さを計算する

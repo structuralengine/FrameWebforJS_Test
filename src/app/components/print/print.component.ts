@@ -32,7 +32,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     public max_min: MaxMinService,
     public electronService: ElectronService,
-    private helper: DataHelperModule,
+    public helper: DataHelperModule,
     private translate: TranslateService
   ) {}
 
