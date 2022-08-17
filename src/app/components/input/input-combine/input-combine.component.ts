@@ -65,9 +65,9 @@ export class InputCombineComponent implements OnInit {
       width: 800,
     });
     this.ROWS_COUNT = this.rowsCount();
-
-    const datasheet_inner = document.getElementById("datasheet_inner");
-    datasheet_inner.style.width = String(window.innerWidth - 40 ) + "px";
+ 
+    //const datasheet_inner = document.getElementById("datasheet_inner");
+    // datasheet_inner.style.width = String(window.innerWidth - 40 ) + "px";
   }
 
   // 指定行row 以降のデータを読み取る
