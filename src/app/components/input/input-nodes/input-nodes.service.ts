@@ -43,9 +43,9 @@ export class InputNodesService {
       const item = this.convertNumber(json[index]);
       const result = {
         id: index,
-        x: (item.x === null) ? '' : item.x.toFixed(3),
-        y: (item.y === null) ? '' : item.y.toFixed(3),
-        z: (item.z === null) ? '' : item.z.toFixed(3)
+        x: (item.x == null) ? '' : item.x.toFixed(3),
+        y: (item.y == null) ? '' : item.y.toFixed(3),
+        z: (item.z == null) ? '' : item.z.toFixed(3)
       };
       this.node.push(result);
     }

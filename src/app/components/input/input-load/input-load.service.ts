@@ -139,75 +139,78 @@ export class InputLoadService {
 
       if ("load_node" in item1) {
         const load_node_list: any[] = item1["load_node"];
-        for (let i = 0; i < load_node_list.length; i++) {
-          const item2 = load_node_list[i];
+        if(load_node_list != null){
+          for (let i = 0; i < load_node_list.length; i++) {
+            const item2 = load_node_list[i];
 
-          const _row: string = "row" in item2 ? item2["row"] : i + 1;
+            const _row: string = "row" in item2 ? item2["row"] : i + 1;
 
-          const _n: string = "n" in item2 ? item2.n : "";
-          let _tx: string = "";
-          if ("tx" in item2) _tx = item2.tx;
-          if ("dx" in item2) _tx = item2.dx;
-          let _ty: string = "";
-          if ("ty" in item2) _ty = item2.ty;
-          if ("dy" in item2) _ty = item2.dy;
-          let _tz: string = "";
-          if ("tz" in item2) _tz = item2.tz;
-          if ("dz" in item2) _tz = item2.dz;
-          let _rx: string = "";
-          if ("rx" in item2) _rx = item2.rx;
-          if ("ax" in item2) _rx = item2.ax;
-          let _ry: string = "";
-          if ("ry" in item2) _ry = item2.ry;
-          if ("ay" in item2) _ry = item2.ay;
-          let _rz: string = "";
-          if ("rz" in item2) _rz = item2.rz;
-          if ("az" in item2) _rz = item2.az;
+            const _n: string = "n" in item2 ? item2.n : "";
+            let _tx: string = "";
+            if ("tx" in item2) _tx = item2.tx;
+            if ("dx" in item2) _tx = item2.dx;
+            let _ty: string = "";
+            if ("ty" in item2) _ty = item2.ty;
+            if ("dy" in item2) _ty = item2.dy;
+            let _tz: string = "";
+            if ("tz" in item2) _tz = item2.tz;
+            if ("dz" in item2) _tz = item2.dz;
+            let _rx: string = "";
+            if ("rx" in item2) _rx = item2.rx;
+            if ("ax" in item2) _rx = item2.ax;
+            let _ry: string = "";
+            if ("ry" in item2) _ry = item2.ry;
+            if ("ay" in item2) _ry = item2.ay;
+            let _rz: string = "";
+            if ("rz" in item2) _rz = item2.rz;
+            if ("az" in item2) _rz = item2.az;
 
-          tmp_load1[_row] = {
-            row: _row,
-            n: _n,
-            tx: _tx,
-            ty: _ty,
-            tz: _tz,
-            rx: _rx,
-            ry: _ry,
-            rz: _rz,
-          };
+            tmp_load1[_row] = {
+              row: _row,
+              n: _n,
+              tx: _tx,
+              ty: _ty,
+              tz: _tz,
+              rx: _rx,
+              ry: _ry,
+              rz: _rz,
+            };
+          }
         }
       }
       if ("load_member" in item1) {
         const load_member_list: any[] = item1["load_member"];
+        if(load_member_list != null){
+          for (let i = 0; i < load_member_list.length; i++) {
+            const item3 = load_member_list[i];
+            const _row: string = "row" in item3 ? item3.row : (i + 1).toString();
+            const _m1: string = "m1" in item3 ? item3.m1 : "";
+            const _m2: string = "m2" in item3 ? item3.m2 : "";
+            const _L1: string = "L1" in item3 ? item3.L1 : "";
 
-        for (let i = 0; i < load_member_list.length; i++) {
-          const item3 = load_member_list[i];
-          const _row: string = "row" in item3 ? item3.row : (i + 1).toString();
-          const _m1: string = "m1" in item3 ? item3.m1 : "";
-          const _m2: string = "m2" in item3 ? item3.m2 : "";
-          const _L1: string = "L1" in item3 ? item3.L1 : "";
+            let _direction: string = "direction" in item3 ? item3.direction : "";
+            if (_direction !== null) {
+              _direction = _direction.trim().toLowerCase();
+            }
 
-          let _direction: string = "direction" in item3 ? item3.direction : "";
-          if (_direction !== null) {
-            _direction = _direction.trim().toLowerCase();
+            const _mark: string = "mark" in item3 ? item3.mark : "";
+
+            const _L2: string = "L2" in item3 ? item3.L2 : "";
+            const _P1: string = "P1" in item3 ? item3.P1 : "";
+            const _P2: string = "P2" in item3 ? item3.P2 : "";
+
+            tmp_load2[_row] = {
+              row: _row,
+              m1: _m1,
+              m2: _m2,
+              direction: _direction,
+              mark: _mark,
+              L1: _L1,
+              L2: _L2,
+              P1: _P1,
+              P2: _P2,
+            };
           }
-
-          const _mark: string = "mark" in item3 ? item3.mark : "";
-
-          const _L2: string = "L2" in item3 ? item3.L2 : "";
-          const _P1: string = "P1" in item3 ? item3.P1 : "";
-          const _P2: string = "P2" in item3 ? item3.P2 : "";
-
-          tmp_load2[_row] = {
-            row: _row,
-            m1: _m1,
-            m2: _m2,
-            direction: _direction,
-            mark: _mark,
-            L1: _L1,
-            L2: _L2,
-            P1: _P1,
-            P2: _P2,
-          };
         }
       }
 
@@ -390,12 +393,12 @@ export class InputLoadService {
       const load_id = (i + 1).toString();
 
       const temp = {
-        fix_node: fix_node === null ? empty : fix_node,
-        fix_member: fix_member === null ? empty : fix_member,
-        element: element === null ? empty : element,
-        joint: joint === null ? empty : joint,
-        symbol: symbol === null ? empty : symbol,
-        LL_pitch: LL_pitch === null ? 0.1 : LL_pitch
+        fix_node: fix_node == null ? empty : fix_node,
+        fix_member: fix_member == null ? empty : fix_member,
+        element: element == null ? empty : element,
+        joint: joint == null ? empty : joint,
+        symbol: symbol == null ? empty : symbol,
+        LL_pitch: LL_pitch == null ? 0.1 : LL_pitch
       };
 
       if (empty !== 0 || isPrint === true) {

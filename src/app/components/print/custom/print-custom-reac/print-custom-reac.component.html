@@ -51,7 +51,7 @@
           <span class="checkbox-parts" translate>print.custom.print-custom-reac.min</span>
         </label>
       </li>
-      <li>
+      <li *ngIf="helper.dimension != 2">
         <p translate>print.custom.print-custom-reac.z_SupportReaction</p>
         <label style="width: 100%">
           <input
@@ -76,7 +76,7 @@
           <span class="checkbox-parts" translate>print.custom.print-custom-reac.min</span>
         </label>
       </li>
-      <li>
+      <li *ngIf="helper.dimension != 2">
         <p translate>print.custom.print-custom-reac.x_RotationalReaction</p>
         <label style="width: 100%">
           <input
@@ -101,7 +101,7 @@
           <span class="checkbox-parts" translate>print.custom.print-custom-reac.min</span>
         </label>
       </li>
-      <li>
+      <li *ngIf="helper.dimension != 2">
         <p translate>print.custom.print-custom-reac.y_RotationalReaction</p>
         <label style="width: 100%">
           <input

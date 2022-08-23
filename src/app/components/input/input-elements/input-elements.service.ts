@@ -78,14 +78,14 @@ export class InputElementsService {
 
         const result = {
           id: index,
-          E: E === null ? "" : E.toExponential(2),
-          G: G === null ? "" : G.toExponential(2),
-          Xp: Xp === null ? "" : Xp.toExponential(2),
-          A: A === null ? "" : A.toFixed(4),
-          J: J === null ? "" : J.toFixed(6),
-          Iy: Iy === null ? "" : Iy.toFixed(6),
-          Iz: Iz === null ? "" : Iz.toFixed(6),
-          n: n === null ? "" : n,
+          E: E == null ? "" : E.toExponential(2),
+          G: G == null ? "" : G.toExponential(2),
+          Xp: Xp == null ? "" : Xp.toExponential(2),
+          A: A == null ? "" : A.toFixed(4),
+          J: J == null ? "" : J.toFixed(6),
+          Iy: Iy == null ? "" : Iy.toFixed(6),
+          Iz: Iz == null ? "" : Iz.toFixed(6),
+          n: n == null ? "" : n,
         };
 
         target.push(result);
