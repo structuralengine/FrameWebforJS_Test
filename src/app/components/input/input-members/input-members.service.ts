@@ -51,10 +51,10 @@ export class InputMembersService {
       const result = {
         id: index,
         L: '',
-        ni: (ni === null) ? '' : ni.toFixed(0),
-        nj: (nj === null) ? '' : nj.toFixed(0),
-        e: (e === null) ? '' : e.toFixed(0),
-        cg: (cg === null) ? '' : cg.toFixed(0),
+        ni: (ni == null) ? '' : ni.toFixed(0),
+        nj: (nj == null) ? '' : nj.toFixed(0),
+        e: (e == null) ? '' : e.toFixed(0),
+        cg: (cg == null) ? '' : cg.toFixed(0),
         n: '',
       };
       

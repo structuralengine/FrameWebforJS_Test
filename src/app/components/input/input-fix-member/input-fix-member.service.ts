@@ -67,11 +67,11 @@ export class InputFixMemberService {
 
         const result = {
           row: row,
-          m: (m === null) ? '' : m.toFixed(0),
-          tx: (tx === null) ? '' : tx.toString(),
-          ty: (ty === null) ? '' : ty.toString(),
-          tz: (tz === null) ? '' : tz.toString(),
-          tr: (tr === null) ? '' : tr.toString()
+          m: (m == null) ? '' : m.toFixed(0),
+          tx: (tx == null) ? '' : tx.toString(),
+          ty: (ty == null) ? '' : ty.toString(),
+          tz: (tz == null) ? '' : tz.toString(),
+          tr: (tr == null) ? '' : tr.toString()
         };
         
         target.push(result);

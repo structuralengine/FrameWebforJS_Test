@@ -73,13 +73,13 @@ export class InputFixNodeService {
 
         const result = {
           row: row,
-          n: item.n === null ? "" : item.n.toFixed(0),
-          tx: item.tx === null ? "" : item.tx.toString(),
-          ty: item.ty === null ? "" : item.ty.toString(),
-          tz: item.tz === null ? "" : item.tz.toString(),
-          rx: item.rx === null ? "" : item.rx.toString(),
-          ry: item.ry === null ? "" : item.ry.toString(),
-          rz: item.rz === null ? "" : item.rz.toString(),
+          n: item.n == null ? "" : item.n.toFixed(0),
+          tx: item.tx == null ? "" : item.tx.toString(),
+          ty: item.ty == null ? "" : item.ty.toString(),
+          tz: item.tz == null ? "" : item.tz.toString(),
+          rx: item.rx == null ? "" : item.rx.toString(),
+          ry: item.ry == null ? "" : item.ry.toString(),
+          rz: item.rz == null ? "" : item.rz.toString(),
         };
 
         target.push(result);
