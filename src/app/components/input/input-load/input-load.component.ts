@@ -9,6 +9,8 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { ThreeLoadService } from "../../three/geometry/three-load/three-load.service";
 import { SceneService } from "../../three/scene.service";
 import { TranslateService } from "@ngx-translate/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { WaitDialogComponent } from "../../wait-dialog/wait-dialog.component";
 
 @Component({
   selector: "app-input-load",
@@ -697,7 +699,7 @@ export class InputLoadComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private threeLoad: ThreeLoadService,
-    private scene: SceneService,
+    private modalService: NgbModal,
     private translate: TranslateService
   ) {
 
@@ -742,6 +744,15 @@ export class InputLoadComponent implements OnInit {
         this.currentCol = column;
       },
       change: (evt, ui) => {
+
+        const symbol: string = this.data.getLoadName(this.page, "symbol");
+        if(symbol === "LL"){
+          // const modalRef = this.modalService.open(WaitDialogComponent);
+          this.three.changeData("load_values");
+          // modalRef.close();
+          return;
+        }
+
         for (const range of ui.updateList) {
           // L1行に 数字ではない入力がされていたら削除する
           const L1 = this.helper.toNumber(range.rowData["L1"]);
@@ -755,6 +766,8 @@ export class InputLoadComponent implements OnInit {
           const row = range.rowIndx + 1;
           this.three.changeData("load_values", row);
         }
+
+
         for (const target of ui.addList) {
           const no: number = target.rowIndx;
           const newRow = target.newRow;
