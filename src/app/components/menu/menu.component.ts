@@ -341,7 +341,7 @@ export class MenuComponent implements OnInit {
       ext = "csv";
     }
     const blob = new window.Blob([pickupJson], { type: "text/plain" });
-    let filename: string = "frameWebForJS." + ext;
+    let filename: string = "frameWebForJS" + ext;
     if (this.fileName.length > 0) {
       filename = this.fileName.split(".").slice(0, -1).join(".");
     }
