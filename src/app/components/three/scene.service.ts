@@ -352,30 +352,56 @@ export class SceneService {
         x: this.camera.position.x,
         y: this.camera.position.y,
         z: this.camera.position.z,
+        zoom: this.camera.zoom
       },
+      target: {
+        x: this.controls.target.x,
+        y: this.controls.target.y,
+        z: this.controls.target.z,
+      },      
     };
   }
 
   // 視点を読み込む
   public setSetting(jsonData: {}): void {
 
-    if (this.helper.dimension === 2) {
-      return; // 2Dの場合は、カメラの設定を反映しない
-    }
     if (!("three" in jsonData)) {
       return;
     }
     const setting: any = jsonData["three"];
-    const x: number = this.helper.toNumber(setting.camera.x);
-    if (x !== null) {
-      const y: number = this.helper.toNumber(setting.camera.y);
-      if (y !== null) {
-        const z: number = this.helper.toNumber(setting.camera.z);
-        if (z !== null) {
+
+    // カメラの位置
+    if('camera' in setting){
+      const camera = setting.camera;
+      const x: number = this.helper.toNumber(camera.x);
+      const y: number = this.helper.toNumber(camera.y);
+      const z: number = this.helper.toNumber(camera.z);
+      if (x !== null && y !== null && z !== null) {
           this.camera.position.set(x, y, z);
-        }
+          if(this.helper.dimension == 2 ) {
+            this.controls.target.x = x;
+            this.controls.target.y = y;
+          }
+      }
+      const zoom: number = this.helper.toNumber(camera.zoom);
+      if (zoom !== null) {
+        this.camera.zoom = zoom;
       }
     }
+
+    // 視点の位置
+    if('target' in setting){
+      const target = setting.target;
+      const x: number = this.helper.toNumber(target.x);
+      const y: number = this.helper.toNumber(target.y);
+      const z: number = this.helper.toNumber(target.z);
+      if (x !== null && y !== null && z !== null) {
+          this.controls.target.x = x;
+          this.controls.target.y = y;
+          this.controls.target.z = z;
+      } 
+    } 
+
   }
 
   public changeGui(dimension: number) {
