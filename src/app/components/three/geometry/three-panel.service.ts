@@ -158,7 +158,8 @@ export class ThreePanelService {
     for(const p of vertexlist){
       points.push(new THREE.Vector3(p[0], p[1], p[2]))
     }
-    const geometry = new THREE.BufferGeometry().setFromPoints( points )
+    const geometry = new THREE.BufferGeometry().setFromPoints([points[0],points[1],points[2]])
+    const geometry2 = new THREE.BufferGeometry().setFromPoints([points[3],points[0],points[2]])
 
     // const geometry = new THREE.Geometry();
 
@@ -178,9 +179,13 @@ export class ThreePanelService {
     
     const mesh = new THREE.Mesh(geometry, material);
     mesh.name = 'panel-' + row.toString();
+    const mesh2 = new THREE.Mesh(geometry2, material);
+    mesh2.name = 'panel-' + row.toString();
 
     this.panelList.push(mesh);
     this.scene.add(mesh);
+    this.panelList.push(mesh2);
+    this.scene.add(mesh2);
   }
 
   // データをクリアする
