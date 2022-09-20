@@ -74,13 +74,17 @@ export class SceneService {
     this.aspectRatio = aspectRatio;
     this.Width = Width;
     this.Height = Height;
+
+    // 3次元用カメラ
     this.PerspectiveCamera = new THREE.PerspectiveCamera(
       70,
       aspectRatio,
       0.1,
       1000
     );
-    this.PerspectiveCamera.position.set(0, -20, 50);
+    this.PerspectiveCamera.position.set(50, 50, -50);  // 3次元カメラのデフォルト位置
+
+    // 2次元用カメラ
     this.OrthographicCamera = new THREE.OrthographicCamera(
       -Width / 10,
       Width / 10,
@@ -89,52 +93,91 @@ export class SceneService {
       -1000,
       1000
     );
-    this.OrthographicCamera.position.set(0, 0, 10);
-    this.initCamera(aspectRatio, Width, Height);
+    this.camera = this.OrthographicCamera; // 初期化の時困るので、一旦 this.cameraに登録しておく（消すな！
+
     // 環境光源
     this.add(new THREE.AmbientLight(0xf0f0f0));
     // レンダラー
     this.createRender(canvasElement, deviceRatio, Width, Height);
-    // コントロール
-    this.addControls();
 
     // 床面を生成する
     this.createHelper();
 
-    //
+    // gui を生成する
     this.gui = new GUI();
     this.gui.domElement.id = "gui_css";
+
+    // GridHelper の表示・非表示を制御するスイッチの登録
     this.gui.add(this.params, "GridHelper").onChange((value) => {
-      // guiによる設定
       this.axisHelper.visible = value;
       this.GridHelper.visible = value;
       this.render();
     });
+
+    // 遠近感あり・なしを制御するスイッチの登録
     this.gui.add(this.params, "Perspective").onChange((value) => {
-      if (this.helper.dimension === 3) {
         this.OrthographicCamera_onChange(value);
-      } else {
-        this.params.Perspective = false;
-      }
     });
+
+    // 再描画するボタンの登録
     // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
+
+    // gui はデフォルトで、展開状態にしておく
     this.gui.open();
 
-    this.changeGui(this.helper.dimension); //2Dモードで作成
+    // コントロール
+    this.addControls();
+
+    // カメラを2Dモードで再登録
+    this.changeGui(this.helper.dimension);
+
   }
 
+  // カメラを切り替える
+  public changeGui(dimension: number) {
+    if (this.gui === undefined) {
+      return;
+    }
+
+    // カメラのGUIを取り出し、可変かどうかを設定する。
+    let camera_gui: any = null;
+    for (const controller of this.gui.__controllers) {
+      if (controller.property === "Perspective") {
+        camera_gui = controller; // カメラのGUIを取り出す
+        if (dimension === 2) {
+          // 2Dモードであれば、触れないようにする
+          camera_gui.domElement.hidden = true;
+          this.OrthographicCamera_onChange(true);
+        } else {
+          camera_gui.domElement.hidden = false;
+          this.OrthographicCamera_onChange(this.params.Perspective);
+        }
+        break;
+      }
+    }
+
+  }
+
+  // カメラを切り替える
   private OrthographicCamera_onChange(value) {
     this.params.Perspective = value;
-    const pos = this.camera.position;
-    const rot = this.camera.rotation;
-    this.initCamera(this.aspectRatio, this.Width, this.Height);
-    // this.scene.children[this.scene.children.length - 1]
+
+
+    this.initCamera();  // カメラをシーンに登録する
     this.controls.object = this.camera; // OrbitControl の登録カメラを変更
-    this.camera.position.set(pos.x, pos.y, pos.z);
+
     if (this.helper.dimension === 2) {
-      this.camera.position.set(0, 0, 10);
-      this.controls.target.set(0, 0, 0); //this.controls.update();でターゲットにlookAtされていることが原因
+      // 2次元に切り替わった場合は、ポジションと回転角をリセットする
+      const pos = this.OrthographicCamera.position;
+      this.camera.up = new THREE.Vector3( 0, -1, 0 );
+      this.camera.position.set(pos.x, pos.y, -10);
+      this.controls.target.set(pos.x, pos.y, 0);
     } else {
+      // 3次元の場合は、ポジションと回転角は引き継ぐ
+      const pos = this.PerspectiveCamera.position;
+      const rot = this.PerspectiveCamera.rotation;
+      this.camera.up = new THREE.Vector3( 0, 0, -1 );
+      this.camera.position.set(pos.x, pos.y, pos.z);
       this.camera.rotation.set(rot.x, rot.y, rot.z);
     }
     // Gizmoを作り直す
@@ -144,6 +187,37 @@ export class SceneService {
     this.controls.update();
     this.render();
   }
+
+  // カメラをシーンに登録する
+  public initCamera() {
+    // 一旦カメラを消す
+    const target = this.scene.getObjectByName("camera");
+    if (target !== undefined) {
+      this.scene.remove(this.camera);
+    }
+
+    // カメラを登録しなおす
+    if(this.helper.dimension === 3) {
+      // 3次元の場合
+      if (this.params.Perspective) {
+        this.camera = this.PerspectiveCamera;  // 遠近感ありの場合
+      } else {
+        this.camera = this.OrthographicCamera; // 遠近感なしの場合 平行投影するカメラ
+      }
+    }
+    else{
+      // 2次元の場合
+      this.camera = this.OrthographicCamera; // 平行投影するカメラ
+    }
+
+    // 3次元なら回転できる、2次元なら回転できないように設定する
+    if (this.controls !== null)
+      this.controls.enableRotate = this.helper.dimension === 3;
+
+    this.camera.name = "camera";
+    this.scene.add(this.camera);
+  }
+
 
   // 床面を生成する
   private createHelper() {
@@ -229,32 +303,6 @@ export class SceneService {
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, this.camera);
     return raycaster;
-  }
-
-  // カメラの初期化
-  public initCamera(
-    aspectRatio: number = null,
-    Width: number = null,
-    Height: number = null
-  ) {
-    aspectRatio = aspectRatio === null ? this.aspectRatio : aspectRatio;
-    Width = Width === null ? this.Width : Width;
-    Height = Height === null ? this.Height : Height;
-
-    const target = this.scene.getObjectByName("camera");
-    if (target !== undefined) {
-      this.scene.remove(this.camera);
-    }
-    if (this.params.Perspective && this.helper.dimension === 3) {
-      this.camera = this.PerspectiveCamera;
-      if (this.controls !== null) this.controls.enableRotate = true; // 回転できる
-    } else {
-      this.camera = this.OrthographicCamera;
-      if (this.controls !== null)
-        this.controls.enableRotate = this.helper.dimension === 3; // 回転できる
-    }
-    this.camera.name = "camera";
-    this.scene.add(this.camera);
   }
 
   // レンダラーを初期化する
@@ -358,7 +406,7 @@ export class SceneService {
         x: this.controls.target.x,
         y: this.controls.target.y,
         z: this.controls.target.z,
-      },      
+      },
     };
   }
 
@@ -404,28 +452,5 @@ export class SceneService {
 
   }
 
-  public changeGui(dimension: number) {
-    if (this.gui === undefined) {
-      return;
-    }
-
-    // カメラのGUIを取り出し、可変かどうかを設定する。
-    let camera: any = null;
-    for (const controller of this.gui.__controllers) {
-      if (controller.property === "Perspective") {
-        // カメラのGUIを取り出す
-        camera = controller;
-        // 2Dモードであれば、触れないようにする
-        if (dimension === 2) {
-          camera.domElement.hidden = true;
-          this.OrthographicCamera_onChange(true);
-        } else {
-          camera.domElement.hidden = false;
-          this.OrthographicCamera_onChange(this.params.Perspective);
-        }
-        break;
-      }
-    }
-  }
 
 }
