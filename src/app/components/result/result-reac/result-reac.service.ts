@@ -182,7 +182,8 @@ export class ResultReacService {
   
       for (const caseNo of Object.keys(load_name)) {
         const caseLoad: any = load_name[caseNo];
-        if(!caseLoad.symbol.includes("LL")){
+        const symbol: string = ('symbol' in caseLoad) ? caseLoad.symbol: '';
+        if(!symbol.includes("LL")){
           this.LL_flg.push(false);
           max_values[caseNo] = org_max_values[caseNo];
           value_range['reac'][caseNo] = org_value_range[caseNo];

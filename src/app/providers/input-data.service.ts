@@ -16,6 +16,9 @@ import { SceneService } from "../components/three/scene.service";
 import { DataHelperModule } from "./data-helper.module";
 import { TranslateService } from "@ngx-translate/core";
 
+import packageJson from '../../../package.json';
+import { forEach } from "@angular-devkit/schematics";
+
 @Injectable({
   providedIn: "root",
 })
@@ -82,11 +85,94 @@ export class InputDataService {
     this.define.setDefineJson(jsonData);
     this.combine.setCombineJson(jsonData);
     this.pickup.setPickUpJson(jsonData);
-    this.three.setSetting(jsonData);
+    this.versionChecker(jsonData);
 
     if ("dimension" in jsonData) {
       this.helper.dimension = jsonData["dimension"];
     }
+  }
+
+  /// ファイルのバージョンによってはデータに手を加える必要がある
+  private versionChecker(jsonData: object): void {
+
+    /// ファイルのバージョンが 2.0.0 より前のデータの場合、軸が違うので変換する
+    const programVer: string = packageJson.version;
+    let filetVer: string = '0.0.0';
+    if('ver' in jsonData)
+      filetVer = jsonData['ver'];
+
+    if(!this.isOlder('2.0.0', filetVer)) {
+      this.three.setSetting(jsonData);
+      return;
+    }
+
+    // y軸, z軸の符号(+, -)を逆にする
+    for(const n of this.node.node){
+      let y = this.helper.toNumber(n.y);
+      if ( y===null) y = 0;
+      n.y = -1 * y;
+      let z = this.helper.toNumber(n.z);
+      if ( z===null) z = 0;
+      n.z = -1 * z;
+    }
+
+    // 荷重にマイナスをつける
+    console.log("荷重にマイナスをつける");
+    for (const load_id of Object.keys(this.load.load)) {
+
+      const load_value_list = this.load.load[load_id];
+
+      for(const load_value of load_value_list){
+
+        // 要素荷重
+        const mark = this.helper.toNumber(load_value['mark']); // '2'
+        if ( mark !== 9 && mark !== 11 ){
+          // const L1 = load_value['L1']; // '0.000'
+          // const L2 = load_value['L2']; // 0
+          // const m1 = load_value['m1']; // '1'
+          // const m2 = load_value['m2']; // '-17'
+          const direction = load_value['direction'];  // 'y'
+          if (direction !== 'x' && direction !== 'r'){
+            const P1 = this.helper.toNumber(load_value['P1']); // -17.2
+            if ( P1 !== null) load_value.P1 = -1 * P1;
+            const P2 = this.helper.toNumber(load_value['P2']); // -17.2
+            if ( P2 !== null) load_value.P2 = -1 * P2;
+          }
+        }
+
+        // 節点荷重
+        // const n = load_value['n']; // '1'
+        // const row = load_value['row']; // 1
+        const rx = this.helper.toNumber(load_value['rx']); // ''
+        if ( rx !== null) load_value.rx = -1 * rx;
+        const ry = this.helper.toNumber(load_value['ry']); // ''
+        if ( ry !== null) load_value.ry = -1 * ry;
+        const rz = this.helper.toNumber(load_value['rz']); // ''
+        if ( rz !== null) load_value.rz = -1 * rz;
+        // const tx = this.helper.toNumber(load_value['tx']); // 0
+        // if ( tx !== null) load_value.tx = -1 * tx;
+        const ty = this.helper.toNumber(load_value['ty']); // ''
+        if ( ty !== null) load_value.ty = -1 * ty;
+        const tz = this.helper.toNumber(load_value['tz']); // ''
+        if ( tz !== null) load_value.tz = -1 * tz;
+
+        console.log(load_id, load_value['row'], load_value);
+      }
+    }
+
+  }
+
+  // バージョン文字列比較処理
+  private isOlder(a: string, b: string): boolean {
+    if (a === b) return false;
+    const aUnits = a.split(".");
+    const bUnits = b.split(".");
+    // 探索幅に従ってユニット毎に比較していく
+    for (var i = 0; i < Math.min(aUnits.length, bUnits.length); i++) {
+      if (parseInt(aUnits[i]) > parseInt(bUnits[i])) return true; // A > B
+      if (parseInt(aUnits[i]) < parseInt(bUnits[i])) return false;  // A < B
+    }
+    return false;
   }
 
   // データを生成 /////////////////////////////////////////////////////////////////////
@@ -114,7 +200,9 @@ export class InputDataService {
       isPrint = true;
     }
 
-    const jsonData = {};
+    const jsonData = {
+      ver: packageJson.version
+    };
 
     const node: {} = this.node.getNodeJson(empty);
     if (Object.keys(node).length > 0) {

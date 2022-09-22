@@ -130,7 +130,7 @@ export class ThreeLoadAxial {
     const lenXY = Math.sqrt(Math.pow(localAxis.x.x, 2) + Math.pow(localAxis.x.y, 2));
     const XZ = new Vector2(lenXY, localAxis.x.z).normalize();
     group.rotateY(-Math.asin(XZ.y));
-    group.rotateX(Math.PI);
+    // group.rotateX(Math.PI);
     group.name = ThreeLoadAxial.id + "-" + row.toString() + "-x";
     return group;
   }

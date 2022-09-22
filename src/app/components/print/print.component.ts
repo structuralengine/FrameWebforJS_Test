@@ -10,6 +10,7 @@ import { ElectronService } from "ngx-electron";
 import { MaxMinService } from "../three/max-min/max-min.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { TranslateService } from "@ngx-translate/core";
+import packageJson from '../../../../package.json';
 
 @Component({
   selector: "app-print",
@@ -72,7 +73,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   public onPrintPDF(): void {
 
     if (this.printService.optionList['captur'].value ) {
-      // 画面印刷
+       // 図の印刷
       if( this.helper.dimension === 2 && 
         ( this.three.mode=='fsec' || this.three.mode==='comb_fsec' || this.three.mode==='pick_fsec')){
 
@@ -115,6 +116,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           layout: this.printService.customThree.print2DThreeLayout,
           output
         }
+        json["ver"] = packageJson.version;
         const base64Encoded = this.getPostJson(json);
         this.pdfPreView(base64Encoded);
 
@@ -128,7 +130,7 @@ export class PrintComponent implements OnInit, OnDestroy {
       }
 
     } else {
-
+      // 図以外の数字だけページの印刷
       const json = this.printService.json;
       if (Object.keys(json).length !== 0) {
         // loadingの表示

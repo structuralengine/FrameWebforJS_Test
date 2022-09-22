@@ -477,7 +477,7 @@ export class ThreeLoadDistribute {
       }
       
       // 独自の回転処理
-      text.rotateX(Math.PI)
+      // text.rotateX(Math.PI)
       text.rotateZ(Math.PI / 2)
       //this.setRotate(direction, text, localAxis, true);
       //if (direction === "z") text.rotateX(-Math.PI / 2);

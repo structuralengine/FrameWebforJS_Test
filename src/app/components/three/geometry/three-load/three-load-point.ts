@@ -189,12 +189,13 @@ export class ThreeLoadPoint {
     const textString: string = value.toFixed(2) + " kN";
 
     const text = this.text.create(textString, new Vector2(-1, 0), 0.1);
-    if (direction === 'tz') text.rotateX(Math.PI);
+    // if (direction === 'tz') text.rotateX(Math.PI);
     if (direction === 'ty') {
       text.rotateZ(Math.PI);
-      text.rotateX(Math.PI);
+      //text.rotateX(Math.PI);
     }
-    if (direction === 'tx' && value < 0) text.rotateY(Math.PI);
+    // if (direction === 'tx' && value < 0) text.rotateY(Math.PI);
+    text.rotateX(Math.PI);
     text.name = key;
 
     child.add(text);
