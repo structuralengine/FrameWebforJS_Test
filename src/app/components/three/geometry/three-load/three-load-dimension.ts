@@ -85,17 +85,18 @@ export class ThreeLoadDimension {
     const height = Math.abs(text.geometry.boundingBox.max.y - text.geometry.boundingBox.min.y);
     const width = Math.abs(text.geometry.boundingBox.max.x - text.geometry.boundingBox.min.x);
     if (vartical === 'bottom') {
-      text.position.y += 0.5 * height;
-    } else if (vartical === 'top') {
       text.position.y -= 0.5 * height;
+    } else if (vartical === 'top') {
+      text.position.y += 0.5 * height;
     }
     if (horizontal === 'left') {
       text.position.x += 0.5 * width;
     } else if (horizontal === 'right') {
       text.position.x -= 0.5 * width;
     }
-    text.rotateZ(Math.PI);
-    text.rotateY(Math.PI);
+    // text.rotateX(Math.PI);
+    // text.rotateZ(Math.PI);
+    // text.rotateY(Math.PI);
     text.name = "text";
 
     group.add(text);

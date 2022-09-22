@@ -42,7 +42,7 @@ export class ThreeLoadTemperature {
     row: number
   ): THREE.Group {
 
-    const offset: number = 0.1;
+    const offset: number = -0.1;
 
     const child = new THREE.Group();
 
@@ -62,12 +62,12 @@ export class ThreeLoadTemperature {
     child.add(line2);
 
     // 矢印を描く
-    const arrow_geo = new THREE.ConeBufferGeometry(0.05, 0.25, 3, 1, false);
-    const arrow = new THREE.Mesh(arrow_geo, this.arrow_mat);
-    arrow.rotation.z = -Math.PI / 2;
-    arrow.name = "arrow";
+    // const arrow_geo = new THREE.ConeBufferGeometry(0.05, 0.25, 3, 1, false);
+    // const arrow = new THREE.Mesh(arrow_geo, this.arrow_mat);
+    // arrow.rotation.z = -Math.PI / 2;
+    // arrow.name = "arrow";
 
-    child.add(arrow);
+    // child.add(arrow);
     child.name = "child";
 
     // 全体
@@ -175,7 +175,9 @@ export class ThreeLoadTemperature {
     const text = this.text.create(textString, pos, 0.1);
     const height = Math.abs(text.geometry.boundingBox.max.y - text.geometry.boundingBox.min.y);
     const width = Math.abs(text.geometry.boundingBox.max.x - text.geometry.boundingBox.min.x);
-      text.position.x += 0.5 * height;
+    text.position.x += 0.5 * height;
+    text.position.y -= 0.5 * height;
+    text.rotateX(Math.PI);
     text.name = key;
     group.add(text);
 

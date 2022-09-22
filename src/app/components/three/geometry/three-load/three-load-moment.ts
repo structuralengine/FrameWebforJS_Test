@@ -260,6 +260,7 @@ export class ThreeLoadMoment {
       text = this.text.create(
         textString, new Vector2(-group_scale * cos30, group_scale * sin30), 0.1);
     }
+    text.rotateX(Math.PI);
     text.name = key;
 
     child.add(text);

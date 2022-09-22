@@ -248,7 +248,7 @@ export class ThreeSectionForceMeshService {
       // text.fontSize = 0.2;
       // text.position.set(pos[i].x, pos[i].y, 0);
       // text.color = 0x000000;
-      text.rotateX(Math.PI);
+      // text.rotateX(Math.PI);
       text.rotateZ(Math.PI/2);
       text.name = key;
       child.add(text);
