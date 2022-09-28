@@ -328,10 +328,10 @@ export class ThreeFixNodeService {
       case 'z':
         switch (pin.relationship) {
           case 'small':
-            cone.rotation.x = Math.PI / 2;
+            cone.rotation.x = -Math.PI / 2;
             break;
           case 'large':
-            cone.rotation.x = Math.PI / 2 * 3;
+            cone.rotation.x = -Math.PI / 2 * 3;
             break;
         }
         break;
@@ -431,7 +431,7 @@ export class ThreeFixNodeService {
         case ('z'):
           x = radius * Math.cos(Math.PI / 180 * i) * maxLength;
           y = radius * Math.sin(Math.PI / 180 * i) * maxLength;
-          z = - i * increase * maxLength;
+          z = i * increase * maxLength;
           break;
       }
       vertices.push(new THREE.Vector3(x, y, z));
