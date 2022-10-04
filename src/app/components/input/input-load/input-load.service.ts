@@ -662,7 +662,9 @@ export class InputLoadService {
     let L2 = 0
 
     const m1: number = Math.abs(load1[0].m1);
-    const m2: number = Math.abs(load1[0].m2);
+    let m2: number = Math.abs(load1[0].m2);
+    if(m2===0) 
+      m2 = m1;
     for (let j = m1; j <= m2; j++) {
       L2 += Math.round(this.member.getMemberLength(j.toString()) * 1000);
     }
