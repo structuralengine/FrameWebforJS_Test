@@ -74,7 +74,8 @@ export class ThreeLoadMemberMoment {
       L = L2;
     }
 
-
+    if(P===0)
+      return null;
     // 矢印
     const arrow: THREE.Group = this.getArrow(direction, P, L);
     arrow.position.y = offset;

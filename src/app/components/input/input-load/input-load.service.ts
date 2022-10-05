@@ -619,22 +619,26 @@ export class InputLoadService {
             load1[0].L1 = (numL1 + _L11[i]).toFixed(3); // 連行荷重の場合1行目の L1を
           }
 
+          let new_load_id: string = load_id;
+
+          if( i > 0 ){
+            // 連行荷重の場合の ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
+            new_load_id = (Math.round((load_num + i / digit)*digit)/digit).toString();
+          }
+
+          if(new_load_id === '1.7')
+            console.log()
+
           // 要素荷重を サーバーで扱える形式に変換する
           const load2: any[] = this.convertMemberLoads(load1);
 
           if (load2.length > 0) {
-            let new_load_id: string = load_id;
-
-            if( i > 0 ){
-              // 連行荷重の場合の ケースid を決める（連行荷重がある場合 x.1, x.2 というケースid を生成する）
-              new_load_id = (Math.round((load_num + i / digit)*digit)/digit).toString();
-            }
 
             load_member[new_load_id] = load2;
 
           }
         }
-        if (load_member[targetCase] === undefined) {
+        if (load_member[targetCase] == null) {
           load_member[targetCase] = new Array();
         }
       }
@@ -709,10 +713,14 @@ export class InputLoadService {
       }
     }
 
+    // 荷重スターと地点を決定する
+    let load3 = this.checkIntoMemberL1(load2);
+
+
     // 要素番号 m2 にマイナスが付いた場合の入力を分ける ------------------------
     let curNo = -1;
     let curPos = 0;
-    let load3 = new Array();
+    load3 = new Array();
   
     let old_row: number = -1;
     for(const row of load2){
@@ -724,14 +732,13 @@ export class InputLoadService {
       }
       old_row = row['row']; //現在の行数を記録しておく
 
-      if (row.m2 < 0) {
-        const res = this.getMemberGroupLoad(row, curNo, curPos); // ※ここで L1 のマイナスは消える
+      const res = this.getMemberGroupLoad(row, curNo, curPos); // ※ここで L1 のマイナスは消える
+      if(res !== null) {
+        load3 = load3.concat(res["loads"]);
         curNo = res["curNo"];
         curPos = res["curPos"];
-        load3 = load3.concat(res["loads"]);
-      } else {
-        load3.push(row);
       }
+
     }
 
     // 要素番号 m1 != m2 の場合の入力を分ける -----------------------
@@ -769,6 +776,10 @@ export class InputLoadService {
   // 要素番号 m2 にマイナスが付いた場合の入力を分ける
   private getMemberGroupLoad( targetLoad: any, curNo: number,  _curPos: number ): any {
     // ※この関数内では距離を 100倍した整数で処理する
+
+    // 先頭データなのにL1にリレーがある場合は無視
+    if(curNo === -1 && targetLoad.sL1.includes("-"))
+      return null;
 
     let curPos: number = Math.round(_curPos * 1000);
 
@@ -996,18 +1007,20 @@ export class InputLoadService {
               targetLoad.m2 = m2;
               targetLoad.L2 = 0;
               targetLoad.P2 = 0;
+              curNo = -1;
               break;
             }
             L2 = L2 - L;
             targetLoad.m2 = j + 1;
             targetLoad.L2 = L2 / 1000;
+            curNo = Math.abs(targetLoad.m2);
           } else {
             targetLoad.m2 = j;
             targetLoad.L2 = L2 / 1000;
+            curNo = Math.abs(targetLoad.m2);
             break;
           }
         }
-        curNo = Math.abs(targetLoad.m2);
         // curPos = Math.round(Math.abs(targetLoad.L2) * 1000);
         curPos = Math.round(targetLoad.L2 * 1000);
         break;
@@ -1126,6 +1139,60 @@ export class InputLoadService {
     }
 
     return load2;
+  }
+
+  // 荷重スターと地点を決定する
+  public checkIntoMemberL1(load) {
+
+    for(const row of load){
+
+      // loadの数値と型を保存しておく
+      const mark = load.mark;
+      const m1 = load.m1.toString();
+      let L1 = Math.round(load.L1 *1000);
+      let L2 = Math.round(load.L2 *1000);
+      let P1 = Math.round(load.P1 *100)/100;
+      let P2 = Math.round(load.P2 *100)/100;
+
+      // memberの範囲外に出ていないか確認
+      const len = Math.round(this.member.getMemberLength(m1) * 1000);
+
+      if (mark === 1 || mark === 11) {
+        if (L1 < 0 || L1 > len) {
+          L1 = 0;
+          P1 = 0;
+        }
+        if (L2 < 0 || L2 > len) {
+          L2 = 0;
+          P2 = 0;
+        };
+      } else if (mark === 2 || mark === 9) {
+        if ( L1 + L2 > len) {
+          L1 = 0;
+          L2 = 0;
+          P1 = 0;
+          P2 = 0;
+        } else {
+          if (L2 < 0 ) {
+            L2 = 0;
+          }
+          if (L1 < 0) {
+            L1 = 0;
+          }
+        }
+      }
+      // 数値をそのままに、元の型に戻す
+      load.L1 = L1 / 1000;
+      load.L2 = L2 / 1000;
+      load.P1 = P1;
+      load.P2 = P2;
+
+      if(load.P1 !==0 || load.P2 !==0){
+        load3.push(load);
+      }
+    }
+
+    return load;
   }
 
    
