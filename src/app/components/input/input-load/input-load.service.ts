@@ -626,9 +626,6 @@ export class InputLoadService {
             new_load_id = (Math.round((load_num + i / digit)*digit)/digit).toString();
           }
 
-          if(new_load_id === '1.7')
-            console.log()
-
           // 要素荷重を サーバーで扱える形式に変換する
           const load2: any[] = this.convertMemberLoads(load1);
 
@@ -712,34 +709,28 @@ export class InputLoadService {
         }
       }
     }
+    
+    // 要素番号 m1 != m2 の場合の入力を分ける -----------------------
+    let load3 = new Array();
+    for(const row of load2){
+      if (row.m1 < row.m2) {
+        const res = this.getMemberRepeatLoad(row);
+        load3 = load3.concat(res);
+      } else {
+        load3.push(row);
+      }
+    }
 
-    // 荷重スターと地点を決定する
-    let load3 = this.checkIntoMemberL1(load2);
+    // 入力行番号 row 順に並べ替える -----------------------
+    load2 = load3.sort((a, b) => {
+      return (a.row < b.row) ? -1 : 1;  //オブジェクトの昇順ソート
+    });
 
+    // 荷重スタート地点を決定する -----------------------
+    load2 = this.checkIntoMemberL1(load2);
 
     // 要素番号 m2 にマイナスが付いた場合の入力を分ける ------------------------
-    let curNo = -1;
-    let curPos = 0;
-    load3 = new Array();
-  
-    let old_row: number = -1;
-    for(const row of load2){
-
-      if(old_row + 1 < row['row']){
-        // 空白行があった場合 グループ化を解除
-        curNo = -1;
-        curPos = 0;
-      }
-      old_row = row['row']; //現在の行数を記録しておく
-
-      const res = this.getMemberGroupLoad(row, curNo, curPos); // ※ここで L1 のマイナスは消える
-      if(res !== null) {
-        load3 = load3.concat(res["loads"]);
-        curNo = res["curNo"];
-        curPos = res["curPos"];
-      }
-
-    }
+    load3 = this.checkMember2(load2);
 
     // 要素番号 m1 != m2 の場合の入力を分ける -----------------------
     load2 = new Array();
@@ -776,10 +767,6 @@ export class InputLoadService {
   // 要素番号 m2 にマイナスが付いた場合の入力を分ける
   private getMemberGroupLoad( targetLoad: any, curNo: number,  _curPos: number ): any {
     // ※この関数内では距離を 100倍した整数で処理する
-
-    // 先頭データなのにL1にリレーがある場合は無視
-    if(curNo === -1 && targetLoad.sL1.includes("-"))
-      return null;
 
     let curPos: number = Math.round(_curPos * 1000);
 
@@ -1141,63 +1128,97 @@ export class InputLoadService {
     return load2;
   }
 
-  // 荷重スターと地点を決定する
-  public checkIntoMemberL1(load) {
+  // 要素番号 m2 にマイナスが付いた場合の入力を分ける
+  private checkMember2(load2){
+    let curNo = -1;
+    let curPos1 = 0;
+    let load3 = new Array();
+  
+    let old_row: number = -1;
+    for(const row of load2){
+
+      if(old_row + 1 < row['row']){
+        // 空白行があった場合 グループ化を解除
+        curNo = -1;
+        curPos1 = 0;
+      }
+      old_row = row['row']; //現在の行数を記録しておく
+
+      const res = this.getMemberGroupLoad(row, curNo, curPos1); // ※ここで L1 のマイナスは消える
+      if(res !== null) {
+        load3 = load3.concat(res["loads"]);
+        curNo = res["curNo"];
+        curPos1 = res["curPos"];
+      }
+
+    }
+
+    return load3;
+  }
+
+
+  // 荷重スタート地点を決定する
+  private checkIntoMemberL1(load) {
+
+    let load2 = new Array();
+
+    let curPos1 = 0;
+    let curPos2 = 0;
+    let old_row: number = -1;
 
     for(const row of load){
 
       // loadの数値と型を保存しておく
-      const mark = load.mark;
-      const m1 = load.m1.toString();
-      let L1 = Math.round(load.L1 *1000);
-      let L2 = Math.round(load.L2 *1000);
-      let P1 = Math.round(load.P1 *100)/100;
-      let P2 = Math.round(load.P2 *100)/100;
+      let L1 = Math.round(row.L1 *1000);
+      let L2 = Math.round(row.L2 *1000);
 
-      // memberの範囲外に出ていないか確認
-      const len = Math.round(this.member.getMemberLength(m1) * 1000);
+      // P1 の位置を調べる
+      if(old_row + 1 < row['row']) {
+        // リセット
+        curPos1 = L1;
+      } else if(L1 < 0) {
+        // 加算モード
+        curPos1 = curPos2 + Math.abs(L1);
+      } else {
+        curPos1 = L1;
+      }
+      old_row = row['row']; //現在の行数を記録しておく
 
-      if (mark === 1 || mark === 11) {
-        if (L1 < 0 || L1 > len) {
-          L1 = 0;
-          P1 = 0;
-        }
-        if (L2 < 0 || L2 > len) {
-          L2 = 0;
-          P2 = 0;
-        };
-      } else if (mark === 2 || mark === 9) {
-        if ( L1 + L2 > len) {
-          L1 = 0;
-          L2 = 0;
-          P1 = 0;
-          P2 = 0;
+      // P2 の位置を調べる
+      if(L2 < 0) {
+        // 加算モード
+        curPos2 = curPos1 + Math.abs(L2);
+      } else {
+        curPos2 = L2;
+      }
+
+      // P1 が ゼロより外側にある場合か判定
+      const mark = row.mark;
+      if(curPos1 < 0 && curPos2 < 0){
+        continue; // その荷重は、無視する
+
+      } else if (mark === 1 || mark === 11) {
+        if(curPos1 < 0){
+          row.L1 = 0;
+          row.sL1 = '0';
+          row.P1 = 0;
         } else {
-          if (L2 < 0 ) {
-            L2 = 0;
-          }
-          if (L1 < 0) {
-            L1 = 0;
-          }
+          row.L1 = curPos1 /1000;
+          row.sL1 = row.L1.toString();
         }
-      }
-      // 数値をそのままに、元の型に戻す
-      load.L1 = L1 / 1000;
-      load.L2 = L2 / 1000;
-      load.P1 = P1;
-      load.P2 = P2;
+        row.L2 = curPos2 /1000;
+      } 
 
-      if(load.P1 !==0 || load.P2 !==0){
-        load3.push(load);
-      }
+      load2.push(row);
+
     }
 
-    return load;
+    return load2;
   }
 
    
   // memberの範囲外に出ていないか確認する
-  public checkIntoMember(load) {
+  private checkIntoMember(load) {
     // loadの数値と型を保存しておく
     const mark = load.mark;
     const m1 = load.m1.toString();
