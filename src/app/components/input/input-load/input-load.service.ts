@@ -1194,19 +1194,35 @@ export class InputLoadService {
 
       // P1 が ゼロより外側にある場合か判定
       const mark = row.mark;
-      if(curPos1 < 0 && curPos2 < 0){
+      if(curPos1 <= 0 && curPos2 <= 0){
         continue; // その荷重は、無視する
 
-      } else if (mark === 1 || mark === 11) {
-        if(curPos1 < 0){
-          row.L1 = 0;
-          row.sL1 = '0';
-          row.P1 = 0;
-        } else {
-          row.L1 = curPos1 /1000;
-          row.sL1 = row.L1.toString();
+      } else {
+        if (mark === 1 || mark === 11) {
+          if(curPos1 < 0){
+            row.L1 = 0;
+            row.sL1 = row.L1.toString();
+            row.P1 = 0;
+          } else {
+            row.L1 = curPos1 /1000;
+            row.sL1 = row.L1.toString();
+          }
+          row.L2 = curPos2 /1000;
+        } else if (mark === 2 ) {
+          if(curPos1 < 0){
+            const P1: number = row.P1;
+            const P2: number = row.P2;
+            const L1: number = Math.abs(curPos1);
+            const L2: number = Math.abs(curPos2);
+            const P3 = P1 + L1 * (P2 - P1) / (L1 + L2);
+            row.L1 = 0;
+            row.sL1 = row.L1.toString();
+            row.L2 = -curPos2 /1000;
+            row.P1 = P3;
+          } else {
+            row.L1 = curPos1 /1000;
+          }
         }
-        row.L2 = curPos2 /1000;
       } 
 
       load2.push(row);
