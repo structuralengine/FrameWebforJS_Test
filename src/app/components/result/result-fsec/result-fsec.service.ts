@@ -64,6 +64,11 @@ export class ResultFsecService {
       return new Array();
     }
     const col = this.columns[key];
+    // 2次元の場合 曲げモーメントのプラスマイナスが逆
+    if(this.helper.dimension===2){
+      console.log(col);
+    }
+
     if (mode === null) {
       return col;
     } else {

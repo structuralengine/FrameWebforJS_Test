@@ -640,6 +640,27 @@ export class InputLoadService {
         }
       }
     }
+  
+    // 不要なケースを削除する
+    let keys: string[] = Object.keys(load_member);
+    for (const key of keys) {
+      const value: any[] = load_member[key];
+      if(value.length == 0)
+        delete load_member[key];
+    }
+    /// 基本となるケースが削除されている場合
+    keys = Object.keys(load_member);
+    if(keys.length > 0){
+      const found = keys.find(key => !key.includes('.'));
+      if( found == null ){
+        const key = keys[0];
+        const value: any[] = load_member[key];
+        delete load_member[key];
+        const key0 = key.substring(0, key.lastIndexOf("."));
+        load_member[key0] = value;
+      }
+    }
+
     return load_member;
   }
 
