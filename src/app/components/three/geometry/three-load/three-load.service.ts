@@ -234,13 +234,18 @@ export class ThreeLoadService {
     this.currentIndex = changeCase.toString();
     if (!isLL_Load) {
       this.visibleCaseChange(this.currentIndex);
-      
+
     } else {
       // 連行荷重の場合
       const LL_list = this.load.getMemberLoadJson(0, this.currentIndex);
       const LL_keys: string[] = Object.keys(LL_list);
       if (LL_keys.length > 0) {
-        this.animation(LL_keys); //ループのきっかけ
+        if (this.animationObject !== null) {
+          cancelAnimationFrame(this.animationObject);
+          this.animationObject = null;
+        }
+
+        this.animation(LL_keys, LL_list); //ループのきっかけ
         return;
       }
     }
@@ -287,7 +292,14 @@ export class ThreeLoadService {
   }
 
   // 連行移動荷重のアニメーションを開始する
-  public animation(keys: string[], i: number = 0, old_j: number = 0) {
+  public animation(keys: string[], LL_list: any, i: number = 0, old_j: number = 0) {
+
+    // アニメーションのオブジェクトを解放
+    if (this.animationObject !== null) {
+      cancelAnimationFrame(this.animationObject);
+      this.animationObject = null;
+    }
+
 
     let j: number = Math.floor(i / 10); // 10フレームに１回位置を更新する
 
@@ -298,15 +310,16 @@ export class ThreeLoadService {
       j = 0;
     }
 
+
     // 次のフレームを要求
     this.animationObject = requestAnimationFrame(() => {
-      this.animation(keys, i, j);
+      this.animation(keys, LL_list, i, j);
     });
 
     if(j === old_j){
       return;
     }
-    
+
     this.visibleCaseChange(keys[j], true)
     // レンダリングする
     this.scene.render();
@@ -582,7 +595,7 @@ export class ThreeLoadService {
     }
 
     // 連行荷重の場合
-    this.animation(LL_keys); //ループのきっかけ
+    this.animation(LL_keys, memberLoadData); //ループのきっかけ
 
   }
 
@@ -1225,8 +1238,10 @@ export class ThreeLoadService {
               load.row,
               n
             );
-            arrow["row"] = load.row;
-            arrowAddGroup.push(arrow);
+            if(arrow !== null){
+              arrow["row"] = load.row;
+              arrowAddGroup.push(arrow);
+            }
           }
         }
       } else if (load.mark === 11) {
@@ -1245,9 +1260,11 @@ export class ThreeLoadService {
               load.row,
               n
             );
-            arrow["row"] = load.row;
-            // arrow["name"] = "child";
-            arrowAddGroup.push(arrow);
+            if(arrow !== null){
+              arrow["row"] = load.row;
+              // arrow["name"] = "child";
+              arrowAddGroup.push(arrow);
+            }
           }
           direction = "r";
         }
