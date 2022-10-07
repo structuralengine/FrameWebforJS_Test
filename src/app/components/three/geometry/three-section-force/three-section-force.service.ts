@@ -412,19 +412,7 @@ export class ThreeSectionForceService {
           textValues.push(P2);
           L2 = Math.round((len - LL) * 1000) / 1000;
           if (item === null) {
-            const mesh =
-              this.helper.dimension === 2 && key1 === "fy"
-                ? this.mesh.create(
-                    nodei,
-                    nodej,
-                    localAxis,
-                    key2,
-                    L1,
-                    L2,
-                    -P1,
-                    -P2
-                  )
-                : this.mesh.create(
+            const mesh = this.mesh.create(
                     nodei,
                     nodej,
                     localAxis,
@@ -436,19 +424,6 @@ export class ThreeSectionForceService {
                   );
             ThreeObject.add(mesh);
           } else {
-            if (this.helper.dimension === 2 && key1 === "fy") {
-              this.mesh.change(
-                item,
-                nodei,
-                nodej,
-                localAxis,
-                key2,
-                L1,
-                L2,
-                -P1,
-                -P2
-              );
-            } else {
               this.mesh.change(
                 item,
                 nodei,
@@ -460,7 +435,6 @@ export class ThreeSectionForceService {
                 P1,
                 P2
               );
-            }
           }
           P1 = P2;
           L1 = LL;

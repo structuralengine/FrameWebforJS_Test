@@ -137,15 +137,15 @@ export class ThreeSectionForceMeshService {
     return {
       points:[
         new THREE.Vector3(x1, 0, 0),  // 0
-        new THREE.Vector3(x1, y1, 0), // 1
-        new THREE.Vector3(x2, y2, 0), // 2
+        new THREE.Vector3(x1, -y1, 0), // 1
+        new THREE.Vector3(x2, -y2, 0), // 2
 
-        new THREE.Vector3(x2, y2, 0), // 2
-        new THREE.Vector3(x3, y3, 0), // 3
+        new THREE.Vector3(x2, -y2, 0), // 2
+        new THREE.Vector3(x3, -y3, 0), // 3
         new THREE.Vector3(x3, 0, 0),  // 4
 
         new THREE.Vector3(x1, 0, 0),  // 0
-        new THREE.Vector3(x2, y2, 0), // 2
+        new THREE.Vector3(x2, -y2, 0), // 2
         new THREE.Vector3(x3, 0, 0),  // 4
       ],
       L1,
