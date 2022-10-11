@@ -76,8 +76,8 @@ export class ThreeFixNodeService {
       return;
     }
 
-    const gui_step: number = 80 * 0.001;
-    this.gui = this.scene.gui.add(this.params, 'fixnodeScale', 0, 80).step(gui_step).onChange((value) => {
+    const gui_step: number = 5 * 0.01;
+    this.gui = this.scene.gui.add(this.params, 'fixnodeScale', 0, 5).step(gui_step).onChange((value) => {
       this.scale = value;
       this.onResize();
       this.scene.render();
@@ -223,7 +223,7 @@ export class ThreeFixNodeService {
         const pin = { direction: 'x', color: 0xff0000 };
         if (position.x <= this.center().x) {
           pin['relationship'] = 'small';
-        } else if (position.x > this.center().x) {
+        } else {
           pin['relationship'] = 'large';
         }
         //this.CreatePin(pin, position, this.baseScale(), target.n);
@@ -231,9 +231,9 @@ export class ThreeFixNodeService {
       }
       if (target.ty === 1) {
         const pin = { direction: 'y', color: 0x00ff00 };
-        if (position.y <= this.center().y) {
+        if (position.y < this.center().y) {
           pin['relationship'] = 'small';
-        } else if (position.y > this.center().y) {
+        } else {
           pin['relationship'] = 'large';
         }
         //this.CreatePin(pin, position, this.baseScale(), target.n);
@@ -243,7 +243,7 @@ export class ThreeFixNodeService {
         const pin = { direction: 'z', color: 0x0000ff };
         if (position.z <= this.center().z) {
           pin['relationship'] = 'small';
-        } else if (position.z > this.center().z) {
+        } else {
           pin['relationship'] = 'large';
         }
         //this.CreatePin(pin, position, this.baseScale(), target.n);
@@ -321,7 +321,7 @@ export class ThreeFixNodeService {
             // 何もしない
             break;
           case 'large':
-            cone.rotation.y = Math.PI / 2;
+            cone.rotation.x = Math.PI;
             break;
         }
         break;
@@ -425,7 +425,7 @@ export class ThreeFixNodeService {
           break;
         case ('y'):
           x = radius * Math.cos(Math.PI / 180 * i) * maxLength;
-          y = - i * increase * maxLength;
+          y = i * increase * maxLength;
           z = radius * Math.sin(Math.PI / 180 * i) * maxLength;
           break;
         case ('z'):
