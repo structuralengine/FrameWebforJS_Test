@@ -83,8 +83,8 @@ export class ThreeFixMemberService {
       return;
     }
 
-    const gui_step: number = 80 * 0.001;
-    this.gui = this.scene.gui.add(this.params, 'fixmenberScale', 0, 80).step(gui_step).onChange((value) => {
+    const gui_step: number = 5 * 0.01;
+    this.gui = this.scene.gui.add(this.params, 'fixmenberScale', 0, 5).step(gui_step).onChange((value) => {
       this.scale = value;
       this.onResize();
       this.scene.render();
