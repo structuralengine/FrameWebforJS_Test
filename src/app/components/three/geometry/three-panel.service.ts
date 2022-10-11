@@ -155,37 +155,29 @@ export class ThreePanelService {
   private createPanel(vertexlist, row): void {
 
     const points = []
+    const geometrys: THREE.BufferGeometry[] = [];
     for(const p of vertexlist){
       points.push(new THREE.Vector3(p[0], p[1], p[2]))
     }
-    const geometry = new THREE.BufferGeometry().setFromPoints([points[0],points[1],points[2]])
-    const geometry2 = new THREE.BufferGeometry().setFromPoints([points[3],points[0],points[2]])
+    // 三角形を作る
+    geometrys.push(new THREE.BufferGeometry().setFromPoints([points[0],points[1],points[2]]));
+    // 四角形が作れる場合
+    if(points.length >2)
+      geometrys.push(new THREE.BufferGeometry().setFromPoints([points[3],points[0],points[2]]));
 
-    // const geometry = new THREE.Geometry();
-
-    // for(const p of vertexlist){
-    //   geometry.vertices.push(new THREE.Vector3(p[0], p[1], p[2]))
-    // }
-    // for (let length = 0; length < geometry.vertices.length - 2; length++){
-    //   geometry.faces.push( new THREE.Face3( 0, length + 1, length + 2 ) );
-    // }
-    
     const material = new THREE.MeshBasicMaterial({
       transparent: true,
       side: THREE.DoubleSide,
       color: 0x7f8F9F,
       opacity: 0.7,
     });
-    
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.name = 'panel-' + row.toString();
-    const mesh2 = new THREE.Mesh(geometry2, material);
-    mesh2.name = 'panel-' + row.toString();
 
-    this.panelList.push(mesh);
-    this.scene.add(mesh);
-    this.panelList.push(mesh2);
-    this.scene.add(mesh2);
+    for(const g of geometrys) {
+      const mesh = new THREE.Mesh(g, material);
+      mesh.name = 'panel-' + row.toString();
+      this.panelList.push(mesh);
+      this.scene.add(mesh);
+    }
   }
 
   // データをクリアする

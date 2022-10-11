@@ -83,6 +83,11 @@ export class ThreeLoadMemberPoint {
       P2 = 0;
     }
     */
+
+    // 荷重値0 ならば null を返す。
+    if(P===0)
+      return null;
+
     // 矢印
     const arrow: THREE.Group = this.getArrow(direction, length, P, L);
     arrow.position.y = offset;

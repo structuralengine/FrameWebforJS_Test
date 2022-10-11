@@ -107,18 +107,13 @@ export class ThreeLoadTorsion {
     group['value'] = p.Pmax; // 大きい方の値を保存　
     group.name = ThreeLoadTorsion.id;
 
-    // 全体の位置を修正する
-
-    group.position.set(nodei.x, nodei.y, nodei.z);
-
     // 全体の向きを修正する
-    const XY = new Vector2(localAxis.x.x, localAxis.x.y).normalize();
-    group.rotateZ(Math.asin(XY.y));
+    this.setRotate(direction, group, localAxis);
 
-    const lenXY = Math.sqrt(Math.pow(localAxis.x.x, 2) + Math.pow(localAxis.x.y, 2));
-    const XZ = new Vector2(lenXY, localAxis.x.z).normalize();
-    group.rotateY(-Math.asin(XZ.y));
+    // 全体の位置を修正する
+    this.setPosition(direction, group, nodei, nodej, P1, P2);
 
+    // 例：TorsionLoad-3-r
     group.name = ThreeLoadTorsion.id + "-" + row.toString() + "-r";
 
     return group;
@@ -462,5 +457,60 @@ export class ThreeLoadTorsion {
 
   }
   
+
+  // 
+  private setPosition(direction: string, group: any, 
+                      nodei: Vector3, nodej: Vector3, 
+                      P1: number, P2: number) {
+
+    if (!direction.includes('g')) {
+      group.position.set(nodei.x, nodei.y, nodei.z);
+    } else if (direction === 'gx') {
+      // nodeとPの関係によって、セットする位置(x座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.x >= nodej.x) {
+          group.position.set(nodej.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.x >= nodej.x) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodej.x, nodei.y, nodei.z);
+        }
+      }
+    } else if (direction === 'gy') {
+      // nodeとPの関係によって、セットする位置(y座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.y >= nodej.y) {
+          group.position.set(nodei.x, nodej.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.y >= nodej.y) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodej.y, nodei.z);
+        }
+      }
+    } else if (direction === 'gz') {
+      // nodeとPの関係によって、セットする位置(z座標)が異なる。
+      if (P1 >= 0 && P2 >= 0) {
+        if (nodei.z >= nodej.z) {
+          group.position.set(nodei.x, nodei.y, nodej.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        }
+      } else {
+        if (nodei.z >= nodej.z) {
+          group.position.set(nodei.x, nodei.y, nodei.z);
+        } else {
+          group.position.set(nodei.x, nodei.y, nodej.z);
+        }
+      }
+    }
+  }
 
 }
