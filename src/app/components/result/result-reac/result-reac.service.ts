@@ -198,8 +198,10 @@ export class ResultReacService {
             return e.indexOf(caseNo + ".") === 0;
           })
           const caseList: string[] = [caseNo]; 
-          const tmp_max_values = org_max_values[caseNo];
-          const tmp_reac = (target_LL_Keys.length > 0) ? JSON.parse(JSON.stringify(reac[caseNo])) : reac[caseNo];
+          const key0: string = target_LL_Keys[0];
+          const tmp_max_values = (caseNo in org_max_values) ? org_max_values[caseNo] : org_max_values[key0];
+
+          const tmp_reac = (target_LL_Keys.length > 0) ? JSON.parse(JSON.stringify(reac[key0])) : reac[caseNo];
   
           for(const k of target_LL_Keys){
             // ケースを追加
