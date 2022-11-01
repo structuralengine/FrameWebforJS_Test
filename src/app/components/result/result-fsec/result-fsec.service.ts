@@ -169,8 +169,8 @@ export class ResultFsecService {
         });
 
         const caseList: string[] = [caseNo];
-        const tmp_max_values = org_max_values[caseNo];
-        //const tmp_value_ranges = org_value_ranges[caseNo];
+        const key0: string = target_LL_Keys[0];
+        const tmp_max_values = (caseNo in org_max_values) ? org_max_values[caseNo] : org_max_values[key0];
 
         for (const k of target_LL_Keys) {
           // ケースを追加

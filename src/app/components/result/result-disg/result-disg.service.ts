@@ -164,7 +164,8 @@ export class ResultDisgService {
           return e.indexOf(caseNo + ".") === 0;
         });
         const caseList: string[] = [caseNo];
-        let tmp_max_values = org_max_values[caseNo];
+        const key0: string = target_LL_Keys[0];
+        let tmp_max_values = (caseNo in org_max_values) ? org_max_values[caseNo] : org_max_values[key0];
 
         for (const k of target_LL_Keys) {
           // ケースを追加
