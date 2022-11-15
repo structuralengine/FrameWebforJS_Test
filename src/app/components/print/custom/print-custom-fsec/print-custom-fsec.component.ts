@@ -119,7 +119,7 @@ export class PrintCustomFsecComponent implements OnInit {
               .map(function (rd) {
                 return rd.id;
               });
-            alert(checked);
+              this.helper.alert(checked);
           },
         },
       ],

@@ -159,7 +159,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           }
         } catch(e) { }
         this.loadind_desable();
-        alert(err['message']);
+        this.helper.alert(err['message']);
       }
     );
   }
