@@ -1,9 +1,9 @@
 {
     "name": "frame-web-for-js",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "scripts": {
         "ng": "ng",
-        "start": "ng serve --open",
+        "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
         "build": "ng build --configuration production --base-href \"https://structuralengine.github.io/FrameWebforJS/\" && angular-cli-ghpages",
         "test": "ng test",
         "lint": "ng lint",
