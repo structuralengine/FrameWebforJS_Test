@@ -85,7 +85,7 @@ export class MenuComponent implements OnInit {
     const response = this.electronService.ipcRenderer.sendSync('open');
 
     if(response.status!==true){
-      alert('ファイルを開くことに失敗しました, status:'+ response.status);
+      this.helper.alert('ファイルを開くことに失敗しました, status:'+ response.status);
       return;
     }
     this.app.dialogClose(); // 現在表示中の画面を閉じる
@@ -164,7 +164,7 @@ export class MenuComponent implements OnInit {
         modalRef.close();
       })
       .catch((err) => {
-        alert(err);
+        this.helper.alert(err);
         modalRef.close();
       });
   }
@@ -219,14 +219,14 @@ export class MenuComponent implements OnInit {
     this.auth.currentUser.then((user) => {
       if (user === null) {
         modalRef.close();
-        alert(this.translate.instant("menu.P_login"));
+        this.helper.alert(this.translate.instant("menu.P_login"));
         return;
       }
 
       const jsonData: {} = this.InputData.getInputJson(0);
 
       if ("error" in jsonData) {
-        alert(jsonData["error"]);
+        this.helper.alert(jsonData["error"]);
         modalRef.close(); // モーダルダイアログを消す
         return;
       }
@@ -306,10 +306,10 @@ export class MenuComponent implements OnInit {
             this.ResultData.loadResultData(_jsonData);
             this.ResultData.isCalculated = true;
           } catch (e) {
-            alert(e);
+            this.helper.alert(e);
           } finally {
             modalRef.close(); // モーダルダイアログを消す
-            alert(
+            this.helper.alert(
               this.user.deduct_points 
               + this.translate.instant("menu.deduct_points") 
               + this.user.new_points 
@@ -322,7 +322,7 @@ export class MenuComponent implements OnInit {
           if ("_body" in error) {
             messege += "\n" + error._body;
           }
-          alert(messege);
+          this.helper.alert(messege);
           console.error(error);
           modalRef.close();
         }
@@ -433,7 +433,7 @@ export class MenuComponent implements OnInit {
         modalRef.close();
       })
       .catch((err) => {
-        alert(err);
+        this.helper.alert(err);
         modalRef.close();
       });
   }

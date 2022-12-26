@@ -1,17 +1,28 @@
 import { NgModule } from "@angular/core";
+import { ElectronService } from "ngx-electron";
 
 @NgModule({
   imports: [],
   exports: [],
 })
 export class DataHelperModule {
-  constructor() {}
+
+  constructor(
+    public electronService: ElectronService
+  ) {}
 
   // ３次元解析=3, ２次元解析=2
   public dimension: number;
   public isContentsDailogShow: boolean;
-  
 
+  // アラートを表示する
+  public alert(message: string): void{
+    if(this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.sendSync('alert', message);
+    }else{
+      alert(message);
+    }
+  }
 
   // 文字列string を数値にする
   public toNumber(num: string, digit: number = null): number {

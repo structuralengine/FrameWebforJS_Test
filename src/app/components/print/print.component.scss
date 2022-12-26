@@ -6,29 +6,38 @@
 .printdata-choice {
     padding: 16px;
     font-size: 16px;
+
     .print-choice {
         margin: 12px 0;
         padding: 16px;
         background-color: #f5f5f5;
         font-size: 16px;
+
         h2 {
             margin-left: 16px;
         }
+
         ul {
             text-align: left;
+
             li {
                 margin-bottom: 8px;
+
                 .radio-input {
                     display: none;
                 }
-                .radio-parts {
+
+                .radio-parts,
+                .selectbox-parts {
                     display: inline-block;
                     padding-left: 30px;
                     position: relative;
                     width: 100%;
                     line-height: 16px;
                 }
-                .radio-parts::before {
+
+                .radio-parts::before,
+                .selectbox-parts::before {
                     content: "";
                     display: block;
                     position: absolute;
@@ -39,15 +48,21 @@
                     border: 1px solid #999;
                     border-radius: 50%;
                 }
-                .radio-input:hover+.radio-parts:hover {
+
+                .radio-input:hover+.radio-parts:hover,
+                .selectbox-input:hover+.selectbox-parts:hover {
                     cursor: pointer;
                     opacity: 0.7;
                     display: block;
                 }
-                .radio-input:checked+.radio-parts {
+
+                .radio-input:checked+.radio-parts,
+                .selectbox-input:checked+.selectbox-parts {
                     color: #d01137;
                 }
-                .radio-input:checked+.radio-parts::after {
+
+                .radio-input:checked+.radio-parts::after,
+                .selectbox-input:checked+.selectbox-parts::after {
                     content: "";
                     display: block;
                     position: absolute;
@@ -58,16 +73,22 @@
                     border-radius: 50%;
                     background-color: #d01137;
                 }
-                .checkbox-input {
+
+                .checkbox-input,
+                .selectbox-input {
                     display: none;
                 }
-                .checkbox-parts {
+
+                .checkbox-parts,
+                .selectbox-parts {
                     display: inline-block;
                     padding-left: 30px;
                     position: relative;
                     width: 100%;
                 }
-                .checkbox-parts::before {
+
+                .checkbox-parts::before,
+                .selectbox-parts::before {
                     content: "";
                     display: block;
                     position: absolute;
@@ -78,15 +99,21 @@
                     border: 1px solid #999;
                     border-radius: 4px;
                 }
-                .checkbox-input:hover+.checkbox-parts:hover {
+
+                .checkbox-input:hover+.checkbox-parts:hover,
+                .selectbox-input:hover+.selectbox-parts:hover {
                     cursor: pointer;
                     opacity: 0.7;
                     display: block;
                 }
-                .checkbox-input:checked+.checkbox-parts {
+
+                .checkbox-input:checked+.checkbox-parts,
+                .selectbox-input:checked+.selectbox-parts {
                     color: #d01137;
                 }
-                .checkbox-input:checked+.checkbox-parts::after {
+
+                .checkbox-input:checked+.checkbox-parts::after,
+                .selectbox-input:checked+.selectbox-parts::after {
                     content: "";
                     display: block;
                     position: absolute;
@@ -98,6 +125,7 @@
                     border-bottom: 3px solid #d01137;
                     border-right: 3px solid #d01137;
                 }
+
                 &:last-child {
                     margin: 0;
                 }
@@ -124,14 +152,17 @@
         padding: 12px 44px;
         background-color: #669987;
         color: #ffffff;
+
         &:hover {
             cursor: pointer;
             opacity: 0.7;
             background-color: #669987;
         }
     }
+
     margin-bottom: 12px;
     font-size: 16px;
+
     .message {
         .caution {
             margin-bottom: 8px;
