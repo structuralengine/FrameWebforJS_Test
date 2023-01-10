@@ -619,27 +619,28 @@ export class ThreeService {
     //this.scene.render();
   }
 
-  private last_ts: number;
-  private reset_ts(): void {
-    this.last_ts = performance.now();
-  };
-  private check_ts(): number {
-    const tmp: number = this.last_ts;
-    this.last_ts = performance.now();
-    return this.last_ts- tmp;
-  };
+  //private last_ts: number;
+  //private reset_ts(): void {
+  //  this.last_ts = performance.now();
+  //};
+  //private check_ts(): number {
+  //  const tmp: number = this.last_ts;
+  //  this.last_ts = performance.now();
+  //  return this.last_ts- tmp;
+  //};
 
   // 印刷する図を収集する
   public async getCaptureImage(): Promise<any> {
     return new Promise((resolve, reject) => {
 
-    this.reset_ts();
-    console.log("starting getCaptureImage...: 0 msec");
+      //this.reset_ts();
+      //console.log("starting getCaptureImage...: 0 msec");
+
       const result = [];
       const captureInfo = this.getCaptureCase();
       const captureCase: string[] = captureInfo.captureCase;
 
-      console.log('getCaptrueCase後: ' + this.check_ts() + " msec");
+      //console.log('getCaptrueCase後: ' + this.check_ts() + " msec");
       const title1: string = captureInfo.title1;
       const title2: string = captureInfo.title2;
       const title3: string[] = captureInfo.title3;
