@@ -46,7 +46,20 @@ export class AppComponent implements OnInit {
 
   public dialogClose(): void {
     this.helper.isContentsDailogShow = false;
+
+    // 印刷ウィンドウの変数をリセット
+    this.resetPrintdialog();
   }
+
+  // 印刷ウィンドウの変数をリセット
+  public resetPrintdialog(): void {
+    for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+      this.printService.printTargetValues[i].value = false;
+    }
+
+    this.printService.selectPrintCase('');
+  }
+
 
   public contentsDailogShow(id): void {
     this.deactiveButtons();

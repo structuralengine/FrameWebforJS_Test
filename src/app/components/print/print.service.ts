@@ -36,6 +36,20 @@ export class PrintService {
   private printPossible: number = 1000; // ページ数の閾値
   public pageDisplay: boolean = true; //　概算ページ数の表示
   public pageError: boolean = false; // 対象データの存在
+
+  // 印刷ケースのラジオボタン値
+  public printCase: string;
+
+  // 印刷対象のチェックボックス値
+  public printTargetValues = [
+    { value: false }, // 軸方向力
+    { value: false }, // y軸方向のせん断力
+    { value: false }, // z軸方向のせん断力
+    { value: false }, // ねじりモーメント
+    { value: false }, // y軸回りのモーメント
+    { value: false }, // z軸回りのモーメント
+  ];
+
   constructor(
     private router: Router,
     public InputData: InputDataService,
@@ -50,8 +64,6 @@ export class PrintService {
     this.clear();
     this.printOption = new Array();
   }
-
-
 
   public fescIndex = [
     "axialForce",
@@ -73,17 +85,17 @@ export class PrintService {
 
   public clear() {
     this.optionList = {
-      input:     { id: 0,  value: false, name: "入力データ" },
-      disg:      { id: 1,  value: false, name: "変位量" },
-      comb_disg: { id: 2,  value: false, name: "COMBINE 変位量" },
-      pick_disg: { id: 3,  value: false, name: "PICKUP 変位量" },
-      reac:      { id: 4,  value: false, name: "反力" },
-      comb_reac: { id: 5,  value: false, name: "COMBINE 反力" },
-      pick_reak: { id: 6,  value: false, name: "PICKUP 反力" },
-      fsec:      { id: 7,  value: false, name: "断面力" },
-      comb_fsec: { id: 8,  value: false, name: "COMBINE 断面力" },
-      pick_fsec: { id: 9,  value: false, name: "PICKUP 断面力" },
-      captur:    { id: 10, value: false, name: "画面印刷" }
+      input: { id: 0, value: false, name: "入力データ" },
+      disg: { id: 1, value: false, name: "変位量" },
+      comb_disg: { id: 2, value: false, name: "COMBINE 変位量" },
+      pick_disg: { id: 3, value: false, name: "PICKUP 変位量" },
+      reac: { id: 4, value: false, name: "反力" },
+      comb_reac: { id: 5, value: false, name: "COMBINE 反力" },
+      pick_reak: { id: 6, value: false, name: "PICKUP 反力" },
+      fsec: { id: 7, value: false, name: "断面力" },
+      comb_fsec: { id: 8, value: false, name: "COMBINE 断面力" },
+      pick_fsec: { id: 9, value: false, name: "PICKUP 断面力" },
+      captur: { id: 10, value: false, name: "画面印刷" }
     };
   }
 
@@ -120,13 +132,13 @@ export class PrintService {
     this.printOption = new Array();
     this.flg = -1;
     setTimeout(() => {
-      for(const key of Object.keys(this.optionList)){
-        if ( this.optionList[key].value === true){
-          if (key=='fsec' || key==='comb_fsec' || key==='pick_fsec' || key === 'captur'){
+      for (const key of Object.keys(this.optionList)) {
+        if (this.optionList[key].value === true) {
+          if (key == 'fsec' || key === 'comb_fsec' || key === 'pick_fsec' || key === 'captur') {
             this.printOption[n] = this.optionList[key];
             n += 1;
           }
-        } 
+        }
       }
 
       this.printOption = this.printOption.filter(
@@ -141,10 +153,11 @@ export class PrintService {
     }, 50);
   }
 
+  // 印刷データ
   // ラジオボタン選択時に発動．一旦すべてfalseにしてから，trueにする．
   public selectRadio(id: number) {
     this.printOption = new Array();
-    for(const key of Object.keys(this.optionList)){
+    for (const key of Object.keys(this.optionList)) {
       this.optionList[key].value = false;
       if (this.optionList[key].id == id) {
         this.optionList[key].value = true;
@@ -158,13 +171,19 @@ export class PrintService {
     this.newPrintJson();
   }
 
+  // 印刷ケース
+  // ラジオボタン選択時に発動
+  public selectPrintCase(printCase: string) {
+    this.printCase = printCase;
+  }
+
   // ページ予想枚数を計算する
   public newPrintJson() {
     setTimeout(() => {
       // pricount:行数をためる
       this.priCount = 0;
       // 画面の印刷であれば行数のカウント
-      if (!(this.optionList['captur'].value=== true)) {
+      if (!(this.optionList['captur'].value === true)) {
         this.getPrintDatas(); // サーバーに送るデータをつくる
       } else {
         this.pageError = false; // 画像印刷はエラー対象にしない
@@ -176,9 +195,9 @@ export class PrintService {
       this.pageOver = this.pageCount > this.printPossible ? true : false;
 
       // 概算ページ数が50いかない場合と，入力データ，画像データの時には，概算ページ数を非表示にする．
-      if (!(this.optionList['input'].value == true 
-            || this.optionList['captur'].value == true)) {
-        if(this.pageCount > 50 ){
+      if (!(this.optionList['input'].value == true
+        || this.optionList['captur'].value == true)) {
+        if (this.pageCount > 50) {
           this.pageDisplay = true;
         } else {
           this.pageDisplay = false;
@@ -202,22 +221,24 @@ export class PrintService {
     // データを作りながら，行数をカウントする．
 
     this.json = {}; // サーバーに送るデータ
-    
-    if ( this.optionList['input'].value &&
-        Object.keys(this.InputData.getInputJson(1)).length !== 0 ) {
+
+    if (this.optionList['input'].value &&
+      Object.keys(this.InputData.getInputJson(1)).length !== 0) {
       this.json = this.InputData.getInputJson(1);
     }
 
     if (this.ResultData.isCalculated == true) {
-   
-      if ( this.optionList['disg'].value &&
-          Object.keys(this.ResultData.disg.disg).length !== 0 ) {
+
+      // 変位量
+      if (this.optionList['disg'].value &&
+        Object.keys(this.ResultData.disg.disg).length !== 0) {
         this.json["disg"] = this.dataChoice(this.ResultData.disg.disg);
         this.json["disgName"] = this.getNames(this.json["disg"]);
-      }  
+      }
 
-      if ( this.optionList['comb_disg'].value &&
-          Object.keys(this.ResultData.combdisg.disgCombine).length !== 0 ) {
+      // COMBINE 変位量
+      if (this.optionList['comb_disg'].value &&
+        Object.keys(this.ResultData.combdisg.disgCombine).length !== 0) {
         this.json["disgCombine"] = this.dataChoice(
           this.ResultData.combdisg.disgCombine
         );
@@ -227,8 +248,9 @@ export class PrintService {
         );
       }
 
-      if ( this.optionList['pick_disg'].value &&
-          Object.keys(this.ResultData.pickdisg.disgPickup).length !== 0 ) {
+      // PICKUP 変位量
+      if (this.optionList['pick_disg'].value &&
+        Object.keys(this.ResultData.pickdisg.disgPickup).length !== 0) {
         this.json["disgPickup"] = this.dataChoice(
           this.ResultData.pickdisg.disgPickup
         );
@@ -238,14 +260,16 @@ export class PrintService {
         );
       }
 
-      if ( this.optionList['fsec'].value &&
-          Object.keys(this.ResultData.fsec.fsec).length !== 0 ) {
+      // 断面力
+      if (this.optionList['fsec'].value &&
+        Object.keys(this.ResultData.fsec.fsec).length !== 0) {
         this.json["fsec"] = this.dataChoiceFsec(this.ResultData.fsec.fsec);
         this.json["fsecName"] = this.getNames(this.json["fsec"]);
       }
 
-      if ( this.optionList['comb_fsec'].value &&
-          Object.keys(this.ResultData.combfsec.fsecCombine).length !== 0 ) {
+      // COMBINE 断面力
+      if (this.optionList['comb_fsec'].value &&
+        Object.keys(this.ResultData.combfsec.fsecCombine).length !== 0) {
         this.json["fsecCombine"] = this.dataChoiceFsec(
           this.ResultData.combfsec.fsecCombine
         );
@@ -255,9 +279,9 @@ export class PrintService {
         );
       }
 
-
-      if ( this.optionList['pick_fsec'].value &&
-        Object.keys(this.ResultData.pickfsec.fsecPickup).length !== 0 ) {
+      // PICKUP 断面力
+      if (this.optionList['pick_fsec'].value &&
+        Object.keys(this.ResultData.pickfsec.fsecPickup).length !== 0) {
         this.json["fsecPickup"] = this.dataChoiceFsec(
           this.ResultData.pickfsec.fsecPickup
         );
@@ -267,14 +291,16 @@ export class PrintService {
         );
       }
 
-      if ( this.optionList['reac'].value &&
-        Object.keys(this.ResultData.reac.reac).length !== 0 ) {
+      // 反力
+      if (this.optionList['reac'].value &&
+        Object.keys(this.ResultData.reac.reac).length !== 0) {
         this.json["reac"] = this.dataChoice(this.ResultData.reac.reac);
         this.json["reacName"] = this.getNames(this.json["reac"]);
       }
 
+      // COMBINE 断面力
       if (this.optionList['comb_reac'].value &&
-        Object.keys(this.ResultData.combreac.reacCombine).length !== 0 ) {
+        Object.keys(this.ResultData.combreac.reacCombine).length !== 0) {
         this.json["reacCombine"] = this.dataChoice(
           this.ResultData.combreac.reacCombine
         );
@@ -283,8 +309,10 @@ export class PrintService {
           "Combine"
         );
       }
-      if ( this.optionList['pick_reak'].value &&
-        Object.keys(this.ResultData.pickreac.reacPickup).length !== 0 ) {
+
+      // PICKUP 断面力
+      if (this.optionList['pick_reak'].value &&
+        Object.keys(this.ResultData.pickreac.reacPickup).length !== 0) {
         this.json["reacPickup"] = this.dataChoice(
           this.ResultData.pickreac.reacPickup
         );
@@ -390,7 +418,7 @@ export class PrintService {
           const item = body4;
           kk = item.m === "" ? kk : Number(item.m) - 1;
           // 指定の部材番号データのみ
-          if('check' in choiceMember[kk]){
+          if ('check' in choiceMember[kk]) {
             if (choiceMember[kk].check === false) {
               continue;
             }
@@ -409,7 +437,7 @@ export class PrintService {
               // 部材番号が空の場合は部材番号が前のものと同じ
               kk = item.m === "" ? kk : Number(item.m) - 1;
               // 指定の部材番号データのみ
-              if('check' in choiceMember[kk]){
+              if ('check' in choiceMember[kk]) {
                 if (choiceMember[kk].check === false) {
                   continue;
                 }
@@ -460,8 +488,8 @@ export class PrintService {
           // LL,combine,Pickup用，反力か変位かをデータ形式から判断する
           // dx_maxがある時：変位量データ
           const axis = (key0 === "dx_max")
-              ? this.customDisg.disgEditable
-              : this.customReac.reacEditable;
+            ? this.customDisg.disgEditable
+            : this.customReac.reacEditable;
 
           // 軸方向にチェックがついていた時
           if (axis[list] === true) {
