@@ -178,7 +178,7 @@
             </label>
           </li>
           <!-- z軸方向のせん断力 -->
-          <li>
+          <li *ngIf="helper.dimension != 2">
             <label style="width: 100%">
               <input type="checkbox" name="checkbox-print-target2" class="checkbox-input"
                 [(ngModel)]="printService.printTargetValues[2].value" />
@@ -186,7 +186,7 @@
             </label>
           </li>
           <!-- ねじりモーメント -->
-          <li>
+          <li *ngIf="helper.dimension != 2">
             <label style="width: 100%">
               <input type="checkbox" name="checkbox-print-target3" class="checkbox-input"
                 [(ngModel)]="printService.printTargetValues[3].value" />
@@ -194,7 +194,7 @@
             </label>
           </li>
           <!-- y軸回りのモーメント -->
-          <li>
+          <li *ngIf="helper.dimension != 2">
             <label style="width: 100%">
               <input type="checkbox" name="checkbox-print-target4" class="checkbox-input"
                 [(ngModel)]="printService.printTargetValues[4].value" />
