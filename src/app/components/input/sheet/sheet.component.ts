@@ -31,7 +31,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
       if (evt.shiftKey === true){
         mov = -1;
       }
-      *\
+      */
       if (evt.key === 'Enter') {
         const $cell = this.grid.getCell({
           rowIndx: ui.rowIndx,
