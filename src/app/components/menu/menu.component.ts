@@ -269,7 +269,7 @@ export class MenuComponent implements OnInit {
           // 通信成功時の処理（成功コールバック）
           console.log(this.translate.instant("menu.success"));
           try {
-            if (response.includes("error")) {
+            if (response.includes("error") || response.includes("exceeded")) {
               throw response;
             }
             // Decode base64 (convert ascii to binary)
