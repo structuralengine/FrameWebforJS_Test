@@ -12,7 +12,7 @@ export class InputPanelService {
   public panel_points: any[];
 
   constructor(private node: InputNodesService,
-              private helper: DataHelperModule) {
+    private helper: DataHelperModule) {
     this.clear();
   }
 
@@ -21,8 +21,7 @@ export class InputPanelService {
   }
 
   public getPanelColumns(row: number): any {
-
-    let result: any = this.panel_points.find( (e) => e.row === row);
+    let result: any = this.panel_points.find((e) => e.row === row.toString());
 
     // 対象データが無かった時に処理
     if (result == undefined) {
@@ -39,10 +38,12 @@ export class InputPanelService {
         }
       }
     }
+
     return result;
   }
 
   public setPanelJson(jsonData: {}): void {
+    console.log('setPanelJson', jsonData);
     if (!('shell' in jsonData)) {
       return;
     }
@@ -55,9 +56,9 @@ export class InputPanelService {
       const e = item['e'];
       const Points: any[] = item.nodes;
 
-      const result = { 
-        row: row, 
-        e: e 
+      const result = {
+        row: row,
+        e: e
       };
       for (let j = 0; j < Points.length; j++) {
         const key = 'point-' + (j + 1).toString();
@@ -72,7 +73,8 @@ export class InputPanelService {
 
     const result: object = {};
 
-    for( const row of this.panel_points) {
+    console.log('this.panel_points', this.panel_points);
+    for (const row of this.panel_points) {
       const r = row['row'];
 
       const points = new Array();
@@ -149,11 +151,11 @@ export class InputPanelService {
     tmp.push('Mesh.ElementOrder = 2');
 
     let result = '';
-    for(const str of tmp){
+    for (const str of tmp) {
       result += str;
       result += ';\n'; // 改行コードを追加
     }
-    
+
     return result;
   }
 }
