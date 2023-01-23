@@ -26,7 +26,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
   private createGrid() {
     this.options.beforeCellKeyDown = (evt, ui) => {
       let mov = 1;
-      *
+      /*
       // Shiftを押したら左に動く
       if (evt.shiftKey === true){
         mov = -1;
