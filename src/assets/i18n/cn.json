@@ -259,6 +259,7 @@
         "SelectPrintData": "选择打印数据",
         "SelectPrintCase": "选择打印案例",
         "inputData": "输入数据",
+        "calc": "计算结果",
         "displacement": "位移量",
         "combine_displacement": "位移量（组合）",
         "pickup_displacement": "位移量（聚集）",

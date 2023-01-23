@@ -259,6 +259,7 @@
         "SelectPrintData": "印刷データを選択",
         "SelectPrintCase": "印刷ケースを選択",
         "inputData": "入力データ",
+        "calc": "計算結果",
         "displacement": "変位量",
         "combine_displacement": "COMBINE 変位量",
         "pickup_displacement": "PICKUP 変位量",

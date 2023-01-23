@@ -16,18 +16,21 @@ import { PrintCustomThreeService } from "./custom/print-custom-three/print-custo
 export class PrintService {
   public isPrinting = false;
   public optionList: {};
+  public calcOptionList: {};
   public mode: number;
   public selectedIndex: string;
+  public selectedCalcIndex: string;
 
   public inputJson: any;
   public combineJson: any;
   public defineJson: any;
   public pickupJson: any;
 
-  public flg: number = -1;
+  public flg: number = -1; // 使われているか？
 
   public print_target: any; // Three.js 印刷 の図のデータ
   public printOption = [];
+  public printCalcOption = [];
   public printRadio: any;
   public json = {};
   private priCount: number = 0;
@@ -86,6 +89,10 @@ export class PrintService {
   public clear() {
     this.optionList = {
       input: { id: 0, value: false, name: "入力データ" },
+      calc: { id: 1, value: false, name: "計算結果" },
+      captur: { id: 10, value: false, name: "画面印刷" }
+    };
+    this.calcOptionList = {
       disg: { id: 1, value: false, name: "変位量" },
       comb_disg: { id: 2, value: false, name: "COMBINE 変位量" },
       pick_disg: { id: 3, value: false, name: "PICKUP 変位量" },
@@ -95,7 +102,6 @@ export class PrintService {
       fsec: { id: 7, value: false, name: "断面力" },
       comb_fsec: { id: 8, value: false, name: "COMBINE 断面力" },
       pick_fsec: { id: 9, value: false, name: "PICKUP 断面力" },
-      captur: { id: 10, value: false, name: "画面印刷" }
     };
   }
 
@@ -127,6 +133,11 @@ export class PrintService {
     });
   }
 
+  // これ使われているか？
+  /* 使ってなさそうに見えるので一度コメント化しておく。
+     このままにする前に要確認。
+  */
+  /*
   public select() {
     let n = 0;
     this.printOption = new Array();
@@ -151,7 +162,8 @@ export class PrintService {
         this.selectedIndex = String(this.flg);
       }
     }, 50);
-  }
+    }
+    */
 
   // 印刷データ
   // ラジオボタン選択時に発動．一旦すべてfalseにしてから，trueにする．
@@ -163,6 +175,24 @@ export class PrintService {
         this.optionList[key].value = true;
         this.flg = id;
         this.selectedIndex = this.optionList[key].id;
+      }
+    }
+
+    this.priCount = 0;
+
+    this.newPrintJson();
+  }
+
+  // 計算結果グループ内のチェックボックス選択時
+  public selectCalcRadio(id: number) {
+    this.printCalcOption = new Array();
+
+    for (const key of Object.keys(this.calcOptionList)) {
+      this.calcOptionList[key].value = false;
+      if (this.calcOptionList[key].id == id) {
+        this.calcOptionList[key].value = true;
+        this.flg = id;
+        this.selectedCalcIndex = this.calcOptionList[key].id;
       }
     }
 
