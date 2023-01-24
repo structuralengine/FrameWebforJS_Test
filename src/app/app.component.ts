@@ -57,7 +57,8 @@ export class AppComponent implements OnInit {
       this.printService.printTargetValues[i].value = false;
     }
 
-    this.printService.selectPrintCase('');
+    //this.printService.selectPrintCase('');
+    this.printService.clearPrintCase(); // いずれ消す
   }
 
 

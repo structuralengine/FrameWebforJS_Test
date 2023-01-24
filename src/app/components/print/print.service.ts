@@ -89,10 +89,6 @@ export class PrintService {
   public clear() {
     this.optionList = {
       input: { id: 0, value: false, name: "入力データ" },
-      calc: { id: 1, value: false, name: "計算結果" },
-      captur: { id: 10, value: false, name: "画面印刷" }
-    };
-    this.calcOptionList = {
       disg: { id: 1, value: false, name: "変位量" },
       comb_disg: { id: 2, value: false, name: "COMBINE 変位量" },
       pick_disg: { id: 3, value: false, name: "PICKUP 変位量" },
@@ -102,6 +98,14 @@ export class PrintService {
       fsec: { id: 7, value: false, name: "断面力" },
       comb_fsec: { id: 8, value: false, name: "COMBINE 断面力" },
       pick_fsec: { id: 9, value: false, name: "PICKUP 断面力" },
+//      calc: { id: 1, value: false, name: "計算結果" },
+      //      captur: { id: 10, value: false, name: "画面印刷" }
+      PrintScreen: { id: 10, value: false, name: "PrintScreen"},
+      PrintDiagram: { id: 11, value: false, name: "PrintDiagram"},
+      CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram"},
+      PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram"}
+    };
+    this.calcOptionList = {
     };
   }
 
@@ -169,12 +173,17 @@ export class PrintService {
   // ラジオボタン選択時に発動．一旦すべてfalseにしてから，trueにする．
   public selectRadio(id: number) {
     this.printOption = new Array();
+    this.printCase = "";
     for (const key of Object.keys(this.optionList)) {
       this.optionList[key].value = false;
       if (this.optionList[key].id == id) {
         this.optionList[key].value = true;
         this.flg = id;
         this.selectedIndex = this.optionList[key].id;
+
+        if (10 == this.optionList[key].id || 11 == this.optionList[key].id ||
+          12 == this.optionList[key].id || 13 == this.optionList[key].id)
+          this.printCase = key;
       }
     }
 
@@ -184,6 +193,7 @@ export class PrintService {
   }
 
   // 計算結果グループ内のチェックボックス選択時
+  /*
   public selectCalcRadio(id: number) {
     this.printCalcOption = new Array();
 
@@ -199,12 +209,17 @@ export class PrintService {
     this.priCount = 0;
 
     this.newPrintJson();
-  }
+    }
 
   // 印刷ケース
   // ラジオボタン選択時に発動
   public selectPrintCase(printCase: string) {
     this.printCase = printCase;
+  }
+  */
+  // 一時的に使う関数
+  public clearPrintCase() {
+    this.printCase = "";
   }
 
   // ページ予想枚数を計算する

@@ -10,7 +10,7 @@ export class PrintCustomThreeService {
 
   constructor(private ResultData: ResultDataService) {
     this.threeEditable = [
-      true, // 軸力図  
+      true, // 軸力図
       true, // y方向のせん断力図
       true, // z方向のせん断力図
       true, // ねじりモーメント図
