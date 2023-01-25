@@ -55,6 +55,9 @@ export class PrintService {
     { value: false }, // 変位図
   ];
 
+  public axis_scale_x = { value: 1.0 };
+  public axis_scale_y = { value: 1.0 };
+
   constructor(
     private router: Router,
     public InputData: InputDataService,
@@ -370,17 +373,19 @@ export class PrintService {
         );
       }
     }
+
     if (Object.keys(this.json).length === 0) {
       this.pageError = true;
       console.log("Page Error!!!!!!");
       return;
     }
+
     this.pageError = false;
 
     this.json["dimension"] = this.helper.dimension;
     this.json["language"] = this.language.browserLang;
 
-    this.json["paper_direction"] = this.printOrientation; // v, h
+    this.json["pageOrientation"] = this.printOrientation; // v, h
     this.json["layout"] = this.printLayout; // splitVertical, splitHorizontal, single
 
     return;// this.json;
