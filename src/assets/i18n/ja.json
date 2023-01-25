@@ -321,10 +321,17 @@
                 "x_torsion": "ねじりモーメント",
                 "y_moment": "y軸回りのモーメント",
                 "z_moment": "z軸回りのモーメント",
+                "disg_chart": "変位図",
                 "selectLayout": "レイアウトを選択",
                 "splitHorizontal": "上, 下",
                 "splitVertical": "左, 右",
-                "single": "シングル"
+                "single": "シングル",
+                "orientation": "用紙方向",
+                "portrait": "縦",
+                "landscape": "横",
+                "scale": "軸線スケール",
+                "scale_x": "横",
+                "scale_y": "縦"
             }
         }
     },

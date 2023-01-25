@@ -16,21 +16,22 @@ import { PrintCustomThreeService } from "./custom/print-custom-three/print-custo
 export class PrintService {
   public isPrinting = false;
   public optionList: {};
-  public calcOptionList: {};
   public mode: number;
   public selectedIndex: string;
-  public selectedCalcIndex: string;
+  public printLayout: string;
+  public printOrientation: string;
+  public scale_x: number;
+  public scale_y: number;
 
   public inputJson: any;
   public combineJson: any;
   public defineJson: any;
   public pickupJson: any;
 
-  public flg: number = -1; // 使われているか？
+  public flg: number = -1; // 古いフラグをズルズル使っている
 
   public print_target: any; // Three.js 印刷 の図のデータ
   public printOption = [];
-  public printCalcOption = [];
   public printRadio: any;
   public json = {};
   private priCount: number = 0;
@@ -51,6 +52,7 @@ export class PrintService {
     { value: false }, // ねじりモーメント
     { value: false }, // y軸回りのモーメント
     { value: false }, // z軸回りのモーメント
+    { value: false }, // 変位図
   ];
 
   constructor(
@@ -98,14 +100,11 @@ export class PrintService {
       fsec: { id: 7, value: false, name: "断面力" },
       comb_fsec: { id: 8, value: false, name: "COMBINE 断面力" },
       pick_fsec: { id: 9, value: false, name: "PICKUP 断面力" },
-//      calc: { id: 1, value: false, name: "計算結果" },
-      //      captur: { id: 10, value: false, name: "画面印刷" }
+      //captur: { id: 10, value: false, name: "画面印刷" },
       PrintScreen: { id: 10, value: false, name: "PrintScreen"},
       PrintDiagram: { id: 11, value: false, name: "PrintDiagram"},
       CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram"},
       PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram"}
-    };
-    this.calcOptionList = {
     };
   }
 
@@ -192,25 +191,7 @@ export class PrintService {
     this.newPrintJson();
   }
 
-  // 計算結果グループ内のチェックボックス選択時
   /*
-  public selectCalcRadio(id: number) {
-    this.printCalcOption = new Array();
-
-    for (const key of Object.keys(this.calcOptionList)) {
-      this.calcOptionList[key].value = false;
-      if (this.calcOptionList[key].id == id) {
-        this.calcOptionList[key].value = true;
-        this.flg = id;
-        this.selectedCalcIndex = this.calcOptionList[key].id;
-      }
-    }
-
-    this.priCount = 0;
-
-    this.newPrintJson();
-    }
-
   // 印刷ケース
   // ラジオボタン選択時に発動
   public selectPrintCase(printCase: string) {
@@ -222,13 +203,30 @@ export class PrintService {
     this.printCase = "";
   }
 
+  // レイアウト選択ハンドラ
+  public selectLayoutRadio(printLayout: string) {
+    this.printLayout = printLayout;
+  }
+
+  // 用紙方向選択ハンドラ
+  public selectOrientationRadio(printOrientation: string) {
+    this.printOrientation = printOrientation;
+  }
+
+  public is_printing_screen(): boolean {
+    return this.optionList['PrintScreen'].value === true
+      || this.optionList['PrintDiagram'].value === true
+      || this.optionList['CombPrintDiagram'].value === true
+      || this.optionList['PickPrintDiagram'].value === true;
+  }
+
   // ページ予想枚数を計算する
   public newPrintJson() {
     setTimeout(() => {
       // pricount:行数をためる
       this.priCount = 0;
       // 画面の印刷であれば行数のカウント
-      if (!(this.optionList['captur'].value === true)) {
+      if (!(this.is_printing_screen())) {
         this.getPrintDatas(); // サーバーに送るデータをつくる
       } else {
         this.pageError = false; // 画像印刷はエラー対象にしない
@@ -240,8 +238,8 @@ export class PrintService {
       this.pageOver = this.pageCount > this.printPossible ? true : false;
 
       // 概算ページ数が50いかない場合と，入力データ，画像データの時には，概算ページ数を非表示にする．
-      if (!(this.optionList['input'].value == true
-        || this.optionList['captur'].value == true)) {
+      if (!(this.optionList['input'].value == true || this.is_printing_screen()))
+      {
         if (this.pageCount > 50) {
           this.pageDisplay = true;
         } else {
@@ -253,7 +251,7 @@ export class PrintService {
       const id = document.getElementById("printButton");
       if (this.pageOver || this.pageError) {
         id.setAttribute("disabled", "true");
-        id.style.opacity = "0.7";
+        id.style.opacity = "0.5";
       } else {
         id.removeAttribute("disabled");
         id.style.opacity = "";
@@ -369,12 +367,16 @@ export class PrintService {
     }
     if (Object.keys(this.json).length === 0) {
       this.pageError = true;
+      console.log("Page Error!!!!!!");
       return;
     }
     this.pageError = false;
 
     this.json["dimension"] = this.helper.dimension;
     this.json["language"] = this.language.browserLang;
+
+    this.json["paper_direction"] = this.printOrientation; // v, h
+    this.json["layout"] = this.printLayout; // splitVertical, splitHorizontal, single
 
     return;// this.json;
   }

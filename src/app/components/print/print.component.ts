@@ -60,20 +60,22 @@ export class PrintComponent implements OnInit, OnDestroy {
   };
 
   // 経過時間計測用
-  //private last_ts: number;
-  //private reset_ts(): void {
-  //  this.last_ts = performance.now();
-  //};
-  //private check_ts(): number {
-  //  const tmp: number = this.last_ts;
-  //  this.last_ts = performance.now();
-  //  return this.last_ts- tmp;
-  //};
+  private last_ts: number;
+  private reset_ts(): void {
+    this.last_ts = performance.now();
+  };
+  private check_ts(): number {
+    const tmp: number = this.last_ts;
+    this.last_ts = performance.now();
+    return this.last_ts- tmp;
+  };
 
   public onPrintPDF(): void {
 
-    //this.reset_ts();
-    //console.log("starting onPrintPDF...: 0 msec");
+    this.reset_ts();
+    console.log("starting onPrintPDF...: 0 msec");
+
+    this.three.mode=''; // どこかでクリアしてるかもしれないけどここでも一応初期化
 
     // 印刷ケースをセット
     if (this.printService.printCase === 'PrintScreen') {
@@ -97,26 +99,25 @@ export class PrintComponent implements OnInit, OnDestroy {
       this.printService.customThree.threeEditable[i] = isSelected;
     }
 
-    if (this.printService.optionList['captur'].value) {
+    //    if (this.printService.optionList['captur'].value) {
+    if (this.printService.is_printing_screen()) {
       // 図の印刷
       if (this.helper.dimension === 2 &&
         (this.three.mode == 'fsec' ||
           this.three.mode === 'comb_fsec' ||
           this.three.mode === 'pick_fsec')) {
-        console.log('図の印刷');
-        //console.log('図の印刷: ' + this.check_ts() + " msec");
+
+        console.log('図の印刷: ' + this.check_ts() + " msec");
 
         // loadingの表示
         this.loadind_enable();
 
         // データの集計
-        console.log('データを集計中...');
-        //console.log('データを集計中...: ' + this.check_ts() + " msec");
+        console.log('データを集計中...: ' + this.check_ts() + " msec");
         this.printService.optionList['input'].value = true;
         this.printService.optionList[this.three.mode].value = true;
         this.printService.getPrintDatas();
-        console.log('データの集計完了.');
-        //console.log('データの集計完了.: ' + this.check_ts() + " msec");
+        console.log('データの集計完了.: ' + this.check_ts() + " msec");
 
         // PDFサーバーに送る
         const json = {};
@@ -177,14 +178,13 @@ export class PrintComponent implements OnInit, OnDestroy {
         //console.log("this.pdfPreView(base64Encoded);が終了: " + this.check_ts() + " msec");
       } else {
         // 3D図の印刷
-        console.log('3D図の印刷');
-        //console.log('3D図の印刷: ' + this.check_ts() + " msec");
+        console.log('3D図の印刷: ' + this.check_ts() + " msec");
 
         this.three.getCaptureImage().then((print_target) => {
+          console.log('getCaptureImage.then start: ' + this.check_ts() + " msec");
           this.printService.print_target = print_target;
-          //console.log('thenの中1: ' + this.check_ts() + " msec");
           this.printService.printDocument("invoice", [""]);
-          //console.log('thenの中2: ' + this.check_ts() + " msec");
+          console.log('getCaptureImage.then last: ' + this.check_ts() + " msec");
         });
       }
     } else {

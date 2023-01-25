@@ -13,13 +13,7 @@
         </li>
         <li>
           <label style="width: 100%">
-            <!--
-                <input type="radio" name="radio-print" class="radio-input" id="result1"
-                       [attr.disabled]="ResultData.isCalculated?null:1"
-                       (click)="printService.selectRadio(1)" />
-                <span class="radio-parts" translate>horihori print.calc</span>
-                -->
-                <span class="subsection" translate>print.calc</span>
+            <span class="subsection" translate>print.calc</span>
           </label>
           <!--          <ng-container *ngIf="'1'==printService.selectedIndex"> -->
             <div class="indented-ul">
@@ -93,12 +87,7 @@
         </li>
         <li>
           <label style="width: 100%">
-            <!--
-                <input type="radio" name="radio-print" class="radio-input" id="result2"
-                       (click)="printService.selectRadio(10)" />
-                <span class="radio-parts">{{PrintScreen}}</span>
-                -->
-                <span class="subsection">{{PrintScreen}}</span>
+            <span class="subsection">{{PrintScreen}}</span>
           </label>
 
           <!--          <ng-container *ngIf="'10'==printService.selectedIndex"> -->
@@ -173,67 +162,6 @@
       </div>
     </div>
   </div>
-
-  <!-- 印刷対象を選択 -->
-  <!-- 表示条件: 計算済み & 画面印刷 & 印刷ケースが"断面力図"|"Combine 断面力図"|"Pickup 断面力図" -->
-  <ng-container *ngIf="ResultData.isCalculated &&
-                       ['PrintDiagram','CombPrintDiagram','PickPrintDiagram'].includes(this.printService.printCase)">
-    <div class="printdata-choice">
-      <h2 translate>print.custom.print-custom-three.selectTarget</h2>
-      <div class="print-choice">
-        <ul>
-          <!-- 軸方向力 -->
-          <li>
-            <label style="width: 100%">
-              <input type="checkbox" name="checkbox-print-target0" class="checkbox-input"
-                     [(ngModel)]="printService.printTargetValues[0].value" />
-              <span class="checkbox-parts" translate>print.custom.print-custom-three.axialForce</span>
-            </label>
-          </li>
-          <!-- y軸方向のせん断力 -->
-          <li>
-            <label style="width: 100%">
-              <input type="checkbox" name="checkbox-print-target1" class="checkbox-input"
-                     [(ngModel)]="printService.printTargetValues[1].value" />
-              <span class="checkbox-parts" translate>print.custom.print-custom-three.y_shear</span>
-            </label>
-          </li>
-          <!-- z軸方向のせん断力 -->
-          <li *ngIf="helper.dimension != 2">
-            <label style="width: 100%">
-              <input type="checkbox" name="checkbox-print-target2" class="checkbox-input"
-                     [(ngModel)]="printService.printTargetValues[2].value" />
-              <span class="checkbox-parts" translate>print.custom.print-custom-three.z_shear</span>
-            </label>
-          </li>
-          <!-- ねじりモーメント -->
-          <li *ngIf="helper.dimension != 2">
-            <label style="width: 100%">
-              <input type="checkbox" name="checkbox-print-target3" class="checkbox-input"
-                     [(ngModel)]="printService.printTargetValues[3].value" />
-              <span class="checkbox-parts" translate>print.custom.print-custom-three.x_torsion</span>
-            </label>
-          </li>
-          <!-- y軸回りのモーメント -->
-          <li *ngIf="helper.dimension != 2">
-            <label style="width: 100%">
-              <input type="checkbox" name="checkbox-print-target4" class="checkbox-input"
-                     [(ngModel)]="printService.printTargetValues[4].value" />
-              <span class="checkbox-parts" translate>print.custom.print-custom-three.y_moment</span>
-            </label>
-          </li>
-          <!-- z軸回りのモーメント -->
-          <li>
-            <label style="width: 100%">
-              <input type="checkbox" name="checkbox-print-target5" class="checkbox-input"
-                     [(ngModel)]="printService.printTargetValues[5].value" />
-              <span class="checkbox-parts" translate>print.custom.print-custom-three.z_moment</span>
-            </label>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </ng-container>
 
   <!-- 最大最小のオプションや任意部材のテーブルの制御 -->
   <ng-container *ngIf="ResultData.isCalculated">

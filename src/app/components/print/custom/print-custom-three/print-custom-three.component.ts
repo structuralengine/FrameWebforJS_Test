@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { ResultDataService } from "src/app/providers/result-data.service";
 import { PrintCustomThreeService } from "./print-custom-three.service";
+import { PrintService } from "../../print.service";
 
 @Component({
   selector: "app-print-custom-three",
@@ -10,6 +11,7 @@ import { PrintCustomThreeService } from "./print-custom-three.service";
     "../../../../app.component.scss",
     "./print-custom-three.component.scss",
     "../print-custom.component.scss",
+    "../../print.component.scss",
   ],
 })
 export class PrintCustomThreeComponent implements OnInit {
@@ -17,7 +19,8 @@ export class PrintCustomThreeComponent implements OnInit {
   constructor(
     public printCustomThreeService: PrintCustomThreeService,
     public ResultData: ResultDataService,
-    public helper: DataHelperModule
+    public helper: DataHelperModule,
+    public printService: PrintService
   ) {}
 
   ngOnInit(): void {

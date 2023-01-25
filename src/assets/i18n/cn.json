@@ -321,10 +321,17 @@
                 "x_torsion": "扭转力矩",
                 "y_moment": "绕y轴的力矩",
                 "z_moment": "绕z轴的力矩",
+                "disg_chart": "位移图",
                 "selectLayout": "Select print layout",
                 "splitHorizontal": "Split Horizontal",
                 "splitVertical": "Split Vertical",
-                "single": "Single Layout"
+                "single": "Single Layout",
+                "orientation": "论文方向",
+                "portrait": "纵向",
+                "landscape": "横向",
+                "scale": "Scale",
+                "scale_x": "X",
+                "scale_y": "Y"
             }
         }
     },

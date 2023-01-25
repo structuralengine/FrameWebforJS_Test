@@ -321,10 +321,17 @@
                 "x_torsion": "X Torsion",
                 "y_moment": "Y Momemt",
                 "z_moment": "Z Moment",
+                "disg_chart": "Displacement Diagram",
                 "selectLayout": "Select print layout",
                 "splitHorizontal": "Split Horizontal",
                 "splitVertical": "Split Vertical",
-                "single": "Single Layout"
+                "single": "Single Layout",
+                "orientation": "Orientation",
+                "portrait": "Portrait",
+                "landscape": "Landscape",
+                "scale": "Scale",
+                "scale_x": "X",
+                "scale_y": "Y"
             }
         }
     },
