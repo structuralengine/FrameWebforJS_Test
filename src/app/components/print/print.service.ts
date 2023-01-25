@@ -213,6 +213,11 @@ export class PrintService {
     this.printOrientation = printOrientation;
   }
 
+  // 軸線スケール選択ハンドラ
+  //public selectOrientationRadio(printOrientation: string) {
+  //  this.printOrientation = printOrientation;
+  //}
+
   public is_printing_screen(): boolean {
     return this.optionList['PrintScreen'].value === true
       || this.optionList['PrintDiagram'].value === true

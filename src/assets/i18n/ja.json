@@ -329,9 +329,9 @@
                 "orientation": "用紙方向",
                 "portrait": "縦",
                 "landscape": "横",
-                "scale": "軸線スケール",
-                "scale_x": "横",
-                "scale_y": "縦"
+                "axis_scale": "軸線スケール",
+                "axis_scale_x": "横",
+                "axis_scale_y": "縦"
             }
         }
     },

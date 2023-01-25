@@ -329,9 +329,9 @@
                 "orientation": "Orientation",
                 "portrait": "Portrait",
                 "landscape": "Landscape",
-                "scale": "Scale",
-                "scale_x": "X",
-                "scale_y": "Y"
+                "axis_scale": "Axis Scale",
+                "axis_scale_x": "X",
+                "axis_scale_y": "Y"
             }
         }
     },

@@ -126,3 +126,21 @@
     </ng-container>
   </div>
 </div>
+
+<div *ngIf="helper.dimension == 2" class="printdata-choice">
+  <h2 translate>print.custom.print-custom-three.axis_scale</h2>
+  <div class="print-choice">
+    <ng-container *ngIf="ResultData.isCalculated">
+      <label style="width: 100%">
+        <span class="radio-parts" translate>print.custom.print-custom-three.axis_scale_x</span>
+        1&nbsp;/&nbsp;<input type="number" name="print-screen-axis-scale" class="number-input" value="1.0"
+                             placeholder="1.0" step="0.1" min="0.1" max="5.0"/>
+      </label>
+      <label style="width: 100%">
+        <span class="radio-parts" translate>print.custom.print-custom-three.axis_scale_y</span>
+        1&nbsp;/&nbsp;<input type="number" name="print-screen-axis-scale" class="number-input" value="1.0"
+                             placeholder="1.0" step="0.1" min="0.1" max="5.0"/>
+      </label>
+    </ng-container>
+  </div>
+</div>

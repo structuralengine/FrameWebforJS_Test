@@ -329,9 +329,9 @@
                 "orientation": "论文方向",
                 "portrait": "纵向",
                 "landscape": "横向",
-                "scale": "Scale",
-                "scale_x": "X",
-                "scale_y": "Y"
+                "axis_scale": "Axis Scale",
+                "axis_scale_x": "X",
+                "axis_scale_y": "Y"
             }
         }
     },
