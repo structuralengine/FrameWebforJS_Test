@@ -30,9 +30,10 @@
   ],
   "win": {
     "icon": "dist/assets/icons",
-    "target": [
-      "nsis"
-    ],
+    "publisherName": "MALME INC.",
+    "certificateFile": "C:/Users/81806/set/setting.pfx",
+    "certificatePassword": "1610701250",
+    "target": "nsis",
     "asar": false
   },
   "mac": {
