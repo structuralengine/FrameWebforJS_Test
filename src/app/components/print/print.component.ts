@@ -111,7 +111,6 @@ export class PrintComponent implements OnInit, OnDestroy {
 
         // loadingの表示
         this.loadind_enable();
-
         // データの集計
         console.log('データを集計中...: ' + this.check_ts() + " msec");
         this.printService.optionList['input'].value = true;
@@ -180,11 +179,16 @@ export class PrintComponent implements OnInit, OnDestroy {
           return;
         }
 
+        json["pageOrientation"] = this.printService.pageOrientation;
+
+        if(null !== this.printService.axis_scale_x.value)
+          json["axis_scale_x"] = this.printService.axis_scale_x.value;
+
+        if(null !== this.printService.axis_scale_y.value)
+          json["axis_scale_y"] = this.printService.axis_scale_y.value;
+
         json["diagramResult"] = {
           layout: this.printService.printLayout,
-          pageOrientation: this.printService.printOrientation,
-          axis_scale_x: this.printService.axis_scale_x,
-          axis_scale_y: this.printService.axis_scale_y,
           output
         }
         json["ver"] = packageJson.version;

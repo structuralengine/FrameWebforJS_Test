@@ -19,7 +19,7 @@ export class PrintService {
   public mode: number;
   public selectedIndex: string;
   public printLayout: string;
-  public printOrientation: string;
+  public pageOrientation: string;
 
   public inputJson: any;
   public combineJson: any;
@@ -206,14 +206,21 @@ export class PrintService {
     this.printCase = "";
   }
 
+  // 一時的に使う関数
+  public resetPrintOption() {
+    // 定数のハードコーディング直したいがとりあえずこのままいく
+    this.pageOrientation = "Horizontal";
+    this.printLayout = "splitHorizontal"; //"splitHorizontal" or "splitVertical" or "single"
+  }
+
   // レイアウト選択ハンドラ
   public selectLayoutRadio(printLayout: string) {
     this.printLayout = printLayout;
   }
 
   // 用紙方向選択ハンドラ
-  public selectOrientationRadio(printOrientation: string) {
-    this.printOrientation = printOrientation;
+  public selectOrientationRadio(pageOrientation: string) {
+    this.pageOrientation = pageOrientation;
   }
 
   public is_printing_screen(): boolean {
