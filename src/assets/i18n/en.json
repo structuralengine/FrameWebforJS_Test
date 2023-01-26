@@ -271,6 +271,7 @@
         "pickup_SectionForce": "SectionForce (PICKUP)",
         "PrintScreen": "Print screen",
         "PrintDiagram": "Sectional force diagram",
+        "disgDiagram": "Displacement Dialog",
         "combPrintDiagram": "Combine force diagram",
         "pickPrintDiagram": "Pickup force diagram",
         "prt": "Print",
@@ -330,6 +331,7 @@
                 "portrait": "Portrait",
                 "landscape": "Landscape",
                 "axis_scale": "Axis Scale",
+                "axis_scale_default": "Auto",
                 "axis_scale_x": "X",
                 "axis_scale_y": "Y"
             }

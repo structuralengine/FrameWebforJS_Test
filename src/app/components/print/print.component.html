@@ -7,7 +7,7 @@
         <li>
           <label style="width: 100%">
             <input type="radio" name="radio-print" class="radio-input" id="result0"
-                   (click)="printService.selectRadio(0)" />
+                   (click)="printService.selectRadio(0)" checked/>
             <span class="radio-parts" translate>print.inputData</span>
           </label>
         </li>
@@ -112,6 +112,15 @@
                       <input type="radio" name="radio-print" class="radio-input" id="printCase1"
                              (click)="printService.selectRadio(11)" />
                       <span class="radio-parts" translate>print.PrintDiagram</span>
+                    </label>
+                  </li>
+                  <!-- 3Dのときの変位図図 -->
+                  <li *ngIf="helper.dimension==3">
+                    <label style="width: 100%">
+                      <!-- (click)="printService.selectPrintCase('CombPrintDiagram')" /> -->
+                      <input type="radio" name="radio-print" class="radio-input" id="printCase4"
+                             (click)="printService.selectRadio(14)" />
+                      <span class="radio-parts" translate>print.disgDiagram</span>
                     </label>
                   </li>
                   <!-- Combine 断面力図 -->

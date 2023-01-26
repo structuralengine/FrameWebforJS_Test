@@ -61,7 +61,6 @@ export class AppComponent implements OnInit {
     this.printService.clearPrintCase(); // いずれ消す
   }
 
-
   public contentsDailogShow(id): void {
     this.deactiveButtons();
     document.getElementById(id).classList.add("active");

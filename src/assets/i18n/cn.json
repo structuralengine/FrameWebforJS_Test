@@ -271,6 +271,7 @@
         "pickup_SectionForce": "截面力（聚集）",
         "PrintScreen": "打印屏幕",
         "PrintDiagram": "截面力图",
+        "disgDiagram": "位移图",
         "combPrintDiagram": "Combine 截面力图",
         "pickPrintDiagram": "Pickup 截面力图",
         "prt": "打印",
@@ -330,6 +331,7 @@
                 "portrait": "纵向",
                 "landscape": "横向",
                 "axis_scale": "Axis Scale",
+                "axis_scale_default": "Auto",
                 "axis_scale_x": "X",
                 "axis_scale_y": "Y"
             }

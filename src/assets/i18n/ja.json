@@ -271,6 +271,7 @@
         "pickup_SectionForce": "PICKUP 断面力",
         "PrintScreen": "画面印刷",
         "PrintDiagram": "断面力図",
+        "disgDiagram": "変位図",
         "combPrintDiagram": "Combine 断面力図",
         "pickPrintDiagram": "Pickup 断面力図",
         "prt": "印刷する",
@@ -330,6 +331,7 @@
                 "portrait": "縦",
                 "landscape": "横",
                 "axis_scale": "軸線スケール",
+                "axis_scale_default": "自動",
                 "axis_scale_x": "横",
                 "axis_scale_y": "縦"
             }

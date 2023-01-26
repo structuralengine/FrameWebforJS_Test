@@ -15,13 +15,17 @@ import { PrintService } from "../../print.service";
   ],
 })
 export class PrintCustomThreeComponent implements OnInit {
+
+  public placeholder: string;
   
   constructor(
     public printCustomThreeService: PrintCustomThreeService,
     public ResultData: ResultDataService,
     public helper: DataHelperModule,
     public printService: PrintService
-  ) {}
+  ) {
+    this.placeholder = $localize`:@@print.custom.print-custom-three.axis_scale_default:`;
+  }
 
   ngOnInit(): void {
   }

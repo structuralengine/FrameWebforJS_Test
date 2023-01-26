@@ -28,7 +28,7 @@ export class PrintService {
   public defineJson: any;
   public pickupJson: any;
 
-  public flg: number = -1; // 古いフラグをズルズル使っている
+  public flg: number = -1; // リファクタリング前の変数をズルズル使っている感じがするので直したほうがいいか？
 
   public print_target: any; // Three.js 印刷 の図のデータ
   public printOption = [];
@@ -55,8 +55,8 @@ export class PrintService {
     { value: false }, // 変位図
   ];
 
-  public axis_scale_x = { value: 1.0 };
-  public axis_scale_y = { value: 1.0 };
+  public axis_scale_x = { value: null };
+  public axis_scale_y = { value: null };
 
   constructor(
     private router: Router,
@@ -107,7 +107,8 @@ export class PrintService {
       PrintScreen: { id: 10, value: false, name: "PrintScreen"},
       PrintDiagram: { id: 11, value: false, name: "PrintDiagram"},
       CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram"},
-      PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram"}
+      PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram"},
+      disgDiagram: { id: 14, value: false, name: "disgDiagram"}
     };
   }
 
@@ -183,8 +184,9 @@ export class PrintService {
         this.flg = id;
         this.selectedIndex = this.optionList[key].id;
 
-        if (10 == this.optionList[key].id || 11 == this.optionList[key].id ||
-          12 == this.optionList[key].id || 13 == this.optionList[key].id)
+        if (10 == this.optionList[key].id || 11 == this.optionList[key].id
+          || 12 == this.optionList[key].id || 13 == this.optionList[key].id
+          || 14 == this.optionList[key].id)
           this.printCase = key;
       }
     }
@@ -216,16 +218,12 @@ export class PrintService {
     this.printOrientation = printOrientation;
   }
 
-  // 軸線スケール選択ハンドラ
-  //public selectOrientationRadio(printOrientation: string) {
-  //  this.printOrientation = printOrientation;
-  //}
-
   public is_printing_screen(): boolean {
     return this.optionList['PrintScreen'].value === true
       || this.optionList['PrintDiagram'].value === true
       || this.optionList['CombPrintDiagram'].value === true
-      || this.optionList['PickPrintDiagram'].value === true;
+      || this.optionList['PickPrintDiagram'].value === true
+      || this.optionList['disgDiagram'].value === true;
   }
 
   // ページ予想枚数を計算する
