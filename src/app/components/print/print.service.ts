@@ -284,8 +284,8 @@ export class PrintService {
     if (this.ResultData.isCalculated == true) {
 
       // 変位量
-      if (this.optionList['disg'].value &&
-        Object.keys(this.ResultData.disg.disg).length !== 0) {
+      if((this.optionList['disg'].value || this.printTargetValues[6].value)
+        && Object.keys(this.ResultData.disg.disg).length !== 0) {
         this.json["disg"] = this.dataChoice(this.ResultData.disg.disg);
         this.json["disgName"] = this.getNames(this.json["disg"]);
       }
@@ -518,7 +518,7 @@ export class PrintService {
     this.priCount += 2;
 
     //case毎
-    for (const type of Object.keys(json)) {
+    for (const type_ of Object.keys(json)) {
       let basic: boolean = true;
 
       let body1 = new Array(); // 軸指定がないとき
@@ -526,7 +526,7 @@ export class PrintService {
       // let i = 0;
       this.priCount += 2;
 
-      const body3 = json[type];
+      const body3 = json[type_];
       const keys = Object.keys(body3);
       const key0 = keys[0];
       const int0 = Number(key0);
@@ -562,7 +562,7 @@ export class PrintService {
           // i++;
         }
       }
-      split[type] = basic ? body1 : body2;
+      split[type_] = basic ? body1 : body2;
     }
     return split;
   }

@@ -162,15 +162,19 @@ export class PrintComponent implements OnInit, OnDestroy {
           output.push("fx");
           selected = true;
         }
-        // 印刷対象を選択 ここまで
-
-        //console.log("印刷対象を選択 ここまで: " + this.check_ts() + " msec");
 
         if (this.printService.customThree.threeEditable[6])
         {
           output.push("disg"); // 変位図
           selected = true;
+
+          // この場合は変位のデータも必要になる
+          json["disg"] = this.printService.json["disg"];
+          json["disgName"] = this.printService.json["disgName"];
         }
+        // 印刷対象を選択 ここまで
+
+        //console.log("印刷対象を選択 ここまで: " + this.check_ts() + " msec");
 
         if(!selected)
         {
