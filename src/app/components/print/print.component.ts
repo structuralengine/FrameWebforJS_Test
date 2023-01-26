@@ -145,27 +145,46 @@ export class PrintComponent implements OnInit, OnDestroy {
         // 印刷対象を選択 ここから
         // 断面力図の種類を指定する
         const output = [];
+        var selected: boolean = false;
         if (this.printService.customThree.threeEditable[5]) {
           // z軸周りのモーメント図
           output.push("mz");
+          selected = true;
         }
 
         if (this.printService.customThree.threeEditable[1]) {
           // y方向のせん断力図
           output.push("fy");
+          selected = true;
         }
 
         if (this.printService.customThree.threeEditable[0]) {
           // 軸力図
           output.push("fx");
+          selected = true;
         }
         // 印刷対象を選択 ここまで
 
         //console.log("印刷対象を選択 ここまで: " + this.check_ts() + " msec");
 
-        output.push("disg");
+        if (this.printService.customThree.threeEditable[6])
+        {
+          output.push("disg"); // 変位図
+          selected = true;
+        }
+
+        if(!selected)
+        {
+          this.helper.alert("対象を選択してください");
+          this.loadind_desable();
+          return;
+        }
+
         json["diagramResult"] = {
-          layout: this.printService.customThree.print2DThreeLayout,
+          layout: this.printService.printLayout,
+          pageOrientation: this.printService.printOrientation,
+          axis_scale_x: this.printService.axis_scale_x,
+          axis_scale_y: this.printService.axis_scale_y,
           output
         }
         json["ver"] = packageJson.version;
@@ -182,8 +201,10 @@ export class PrintComponent implements OnInit, OnDestroy {
 
         this.three.getCaptureImage().then((print_target) => {
           console.log('getCaptureImage.then start: ' + this.check_ts() + " msec");
+
           this.printService.print_target = print_target;
           this.printService.printDocument("invoice", [""]);
+
           console.log('getCaptureImage.then last: ' + this.check_ts() + " msec");
         });
       }

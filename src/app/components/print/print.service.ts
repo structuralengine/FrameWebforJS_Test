@@ -20,8 +20,6 @@ export class PrintService {
   public selectedIndex: string;
   public printLayout: string;
   public printOrientation: string;
-  public scale_x: number;
-  public scale_y: number;
 
   public inputJson: any;
   public combineJson: any;
@@ -382,9 +380,6 @@ export class PrintService {
 
     this.json["dimension"] = this.helper.dimension;
     this.json["language"] = this.language.browserLang;
-
-    this.json["pageOrientation"] = this.printOrientation; // v, h
-    this.json["layout"] = this.printLayout; // splitVertical, splitHorizontal, single
 
     return;// this.json;
   }
