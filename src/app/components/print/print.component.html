@@ -21,64 +21,76 @@
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print1"
-                           (click)="printService.selectRadio(1)" />
-                    <span class="radio-parts" translate>print.displacement</span>
+                           (click)="printService.selectRadio(1)"
+                           [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.displacement
+                    </span>
                   </label>
                 </li>
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print2"
-                           (click)="printService.selectRadio(2)" />
-                    <span class="radio-parts" translate>print.combine_displacement</span>
+                           (click)="printService.selectRadio(2)"
+                           [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.combine_displacement</span>
                   </label>
                 </li>
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print3"
-                           (click)="printService.selectRadio(3)" />
-                    <span class="radio-parts" translate>print.pickup_displacement</span>
+                           (click)="printService.selectRadio(3)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.pickup_displacement</span>
                   </label>
                 </li>
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print4"
-                           (click)="printService.selectRadio(4)" />
-                    <span class="radio-parts" translate>print.reaction</span>
+                           (click)="printService.selectRadio(4)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.reaction</span>
                   </label>
                 </li>
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print5"
-                           (click)="printService.selectRadio(5)" />
-                    <span class="radio-parts" translate>print.combine_reaction</span>
+                           (click)="printService.selectRadio(5)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.combine_reaction</span>
                   </label>
                 </li>
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print6"
-                           (click)="printService.selectRadio(6)" />
-                    <span class="radio-parts" translate>print.pickup_reaction</span>
+                           (click)="printService.selectRadio(6)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.pickup_reaction</span>
                   </label>
                 </li>
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print7"
-                           (click)="printService.selectRadio(7)" />
-                    <span class="radio-parts" translate>print.SectionForce</span>
+                           (click)="printService.selectRadio(7)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.SectionForce</span>
                   </label>
                 </li>
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print8"
-                           (click)="printService.selectRadio(8)" />
-                    <span class="radio-parts" translate>print.combine_SectionForce</span>
+                           (click)="printService.selectRadio(8)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.combine_SectionForce</span>
                   </label>
                 </li>
                 <li>
                   <label style="width: 100%">
                     <input type="radio" name="radio-print" class="radio-input" id="print9"
-                           (click)="printService.selectRadio(9)" />
-                    <span class="radio-parts" translate>print.pickup_SectionForce</span>
+                           (click)="printService.selectRadio(9)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                      print.pickup_SectionForce</span>
                   </label>
                 </li>
               </ul>
@@ -100,18 +112,21 @@
                   <label style="width: 100%">
                     <!--                         (click)="printService.selectPrintCase('PrintScreen')" /> -->
                     <input type="radio" name="radio-print" class="radio-input" id="printCase0"
-                           (click)="printService.selectRadio(10)" />
+                           (click)="printService.selectRadio(10)"/>
                     <span class="radio-parts" translate>print.PrintScreen</span>
                   </label>
                 </li>
-                <ng-container *ngIf="ResultData.isCalculated">
+                <!--
+                    <ng-container *ngIf="ResultData.isCalculated">
+                      -->
                   <!-- 断面力図 -->
                   <li>
                     <label style="width: 100%">
                       <!-- (click)="printService.selectPrintCase('PrintDiagram')" /> -->
                       <input type="radio" name="radio-print" class="radio-input" id="printCase1"
-                             (click)="printService.selectRadio(11)" />
-                      <span class="radio-parts" translate>print.PrintDiagram</span>
+                             (click)="printService.selectRadio(11)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                        print.PrintDiagram</span>
                     </label>
                   </li>
                   <!-- 3Dのときの変位図図 -->
@@ -119,8 +134,9 @@
                     <label style="width: 100%">
                       <!-- (click)="printService.selectPrintCase('CombPrintDiagram')" /> -->
                       <input type="radio" name="radio-print" class="radio-input" id="printCase4"
-                             (click)="printService.selectRadio(14)" />
-                      <span class="radio-parts" translate>print.disgDiagram</span>
+                             (click)="printService.selectRadio(14)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                        print.disgDiagram</span>
                     </label>
                   </li>
                   <!-- Combine 断面力図 -->
@@ -128,8 +144,9 @@
                     <label style="width: 100%">
                       <!--                           (click)="printService.selectPrintCase('CombPrintDiagram')" /> -->
                       <input type="radio" name="radio-print" class="radio-input" id="printCase2"
-                             (click)="printService.selectRadio(12)" />
-                      <span class="radio-parts" translate>print.combPrintDiagram</span>
+                             (click)="printService.selectRadio(12)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                        print.combPrintDiagram</span>
                     </label>
                   </li>
                   <!-- Pickup 断面力図 -->
@@ -137,11 +154,12 @@
                     <label style="width: 100%">
                       <!--                           (click)="printService.selectPrintCase('PickPrintDiagram')" /> -->
                       <input type="radio" name="radio-print" class="radio-input" id="printCase3"
-                             (click)="printService.selectRadio(13)" />
-                      <span class="radio-parts" translate>print.pickPrintDiagram</span>
+                             (click)="printService.selectRadio(13)" [disabled]="ResultData.isCalculated?null:'1'"/>
+                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                        print.pickPrintDiagram</span>
                     </label>
                   </li>
-                </ng-container>
+<!--                </ng-container> -->
               </ul>
             </div>
             <!--          </ng-container> -->

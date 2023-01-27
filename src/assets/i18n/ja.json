@@ -279,6 +279,7 @@
         "about": "枚程度",
         "noDataFound": "印刷データが\n存在しません",
         "about1000": "ページ枚数を1000枚\n程度に抑えて下さい",
+        "selectTarget": "印刷対象を選択してください",
         "custom": {
             "print-custom-disg": {
                 "max": "最大",

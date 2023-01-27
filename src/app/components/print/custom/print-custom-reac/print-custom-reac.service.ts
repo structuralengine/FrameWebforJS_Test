@@ -21,4 +21,18 @@ export class PrintCustomReacService {
 
   constructor() {}
 
+  public reset_check() {
+    this.reacEditable["tx_max"] = true;
+    this.reacEditable["tx_min"] = true;
+    this.reacEditable["ty_max"] = true;
+    this.reacEditable["ty_min"] = true;
+    this.reacEditable["tz_max"] = true;
+    this.reacEditable["tz_min"] = true;
+    this.reacEditable["mx_max"] = true;
+    this.reacEditable["mx_min"] = true;
+    this.reacEditable["my_max"] = true;
+    this.reacEditable["my_min"] = true;
+    this.reacEditable["mz_max"] = true;
+    this.reacEditable["mz_min"] = true;
+  };
 }

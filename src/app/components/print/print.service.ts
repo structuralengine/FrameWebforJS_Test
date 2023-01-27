@@ -106,7 +106,7 @@ export class PrintService {
       PrintDiagram: { id: 11, value: false, name: "PrintDiagram"},
       CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram"},
       PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram"},
-      disgDiagram: { id: 14, value: false, name: "disgDiagram"}
+      disgDiagram: { id: 14, value: false, name: "disgDiagram"} // 3Dのときだけ
     };
   }
 
@@ -172,7 +172,14 @@ export class PrintService {
 
   // 印刷データ
   // ラジオボタン選択時に発動．一旦すべてfalseにしてから，trueにする．
-  public selectRadio(id: number) {
+  //
+  // すごく付け焼き刃な対応があるのでいずれ直したい。
+  public selectRadio(id: number)
+  {
+    var e = document.getElementById("printCus6");
+    if(11 != id && null !== e)
+      e.setAttribute("checked",null);
+
     this.printOption = new Array();
     this.printCase = "";
     for (const key of Object.keys(this.optionList)) {
@@ -208,9 +215,25 @@ export class PrintService {
 
   // 一時的に使う関数
   public resetPrintOption() {
-    // 定数のハードコーディング直したいがとりあえずこのままいく
-    this.pageOrientation = "Horizontal";
-    this.printLayout = "splitHorizontal"; //"splitHorizontal" or "splitVertical" or "single"
+    var e = document.getElementById("result0");
+    if(null !== e)
+      e.setAttribute("checked","checked");
+
+    e = document.getElementById("print-screen-layout-single");
+    if(null !== e)
+      e.setAttribute("checked","checked");
+
+    e = document.getElementById("print-screen-orientation-portrait");
+    if(null !== e)
+      e.setAttribute("checked","checked");
+
+    // 定数のハードコーディング直したほうがいいだろうがとりあえずこのままいく
+    this.pageOrientation = "Vertical";  // "Horizontal" or "Vertical"
+    this.printLayout = "single"; //"splitHorizontal" or "splitVertical" or "single"
+
+    this.customDisg.reset_check();
+    this.customFsec.reset_check();
+    this.customReac.reset_check();
   }
 
   // レイアウト選択ハンドラ
@@ -284,7 +307,7 @@ export class PrintService {
     if (this.ResultData.isCalculated == true) {
 
       // 変位量
-      if((this.optionList['disg'].value || this.printTargetValues[6].value)
+      if((this.optionList['disg'].value || (11 == this.flg && this.printTargetValues[6].value))
         && Object.keys(this.ResultData.disg.disg).length !== 0) {
         this.json["disg"] = this.dataChoice(this.ResultData.disg.disg);
         this.json["disgName"] = this.getNames(this.json["disg"]);

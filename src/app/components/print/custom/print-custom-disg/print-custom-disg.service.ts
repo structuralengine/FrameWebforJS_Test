@@ -21,4 +21,19 @@ export class PrintCustomDisgService {
   };
 
   constructor(){}
+
+  public reset_check() {
+    this.disgEditable["dx_max"] = true;
+    this.disgEditable["dx_min"] = true;
+    this.disgEditable["dy_max"] = true;
+    this.disgEditable["dy_min"] = true;
+    this.disgEditable["dz_max"] = true;
+    this.disgEditable["dz_min"] = true;
+    this.disgEditable["rx_max"] = true;
+    this.disgEditable["rx_min"] = true;
+    this.disgEditable["ry_max"] = true;
+    this.disgEditable["ry_min"] = true;
+    this.disgEditable["rz_max"] = true;
+    this.disgEditable["rz_min"] = true;
+  };
 }

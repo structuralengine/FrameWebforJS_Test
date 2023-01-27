@@ -279,6 +279,7 @@
         "about": "sheets",
         "noDataFound": "No Data Found",
         "about1000": "Please limit the number of pages to about 1000",
+        "selectTarget": "Please select a print target",
         "custom": {
             "print-custom-disg": {
                 "max": "Max",

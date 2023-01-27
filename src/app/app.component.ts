@@ -57,9 +57,10 @@ export class AppComponent implements OnInit {
       this.printService.printTargetValues[i].value = false;
     }
 
+    this.printService.resetPrintOption(); // いずれ消したい
     //this.printService.selectPrintCase('');
-    this.printService.clearPrintCase(); // いずれ消す
-    this.printService.resetPrintOption(); // いずれ消す
+    this.printService.clearPrintCase(); // いずれ消したい
+
   }
 
   public contentsDailogShow(id): void {

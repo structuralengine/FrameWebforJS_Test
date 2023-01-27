@@ -163,7 +163,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           selected = true;
         }
 
-        if (this.printService.customThree.threeEditable[6])
+        if (11 == this.printService.flg && this.printService.customThree.threeEditable[6])
         {
           output.push("disg"); // 変位図
           selected = true;
@@ -178,23 +178,24 @@ export class PrintComponent implements OnInit, OnDestroy {
 
         if(!selected)
         {
-          this.helper.alert("対象を選択してください");
+          this.helper.alert(this.translate.instant("print.selectTarget"));
           this.loadind_desable();
           return;
         }
 
         json["pageOrientation"] = this.printService.pageOrientation;
 
-        if(null !== this.printService.axis_scale_x.value)
-          json["axis_scale_x"] = this.printService.axis_scale_x.value;
-
-        if(null !== this.printService.axis_scale_y.value)
-          json["axis_scale_y"] = this.printService.axis_scale_y.value;
-
         json["diagramResult"] = {
           layout: this.printService.printLayout,
           output
         }
+
+        if(null !== this.printService.axis_scale_x.value)
+          json["diagramResult"].scaleX = 1.0 / Number(this.printService.axis_scale_x.value);
+
+        if(null !== this.printService.axis_scale_y.value)
+          json["diagramResult"].scaleY = 1.0 / Number(this.printService.axis_scale_y.value);
+
         json["ver"] = packageJson.version;
         const base64Encoded = this.getPostJson(json);
 

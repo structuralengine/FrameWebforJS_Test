@@ -376,7 +376,6 @@ export class MenuComponent implements OnInit {
     if (id === 13) {
       this.printService.clear();
       this.CustomFsecData.clear();
-      this.resetPrintdialog()
     }
     this.helper.isContentsDailogShow = true;
   }

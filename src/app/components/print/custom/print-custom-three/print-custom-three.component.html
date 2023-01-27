@@ -58,12 +58,14 @@
           </label>
         </li>
 
-        <li *ngIf="helper.dimension == 2 && printService.flg == 11">
+        <li *ngIf="helper.dimension == 2">
           <label style="width: 100%">
             <!--  [(ngModel)]="printCustomThreeService.threeEditable[6]"/> -->
             <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus6"
-                   [(ngModel)]="printService.printTargetValues[6].value" />
-            <span class="checkbox-parts" translate>print.custom.print-custom-three.disg_chart</span>
+                   [(ngModel)]="printService.printTargetValues[6].value"
+                   [disabled]="printService.flg==11?null:'1'"/>
+            <span [class]="printService.flg==11?'checkbox-parts':'checkbox-parts-disabled'" translate>
+              print.custom.print-custom-three.disg_chart</span>
           </label>
         </li>
       </ul>
@@ -79,7 +81,7 @@
       <ul>
         <li>
           <label style="width: 100%">
-            <input type="radio" name="print-screen-layout" class="radio-input" checked
+            <input type="radio" name="print-screen-layout" class="radio-input"
                    (click)="printService.selectLayoutRadio('splitHorizontal')"/>
             <span class="radio-parts" translate>print.custom.print-custom-three.splitHorizontal</span>
           </label>
@@ -93,8 +95,8 @@
         </li>
         <li>
           <label style="width: 100%">
-            <input type="radio" name="print-screen-layout" class="radio-input"
-                   (click)="printService.selectLayoutRadio('single')"/>
+            <input type="radio" name="print-screen-layout" class="radio-input" id="print-screen-layout-single"
+                   (click)="printService.selectLayoutRadio('single')" checked/>
             <span class="radio-parts" translate>print.custom.print-custom-three.single</span>
           </label>
         </li>
@@ -110,14 +112,15 @@
       <ul>
         <li>
           <label style="width: 100%">
-            <input type="radio" name="print-screen-orientation" class="radio-input" checked
+            <input type="radio" name="print-screen-orientation" class="radio-input"
                    (click)="printService.selectOrientationRadio('Horizontal')"/>
             <span class="radio-parts" translate>print.custom.print-custom-three.landscape</span>
           </label>
         </li>
         <li>
           <label style="width: 100%">
-            <input type="radio" name="print-screen-orientation" class="radio-input"
+            <input type="radio" name="print-screen-orientation" class="radio-input" checked
+                   id="print-screen-orientation-portrait"
                    (click)="printService.selectOrientationRadio('Vertical')"/>
             <span class="radio-parts" translate>print.custom.print-custom-three.portrait</span>
           </label>
