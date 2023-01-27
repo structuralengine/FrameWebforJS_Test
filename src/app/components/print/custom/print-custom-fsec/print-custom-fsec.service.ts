@@ -34,6 +34,21 @@ export class PrintCustomFsecService {
     this.loadData();
   }
 
+  public reset_check() {
+    this.fsecEditable["fx_max"] = true;
+    this.fsecEditable["fx_min"] = true;
+    this.fsecEditable["fy_max"] = true;
+    this.fsecEditable["fy_min"] = true;
+    this.fsecEditable["fz_max"] = true;
+    this.fsecEditable["fz_min"] = true;
+    this.fsecEditable["mx_max"] = true;
+    this.fsecEditable["mx_min"] = true;
+    this.fsecEditable["my_max"] = true;
+    this.fsecEditable["my_min"] = true;
+    this.fsecEditable["mz_max"] = true;
+    this.fsecEditable["mz_min"] = true;
+  }
+
   // 断面力部材番号の選択をすべてtrueにする
   checkReverse() {
     for (const index of this.dataset) {

@@ -10,6 +10,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { MatInputModule } from "@angular/material/input";
+import {MatExpansionModule} from '@angular/material/expansion';
 
 import { AngularFireModule } from "@angular/fire";
 import { environment } from "../environments/environment";
@@ -107,6 +108,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     DataHelperModule,
     MatInputModule,
     MatRadioModule,
+    MatExpansionModule,
     AngularFireModule.initializeApp(environment.firebase),
     TranslateModule.forRoot({
       loader: {

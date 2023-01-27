@@ -259,6 +259,7 @@
         "SelectPrintData": "Select print data",
         "SelectPrintCase": "Select print case",
         "inputData": "Input data",
+        "calc": "Calculation Results",
         "displacement": "Amount of displacement",
         "combine_displacement": "Amount of displacement (COMBINE)",
         "pickup_displacement": "Amount of displacement (PICKUP)",
@@ -270,6 +271,7 @@
         "pickup_SectionForce": "SectionForce (PICKUP)",
         "PrintScreen": "Print screen",
         "PrintDiagram": "Sectional force diagram",
+        "disgDiagram": "Displacement Dialog",
         "combPrintDiagram": "Combine force diagram",
         "pickPrintDiagram": "Pickup force diagram",
         "prt": "Print",
@@ -277,6 +279,7 @@
         "about": "sheets",
         "noDataFound": "No Data Found",
         "about1000": "Please limit the number of pages to about 1000",
+        "selectTarget": "Please select a print target",
         "custom": {
             "print-custom-disg": {
                 "max": "Max",
@@ -320,10 +323,18 @@
                 "x_torsion": "X Torsion",
                 "y_moment": "Y Momemt",
                 "z_moment": "Z Moment",
+                "disg_chart": "Displacement Diagram",
                 "selectLayout": "Select print layout",
                 "splitHorizontal": "Split Horizontal",
                 "splitVertical": "Split Vertical",
-                "single": "Single Layout"
+                "single": "Single Layout",
+                "orientation": "Orientation",
+                "portrait": "Portrait",
+                "landscape": "Landscape",
+                "axis_scale": "Axis Scale",
+                "axis_scale_default": "Auto",
+                "axis_scale_x": "X",
+                "axis_scale_y": "Y"
             }
         }
     },

@@ -18,13 +18,15 @@ export class PrintService {
   public optionList: {};
   public mode: number;
   public selectedIndex: string;
+  public printLayout: string;
+  public pageOrientation: string;
 
   public inputJson: any;
   public combineJson: any;
   public defineJson: any;
   public pickupJson: any;
 
-  public flg: number = -1;
+  public flg: number = -1; // リファクタリング前の変数をズルズル使っている感じがするので直したほうがいいか？
 
   public print_target: any; // Three.js 印刷 の図のデータ
   public printOption = [];
@@ -48,7 +50,11 @@ export class PrintService {
     { value: false }, // ねじりモーメント
     { value: false }, // y軸回りのモーメント
     { value: false }, // z軸回りのモーメント
+    { value: false }, // 変位図
   ];
+
+  public axis_scale_x = { value: null };
+  public axis_scale_y = { value: null };
 
   constructor(
     private router: Router,
@@ -95,7 +101,12 @@ export class PrintService {
       fsec: { id: 7, value: false, name: "断面力" },
       comb_fsec: { id: 8, value: false, name: "COMBINE 断面力" },
       pick_fsec: { id: 9, value: false, name: "PICKUP 断面力" },
-      captur: { id: 10, value: false, name: "画面印刷" }
+      //captur: { id: 10, value: false, name: "画面印刷" },
+      PrintScreen: { id: 10, value: false, name: "PrintScreen"},
+      PrintDiagram: { id: 11, value: false, name: "PrintDiagram"},
+      CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram"},
+      PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram"},
+      disgDiagram: { id: 14, value: false, name: "disgDiagram"} // 3Dのときだけ
     };
   }
 
@@ -127,6 +138,11 @@ export class PrintService {
     });
   }
 
+  // これ使われているか？
+  /* 使ってなさそうに見えるので一度コメント化しておく。
+     このままにする前に要確認。
+  */
+  /*
   public select() {
     let n = 0;
     this.printOption = new Array();
@@ -151,18 +167,32 @@ export class PrintService {
         this.selectedIndex = String(this.flg);
       }
     }, 50);
-  }
+    }
+    */
 
   // 印刷データ
   // ラジオボタン選択時に発動．一旦すべてfalseにしてから，trueにする．
-  public selectRadio(id: number) {
+  //
+  // すごく付け焼き刃な対応があるのでいずれ直したい。
+  public selectRadio(id: number)
+  {
+    var e = document.getElementById("printCus6");
+    if(11 != id && null !== e)
+      e.setAttribute("checked",null);
+
     this.printOption = new Array();
+    this.printCase = "";
     for (const key of Object.keys(this.optionList)) {
       this.optionList[key].value = false;
       if (this.optionList[key].id == id) {
         this.optionList[key].value = true;
         this.flg = id;
         this.selectedIndex = this.optionList[key].id;
+
+        if (10 == this.optionList[key].id || 11 == this.optionList[key].id
+          || 12 == this.optionList[key].id || 13 == this.optionList[key].id
+          || 14 == this.optionList[key].id)
+          this.printCase = key;
       }
     }
 
@@ -171,10 +201,57 @@ export class PrintService {
     this.newPrintJson();
   }
 
+  /*
   // 印刷ケース
   // ラジオボタン選択時に発動
   public selectPrintCase(printCase: string) {
     this.printCase = printCase;
+  }
+  */
+  // 一時的に使う関数
+  public clearPrintCase() {
+    this.printCase = "";
+  }
+
+  // 一時的に使う関数
+  public resetPrintOption() {
+    var e = document.getElementById("result0");
+    if(null !== e)
+      e.setAttribute("checked","checked");
+
+    e = document.getElementById("print-screen-layout-single");
+    if(null !== e)
+      e.setAttribute("checked","checked");
+
+    e = document.getElementById("print-screen-orientation-portrait");
+    if(null !== e)
+      e.setAttribute("checked","checked");
+
+    // 定数のハードコーディング直したほうがいいだろうがとりあえずこのままいく
+    this.pageOrientation = "Vertical";  // "Horizontal" or "Vertical"
+    this.printLayout = "single"; //"splitHorizontal" or "splitVertical" or "single"
+
+    this.customDisg.reset_check();
+    this.customFsec.reset_check();
+    this.customReac.reset_check();
+  }
+
+  // レイアウト選択ハンドラ
+  public selectLayoutRadio(printLayout: string) {
+    this.printLayout = printLayout;
+  }
+
+  // 用紙方向選択ハンドラ
+  public selectOrientationRadio(pageOrientation: string) {
+    this.pageOrientation = pageOrientation;
+  }
+
+  public is_printing_screen(): boolean {
+    return this.optionList['PrintScreen'].value === true
+      || this.optionList['PrintDiagram'].value === true
+      || this.optionList['CombPrintDiagram'].value === true
+      || this.optionList['PickPrintDiagram'].value === true
+      || this.optionList['disgDiagram'].value === true;
   }
 
   // ページ予想枚数を計算する
@@ -183,7 +260,7 @@ export class PrintService {
       // pricount:行数をためる
       this.priCount = 0;
       // 画面の印刷であれば行数のカウント
-      if (!(this.optionList['captur'].value === true)) {
+      if (!(this.is_printing_screen())) {
         this.getPrintDatas(); // サーバーに送るデータをつくる
       } else {
         this.pageError = false; // 画像印刷はエラー対象にしない
@@ -195,8 +272,8 @@ export class PrintService {
       this.pageOver = this.pageCount > this.printPossible ? true : false;
 
       // 概算ページ数が50いかない場合と，入力データ，画像データの時には，概算ページ数を非表示にする．
-      if (!(this.optionList['input'].value == true
-        || this.optionList['captur'].value == true)) {
+      if (!(this.optionList['input'].value == true || this.is_printing_screen()))
+      {
         if (this.pageCount > 50) {
           this.pageDisplay = true;
         } else {
@@ -208,7 +285,7 @@ export class PrintService {
       const id = document.getElementById("printButton");
       if (this.pageOver || this.pageError) {
         id.setAttribute("disabled", "true");
-        id.style.opacity = "0.7";
+        id.style.opacity = "0.5";
       } else {
         id.removeAttribute("disabled");
         id.style.opacity = "";
@@ -230,8 +307,8 @@ export class PrintService {
     if (this.ResultData.isCalculated == true) {
 
       // 変位量
-      if (this.optionList['disg'].value &&
-        Object.keys(this.ResultData.disg.disg).length !== 0) {
+      if((this.optionList['disg'].value || (11 == this.flg && this.printTargetValues[6].value))
+        && Object.keys(this.ResultData.disg.disg).length !== 0) {
         this.json["disg"] = this.dataChoice(this.ResultData.disg.disg);
         this.json["disgName"] = this.getNames(this.json["disg"]);
       }
@@ -322,10 +399,13 @@ export class PrintService {
         );
       }
     }
+
     if (Object.keys(this.json).length === 0) {
       this.pageError = true;
+      console.log("Page Error!!!!!!");
       return;
     }
+
     this.pageError = false;
 
     this.json["dimension"] = this.helper.dimension;
@@ -461,7 +541,7 @@ export class PrintService {
     this.priCount += 2;
 
     //case毎
-    for (const type of Object.keys(json)) {
+    for (const type_ of Object.keys(json)) {
       let basic: boolean = true;
 
       let body1 = new Array(); // 軸指定がないとき
@@ -469,7 +549,7 @@ export class PrintService {
       // let i = 0;
       this.priCount += 2;
 
-      const body3 = json[type];
+      const body3 = json[type_];
       const keys = Object.keys(body3);
       const key0 = keys[0];
       const int0 = Number(key0);
@@ -505,7 +585,7 @@ export class PrintService {
           // i++;
         }
       }
-      split[type] = basic ? body1 : body2;
+      split[type_] = basic ? body1 : body2;
     }
     return split;
   }
