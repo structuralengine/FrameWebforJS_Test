@@ -10,12 +10,13 @@ export class PrintCustomThreeService {
 
   constructor(private ResultData: ResultDataService) {
     this.threeEditable = [
-      true, // 軸力図  
+      true, // 軸力図
       true, // y方向のせん断力図
       true, // z方向のせん断力図
       true, // ねじりモーメント図
       true, // y軸周りのモーメント図
-      true  // z軸周りのモーメント図
+      true,  // z軸周りのモーメント図
+      true  // 変位図
     ];
     // 2次元で印刷する場合のレイアウト
     /// splitHorizontal: 上, 下,

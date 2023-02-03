@@ -259,6 +259,7 @@
         "SelectPrintData": "选择打印数据",
         "SelectPrintCase": "选择打印案例",
         "inputData": "输入数据",
+        "calc": "计算结果",
         "displacement": "位移量",
         "combine_displacement": "位移量（组合）",
         "pickup_displacement": "位移量（聚集）",
@@ -270,6 +271,7 @@
         "pickup_SectionForce": "截面力（聚集）",
         "PrintScreen": "打印屏幕",
         "PrintDiagram": "截面力图",
+        "disgDiagram": "位移图",
         "combPrintDiagram": "Combine 截面力图",
         "pickPrintDiagram": "Pickup 截面力图",
         "prt": "打印",
@@ -277,6 +279,7 @@
         "about": "张",
         "noDataFound": "打印数据\n不存在",
         "about1000": "请将页数限制在1000左右",
+        "selectTarget": "选择打印目标",
         "custom": {
             "print-custom-disg": {
                 "max": "最大",
@@ -320,10 +323,18 @@
                 "x_torsion": "扭转力矩",
                 "y_moment": "绕y轴的力矩",
                 "z_moment": "绕z轴的力矩",
+                "disg_chart": "位移图",
                 "selectLayout": "Select print layout",
                 "splitHorizontal": "Split Horizontal",
                 "splitVertical": "Split Vertical",
-                "single": "Single Layout"
+                "single": "Single Layout",
+                "orientation": "论文方向",
+                "portrait": "纵向",
+                "landscape": "横向",
+                "axis_scale": "Axis Scale",
+                "axis_scale_default": "Auto",
+                "axis_scale_x": "X",
+                "axis_scale_y": "Y"
             }
         }
     },

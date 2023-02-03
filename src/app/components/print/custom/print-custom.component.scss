@@ -1,4 +1,6 @@
 .print-custom-fsec {
+    margin-top: 16px;
+    margin-right: 16px;
     width: 550px;
 }
 
@@ -47,10 +49,10 @@ $height_content: 16px;
 // margin-top:96px;
 h2 {
     display: block;
-    height: $height_header;
+    //height: $height_header;
     // margin-top: 80px;
-    padding: 0 0 32px 0;
-    line-height: 32px;
+    //padding: 0 0 32px 0;
+    //line-height: 32px;
     font-size: 16px;
     font-weight: 400;
     font-family: "ＭＳ Ｐゴシック";
@@ -166,7 +168,7 @@ tfoot {
 
 // 選択画面
 .print-choice {
-    margin: 16px;
+//    margin: 16px;
     padding: 16px;
     background-color: #f5f5f5;
     font-size: 16px;

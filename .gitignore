@@ -45,6 +45,7 @@ package-lock.json
 /e2e/*.map
 
 # System Files
+._.DS_Store
 .DS_Store
 Thumbs.db
 

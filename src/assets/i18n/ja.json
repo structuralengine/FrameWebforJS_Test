@@ -259,6 +259,7 @@
         "SelectPrintData": "印刷データを選択",
         "SelectPrintCase": "印刷ケースを選択",
         "inputData": "入力データ",
+        "calc": "計算結果",
         "displacement": "変位量",
         "combine_displacement": "COMBINE 変位量",
         "pickup_displacement": "PICKUP 変位量",
@@ -270,6 +271,7 @@
         "pickup_SectionForce": "PICKUP 断面力",
         "PrintScreen": "画面印刷",
         "PrintDiagram": "断面力図",
+        "disgDiagram": "変位図",
         "combPrintDiagram": "Combine 断面力図",
         "pickPrintDiagram": "Pickup 断面力図",
         "prt": "印刷する",
@@ -277,6 +279,7 @@
         "about": "枚程度",
         "noDataFound": "印刷データが\n存在しません",
         "about1000": "ページ枚数を1000枚\n程度に抑えて下さい",
+        "selectTarget": "印刷対象を選択してください",
         "custom": {
             "print-custom-disg": {
                 "max": "最大",
@@ -320,10 +323,18 @@
                 "x_torsion": "ねじりモーメント",
                 "y_moment": "y軸回りのモーメント",
                 "z_moment": "z軸回りのモーメント",
+                "disg_chart": "変位図",
                 "selectLayout": "レイアウトを選択",
                 "splitHorizontal": "上, 下",
                 "splitVertical": "左, 右",
-                "single": "シングル"
+                "single": "シングル",
+                "orientation": "用紙方向",
+                "portrait": "縦",
+                "landscape": "横",
+                "axis_scale": "軸線スケール",
+                "axis_scale_default": "自動",
+                "axis_scale_x": "横",
+                "axis_scale_y": "縦"
             }
         }
     },
