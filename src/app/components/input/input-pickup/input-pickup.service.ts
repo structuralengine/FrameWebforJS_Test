@@ -32,7 +32,7 @@ export class InputPickupService {
     // 対象データが無かった時に処理
     if (result == null) {
       result = { row: row };
-      result['name'] = this.getPickUpName(row);
+      result['name'] = '';
       for (let i = 1; i < col; i++) {
         result['C' + i] = '';
       }
