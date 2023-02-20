@@ -36,6 +36,7 @@ export class ResultFsecComponent implements OnInit {
   constructor(
     private data: ResultFsecService,
     private app: AppComponent,
+    private result: ResultDataService,
     private load: InputLoadService,
     private three: ThreeService,
     private comb: ResultCombineFsecService,
@@ -52,7 +53,7 @@ export class ResultFsecComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadPage(1);
+    this.loadPage(this.result.page);
     setTimeout(() => {
       const circle = document.getElementById(String(this.cal + 20));
       if (circle !== null) {
@@ -83,14 +84,14 @@ export class ResultFsecComponent implements OnInit {
   }
 
   loadPage(currentPage: number) {
-    if (currentPage !== this.page) {
-      this.page = currentPage;
+    if (currentPage !== this.result.page) {
+      this.result.page = currentPage;
     }
 
     this.load_name = this.load.getLoadName(currentPage);
 
-    if(this.page <= this.data.LL_flg.length){
-      this.LL_page =this.data.LL_flg[this.page - 1];
+    if(this.result.page <= this.data.LL_flg.length){
+      this.LL_page =this.data.LL_flg[this.result.page - 1];
     } else {
       this.LL_page = false;
     }
@@ -98,10 +99,10 @@ export class ResultFsecComponent implements OnInit {
     if(this.LL_page===true){
       this.dataset = new Array();
       for (const key of this.KEYS) {
-        this.dataset.push(this.data.getFsecColumns(this.page, key));
+        this.dataset.push(this.data.getFsecColumns(this.result.page, key));
       }
     } else{
-      this.dataset = this.data.getFsecColumns(this.page);
+      this.dataset = this.data.getFsecColumns(this.result.page);
     }
 
     this.three.ChangeMode("fsec");
