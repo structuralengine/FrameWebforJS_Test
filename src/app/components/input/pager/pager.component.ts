@@ -1,6 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
+import { ResultDataService } from "../../../providers/result-data.service";
+import { Router } from '@angular/router';
 
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 
@@ -19,8 +21,17 @@ export class PagerComponent implements OnInit {
   public Editing: boolean = false;
   public page: number = 0;
 
-  constructor(private helper: DataHelperModule) {
-    this.changePage(1);
+  constructor(
+    private helper: DataHelperModule,
+    private result: ResultDataService,
+    private router : Router
+    ) {
+    if(this.router.url.includes('result')){
+      this.changePage(this.result.page);
+    }else {
+      this.changePage(1);
+    }
+    
   }
 
   ngOnInit(): void {

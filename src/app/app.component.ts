@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   btnReac!: string;
   constructor(
     private _router: Router,
-    private ResultData: ResultDataService,
+    public ResultData: ResultDataService,
     public printService: PrintService,
     public helper: DataHelperModule,
     public fsec: ResultFsecService,

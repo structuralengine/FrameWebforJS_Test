@@ -27,6 +27,8 @@ import { InputDataService } from "./input-data.service";
 })
 export class ResultDataService {
   public isCalculated: boolean;
+  public page: number;
+  public case: string;
 
   private defList: any = null;
   private combList: any = null;
@@ -61,6 +63,8 @@ export class ResultDataService {
   // データをクリアする ///////////////////////////////////////////////////////////////
   public clear(): void {
     this.isCalculated = false;
+    this.page = 1;
+    this.case = "basic"
 
     this.disg.clear();
     this.reac.clear();

@@ -4,6 +4,7 @@ import { InputCombineService } from "../../input/input-combine/input-combine.ser
 import { ThreeService } from "../../three/three.service";
 import { ResultPickupDisgService } from "../result-pickup-disg/result-pickup-disg.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { ResultDataService } from "../../../providers/result-data.service";
 // import { MatCarousel, MatCarouselComponent } from "@ngmodule/material-carousel";
 
 @Component({
@@ -36,6 +37,7 @@ export class ResultCombineDisgComponent implements OnInit {
     private comb: InputCombineService,
     private three: ThreeService,
     private pic: ResultPickupDisgService,
+    private result: ResultDataService,
     private helper: DataHelperModule
   ) {
     this.dataset = new Array();
@@ -45,10 +47,15 @@ export class ResultCombineDisgComponent implements OnInit {
       this.circleBox.push(i);
     }
     this.dimension = this.helper.dimension;
+
+    if(this.result.case != "comb"){
+      this.result.page = 1
+      this.result.case = "comb"
+    }
   }
 
   ngOnInit() {
-    this.loadPage(1);
+    this.loadPage(this.result.page);
     this.calPage(0);
 
     // ピックアップデータがあればボタンを表示する
@@ -69,12 +76,12 @@ export class ResultCombineDisgComponent implements OnInit {
   }
 
   loadPage(currentPage: number) {
-    if (currentPage !== this.page) {
-      this.page = currentPage;
+    if (currentPage !== this.result.page) {
+      this.result.page = currentPage;
     }
     this.dataset = new Array();
     for (const key of this.KEYS) {
-      const d = this.data.getCombineDisgColumns(this.page, key);
+      const d = this.data.getCombineDisgColumns(this.result.page, key);
       if(d==null){
         this.dataset = new Array();
         break;
