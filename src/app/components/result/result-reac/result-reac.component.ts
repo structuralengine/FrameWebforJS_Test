@@ -50,6 +50,11 @@ export class ResultReacComponent implements OnInit {
     for (let i = 0; i < this.TITLES.length; i++) {
       this.circleBox.push(i);
     }
+
+    if(this.result.case != "basic"){
+      this.result.page = 1
+      this.result.case = "basic"
+    }
   }
 
   ngOnInit() {

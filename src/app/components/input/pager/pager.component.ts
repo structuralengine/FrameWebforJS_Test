@@ -26,7 +26,7 @@ export class PagerComponent implements OnInit {
     private result: ResultDataService,
     private router : Router
     ) {
-    if(this.router.url.includes('result-reac') || this.router.url.includes('result-fsec') || this.router.url.includes('result-disg')){
+    if(this.router.url.includes('result')){
       this.changePage(this.result.page);
     }else {
       this.changePage(1);
