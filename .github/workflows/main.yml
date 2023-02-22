@@ -6,29 +6,22 @@ on:
 
 jobs:
   build:
-
-    runs-on: windows-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x]
-
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build --if-present -- --prod
-      env:
-        CI: true
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@3.7.1
+        node-version: 14.x
+    - name: Install NPM packages
+      run: npm install
+    - name: Build website
+      run: npm run build --if-present -- --configuration production --base-href /FrameWebforJS/
+    - name: Test
+      run: npm test -- --watch=false --browsers=ChromeHeadless
+    - name: Deploy 
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: dist
         CLEAN: true
