@@ -16,7 +16,7 @@ jobs:
     - name: Install NPM packages
       run: npm install
     - name: Build website
-      run: ng build --if-present -- --configuration production --base-href /FrameWebforJS/
+      run: npm run build
     - name: Deploy 
       uses: JamesIves/github-pages-deploy-action@v4
       with:
