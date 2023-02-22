@@ -56,7 +56,4 @@ unity-src/.vs/
 .vs/
 *.log
 *.log*
-src/environments/environment.web.ts
-src/environments/environment.prod.ts
-src/environments/environment.ts
 .angular/
