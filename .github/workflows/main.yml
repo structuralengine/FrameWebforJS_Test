@@ -1,0 +1,36 @@
+name: Node CI
+
+on:
+  push: 
+    branches: master
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm run build --if-present -- --prod
+        npm test -- --watch=false --browsers=ChromeHeadless
+        cp -a dist/index.html dist/404.html
+      env:
+        CI: true
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: dist
+        CLEAN: true
