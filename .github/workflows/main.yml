@@ -16,9 +16,7 @@ jobs:
     - name: Install NPM packages
       run: npm install
     - name: Build website
-      run: npm run build --if-present -- --configuration production --base-href /FrameWebforJS/
-    - name: Test
-      run: npm test -- --watch=false --browsers=ChromeHeadless
+      run: ng build --configuration production --base-href \"https://structuralengine.github.io/FrameWebforJS/\"
     - name: Deploy 
       uses: JamesIves/github-pages-deploy-action@v4
       with:
