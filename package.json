@@ -5,6 +5,7 @@
         "ng": "ng",
         "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
         "build": "ng build --configuration production --base-href \"https://structuralengine.github.io/FrameWebforJS/\" && angular-cli-ghpages",
+        "build-action": "ng build --configuration production --base-href \"https://structuralengine.github.io/FrameWebforJS/\"",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
