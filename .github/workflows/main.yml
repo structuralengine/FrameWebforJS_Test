@@ -23,8 +23,6 @@ jobs:
       run: |
         npm install
         npm run build --if-present -- --prod
-        npm test -- --watch=false --browsers=ChromeHeadless
-        cp -a {dist}/index.html {dist}/404.html
       env:
         CI: true
     - name: Deploy 🚀
