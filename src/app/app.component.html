@@ -140,9 +140,10 @@
           </a>
           <p class="guide" translate>app.input</p>
         </div>
+
         <div
           class="output-area"
-          *ngIf="disg.isCalculated || reac.isCalculated || fsec.isCalculated"
+          *ngIf="(disg.isCalculated || reac.isCalculated || fsec.isCalculated) && (ResultData.case == 'basic')"
         >
           <a
             routerLink="./result-disg"
@@ -187,6 +188,101 @@
           </a>
           <p class="guide" translate>app.output</p>
         </div>
+        <div
+          class="output-area"
+          *ngIf="(disg.isCalculated || reac.isCalculated || fsec.isCalculated) && (ResultData.case == 'comb')"
+        >
+          <a
+            routerLink="./result-comb_disg"
+            *ngIf="disg.isCalculated"
+            (click)="contentsDailogShow(10)"
+            id="10"
+            class="btn-md btn-blue"
+          >
+            <div class="icon-img ppt">
+              <img src="./assets/img/heni.png" width="50" height="40" />
+            </div>
+            <p translate>app.displacement</p>
+          </a>
+          <a
+            routerLink="./result-comb_reac"
+            *ngIf="reac.isCalculated"
+            (click)="contentsDailogShow(11)"
+            id="11"
+            class="btn-md btn-blue"
+          >
+            <div class="icon-img ppt">
+              <img
+                src="./assets/img/shitenhanryoku.png"
+                width="60"
+                height="40"
+              />
+            </div>
+            <p translate>app.reaction</p>
+          </a>
+          <a
+            routerLink="./result-comb_fsec"
+            *ngIf="fsec.isCalculated"
+            (click)="contentsDailogShow(12)"
+            routerLinkActive="selected-item"
+            id="12"
+            class="btn-md btn-blue"
+          >
+            <div class="icon-img ppt">
+              <img src="./assets/img/danmen.png" width="60" height="40" />
+            </div>
+            <p translate>app.memberSectionForce</p>
+          </a>
+          <p class="guide" translate>app.output</p>
+        </div>
+        <div
+          class="output-area"
+          *ngIf="(disg.isCalculated || reac.isCalculated || fsec.isCalculated) && (ResultData.case == 'pic')"
+        >
+          <a
+            routerLink="./result-pic_disg"
+            *ngIf="disg.isCalculated"
+            (click)="contentsDailogShow(10)"
+            id="10"
+            class="btn-md btn-blue"
+          >
+            <div class="icon-img ppt">
+              <img src="./assets/img/heni.png" width="50" height="40" />
+            </div>
+            <p translate>app.displacement</p>
+          </a>
+          <a
+            routerLink="./result-pic_reac"
+            *ngIf="reac.isCalculated"
+            (click)="contentsDailogShow(11)"
+            id="11"
+            class="btn-md btn-blue"
+          >
+            <div class="icon-img ppt">
+              <img
+                src="./assets/img/shitenhanryoku.png"
+                width="60"
+                height="40"
+              />
+            </div>
+            <p translate>app.reaction</p>
+          </a>
+          <a
+            routerLink="./result-pic_fsec"
+            *ngIf="fsec.isCalculated"
+            (click)="contentsDailogShow(12)"
+            routerLinkActive="selected-item"
+            id="12"
+            class="btn-md btn-blue"
+          >
+            <div class="icon-img ppt">
+              <img src="./assets/img/danmen.png" width="60" height="40" />
+            </div>
+            <p translate>app.memberSectionForce</p>
+          </a>
+          <p class="guide" translate>app.output</p>
+        </div>
+
       </nav>
     </div>
     <div id="print-loading">

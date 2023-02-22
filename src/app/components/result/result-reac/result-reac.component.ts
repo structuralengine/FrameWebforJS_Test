@@ -38,6 +38,7 @@ export class ResultReacComponent implements OnInit {
     private data: ResultReacService,
     private load: InputLoadService,
     private three: ThreeService,
+    private result: ResultDataService,
     private comb: ResultCombineReacService,
     private pic: ResultPickupReacService,
     private helper: DataHelperModule
@@ -49,10 +50,15 @@ export class ResultReacComponent implements OnInit {
     for (let i = 0; i < this.TITLES.length; i++) {
       this.circleBox.push(i);
     }
+
+    if(this.result.case != "basic"){
+      this.result.page = 1
+      this.result.case = "basic"
+    }
   }
 
   ngOnInit() {
-    this.loadPage(1);
+    this.loadPage(this.result.page);
     setTimeout(() => {
       const circle = document.getElementById(String(this.cal + 20));
       if (circle !== null) {
@@ -83,14 +89,14 @@ export class ResultReacComponent implements OnInit {
   }
 
   loadPage(currentPage: number) {
-    if (currentPage !== this.page) {
-      this.page = currentPage;
+    if (currentPage !== this.result.page) {
+      this.result.page = currentPage;
     }
 
     this.load_name = this.load.getLoadName(currentPage);
 
-    if(this.page <= this.data.LL_flg.length){
-      this.LL_page =this.data.LL_flg[this.page - 1];
+    if(this.result.page <= this.data.LL_flg.length){
+      this.LL_page =this.data.LL_flg[this.result.page - 1];
     } else {
       this.LL_page = false;
     }
@@ -98,10 +104,10 @@ export class ResultReacComponent implements OnInit {
     if(this.LL_page===true){
       this.dataset = new Array();
       for (const key of this.KEYS) {
-        this.dataset.push(this.data.getReacColumns(this.page, key));
+        this.dataset.push(this.data.getReacColumns(this.result.page, key));
       }
     } else{
-      this.dataset = this.data.getReacColumns(this.page);
+      this.dataset = this.data.getReacColumns(this.result.page);
     }
 
     this.three.ChangeMode("reac");

@@ -50,11 +50,16 @@ export class ResultCombineFsecComponent implements OnInit {
       this.circleBox.push(i);
     }
     this.dimension = this.helper.dimension;
+
+    if(this.result.case != "comb"){
+      this.result.page = 1
+      this.result.case = "comb"
+    }
   }
 
   ngOnInit() {
     const n: number = this.comb.getCombineCaseCount();
-    this.loadPage(1);
+    this.loadPage(this.result.page);
     this.calPage(0);
 
     // ピックアップデータがあればボタンを表示する
@@ -75,12 +80,12 @@ export class ResultCombineFsecComponent implements OnInit {
   }
 
   loadPage(currentPage: number) {
-    if (currentPage !== this.page) {
-      this.page = currentPage;
+    if (currentPage !== this.result.page) {
+      this.result.page = currentPage;
     }
     this.dataset = new Array();
     for (const key of this.KEYS) {
-      const d = this.data.getCombineFsecColumns(this.page, key);
+      const d = this.data.getCombineFsecColumns(this.result.page, key);
       if(d==null){
         this.dataset = new Array();
         break;

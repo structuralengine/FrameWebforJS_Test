@@ -37,6 +37,7 @@ export class ResultPickupDisgComponent implements OnInit {
     private pickup: InputPickupService,
     private three: ThreeService,
     private comb: ResultCombineDisgService,
+    private result: ResultDataService,
     private helper: DataHelperModule
   ) {
     this.dataset = new Array();
@@ -46,10 +47,15 @@ export class ResultPickupDisgComponent implements OnInit {
       this.circleBox.push(i);
     }
     this.dimension = this.helper.dimension;
+
+    if(this.result.case != "pic"){
+      this.result.page = 1
+      this.result.case = "pic"
+    }
   }
 
   ngOnInit() {
-    this.loadPage(1);
+    this.loadPage(this.result.page);
     this.calPage(0);
 
     // コンバインデータがあればボタンを表示する
@@ -70,12 +76,12 @@ export class ResultPickupDisgComponent implements OnInit {
   }
 
   loadPage(currentPage: number) {
-    if (currentPage !== this.page) {
-      this.page = currentPage;
+    if (currentPage !== this.result.page) {
+      this.result.page = currentPage;
     }
     this.dataset = new Array();
     for (const key of this.KEYS) {
-      const d = this.data.getPickupDisgColumns(this.page, key);
+      const d = this.data.getPickupDisgColumns(this.result.page, key);
       if(d==null){
         this.dataset = new Array();
         break;

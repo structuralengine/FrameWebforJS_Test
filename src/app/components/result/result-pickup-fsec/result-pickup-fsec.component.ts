@@ -5,6 +5,7 @@ import { ThreeService } from "../../three/three.service";
 
 import { ResultCombineFsecService } from "../result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { ResultDataService } from "../../../providers/result-data.service";
 
 @Component({
   selector: "app-result-pickup-fsec",
@@ -33,6 +34,7 @@ export class ResultPickupFsecComponent implements OnInit {
     private data: ResultPickupFsecService,
     private pickup: InputPickupService,
     private three: ThreeService,
+    private result: ResultDataService,
     private comb: ResultCombineFsecService,
     private helper: DataHelperModule
   ) {
@@ -43,10 +45,15 @@ export class ResultPickupFsecComponent implements OnInit {
       this.circleBox.push(i);
     }
     this.dimension = this.helper.dimension;
+
+    if(this.result.case != "pic"){
+      this.result.page = 1
+      this.result.case = "pic"
+    }
   }
 
   ngOnInit() {
-    this.loadPage(1);
+    this.loadPage(this.result.page);
     this.calPage(0);
 
     // コンバインデータがあればボタンを表示する
@@ -67,12 +74,12 @@ export class ResultPickupFsecComponent implements OnInit {
   }
 
   loadPage(currentPage: number) {
-    if (currentPage !== this.page) {
-      this.page = currentPage;
+    if (currentPage !== this.result.page) {
+      this.result.page = currentPage;
     }
     this.dataset = new Array();
     for (const key of this.KEYS) {
-      const d = this.data.getPickupFsecColumns(this.page, key);
+      const d = this.data.getPickupFsecColumns(this.result.page, key);
       if(d==null){
         this.dataset = new Array();
         break;
