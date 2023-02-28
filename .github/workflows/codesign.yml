@@ -1,9 +1,8 @@
 name: Code Signing
 
 on:
-  push:
-    tags:
-      - 'v*'
+  push: 
+    branches: master
 
 jobs:
   release:
