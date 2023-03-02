@@ -20,12 +20,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+
+      - name: Code Signing
+        uses: dlemstra/code-sign-action@v1
         with:
-          # ...
-          windows_certs: ${{ secrets.codesign }}
-          windows_certs_password: ${{ secrets.password }}
+          certificate: '${{ secrets.CODESIGN }}'
+          folder: 'files'
+          recursive: true
 
       - name: Build/release Electron app for mac os
         uses: samuelmeuli/action-electron-builder@v1
