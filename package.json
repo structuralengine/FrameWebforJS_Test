@@ -4,8 +4,8 @@
     "scripts": {
         "ng": "ng",
         "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
-        "build": "ng build --configuration production --base-href \"https://structuralengine.github.io/FrameWebforJS/\" && angular-cli-ghpages",
-        "build-action": "ng build --configuration production --base-href \"https://structuralengine.github.io/FrameWebforJS/\"",
+        "build": "set NODE_OPTIONS=--openssl-legacy-provider && ng build --configuration production --base-href \"https://frameweb.structuralengine.com/\" && angular-cli-ghpages",
+        "build-action": "ng build --configuration production --base-href \"https://frameweb.structuralengine.com/\"",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
