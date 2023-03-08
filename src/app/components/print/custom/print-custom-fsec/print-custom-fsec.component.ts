@@ -71,14 +71,17 @@ export class PrintCustomFsecComponent implements OnInit {
     public printService: PrintService,
     private translate: TranslateService,
     public helper: DataHelperModule
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    // 印刷パネルを表示・再表示したときに、フラグをリセットする
+    this.printCustomFsecService.flg = undefined;
+
     this.printCustomFsecService.clear();
     if (!this.printCustomFsecService.flg) {
       this.printCustomFsecService.checkReverse();
     }
-    if( this.helper.dimension == 2){
+    if (this.helper.dimension == 2) {
       this.printCustomFsecService.fsecEditable.fz_max = false;
       this.printCustomFsecService.fsecEditable.fz_max = false;
       this.printCustomFsecService.fsecEditable.mx_max = false;
@@ -119,7 +122,7 @@ export class PrintCustomFsecComponent implements OnInit {
               .map(function (rd) {
                 return rd.id;
               });
-              this.helper.alert(checked);
+            this.helper.alert(checked);
           },
         },
       ],
