@@ -74,9 +74,6 @@ export class PrintCustomFsecComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // 印刷パネルを表示・再表示したときに、フラグをリセットする
-    this.printCustomFsecService.flg = undefined;
-
     this.printCustomFsecService.clear();
     if (!this.printCustomFsecService.flg) {
       this.printCustomFsecService.checkReverse();

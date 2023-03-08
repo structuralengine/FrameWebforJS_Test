@@ -52,7 +52,8 @@ export class MenuComponent implements OnInit {
     public user: UserInfoService,
     public language: LanguagesService,
     public electronService: ElectronService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public printCustomFsecService: PrintCustomFsecService,
   ) {
     this.fileName = "";
     this.three.fileName = "";
@@ -77,15 +78,18 @@ export class MenuComponent implements OnInit {
     this.fileName = "";
     this.three.fileName = "";
     this.three.mode = "";
+
+    // "新規作成"のとき、印刷パネルのフラグをリセットする
+    this.printCustomFsecService.flg = undefined;
   }
 
   // Electron でファイルを開く
-  open_electron(){
+  open_electron() {
 
     const response = this.electronService.ipcRenderer.sendSync('open');
 
-    if(response.status!==true){
-      this.helper.alert('ファイルを開くことに失敗しました, status:'+ response.status);
+    if (response.status !== true) {
+      this.helper.alert('ファイルを開くことに失敗しました, status:' + response.status);
       return;
     }
     this.app.dialogClose(); // 現在表示中の画面を閉じる
@@ -141,6 +145,9 @@ export class MenuComponent implements OnInit {
     evt.target.value = "";
     this.fileToText(file)
       .then((text) => {
+        // "ファイルを開く"のとき、印刷パネルのフラグをリセットする
+        this.printCustomFsecService.flg = undefined;
+
         this.app.dialogClose(); // 現在表示中の画面を閉じる
         this.ResultData.clear(); // 解析結果を削除
         const old = this.helper.dimension;
@@ -172,7 +179,7 @@ export class MenuComponent implements OnInit {
   // 上書き保存
   // 上書き保存のメニューが表示されるのは electron のときだけ
   public overWrite(): void {
-    if (this.fileName === ""){
+    if (this.fileName === "") {
       this.save();
       return;
     }
@@ -204,7 +211,7 @@ export class MenuComponent implements OnInit {
       this.fileName += ".json";
     }
     // 保存する
-    if(this.electronService.isElectronApp) {
+    if (this.electronService.isElectronApp) {
       this.fileName = this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson, "json");
     } else {
       const blob = new window.Blob([inputJson], { type: "text/plain" });
@@ -310,9 +317,9 @@ export class MenuComponent implements OnInit {
           } finally {
             modalRef.close(); // モーダルダイアログを消す
             this.helper.alert(
-              this.user.deduct_points 
-              + this.translate.instant("menu.deduct_points") 
-              + this.user.new_points 
+              this.user.deduct_points
+              + this.translate.instant("menu.deduct_points")
+              + this.user.new_points
               + this.translate.instant("menu.new_points")
             );
           }
@@ -346,7 +353,7 @@ export class MenuComponent implements OnInit {
       filename = this.fileName.split(".").slice(0, -1).join(".");
     }
     // 保存する
-    if(this.electronService.isElectronApp) {
+    if (this.electronService.isElectronApp) {
       this.electronService.ipcRenderer.sendSync('saveFile', filename, pickupJson, ext);
     } else {
       filename += '.';
@@ -358,7 +365,7 @@ export class MenuComponent implements OnInit {
   // ログイン関係
   logIn(): void {
     this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.modalService.open(LoginDialogComponent).result.then((result) => {});
+    this.modalService.open(LoginDialogComponent).result.then((result) => { });
   }
 
   logOut(): void {
