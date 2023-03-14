@@ -23,6 +23,7 @@ import { PrintCustomThreeService } from "../print/custom/print-custom-three/prin
 import { ResultCombineFsecService } from "../result/result-combine-fsec/result-combine-fsec.service";
 import { MaxMinService } from "./max-min/max-min.service";
 import { MaxMinComponent } from "./max-min/max-min.component";
+import { InputLoadService } from "../input/input-load/input-load.service";
 
 @Injectable({
   providedIn: "root",
@@ -58,8 +59,9 @@ export class ThreeService {
     private InputData: InputDataService,
     private secForce: ThreeSectionForceService,
     private customThree: PrintCustomThreeService,
-    private resultFsec: ResultCombineFsecService
-  ) {}
+    private resultFsec: ResultCombineFsecService,
+    private inputLoadData: InputLoadService,
+  ) { }
 
   //////////////////////////////////////////////////////
   // 初期化
@@ -280,13 +282,13 @@ export class ThreeService {
         this.fsec.changeData(currentPage, this.mode);
         let key: string;
         if (this.secForce.currentRadio === 'axialForce' ||
-            this.secForce.currentRadio === 'torsionalMorment') {
+          this.secForce.currentRadio === 'torsionalMorment') {
           key = 'x';
-        } else if ( this.secForce.currentRadio === 'shearForceY' ||
-                    this.secForce.currentRadio === 'momentY') {
+        } else if (this.secForce.currentRadio === 'shearForceY' ||
+          this.secForce.currentRadio === 'momentY') {
           key = 'y';
-        } else if ( this.secForce.currentRadio === 'shearForceZ' ||
-                    this.secForce.currentRadio === 'momentZ') {
+        } else if (this.secForce.currentRadio === 'shearForceZ' ||
+          this.secForce.currentRadio === 'momentZ') {
           key = 'z';
         }
         this.max_min.getMaxMinValue(
@@ -499,14 +501,14 @@ export class ThreeService {
       this.reac.visibleChange(false);
       this.fsec.visibleChange(ModeName);
       let key: string;
-      if ( this.secForce.currentRadio === 'axialForce' ||
-            this.secForce.currentRadio === 'torsionalMorment') {
+      if (this.secForce.currentRadio === 'axialForce' ||
+        this.secForce.currentRadio === 'torsionalMorment') {
         key = 'x';
-      } else if ( this.secForce.currentRadio === 'shearForceY' ||
-                  this.secForce.currentRadio === 'momentY') {
+      } else if (this.secForce.currentRadio === 'shearForceY' ||
+        this.secForce.currentRadio === 'momentY') {
         key = 'y';
-      } else if ( this.secForce.currentRadio === 'shearForceZ' ||
-                  this.secForce.currentRadio === 'momentZ') {
+      } else if (this.secForce.currentRadio === 'shearForceZ' ||
+        this.secForce.currentRadio === 'momentZ') {
         key = 'z';
       }
       this.max_min.getMaxMinValue(
@@ -533,14 +535,14 @@ export class ThreeService {
       this.reac.visibleChange(false);
       this.fsec.visibleChange(ModeName);
       let key: string;
-      if ( this.secForce.currentRadio === 'axialForce' ||
-            this.secForce.currentRadio === 'torsionalMorment') {
+      if (this.secForce.currentRadio === 'axialForce' ||
+        this.secForce.currentRadio === 'torsionalMorment') {
         key = 'x';
-      } else if ( this.secForce.currentRadio === 'shearForceY' ||
-                  this.secForce.currentRadio === 'momentY') {
+      } else if (this.secForce.currentRadio === 'shearForceY' ||
+        this.secForce.currentRadio === 'momentY') {
         key = 'y';
-      } else if ( this.secForce.currentRadio === 'shearForceZ' ||
-                  this.secForce.currentRadio === 'momentZ') {
+      } else if (this.secForce.currentRadio === 'shearForceZ' ||
+        this.secForce.currentRadio === 'momentZ') {
         key = 'z';
       }
       this.max_min.getMaxMinValue(
@@ -614,6 +616,10 @@ export class ThreeService {
       case "comb_reac":
       case "pik_reac":
         break;
+
+      // 荷重図
+      case "print_load":
+        break;
     }
     // 再描画
     //this.scene.render();
@@ -649,11 +655,53 @@ export class ThreeService {
       screenArea.style.height = this.canvasHeight;
 
       if (captureCase.length === 0) {
+        // 印刷パネルで
+        // 画面印刷
+        // が選択されているときの処理
         html2canvas(screenArea).then((canvas) => {
           result.push({
             title: title2,
             src: canvas.toDataURL(),
           });
+
+          resolve({ result, title1 });
+        });
+      } else if (this.mode === "print_load") {
+        // 印刷パネルで
+        // 荷重図
+        // が選択されているときの処理
+        const title4: string = captureInfo.title4;
+        const title5: string = captureInfo.title5;
+
+        // [1,2,3,...n]の配列
+        const ary = [...Array(this.inputLoadData.load_name.length)].map((_, i) => i + 1);
+
+        // "同期"でループする
+        const asyncLoop = async () => {
+          for (const [index, i] of ary.entries()) {
+            const columnItem = this.inputLoadData.getLoadNameColumns(i);
+
+            const loadName = columnItem.name;
+            const symbol = columnItem.symbol;
+
+            if (loadName !== "") {
+              this.ChangeMode("load_values");
+              this.ChangePage(i);
+
+              await html2canvas(screenArea).then((canvas) => {
+                // 各図のタイトル
+                // Case （荷重記号）（荷重名称）
+                result.push({
+                  title: `Case${i} ${symbol} ${loadName}`,
+                  src: canvas.toDataURL(),
+                });
+              });
+            }
+          }
+        };
+
+        return asyncLoop().then((res) => {
+          // console.log('complete!');
           resolve({ result, title1 });
         });
       } else if (
@@ -661,6 +709,9 @@ export class ThreeService {
         this.mode === "comb_fsec" ||
         this.mode === "pick_fsec"
       ) {
+        // 印刷パネルで
+        // 断面力図|COMBINE 断面力|PICKUP 断面力
+        // が選択されているときの処理
         let counter = 0;
         const title4: string[] = captureInfo.title4;
         const title5: string[] = captureInfo.title5;
@@ -688,6 +739,7 @@ export class ThreeService {
               // this.ChangePage(number,this.mode).finally(() => {
               this.secForce.changeRadioButtons(loadType);
               html2canvas(screenArea).then((canvas) => {
+                console.log(title2, name, loadTypeJa);
                 result.push({
                   title: title2 + name,
                   type: loadTypeJa,
@@ -739,6 +791,7 @@ export class ThreeService {
       }
     });
   }
+
   // 印刷するケース数を返す
   private getCaptureCase(): any {
     let result: string[] = new Array();
@@ -865,6 +918,16 @@ export class ThreeService {
         title1 = "ピックアップ 反力";
         title2 = "PickUp";
         title3 = this.getPickupTitle();
+        break;
+
+      // 荷重図
+      case "print_load":
+        result = Object.keys(this.printService.pickupJson);
+        result = this.helper.numberSort(result);
+        title1 = "荷重図";
+        title2 = "Case";
+        title4 = this.printService.fescIndex;
+        title5 = this.printService.fescIndexJa;
         break;
 
       case "nodes": // 図が 1種類のモード

@@ -1,5 +1,6 @@
 <div class="datasheet_inner" [style.width.px]="width">
     <div class="boxContainer">
+        <!-- グリッドの表示切り替えタブ -->
         <div class="btn-group">
             <nav>
                 <a routerLink="/input-load-name" routerLinkActive="selected-item" class="btn-change">
@@ -11,10 +12,12 @@
             </nav>
         </div>
 
+        <!-- 荷重番号の選択 -->
         <div class="pager">
             <app-pager (event)="onReceiveEventFromChild($event)"></app-pager>
         </div>
 
+        <!-- 現在表示中の荷重名称 -->
         <div class="load-name">
             <p>{{ load_name }}</p>
         </div>
@@ -23,9 +26,11 @@
     <div *ngIf="LL_flg === true">
         <div class="LL_area">
             <label class="label">ピッチ</label>
-            <input type="number" min="0.1" step="0.1" matInput matType="number" 
-                (change)="change_pich()" class="input"  [(ngModel)]="LL_pitch">
+            <input type="number" min="0.1" step="0.1" matInput matType="number" (change)="change_pich()" class="input"
+                [(ngModel)]="LL_pitch">
         </div>
     </div>
+
+    <!-- グリッド -->
     <app-sheet #grid [options]="options"></app-sheet>
 </div>
