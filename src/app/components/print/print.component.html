@@ -7,7 +7,7 @@
         <li>
           <label style="width: 100%">
             <input type="radio" name="radio-print" class="radio-input" id="result0"
-                   (click)="printService.selectRadio(0)" checked/>
+              (click)="printService.selectRadio(0)" checked />
             <span class="radio-parts" translate>print.inputData</span>
           </label>
         </li>
@@ -16,162 +16,164 @@
             <span class="subsection" translate>print.calc</span>
           </label>
           <!--          <ng-container *ngIf="'1'==printService.selectedIndex"> -->
-            <div class="indented-ul">
-              <ul>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print1"
-                           (click)="printService.selectRadio(1)"
-                           [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.displacement
-                    </span>
-                  </label>
-                </li>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print2"
-                           (click)="printService.selectRadio(2)"
-                           [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.combine_displacement</span>
-                  </label>
-                </li>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print3"
-                           (click)="printService.selectRadio(3)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.pickup_displacement</span>
-                  </label>
-                </li>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print4"
-                           (click)="printService.selectRadio(4)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.reaction</span>
-                  </label>
-                </li>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print5"
-                           (click)="printService.selectRadio(5)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.combine_reaction</span>
-                  </label>
-                </li>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print6"
-                           (click)="printService.selectRadio(6)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.pickup_reaction</span>
-                  </label>
-                </li>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print7"
-                           (click)="printService.selectRadio(7)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.SectionForce</span>
-                  </label>
-                </li>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print8"
-                           (click)="printService.selectRadio(8)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.combine_SectionForce</span>
-                  </label>
-                </li>
-                <li>
-                  <label style="width: 100%">
-                    <input type="radio" name="radio-print" class="radio-input" id="print9"
-                           (click)="printService.selectRadio(9)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                    <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                      print.pickup_SectionForce</span>
-                  </label>
-                </li>
-              </ul>
-            </div>
-            <!--          </ng-container> -->
+          <div class="indented-ul">
+            <ul>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print1"
+                    (click)="printService.selectRadio(1)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.displacement
+                  </span>
+                </label>
+              </li>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print2"
+                    (click)="printService.selectRadio(2)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.combine_displacement</span>
+                </label>
+              </li>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print3"
+                    (click)="printService.selectRadio(3)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.pickup_displacement</span>
+                </label>
+              </li>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print4"
+                    (click)="printService.selectRadio(4)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.reaction</span>
+                </label>
+              </li>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print5"
+                    (click)="printService.selectRadio(5)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.combine_reaction</span>
+                </label>
+              </li>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print6"
+                    (click)="printService.selectRadio(6)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.pickup_reaction</span>
+                </label>
+              </li>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print7"
+                    (click)="printService.selectRadio(7)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.SectionForce</span>
+                </label>
+              </li>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print8"
+                    (click)="printService.selectRadio(8)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.combine_SectionForce</span>
+                </label>
+              </li>
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="print9"
+                    (click)="printService.selectRadio(9)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.pickup_SectionForce</span>
+                </label>
+              </li>
+            </ul>
+          </div>
+          <!--          </ng-container> -->
         </li>
         <li>
           <label style="width: 100%">
             <span class="subsection">{{PrintScreen}}</span>
           </label>
 
-          <!--          <ng-container *ngIf="'10'==printService.selectedIndex"> -->
-            <!-- 印刷ケースを選択 -->
-            <!-- 印刷データ選択肢で"画面印刷"オプションを選択しているときだけ表示 -->
-            <div class="indented-ul">
-              <ul>
-                <!-- 画面印刷 -->
-                <li>
-                  <label style="width: 100%">
-                    <!--                         (click)="printService.selectPrintCase('PrintScreen')" /> -->
-                    <input type="radio" name="radio-print" class="radio-input" id="printCase0"
-                           (click)="printService.selectRadio(10)"/>
-                    <span class="radio-parts" translate>print.PrintScreen</span>
-                  </label>
-                </li>
-                <!--
-                    <ng-container *ngIf="ResultData.isCalculated">
-                      -->
-                  <!-- 断面力図 -->
-                  <li>
-                    <label style="width: 100%">
-                      <!-- (click)="printService.selectPrintCase('PrintDiagram')" /> -->
-                      <input type="radio" name="radio-print" class="radio-input" id="printCase1"
-                             (click)="printService.selectRadio(11)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                        print.PrintDiagram</span>
-                    </label>
-                  </li>
-                  <!-- 3Dのときの変位図図 -->
-                  <li *ngIf="helper.dimension==3">
-                    <label style="width: 100%">
-                      <!-- (click)="printService.selectPrintCase('CombPrintDiagram')" /> -->
-                      <input type="radio" name="radio-print" class="radio-input" id="printCase4"
-                             (click)="printService.selectRadio(14)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                        print.disgDiagram</span>
-                    </label>
-                  </li>
-                  <!-- Combine 断面力図 -->
-                  <li>
-                    <label style="width: 100%">
-                      <!--                           (click)="printService.selectPrintCase('CombPrintDiagram')" /> -->
-                      <input type="radio" name="radio-print" class="radio-input" id="printCase2"
-                             (click)="printService.selectRadio(12)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                        print.combPrintDiagram</span>
-                    </label>
-                  </li>
-                  <!-- Pickup 断面力図 -->
-                  <li>
-                    <label style="width: 100%">
-                      <!--                           (click)="printService.selectPrintCase('PickPrintDiagram')" /> -->
-                      <input type="radio" name="radio-print" class="radio-input" id="printCase3"
-                             (click)="printService.selectRadio(13)" [disabled]="ResultData.isCalculated?null:'1'"/>
-                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                        print.pickPrintDiagram</span>
-                    </label>
-                  </li>
-<!--                </ng-container> -->
-              </ul>
-            </div>
-            <!--          </ng-container> -->
+          <!-- 印刷ケースを選択 -->
+          <!-- 印刷データ選択肢で"画面印刷"オプションを選択しているときだけ表示 -->
+          <div class="indented-ul">
+            <ul>
+              <!-- 画面印刷 -->
+              <!-- 2Dモードや計算前に関わらず、常に選択できる -->
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="printCase0"
+                    (click)="printService.selectRadio(10)" />
+                  <span class="radio-parts" translate>print.PrintScreen</span>
+                </label>
+              </li>
 
+              <!-- 荷重図 -->
+              <!-- 2Dモードや計算前に関わらず、常に選択できる -->
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="printCase5"
+                    (click)="printService.selectRadio(15)" />
+                  <span class="radio-parts" translate>print.PrintLoad</span>
+                </label>
+              </li>
+
+              <!-- 断面力図 -->
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="printCase1"
+                    (click)="printService.selectRadio(11)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.PrintDiagram</span>
+                </label>
+              </li>
+
+              <!-- 3Dのときの変位図図 -->
+              <li *ngIf="helper.dimension==3">
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="printCase4"
+                    (click)="printService.selectRadio(14)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.disgDiagram</span>
+                </label>
+              </li>
+
+              <!-- Combine 断面力図 -->
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="printCase2"
+                    (click)="printService.selectRadio(12)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.combPrintDiagram</span>
+                </label>
+              </li>
+
+              <!-- Pickup 断面力図 -->
+              <li>
+                <label style="width: 100%">
+                  <input type="radio" name="radio-print" class="radio-input" id="printCase3"
+                    (click)="printService.selectRadio(13)" [disabled]="ResultData.isCalculated?null:'1'" />
+                  <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                    print.pickPrintDiagram</span>
+                </label>
+              </li>
+            </ul>
+          </div>
         </li>
       </ul>
     </div>
 
     <div class="print-ing">
       <label>
+        <!-- 印刷する -->
         <input id="printButton" type="button" name="printButton" value="{{'print.prt'| translate }}"
-               (click)="onPrintPDF()" />
+          (click)="onPrintPDF()" />
       </label>
 
       <div *ngIf="printService.pageCount>0" class="message">
