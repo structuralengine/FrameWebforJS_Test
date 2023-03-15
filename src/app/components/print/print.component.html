@@ -4,20 +4,23 @@
     <h2 translate>print.SelectPrintData</h2>
     <div class="print-choice">
       <ul>
+        <!-- 入力データ -->
         <li>
           <label style="width: 100%">
             <input type="radio" name="radio-print" class="radio-input" id="result0"
-              (click)="printService.selectRadio(0)" checked />
+              (click)="printService.selectRadio(0)" [checked]="printService.flg === 0" />
             <span class="radio-parts" translate>print.inputData</span>
           </label>
         </li>
+
+        <!-- 計算結果 -->
         <li>
           <label style="width: 100%">
             <span class="subsection" translate>print.calc</span>
           </label>
-          <!--          <ng-container *ngIf="'1'==printService.selectedIndex"> -->
           <div class="indented-ul">
             <ul>
+              <!-- 変位量 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print1"
@@ -27,6 +30,8 @@
                   </span>
                 </label>
               </li>
+
+              <!-- COMBINE 変位量 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print2"
@@ -35,6 +40,8 @@
                     print.combine_displacement</span>
                 </label>
               </li>
+
+              <!-- PICKUP 変位量 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print3"
@@ -43,6 +50,8 @@
                     print.pickup_displacement</span>
                 </label>
               </li>
+
+              <!-- 反力 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print4"
@@ -51,6 +60,8 @@
                     print.reaction</span>
                 </label>
               </li>
+
+              <!-- COMBINE 反力 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print5"
@@ -59,6 +70,8 @@
                     print.combine_reaction</span>
                 </label>
               </li>
+
+              <!-- PICKUP 反力 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print6"
@@ -67,6 +80,8 @@
                     print.pickup_reaction</span>
                 </label>
               </li>
+
+              <!-- 断面力 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print7"
@@ -75,6 +90,8 @@
                     print.SectionForce</span>
                 </label>
               </li>
+
+              <!-- COMBINE 断面力 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print8"
@@ -83,6 +100,8 @@
                     print.combine_SectionForce</span>
                 </label>
               </li>
+
+              <!-- PICKUP 断面力 -->
               <li>
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="print9"
@@ -93,8 +112,9 @@
               </li>
             </ul>
           </div>
-          <!--          </ng-container> -->
         </li>
+
+        <!-- 画面印刷 -->
         <li>
           <label style="width: 100%">
             <span class="subsection">{{PrintScreen}}</span>

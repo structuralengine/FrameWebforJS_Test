@@ -380,8 +380,14 @@ export class MenuComponent implements OnInit {
   public contentsDailogShow(id): void {
     this.deactiveButtons();
     document.getElementById(id).classList.add("active");
+
     if (id === 13) {
+      // 変数をクリア
       this.printService.clear();
+
+      // 印刷パネルの選択状態をリセット
+      this.printService.flg = 0;
+
       this.CustomFsecData.clear();
     }
     this.helper.isContentsDailogShow = true;

@@ -25,6 +25,9 @@ export class PrintComponent implements OnInit, OnDestroy {
   private url = "https://frameprintpdf.azurewebsites.net/api/Function1";
   public PrintScreen: string;
 
+  // 選択されている印刷データのラジオボタン
+  public selectedRadioButton: number = 0;
+
   constructor(
     public InputData: InputDataService,
     public printService: PrintService,
@@ -64,6 +67,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   private reset_ts(): void {
     this.last_ts = performance.now();
   };
+
   private check_ts(): number {
     const tmp: number = this.last_ts;
     this.last_ts = performance.now();
@@ -71,29 +75,31 @@ export class PrintComponent implements OnInit, OnDestroy {
   };
 
   public onPrintPDF(): void {
-
     this.reset_ts();
     console.log("starting onPrintPDF...: 0 msec");
 
-    this.three.mode = ''; // どこかでクリアしてるかもしれないけどここでも一応初期化
-
     // 印刷ケースをセット
+    let mode = '';
     if (this.printService.printCase === 'PrintScreen') {
       // 画面印刷
-      this.three.mode = 'default';
+      mode = 'default';
     } else if (this.printService.printCase === 'PrintLoad') {
       // 荷重図
-      this.three.mode = 'print_load';
+      mode = 'print_load';
     } else if (this.printService.printCase === 'PrintDiagram') {
       // 断面力図
-      this.three.mode = 'fsec';
+      mode = 'fsec';
     } else if (this.printService.printCase === 'CombPrintDiagram') {
       // Combine 断面力図
-      this.three.mode = 'comb_fsec';
+      mode = 'comb_fsec';
     } else if (this.printService.printCase === 'PickPrintDiagram') {
       // Pickup 断面力図
-      this.three.mode = 'pick_fsec';
+      mode = 'pick_fsec';
     }
+
+    this.three.ChangeMode(mode);
+
+    this.three.mode = mode;
 
     // 印刷対象を取得して、セット
     for (let i = 0; i < this.printService.printTargetValues.length; i++) {

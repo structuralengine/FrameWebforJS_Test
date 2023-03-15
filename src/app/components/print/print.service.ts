@@ -177,8 +177,9 @@ export class PrintService {
   // すごく付け焼き刃な対応があるのでいずれ直したい。
   public selectRadio(id: number) {
     var e = document.getElementById("printCus6");
-    if (11 != id && null !== e)
+    if (11 != id && null !== e) {
       e.setAttribute("checked", null);
+    }
 
     this.printOption = new Array();
     this.printCase = "";
