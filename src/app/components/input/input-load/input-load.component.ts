@@ -744,8 +744,9 @@ export class InputLoadComponent implements OnInit {
         this.currentCol = column;
       },
       change: (evt, ui) => {
-
+        console.log("UI: ", ui)
         const symbol: string = this.data.getLoadName(this.page, "symbol");
+        console.log(symbol)
         if(symbol === "LL"){
           // const modalRef = this.modalService.open(WaitDialogComponent);
           this.three.changeData("load_values");
@@ -753,6 +754,7 @@ export class InputLoadComponent implements OnInit {
           return;
         }
 
+        const updatedRows = [];
         for (const range of ui.updateList) {
           // L1行に 数字ではない入力がされていたら削除する
           const L1 = this.helper.toNumber(range.rowData["L1"]);
@@ -763,10 +765,12 @@ export class InputLoadComponent implements OnInit {
           if (direction !== undefined && direction !== null) {
             range.rowData["direction"] = direction.trim().toLowerCase();
           }
-          const row = range.rowIndx + 1;
-          this.three.changeData("load_values", row);
+          updatedRows.push(range.rowData.row);
+          // const row = range.rowIndx + 1;
+          // this.three.changeData("load_values", row);
         }
 
+        this.three.changeDataList("load_values", { updatedRows });
 
         for (const target of ui.addList) {
           const no: number = target.rowIndx;

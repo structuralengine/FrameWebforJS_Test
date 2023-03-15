@@ -22,6 +22,7 @@ import { ThreeLoadMemberMoment } from "./three-load-member-moment";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
 import { withLatestFrom } from "rxjs-compat/operator/withLatestFrom";
+import { forEach } from '@angular-devkit/schematics';
 
 @Injectable({
   providedIn: "root",
@@ -31,7 +32,7 @@ export class ThreeLoadService {
 
   // 全ケースの荷重を保存
   private AllCaseLoadList: {};
-  private currentIndex: string; // 現在 表示中のケース番号
+  private currentIndex: string; // 現在 表示中のケース番号♦
 
   // 荷重のテンプレート
   private loadEditor: {};
@@ -701,6 +702,132 @@ export class ThreeLoadService {
       }
 
     }
+
+    // 重なりを調整する
+    this.setOffset();
+    // サイズを調整する
+    this.onResize();
+    // レンダリング
+    this.scene.render();
+    // 表示フラグを ON にする
+    this.isVisible.object = true;
+  }
+
+  // 荷重の入力が変更された場合（複数行）
+  public changeDataList(param): void {
+
+    const { updatedRows } = param;
+
+    const index = parseInt(this.currentIndex, 10);
+    const symbol: string = this.load.getLoadName(index, "symbol");
+    if(symbol === "LL"){
+      this.change_LL_Load(this.currentIndex);
+      return;
+    }
+
+    // データになカレントデータがなければ
+    if (!(this.currentIndex in this.load.load)) {
+      this.removeCase(this.currentIndex);
+      return;
+    }
+
+    // 格点データを入手
+    if (this.nodeData === null) {
+      return; // 格点がなければ 以降の処理は行わない
+    }
+    if (Object.keys(this.nodeData).length <= 0) {
+      return; // 格点がなければ 以降の処理は行わない
+    }
+
+    // 要素データを入手
+    if (this.memberData === null) {
+      return; //要素がなければ 以降の処理は行わない
+    }
+    
+    if (Object.keys(this.memberData).length <= 0) {
+      return; //要素がなければ 以降の処理は行わない
+    }
+
+    const tempMemberLoad = this.load.getMemberLoadJson(null, this.currentIndex); //計算に使う版
+    let memberLoadData = this.load.getMemberLoadJson(0, this.currentIndex); //計算に使う版
+    
+    // TODO: 「確認要」荷重強度をすべて削除するとレンダリングにならないトラブルを解消
+    if (!(this.currentIndex in memberLoadData)) {
+      memberLoadData[this.currentIndex] = [];
+    }
+
+    // 節点荷重データを入手
+    const nodeLoadData = this.load.getNodeLoadJson(0, this.currentIndex);
+
+    updatedRows.forEach((row: number) => {
+
+      let row1 = row; // 変更・調整されるrow1を定義
+
+      // 節点荷重を変更
+      this.changeNodeLode(row, nodeLoadData);
+  
+  
+      if (this.currentIndex in memberLoadData) {
+        // 要素荷重を変更
+        this.changeMemberLode(row1, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+  
+        // 対象行以下の行について
+        row1++;
+        const tmLoad = tempMemberLoad[this.currentIndex];
+        let i = tmLoad.findIndex((e) => e.row === row1);
+        while (i >= 0) {
+          if (tmLoad[i].L1 == null) {
+            break;
+          }
+          if (!tmLoad[i].L1.includes("-")) {
+            break;
+          }
+          // 要素荷重を変更
+          this.changeMemberLode(tmLoad[i].row, memberLoadData); //実際に荷重として使っているのは　memberLoadData こっち
+          row1++;
+          i = tmLoad.findIndex((e) => e.row === row1);
+        }
+      }
+  
+      if (this.currentIndex in memberLoadData){
+  
+        // 変更行をピックアップして、対象の部材番号・directionのオブジェクトの順番を整理する。
+        // 変更行をピックアップ
+        const tempMemberLoadData = memberLoadData[this.currentIndex];
+        const targetMemberLoadData = tempMemberLoadData.filter(
+          (load) => load.row === row
+        );
+        // 再構築されたlistでforループを回す → 基本は1回
+        for (const key of Object.keys(targetMemberLoadData)) {
+          // 変更された行のdirectionを拾う.
+          const direction = targetMemberLoadData[key]["direction"];
+          // 順番を並び変えるmemberLoadListを拾う.
+          const targetCaseLoadList = this.AllCaseLoadList[this.currentIndex];
+          if (targetCaseLoadList === undefined) {
+            break;
+          };
+          const memberLoadList = targetCaseLoadList.memberLoadList;
+          for (const key1 of Object.keys(memberLoadList)) {
+            const targetList = memberLoadList[key1];
+            const list = targetList[direction];
+            if (list === undefined) {
+              break;
+            };
+            // rowをキーに昇順で並べ替える
+            list.sort((a, b) => {
+              if (a.row < b.row) {
+                return -1;
+              } else if (a.row > b.row) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+          }
+        }
+      }
+    })
+
 
     // 重なりを調整する
     this.setOffset();
