@@ -145,6 +145,23 @@ export class ThreeService {
   }
 
   //////////////////////////////////////////////////////
+  // データの変更通知を処理する（複数行）
+  public changeDataList(mode: string = "", param={}): void {
+    switch (mode) {
+      case "load_values":
+        this.load.changeDataList(param);
+        break;
+
+      default:
+        // 何御しない
+        return;
+    }
+
+    // 再描画
+    this.scene.render();
+  }
+
+  //////////////////////////////////////////////////////
   // データの選択を処理する
   public selectChange(mode: string, index: number, index_sub: any): void {
     //console.log("selectChange", mode, index, index_sub);
