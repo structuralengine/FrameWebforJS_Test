@@ -736,7 +736,7 @@ export class InputLoadComponent implements OnInit {
         const row = range[0].r1 + 1;
         const columnList = this.getColumnList(this.helper.dimension);
         const column = columnList[range[0].c1];
-        if (this.currentRow !== row || this.currentCol !== column){
+        if (this.currentRow !== row || this.currentCol !== column) {
           //選択行の変更があるとき，ハイライトを実行する
           this.three.selectChange("load_values", row, column);
         }
@@ -746,8 +746,7 @@ export class InputLoadComponent implements OnInit {
       change: (evt, ui) => {
         console.log("UI: ", ui)
         const symbol: string = this.data.getLoadName(this.page, "symbol");
-        console.log(symbol)
-        if(symbol === "LL"){
+        if (symbol === "LL") {
           // const modalRef = this.modalService.open(WaitDialogComponent);
           this.three.changeData("load_values");
           // modalRef.close();
@@ -794,7 +793,7 @@ export class InputLoadComponent implements OnInit {
           load['L2'] = (newRow.L2 != undefined) ? newRow.L2 : '';
           load['P1'] = (newRow.P1 != undefined) ? newRow.P1 : '';
           load['P2'] = (newRow.P2 != undefined) ? newRow.P2 : '';
-          load['n']  = (newRow.n  != undefined) ? newRow.n  : '';
+          load['n'] = (newRow.n != undefined) ? newRow.n : '';
           load['tx'] = (newRow.tx != undefined) ? newRow.tx : '';
           load['ty'] = (newRow.ty != undefined) ? newRow.ty : '';
           load['tz'] = (newRow.tz != undefined) ? newRow.tz : '';
@@ -858,7 +857,7 @@ export class InputLoadComponent implements OnInit {
 
     const load_name = this.data.getLoadNameColumns(currentPage);
     this.checkLL(load_name.symbol);
-    if(this.LL_flg){
+    if (this.LL_flg) {
       this.LL_pitch = load_name.LL_pitch;
     }
     this.page = currentPage;
@@ -878,7 +877,7 @@ export class InputLoadComponent implements OnInit {
   // 連行荷重のピッチを変えた場合
   public change_pich() {
 
-    if(this.LL_pitch < 0.1){
+    if (this.LL_pitch < 0.1) {
       this.LL_pitch = 0.1;
       return;
     }
@@ -886,10 +885,10 @@ export class InputLoadComponent implements OnInit {
     const load_name = this.data.getLoadNameColumns(this.page);
     load_name.LL_pitch = this.LL_pitch;
 
-    this.threeLoad.change_LL_Load(this.page.toString()); 
+    this.threeLoad.change_LL_Load(this.page.toString());
   }
 
-  private checkLL(symbol: string): void{
+  private checkLL(symbol: string): void {
     if (symbol === undefined) {
       this.LL_flg = false;
       return
@@ -922,7 +921,7 @@ export class InputLoadComponent implements OnInit {
 
   }
 
-  private getColumnList (dimension): string[] {
+  private getColumnList(dimension): string[] {
     if (dimension === 3) {
       return this.columnKeys3D;
     } else {

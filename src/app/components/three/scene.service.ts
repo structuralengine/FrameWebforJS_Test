@@ -147,11 +147,9 @@ export class SceneService {
         if (dimension === 2) {
           // 2Dモードであれば、触れないようにする
           camera_gui.domElement.hidden = true;
-          this.GridHelper.visible = false;
           this.OrthographicCamera_onChange(true);
         } else {
           camera_gui.domElement.hidden = false;
-          this.GridHelper.visible = true;
           this.OrthographicCamera_onChange(this.params.Perspective);
         }
         break;

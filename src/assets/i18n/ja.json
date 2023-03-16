@@ -270,6 +270,7 @@
         "combine_SectionForce": "COMBINE 断面力",
         "pickup_SectionForce": "PICKUP 断面力",
         "PrintScreen": "画面印刷",
+        "PrintLoad": "荷重図",
         "PrintDiagram": "断面力図",
         "disgDiagram": "変位図",
         "combPrintDiagram": "Combine 断面力図",

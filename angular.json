@@ -55,8 +55,6 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "baseHref": "/FrameWebforJS",
-              "deployUrl": "/FrameWebforJS/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
