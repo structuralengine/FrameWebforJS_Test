@@ -146,7 +146,7 @@ export class ThreeService {
 
   //////////////////////////////////////////////////////
   // データの変更通知を処理する（複数行）
-  public changeDataList(mode: string = "", param={}): void {
+  public changeDataList(mode: string = "", param = {}): void {
     switch (mode) {
       case "load_values":
         this.load.changeDataList(param);
@@ -269,6 +269,7 @@ export class ThreeService {
         this.load.changeCase(currentPage);
         break;
 
+      // 変位
       case "disg":
         this.disg.changeData(currentPage);
       case "comb_disg":
@@ -450,6 +451,7 @@ export class ThreeService {
       this.fsec.visibleChange("");
     }
 
+    // 変位
     if (ModeName === "disg") {
       this.node.visibleChange(true, true, false);
       this.member.visibleChange(true, false, false);
@@ -504,9 +506,8 @@ export class ThreeService {
       this.fsec.visibleChange("");
     }
 
-    if (
-      ModeName === "fsec"
-    ) {
+    // 断面力図
+    if (ModeName === "fsec") {
       this.node.visibleChange(true, false, false);
       this.member.visibleChange(true, true, false);
       this.fixNode.visibleChange(false);
@@ -537,6 +538,7 @@ export class ThreeService {
       );
     }
 
+    // Combine 断面力図|Pickup 断面力図
     if (
       ModeName === "comb_fsec" ||
       ModeName === "pick_fsec"
@@ -656,7 +658,7 @@ export class ThreeService {
   public async getCaptureImage(): Promise<any> {
     return new Promise((resolve, reject) => {
 
-      //this.reset_ts();
+      // this.reset_ts();
       //console.log("starting getCaptureImage...: 0 msec");
 
       const result = [];
@@ -719,6 +721,53 @@ export class ThreeService {
 
         return asyncLoop().then((res) => {
           // console.log('complete!');
+          resolve({ result, title1 });
+        });
+      } else if (this.mode === "disg") {
+        // 印刷パネルで
+        // 変位図
+        // が選択されているときの処理
+
+        // [1,2,3,...n]の配列
+        const ary = [...Array(this.inputLoadData.load_name.length)].map((_, i) => i + 1);
+
+        // "同期"でループする
+        const asyncLoop = async () => {
+          for (const [index, i] of ary.entries()) {
+            const columnItem = this.inputLoadData.getLoadNameColumns(i);
+
+            const loadName = columnItem.name;
+
+            // console.log('変位図', loadName, i);
+
+            if (loadName !== "") {
+              this.ChangeMode("disg");
+              this.ChangePage(i);
+
+              // 変位図の場合、文字列を取得して、プリントアウト時にセットする
+              const maxMinObj = this.max_min.getMaxMinValue(
+                this.disg.value_range,
+                this.mode,
+                i,
+                'momentY'
+              );
+
+              // canvas上の文字列はプリントアウト時には非表示にする
+              this.max_min.visible = false;
+
+              await html2canvas(screenArea).then((canvas) => {
+                result.push({
+                  title: `Case${i} ${loadName}`,
+                  disgSubInfo1: maxMinObj.max ?? '',
+                  disgSubInfo2: maxMinObj.min ?? '',
+                  src: canvas.toDataURL(),
+                });
+              });
+            }
+          }
+        };
+
+        return asyncLoop().then((res) => {
           resolve({ result, title1 });
         });
       } else if (

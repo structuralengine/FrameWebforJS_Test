@@ -42,12 +42,12 @@ export class ThreeDisplacementService {
 
 
   constructor(private scene: SceneService,
-              private node: InputNodesService,
-              private member: InputMembersService,
-              private panel: InputPanelService,
-              private load: InputLoadService,
-              private three_node: ThreeNodesService,
-              private three_member: ThreeMembersService) {
+    private node: InputNodesService,
+    private member: InputMembersService,
+    private panel: InputPanelService,
+    private load: InputLoadService,
+    private three_node: ThreeNodesService,
+    private three_member: ThreeMembersService) {
 
     this.lineList = new THREE.Object3D();
     this.lineList.visible = false;
@@ -69,7 +69,7 @@ export class ThreeDisplacementService {
   }
 
   public visibleChange(flag: boolean): void {
-    if ( this.lineList.visible === flag) {
+    if (this.lineList.visible === flag) {
       return;
     }
     this.lineList.visible = flag;
@@ -139,30 +139,30 @@ export class ThreeDisplacementService {
 
     this.nodeData = this.node.getNodeJson(0);
     this.membData = this.member.getMemberJson(0);
-    
+
     /////// パネルの1辺を仮想の部材として登録
     const panelData = this.panel.getPanelJson(0);
-    for(const pk of Object.keys(panelData)){
+    for (const pk of Object.keys(panelData)) {
       const p = panelData[pk];
-      for(let i = 1; i < p.nodes.length; i++){
-        const temp = { 
-          'ni': p.nodes[i-1], 
-          'nj': p.nodes[i], 
-          'e': p.e, 
+      for (let i = 1; i < p.nodes.length; i++) {
+        const temp = {
+          'ni': p.nodes[i - 1],
+          'nj': p.nodes[i],
+          'e': p.e,
           'cg': 0
         };
-        if(!this.member.sameNodeMember(temp, this.membData)){
-          this.membData['p'+ pk + '-' + i.toString()] = temp;
+        if (!this.member.sameNodeMember(temp, this.membData)) {
+          this.membData['p' + pk + '-' + i.toString()] = temp;
         }
       }
       const temp = {  // 最初と最後の負始点
-        'ni': p.nodes[0], 
-        'nj': p.nodes[p.nodes.length-1], 
-        'e': p.e, 
+        'ni': p.nodes[0],
+        'nj': p.nodes[p.nodes.length - 1],
+        'e': p.e,
         'cg': 0
       };
-      if(!this.member.sameNodeMember(temp, this.membData)){
-        this.membData['p'+ pk + '-0'] = temp;
+      if (!this.member.sameNodeMember(temp, this.membData)) {
+        this.membData['p' + pk + '-0'] = temp;
       }
     }
     this.panelData = this.panel.getPanelJson(0);
@@ -177,7 +177,6 @@ export class ThreeDisplacementService {
   }
 
   public changeData(index: number): void {
-
     // 格点データを入手
     if (Object.keys(this.nodeData).length <= 0) {
       this.visibleChange(false);
@@ -192,7 +191,7 @@ export class ThreeDisplacementService {
       this.visibleChange(false);
       return;
     }
-    
+
     // 変位データを入手
     const targetKey: string = index.toString();
     if (!(targetKey in this.allDisgData)) {
@@ -206,13 +205,13 @@ export class ThreeDisplacementService {
     [minDistance, maxDistance] = this.getDistance();
 
     // 非表示だったら 表示する
-    if(this.lineList.visible===false){
+    if (this.lineList.visible === false) {
       this.visibleChange(true);
     }
 
     // 連行荷重の場合 アニメーションを走らせる
     const symbol: string = this.load.getLoadName(index, "symbol");
-    if(symbol === "LL"){
+    if (symbol === "LL") {
       this.change_LL_Load(targetKey, membKeys, minDistance, maxDistance);
       return;
     }
@@ -228,7 +227,7 @@ export class ThreeDisplacementService {
   }
 
   private changeDisg(targetKey: string, membKeys: string[],
-                      minDistance: number, maxDistance: number): void {
+    minDistance: number, maxDistance: number): void {
 
     const disgData = this.allDisgData[targetKey];
 
@@ -262,10 +261,10 @@ export class ThreeDisplacementService {
         continue;
       }
       let Division = 20;
-      if(di.rx===dj.rx && di.ry===dj.ry && di.rz===dj.rz ){
+      if (di.rx === dj.rx && di.ry === dj.ry && di.rz === dj.rz) {
         Division = 1;
       }
-      
+
       this.targetData.push({
         name: key,
         xi: i.x,
@@ -293,34 +292,34 @@ export class ThreeDisplacementService {
 
     const i = targetKey.indexOf('.');
     let targetKey2 = targetKey;
-    if(i>0){
+    if (i > 0) {
       targetKey2 = targetKey.slice(0, i);
     }
     const maxValue: number = this.max_values[targetKey2];
-    if(maxValue > 0){
+    if (maxValue > 0) {
       this.targetData['scale'] = this.three_node.maxDistance * 0.1 / maxValue;
     }
-    else{
+    else {
       this.targetData['scale'] = 1;
     }
     // this.gui_max_scale = maxDistance / minDistance;
 
     this.onResize();
-    
+
   }
-  
+
   // 連行荷重を変更する
   public change_LL_Load(id: string, membKeys: string[],
-                        minDistance: number, maxDistance: number): void{
+    minDistance: number, maxDistance: number): void {
 
     // 対象の連行荷重を全部削除する
-    let LL_keys = Object.keys(this.allDisgData).filter(e =>{
+    let LL_keys = Object.keys(this.allDisgData).filter(e => {
       return e.indexOf(id + ".") === 0;
     })
-    if(LL_keys === undefined){
+    if (LL_keys === undefined) {
       return;
     }
-    
+
     LL_keys = [id].concat(LL_keys)
 
     // 一旦アニメーションを削除
@@ -336,15 +335,15 @@ export class ThreeDisplacementService {
 
 
   // 連行移動荷重のアニメーションを開始する
-  public animation( keys: string[], membKeys: string[],
-                    minDistance: number, maxDistance: number,
-                    i: number = 0, old_j: number = 0 ) {
+  public animation(keys: string[], membKeys: string[],
+    minDistance: number, maxDistance: number,
+    i: number = 0, old_j: number = 0) {
 
     let j: number = Math.floor(i / 10); // 10フレームに１回位置を更新する
 
-    if(j < keys.length){
+    if (j < keys.length) {
       i = i + 1; // 次のフレーム
-    }else{
+    } else {
       i = 0;
       j = 0;
     }
@@ -354,7 +353,7 @@ export class ThreeDisplacementService {
       this.animation(keys, membKeys, minDistance, maxDistance, i, j);
     });
 
-    if(j === old_j){
+    if (j === old_j) {
       return;
     }
 
@@ -380,17 +379,17 @@ export class ThreeDisplacementService {
 
       // 要素座標系への変換
       const t = this.three_member.tMatrix(xi, yi, zi, xj, yj, zj, target.theta);
-      const dge = [ target.dxi, target.dyi, target.dzi, target.rxi, target.ryi, target.rzi, 
-                    target.dxj, target.dyj, target.dzj, target.rxj, target.ryj, target.rzj];//.map(v => v * scale);;
+      const dge = [target.dxi, target.dyi, target.dzi, target.rxi, target.ryi, target.rzi,
+      target.dxj, target.dyj, target.dzj, target.rxj, target.ryj, target.rzj];//.map(v => v * scale);;
       const de: number[] = new Array(dge.length);
-      for( let ip=0; ip<4; ip++){
+      for (let ip = 0; ip < 4; ip++) {
         const ib = 3 * ip;
-        for(let i=0; i<3; i++){
+        for (let i = 0; i < 3; i++) {
           let s = 0;
-          for(let j=0; j<3; j++){
+          for (let j = 0; j < 3; j++) {
             s = s + t[i][j] * dge[ib + j];
           }
-        de[ib + i] = s
+          de[ib + i] = s
         }
       }
 
@@ -410,7 +409,7 @@ export class ThreeDisplacementService {
         const yhe = (1 - 3 * Math.pow(n, 2) + 2 * Math.pow(n, 3)) * de[1] + L * (n - 2 * Math.pow(n, 2) + Math.pow(n, 3)) * de[5]
           + (3 * Math.pow(n, 2) - 2 * Math.pow(n, 3)) * de[7] + L * (0 - Math.pow(n, 2) + Math.pow(n, 3)) * de[11];
         const zhe = (1 - 3 * Math.pow(n, 2) + 2 * Math.pow(n, 3)) * de[2] - L * (n - 2 * Math.pow(n, 2) + Math.pow(n, 3)) * de[4]
-          + (3 * Math.pow(n, 2) - 2 * Math.pow(n, 3)) * de[8] - L * ( Math.pow(n, 3)- Math.pow(n, 2)) * de[10];
+          + (3 * Math.pow(n, 2) - 2 * Math.pow(n, 3)) * de[8] - L * (Math.pow(n, 3) - Math.pow(n, 2)) * de[10];
 
 
         // 全体座標系への変換
@@ -434,7 +433,7 @@ export class ThreeDisplacementService {
         geometry.setFromPoints(positions);
 
       } else {
-        const geometry = new THREE.BufferGeometry().setFromPoints( positions );
+        const geometry = new THREE.BufferGeometry().setFromPoints(positions);
         const matLine = new THREE.LineBasicMaterial({
           color: 0xFF0000,
           linewidth: 0.001,
@@ -454,9 +453,9 @@ export class ThreeDisplacementService {
     let maxDistance: number = 0;
 
     const member: object = this.membData;
-    for ( const memberNo of Object.keys(member)){
+    for (const memberNo of Object.keys(member)) {
       let l: number;
-      if (!memberNo.includes('p')){
+      if (!memberNo.includes('p')) {
         l = this.member.getMemberLength(memberNo);
       } else {
         l = this.panel.getPanelLength(member[memberNo]);

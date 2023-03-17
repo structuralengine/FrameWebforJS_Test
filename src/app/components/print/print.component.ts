@@ -25,9 +25,6 @@ export class PrintComponent implements OnInit, OnDestroy {
   private url = "https://frameprintpdf.azurewebsites.net/api/Function1";
   public PrintScreen: string;
 
-  // 選択されている印刷データのラジオボタン
-  public selectedRadioButton: number = 0;
-
   constructor(
     public InputData: InputDataService,
     public printService: PrintService,
@@ -89,6 +86,9 @@ export class PrintComponent implements OnInit, OnDestroy {
     } else if (this.printService.printCase === 'PrintDiagram') {
       // 断面力図
       mode = 'fsec';
+    } else if (this.printService.printCase === 'disgDiagram') {
+      // 変位
+      mode = 'disg';
     } else if (this.printService.printCase === 'CombPrintDiagram') {
       // Combine 断面力図
       mode = 'comb_fsec';
@@ -108,7 +108,6 @@ export class PrintComponent implements OnInit, OnDestroy {
       this.printService.customThree.threeEditable[i] = isSelected;
     }
 
-    //    if (this.printService.optionList['captur'].value) {
     if (this.printService.is_printing_screen()) {
       // 図の印刷
       if (this.helper.dimension === 2 && ['fsec', 'comb_fsec', 'pick_fsec'].includes(this.three.mode)) {
@@ -117,6 +116,7 @@ export class PrintComponent implements OnInit, OnDestroy {
 
         // loadingの表示
         this.loadind_enable();
+
         // データの集計
         console.log('データを集計中...: ' + this.check_ts() + " msec");
         this.printService.optionList['input'].value = true;

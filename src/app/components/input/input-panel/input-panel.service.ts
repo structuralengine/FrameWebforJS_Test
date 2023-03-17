@@ -73,7 +73,7 @@ export class InputPanelService {
 
     const result: object = {};
 
-    console.log('this.panel_points', this.panel_points);
+    // console.log('this.panel_points', this.panel_points);
     for (const row of this.panel_points) {
       const r = row['row'];
 

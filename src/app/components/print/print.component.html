@@ -154,7 +154,7 @@
                 </label>
               </li>
 
-              <!-- 3Dのときの変位図図 -->
+              <!-- 3Dのときの変位図 -->
               <li *ngIf="helper.dimension==3">
                 <label style="width: 100%">
                   <input type="radio" name="radio-print" class="radio-input" id="printCase4"
@@ -212,13 +212,9 @@
     </div>
   </div>
 
+  <!-- 印刷対象を選択 -->
   <!-- 最大最小のオプションや任意部材のテーブルの制御 -->
   <ng-container *ngIf="ResultData.isCalculated">
     <app-print-custom></app-print-custom>
-  </ng-container>
-
-  <!-- ↓?? -->
-  <ng-container *ngIf="!ResultData.isCalculated">
-    <div></div>
   </ng-container>
 </div>
