@@ -1,5 +1,6 @@
 $height_header: 32px;
 $height_semiHeader: 32px;
+
 h2 {
     // height: $height_header;
     // padding:80px 0 32px 0;
@@ -32,10 +33,15 @@ h4 {
 
 .fit-picture {
     margin-bottom: 8px;
+
     img {
         width: 780px;
         height: 500px;
         object-fit: cover;
         object-position: 0 0;
     }
+}
+
+.small {
+    font-size: xx-small;
 }
