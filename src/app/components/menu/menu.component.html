@@ -1,38 +1,62 @@
 <div class="title-and-menu" id="disTitle">
     <div class="icon-area">
         <ul>
+            <!-- ファイル -->
             <li>
                 <div ngbDropdown class="dropdownmenu">
                     <a class="icon file" id="dropdownBasic1" ngbDropdownToggle onfocus="this.blur();"><i
                             class="far fa-file"></i></a>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <button ngbDropdownItem (click)="renew()"translate>menu.newEntry</button>
-                        <ng-container  *ngIf="!electronService.isElectronApp">
+                        <!-- 新規作成 -->
+                        <button ngbDropdownItem (click)="renew()" translate>menu.newEntry</button>
+
+                        <!-- ファイルを開く(ブラウザ) -->
+                        <ng-container *ngIf="!electronService.isElectronApp">
                             <label style="width: 100%; margin: 0px">
                                 <span ngbDropdownItem style="padding: 8px" translate>menu.openFile
-                                    <input type="file" accept="application/json" (change)="open($event)" style="display: none" />
+                                    <input type="file" accept="application/json" (change)="open($event)"
+                                        style="display: none" />
                                 </span>
                             </label>
                         </ng-container>
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="open_electron()" translate>
+
+                        <!-- ファイルを開く(Electron) -->
+                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="open_electron()"
+                            translate>
                             menu.openFile
-                        </button> 
+                        </button>
+
+                        <!-- ファイルを保存 -->
                         <button ngbDropdownItem (click)="save()" translate>menu.saveFile</button>
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()" translate>menu.overwrite</button>
-                        <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()"translate>menu.outputFile</button>
+
+                        <!--  -->
+                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()"
+                            translate>menu.overwrite</button>
+
+                        <!--  -->
+                        <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()"
+                            translate>menu.outputFile</button>
                     </div>
                 </div>
             </li>
+
+            <!-- 計算 -->
             <li>
                 <a (click)="calcrate()"><i class="fas fa-calculator"></i></a>
             </li>
+
+            <!-- 印刷 -->
             <li>
                 <a routerLink="./print" (click)="contentsDailogShow(13)" routerLinkActive="selected-item" id="13"><i
                         class="fi fi-print"></i></a>
             </li>
+
+            <!-- Question -->
             <li>
                 <a (click)="goToLink()"><i class="far fa-question-circle"></i></a>
             </li>
+
+            <!-- 2D|3D切り替えスイッチ -->
             <li>
                 <div class="toggle toggle--switch">
                     <input type="checkbox" id="toggle--switch" name="g2" class="toggle--checkbox" style="display: none;"
@@ -48,7 +72,7 @@
     <div class="title" *ngIf="fileName ===  '';then init; else file">
     </div>
     <ng-template #init>
-        <h1 >{{'menu.softName'| translate }} ver.{{version}}</h1>
+        <h1>{{'menu.softName'| translate }} ver.{{version}}</h1>
     </ng-template>
     <ng-template #file>
         <h1>{{fileName}}</h1>
@@ -73,14 +97,14 @@
                     <a class="icon file" id="dropdownBasic1" class="menu-btn" ngbDropdownToggle
                         onfocus="this.blur();"><i class="far fa-user-circle"></i>{{ user.displayName }}</a>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <a (click)="auth.signOut()" (click)="logOut()" class="menu-btn logOut"translate>menu.logout</a>
+                        <a (click)="auth.signOut()" (click)="logOut()" class="menu-btn logOut" translate>menu.logout</a>
                     </div>
                 </div>
             </div>
         </div>
         <ng-template #showLogin>
             <a (click)="logIn()" class="menu-btn">
-                <i class="fas fa-sign-in-alt"></i> 
+                <i class="fas fa-sign-in-alt"></i>
                 <p translate>menu.login</p>
             </a>
         </ng-template>

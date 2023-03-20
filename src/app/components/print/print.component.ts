@@ -64,33 +64,42 @@ export class PrintComponent implements OnInit, OnDestroy {
   private reset_ts(): void {
     this.last_ts = performance.now();
   };
+
   private check_ts(): number {
     const tmp: number = this.last_ts;
     this.last_ts = performance.now();
-    return this.last_ts- tmp;
+    return this.last_ts - tmp;
   };
 
   public onPrintPDF(): void {
-
     this.reset_ts();
     console.log("starting onPrintPDF...: 0 msec");
 
-    this.three.mode=''; // どこかでクリアしてるかもしれないけどここでも一応初期化
-
     // 印刷ケースをセット
+    let mode = '';
     if (this.printService.printCase === 'PrintScreen') {
       // 画面印刷
-      this.three.mode = 'default';
+      mode = 'default';
+    } else if (this.printService.printCase === 'PrintLoad') {
+      // 荷重図
+      mode = 'print_load';
     } else if (this.printService.printCase === 'PrintDiagram') {
       // 断面力図
-      this.three.mode = 'fsec';
+      mode = 'fsec';
+    } else if (this.printService.printCase === 'disgDiagram') {
+      // 変位
+      mode = 'disg';
     } else if (this.printService.printCase === 'CombPrintDiagram') {
       // Combine 断面力図
-      this.three.mode = 'comb_fsec';
+      mode = 'comb_fsec';
     } else if (this.printService.printCase === 'PickPrintDiagram') {
       // Pickup 断面力図
-      this.three.mode = 'pick_fsec';
+      mode = 'pick_fsec';
     }
+
+    this.three.ChangeMode(mode);
+
+    this.three.mode = mode;
 
     // 印刷対象を取得して、セット
     for (let i = 0; i < this.printService.printTargetValues.length; i++) {
@@ -99,18 +108,15 @@ export class PrintComponent implements OnInit, OnDestroy {
       this.printService.customThree.threeEditable[i] = isSelected;
     }
 
-    //    if (this.printService.optionList['captur'].value) {
     if (this.printService.is_printing_screen()) {
       // 図の印刷
-      if (this.helper.dimension === 2 &&
-        (this.three.mode == 'fsec' ||
-          this.three.mode === 'comb_fsec' ||
-          this.three.mode === 'pick_fsec')) {
+      if (this.helper.dimension === 2 && ['fsec', 'comb_fsec', 'pick_fsec'].includes(this.three.mode)) {
 
         console.log('図の印刷: ' + this.check_ts() + " msec");
 
         // loadingの表示
         this.loadind_enable();
+
         // データの集計
         console.log('データを集計中...: ' + this.check_ts() + " msec");
         this.printService.optionList['input'].value = true;
@@ -163,8 +169,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           selected = true;
         }
 
-        if (11 == this.printService.flg && this.printService.customThree.threeEditable[6])
-        {
+        if (11 == this.printService.flg && this.printService.customThree.threeEditable[6]) {
           output.push("disg"); // 変位図
           selected = true;
 
@@ -176,8 +181,7 @@ export class PrintComponent implements OnInit, OnDestroy {
 
         //console.log("印刷対象を選択 ここまで: " + this.check_ts() + " msec");
 
-        if(!selected)
-        {
+        if (!selected) {
           this.helper.alert(this.translate.instant("print.selectTarget"));
           this.loadind_desable();
           return;
@@ -190,10 +194,10 @@ export class PrintComponent implements OnInit, OnDestroy {
           output
         }
 
-        if(null !== this.printService.axis_scale_x.value)
+        if (null !== this.printService.axis_scale_x.value)
           json["diagramResult"].scaleX = 1.0 / Number(this.printService.axis_scale_x.value);
 
-        if(null !== this.printService.axis_scale_y.value)
+        if (null !== this.printService.axis_scale_y.value)
           json["diagramResult"].scaleY = 1.0 / Number(this.printService.axis_scale_y.value);
 
         json["ver"] = packageJson.version;

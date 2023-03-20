@@ -1,6 +1,7 @@
 $height_header: 32px;
 $height_semiHeader: 32px;
 $height_content: 16px;
+
 // .invoice {
 //   page-break-after: always;
 // }
@@ -11,9 +12,11 @@ $height_content: 16px;
     .title-and-menu {
         display: none;
     }
+
     #contents-dialog-id {
         display: none;
     }
+
     @page {
         size: A4;
         margin: 80px 0;
@@ -22,7 +25,7 @@ $height_content: 16px;
 
 .pagerBreak {
     size: A4;
-    page-break-after: always;
+    page-break-before: always;
 }
 
 .pagerBreakB {
@@ -67,48 +70,58 @@ table {
     margin-bottom: 16px;
     text-align: left;
     break-inside: auto;
+
     thead {
         display: table-header-group;
         // break-inside: avoid;
         //     // break-after: avoid;
         //  tr { page-break-inside: avoid; }
     }
+
     tbody {
         margin-bottom: 32px;
     }
+
     th {
         padding: 4px 8px;
         text-align: center;
         font-size: 16px;
         font-weight: 400;
+
         &.title {
             text-align: left;
             font-weight: bold;
             font-family: "MS UI Gothic";
         }
+
         &.type {
             text-align: left;
         }
     }
+
     td {
         padding: 4px 8px;
         font-size: 16px;
         text-align: right;
+
         &.name {
             text-align: left;
         }
+
         &.word {
             max-width: 400px;
             min-width: 200px;
             word-wrap: break-word;
             text-align: left;
         }
+
         &.comb {
             max-width: 150px;
             word-wrap: break-word;
             text-align: left;
         }
     }
+
     th,
     td {
         &.y1 {
@@ -120,6 +133,7 @@ table {
 //印刷結果表示のtableのpadding
 .print-sm {
     break-inside: avoid;
+
     th,
     td {
         padding: 4px 16px;
@@ -128,6 +142,7 @@ table {
 
 .print-md {
     break-inside: avoid;
+
     th,
     td {
         padding: 4px 24px;
@@ -136,6 +151,7 @@ table {
 
 .print-lg {
     break-inside: avoid;
+
     th,
     td {
         padding: 4px 28px;
@@ -144,6 +160,7 @@ table {
 
 //input-load
 .print-load {
+
     th,
     td {
         padding: 4px 20px;

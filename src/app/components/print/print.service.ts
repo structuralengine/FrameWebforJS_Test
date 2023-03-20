@@ -102,11 +102,12 @@ export class PrintService {
       comb_fsec: { id: 8, value: false, name: "COMBINE 断面力" },
       pick_fsec: { id: 9, value: false, name: "PICKUP 断面力" },
       //captur: { id: 10, value: false, name: "画面印刷" },
-      PrintScreen: { id: 10, value: false, name: "PrintScreen"},
-      PrintDiagram: { id: 11, value: false, name: "PrintDiagram"},
-      CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram"},
-      PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram"},
-      disgDiagram: { id: 14, value: false, name: "disgDiagram"} // 3Dのときだけ
+      PrintScreen: { id: 10, value: false, name: "PrintScreen" },
+      PrintLoad: { id: 15, value: false, name: "PrintLoad" },
+      PrintDiagram: { id: 11, value: false, name: "PrintDiagram" },
+      CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram" },
+      PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram" },
+      disgDiagram: { id: 14, value: false, name: "disgDiagram" } // 3Dのときだけ
     };
   }
 
@@ -174,11 +175,11 @@ export class PrintService {
   // ラジオボタン選択時に発動．一旦すべてfalseにしてから，trueにする．
   //
   // すごく付け焼き刃な対応があるのでいずれ直したい。
-  public selectRadio(id: number)
-  {
+  public selectRadio(id: number) {
     var e = document.getElementById("printCus6");
-    if(11 != id && null !== e)
-      e.setAttribute("checked",null);
+    if (11 != id && null !== e) {
+      e.setAttribute("checked", null);
+    }
 
     this.printOption = new Array();
     this.printCase = "";
@@ -189,10 +190,9 @@ export class PrintService {
         this.flg = id;
         this.selectedIndex = this.optionList[key].id;
 
-        if (10 == this.optionList[key].id || 11 == this.optionList[key].id
-          || 12 == this.optionList[key].id || 13 == this.optionList[key].id
-          || 14 == this.optionList[key].id)
+        if ([10, 11, 12, 13, 14, 15].includes(this.optionList[key].id)) {
           this.printCase = key;
+        }
       }
     }
 
@@ -216,16 +216,16 @@ export class PrintService {
   // 一時的に使う関数
   public resetPrintOption() {
     var e = document.getElementById("result0");
-    if(null !== e)
-      e.setAttribute("checked","checked");
+    if (null !== e)
+      e.setAttribute("checked", "checked");
 
     e = document.getElementById("print-screen-layout-single");
-    if(null !== e)
-      e.setAttribute("checked","checked");
+    if (null !== e)
+      e.setAttribute("checked", "checked");
 
     e = document.getElementById("print-screen-orientation-portrait");
-    if(null !== e)
-      e.setAttribute("checked","checked");
+    if (null !== e)
+      e.setAttribute("checked", "checked");
 
     // 定数のハードコーディング直したほうがいいだろうがとりあえずこのままいく
     this.pageOrientation = "Vertical";  // "Horizontal" or "Vertical"
@@ -248,6 +248,7 @@ export class PrintService {
 
   public is_printing_screen(): boolean {
     return this.optionList['PrintScreen'].value === true
+      || this.optionList['PrintLoad'].value === true
       || this.optionList['PrintDiagram'].value === true
       || this.optionList['CombPrintDiagram'].value === true
       || this.optionList['PickPrintDiagram'].value === true
@@ -272,8 +273,7 @@ export class PrintService {
       this.pageOver = this.pageCount > this.printPossible ? true : false;
 
       // 概算ページ数が50いかない場合と，入力データ，画像データの時には，概算ページ数を非表示にする．
-      if (!(this.optionList['input'].value == true || this.is_printing_screen()))
-      {
+      if (!(this.optionList['input'].value == true || this.is_printing_screen())) {
         if (this.pageCount > 50) {
           this.pageDisplay = true;
         } else {
@@ -307,7 +307,7 @@ export class PrintService {
     if (this.ResultData.isCalculated == true) {
 
       // 変位量
-      if((this.optionList['disg'].value || (11 == this.flg && this.printTargetValues[6].value))
+      if ((this.optionList['disg'].value || (11 == this.flg && this.printTargetValues[6].value))
         && Object.keys(this.ResultData.disg.disg).length !== 0) {
         this.json["disg"] = this.dataChoice(this.ResultData.disg.disg);
         this.json["disgName"] = this.getNames(this.json["disg"]);

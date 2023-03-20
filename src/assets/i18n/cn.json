@@ -270,6 +270,7 @@
         "combine_SectionForce": "截面力（组合）",
         "pickup_SectionForce": "截面力（聚集）",
         "PrintScreen": "打印屏幕",
+        "PrintLoad": "载重图",
         "PrintDiagram": "截面力图",
         "disgDiagram": "位移图",
         "combPrintDiagram": "Combine 截面力图",
