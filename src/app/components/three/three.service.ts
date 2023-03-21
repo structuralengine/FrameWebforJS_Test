@@ -294,6 +294,7 @@ export class ThreeService {
         );
         break;
 
+      // 断面力
       case "fsec":
       case "comb_fsec":
       case "pick_fsec":
@@ -309,6 +310,14 @@ export class ThreeService {
           this.secForce.currentRadio === 'momentZ') {
           key = 'z';
         }
+
+        // console.log('#this.secForce.currentRadio', this.secForce.currentRadio);
+        // console.log('#this.secForce.value_ranges', this.secForce.value_ranges);
+        // console.log('#this.mode', this.mode);
+        // console.log('#currentPage', currentPage);
+        // console.log('#this.secForce.currentRadio', this.secForce.currentRadio);
+        // console.log('#key', key);
+
         this.max_min.getMaxMinValue(
           this.secForce.value_ranges,
           this.mode,

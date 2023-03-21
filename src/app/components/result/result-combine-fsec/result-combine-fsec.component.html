@@ -104,33 +104,29 @@
                                 </thead>
                                 <tbody>
                                     <div *ngIf="dimension===3">
-                                        <cdk-virtual-scroll-viewport itemSize="105">       
-                                            <tr *cdkVirtualFor="let resultData of dataset[i]; index as i">
-                                                <td class="result-sm">{{ resultData.m }}</td>
-                                                <td class="result-sm">{{ resultData.n }}</td>
-                                                <td class="result-lg">{{ resultData.l }}</td>
-                                                <td class="result-lg">{{ resultData.fx }}</td>
-                                                <td class="result-lg">{{ resultData.fy }}</td>
-                                                <td class="result-lg">{{ resultData.fz }}</td>
-                                                <td class="result-lg">{{ resultData.mx }}</td>
-                                                <td class="result-lg">{{ resultData.my }}</td>
-                                                <td class="result-lg">{{ resultData.mz }}</td>
-                                                <td class="result-lg">{{ resultData.case }}</td>
-                                            </tr>
-                                        </cdk-virtual-scroll-viewport>
+                                        <tr *ngFor="let resultData of dataset[i]; index as i">
+                                            <td class="result-sm">{{ resultData.m }}</td>
+                                            <td class="result-sm">{{ resultData.n }}</td>
+                                            <td class="result-lg">{{ resultData.l }}</td>
+                                            <td class="result-lg">{{ resultData.fx }}</td>
+                                            <td class="result-lg">{{ resultData.fy }}</td>
+                                            <td class="result-lg">{{ resultData.fz }}</td>
+                                            <td class="result-lg">{{ resultData.mx }}</td>
+                                            <td class="result-lg">{{ resultData.my }}</td>
+                                            <td class="result-lg">{{ resultData.mz }}</td>
+                                            <td class="result-lg">{{ resultData.case }}</td>
+                                        </tr>
                                     </div>
                                     <div *ngIf="dimension===2">
-                                        <cdk-virtual-scroll-viewport itemSize="105">       
-                                            <tr *cdkVirtualFor="let resultData of dataset[i]; index as i">
-                                                <td class="result-sm">{{ resultData.m }}</td>
-                                                <td class="result-sm">{{ resultData.n }}</td>
-                                                <td class="result-lg">{{ resultData.l }}</td>
-                                                <td class="result-lg">{{ resultData.fx }}</td>
-                                                <td class="result-lg">{{ resultData.fy }}</td>
-                                                <td class="result-lg">{{ resultData.mz }}</td>
-                                                <td class="result-lg">{{ resultData.case }}</td>
-                                            </tr>
-                                        </cdk-virtual-scroll-viewport>
+                                        <tr *ngFor="let resultData of dataset[i]; index as i">
+                                            <td class="result-sm">{{ resultData.m }}</td>
+                                            <td class="result-sm">{{ resultData.n }}</td>
+                                            <td class="result-lg">{{ resultData.l }}</td>
+                                            <td class="result-lg">{{ resultData.fx }}</td>
+                                            <td class="result-lg">{{ resultData.fy }}</td>
+                                            <td class="result-lg">{{ resultData.mz }}</td>
+                                            <td class="result-lg">{{ resultData.case }}</td>
+                                        </tr>
                                     </div>
                                 </tbody>
                             </table>
