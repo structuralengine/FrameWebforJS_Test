@@ -143,6 +143,11 @@ export class ThreeSectionForceService {
       this.params[key] = false;
     }
 
+    this.resetGuiParams();
+  }
+
+  // パラメータを2D|3Dに応じてリセット
+  public resetGuiParams(): void {
     if (this.helper.dimension === 3) {
       this.params.momentY = true; // 初期値（3D）
       this.currentRadio = "momentY";
@@ -172,14 +177,6 @@ export class ThreeSectionForceService {
         }),
     };
 
-    // this.gui['textCount'] = this.scene.gui.add(this.params, 'textCount', 0, 100).step(10).onFinishChange((value) => {
-    //   // guiによる設定
-    //   this.textCount = value;
-    //   this.changeMesh();
-    //   this.onResize();
-    //   this.scene.render();
-    // });
-
     for (const key of this.radioButtons) {
       this.gui[key] = this.scene.gui
         .add(this.params, key, this.params[key])
@@ -192,10 +189,10 @@ export class ThreeSectionForceService {
           }
           this.changeMesh();
           const key1: string =
-          ( key === 'axialForce' || key === 'torsionalMorment' ) ? 'x' :
-          ( key === 'shearForceY' || key === 'momentY' ) ? 'y' : 'z';
+            (key === 'axialForce' || key === 'torsionalMorment') ? 'x' :
+              (key === 'shearForceY' || key === 'momentY') ? 'y' : 'z';
           this.max_min._getMaxMinValue(
-            this.value_ranges[this.currentMode][this.currentIndex][key1], 
+            this.value_ranges[this.currentMode][this.currentIndex][key1],
             'fsec',
             this.currentRadio
           );
@@ -413,28 +410,28 @@ export class ThreeSectionForceService {
           L2 = Math.round((len - LL) * 1000) / 1000;
           if (item === null) {
             const mesh = this.mesh.create(
-                    nodei,
-                    nodej,
-                    localAxis,
-                    key2,
-                    L1,
-                    L2,
-                    P1,
-                    P2
-                  );
+              nodei,
+              nodej,
+              localAxis,
+              key2,
+              L1,
+              L2,
+              P1,
+              P2
+            );
             ThreeObject.add(mesh);
           } else {
-              this.mesh.change(
-                item,
-                nodei,
-                nodej,
-                localAxis,
-                key2,
-                L1,
-                L2,
-                P1,
-                P2
-              );
+            this.mesh.change(
+              item,
+              nodei,
+              nodej,
+              localAxis,
+              key2,
+              L1,
+              L2,
+              P1,
+              P2
+            );
           }
           P1 = P2;
           L1 = LL;
