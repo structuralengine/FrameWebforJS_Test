@@ -27,6 +27,7 @@ jobs:
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
+          build_script_name: 'npm run electron:windows'
           windows_certs: '${{ secrets.CODESIGN }}'
           windows_certs_password: '${{ secrets.PASSWORD }}'
           # GitHub token, automatically provided to the action
