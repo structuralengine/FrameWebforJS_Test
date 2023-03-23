@@ -24,11 +24,10 @@ jobs:
         run: npm install
 
       - name: Code Signing
-        uses: dlemstra/code-sign-action@v1
+        uses: samuelmeuli/action-electron-builder@v1
         with:
-          certificate: '${{ secrets.CODESIGN }}'
-          folder: 'files'
-          recursive: true
+          windows_certs: '${{ secrets.CODESIGN }}'
+          windows_certs_password: '${{ secrets.PASSWORD }}'
 
       - name: Push Build to Releases
         uses: ncipollo/release-action@v1
