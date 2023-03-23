@@ -30,6 +30,9 @@ jobs:
           folder: 'files'
           recursive: true
 
-      - name: Build electron
-        run: npm run electron:windows
+      - name: Push Build to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist/angular-githubaction/*"
+          token: ${{ secrets.TOKEN }}
         
