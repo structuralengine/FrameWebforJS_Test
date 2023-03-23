@@ -29,9 +29,16 @@ jobs:
           windows_certs: '${{ secrets.CODESIGN }}'
           windows_certs_password: '${{ secrets.PASSWORD }}'
 
-      - name: Push Build to Releases
-        uses: ncipollo/release-action@v1
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
         with:
-          artifacts: "dist/angular-githubaction/*"
-          token: ${{ secrets.TOKEN }}
+          windows_certs: '${{ secrets.CODESIGN }}'
+          windows_certs_password: '${{ secrets.PASSWORD }}'
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token: ${{ secrets.TOKEN }}
+  
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         
