@@ -23,11 +23,6 @@ jobs:
       - name: Install NPM packages
         run: npm install
 
-      - name: Code Signing
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          windows_certs: '${{ secrets.CODESIGN }}'
-          windows_certs_password: '${{ secrets.PASSWORD }}'
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
