@@ -27,9 +27,9 @@ jobs:
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          build_script_name: 'npm run electron:windows'
           windows_certs: '${{ secrets.CODESIGN }}'
           windows_certs_password: '${{ secrets.PASSWORD }}'
+          build_script_name: 'electron:windows'
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.TOKEN }}
@@ -37,4 +37,5 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
         
