@@ -2,7 +2,7 @@ name: Code Signing
 
 on:
   push: 
-    branches: hirano_#automatic
+    branches: master
 
 jobs:
   release:
