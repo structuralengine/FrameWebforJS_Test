@@ -11,7 +11,7 @@
         "e2e": "ng e2e",
         "build:dev": "set NODE_OPTIONS=--openssl-legacy-provider && concurrently \"ng build --delete-output-path=false --watch\" \"webpack --config webpack.electron.dev.config.js --watch\"",
         "start:dev": "electron dist/shell.js",
-        "electron:windows": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build:prod && npx electron-builder build --windows",
+        "electron:windows": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build:prod && npx electron-builder build --windows --if-present=false",
         "build:prod": "ng build --configuration production --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js && npm run filecopy1 && npm run filecopy2",
         "nocopybuild:prod": "ng build --configuration production --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js",
         "start:prod": "set NODE_OPTIONS=--openssl-legacy-provider && electron dist/index.js",
