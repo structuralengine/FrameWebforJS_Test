@@ -20,14 +20,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.18.1
+      - name: Npm install
+        run: npm install --build-from-resource
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
-          package_root: 'postinstall'
-          build_script_name: 'nocopybuild:prod && npx electron-builder build --windows'
+          build_script_name: 'build:prod && npx electron-builder build --windows'
           github_token: ${{ secrets.TOKEN }}
           
           windows_certs: ${{ secrets.CODESIGN }}
