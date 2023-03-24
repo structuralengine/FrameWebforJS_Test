@@ -16,7 +16,15 @@
         "nocopybuild:prod": "ng build --configuration production --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js",
         "start:prod": "set NODE_OPTIONS=--openssl-legacy-provider && electron dist/index.js",
         "filecopy1": "node -e \"require('fs').copyFileSync('dev-app-update.yml', 'dist/dev-app-update.yml')\"",
-        "filecopy2": "node -e \"require('fs').copyFileSync('app-update.yml', 'dist/app-update.yml')\""
+        "filecopy2": "node -e \"require('fs').copyFileSync('app-update.yml', 'dist/app-update.yml')\"",
+        "postinstall": "electron-builder install-app-deps",
+        "release": "electron-builder --mac --windows --linux --publish always"
+    },
+    "build": {
+        "appId": "1:424393809904:web:da2eb60ab855cf4e76c735",
+        "files": [
+        "dist/**/*"
+        ]
     },
     "description": "FrameWebforJS",
     "author": {
