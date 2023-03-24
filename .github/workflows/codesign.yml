@@ -28,7 +28,7 @@ jobs:
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
-          build_script_name: 'nocopybuild:prod && npx electron-builder build --windows --if-present'
+          build_script_name: 'nocopybuild:prod && npx electron-builder build --windows --if-present --no-prune'
           github_token: ${{ secrets.TOKEN }}
           
           windows_certs: ${{ secrets.CODESIGN }}
