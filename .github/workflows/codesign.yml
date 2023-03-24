@@ -33,7 +33,7 @@ jobs:
           
           windows_certs: ${{ secrets.CODESIGN }}
           windows_certs_password: ${{ secrets.PASSWORD }}
-          build_script_name: 'build:prod && npx electron-builder build --windows'
+          build_script_name: 'nocopybuild:prod && npx electron-builder build --windows'
 
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
