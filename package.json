@@ -23,7 +23,7 @@
     "build": {
         "appId": "1:424393809904:web:da2eb60ab855cf4e76c735",
         "files": [
-        "dist/**/*"
+            "dist/**/*"
         ]
     },
     "description": "FrameWebforJS",
@@ -97,7 +97,7 @@
         "codelyzer": "^6.0.0",
         "concurrently": "^6.2.1",
         "electron": "^13.2.0",
-        "electron-builder": "^22.14.13",
+        "electron-builder": "^23.6.0",
         "electron-log": "4.4.1",
         "electron-packager": "^15.3.0",
         "jasmine-core": "~3.8.0",
