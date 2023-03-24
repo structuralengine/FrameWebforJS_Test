@@ -17,6 +17,10 @@
         "filecopy1": "node -e \"require('fs').copyFileSync('dev-app-update.yml', 'dist/dev-app-update.yml')\"",
         "filecopy2": "node -e \"require('fs').copyFileSync('app-update.yml', 'dist/app-update.yml')\""
     },
+    "build": {
+        "appId": "com.username.sample-project",
+        "files": ["dist/**/*"]
+    },
     "description": "FrameWebforJS",
     "author": {
         "name": "MALME INC.",
