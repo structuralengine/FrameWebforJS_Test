@@ -13,13 +13,10 @@
         "start:dev": "electron dist/shell.js",
         "electron:windows": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build:prod && npx electron-builder build --windows",
         "build:prod": "ng build --configuration production --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js && npm run filecopy1 && npm run filecopy2",
+        "nocopybuild:prod": "ng build --configuration production --optimization --outputHashing=all --sourceMap=false --namedChunks=false --extract-licenses --vendorChunk=false --build-optimizer && webpack --config webpack.electron.prod.config.js",
         "start:prod": "set NODE_OPTIONS=--openssl-legacy-provider && electron dist/index.js",
         "filecopy1": "node -e \"require('fs').copyFileSync('dev-app-update.yml', 'dist/dev-app-update.yml')\"",
         "filecopy2": "node -e \"require('fs').copyFileSync('app-update.yml', 'dist/app-update.yml')\""
-    },
-    "build": {
-        "appId": "com.username.sample-project",
-        "files": ["dist/**/*"]
     },
     "description": "FrameWebforJS",
     "author": {
