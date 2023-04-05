@@ -1,39 +1,30 @@
-name: Code Signing
+name: Codesign Windows App
 
 on:
-  push: 
-    branches: master
+  push:
+    tags:
+      - 1.*
 
 jobs:
   release:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [windows-latest]
-
+    runs-on: windows-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
-      - name: Install Node.js, NPM and Yarn
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 14.18.1
-      - name: Npm install
-        run: npm install --build-from-resource
+          node-version: "14.18.1"
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+      - name: Install dependencies
+        run: npm install -g @angular/cli@12.2.7 && npm install
+
+      - name: Build Windows app
+        uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          build_script_name: 'nocopybuild:prod && npx electron-builder build --windows'
-          github_token: ${{ secrets.TOKEN }}
-
+          build_script_name: "build:win"
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
           windows_certs: ${{ secrets.CODESIGN }}
           windows_certs_password: ${{ secrets.PASSWORD }}
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
