@@ -3,7 +3,7 @@ name: Codesign Windows App
 on:
   push:
     tags:
-      - v.*
+      - v*
 
 jobs:
   release:
