@@ -1,26 +1,44 @@
-name: Node CI
+name: Deploy Angular App
 
 on:
-  push: 
-    branches: master
+  push:
+    tags:
+      - 1.*
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 14.18.1
-    - name: Install NPM packages
-      run: npm install
-    - name: Build website
-      run: npm run build-action
-    - name: Deploy 
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: dist
-        CLEAN: true
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14.18.1"
+
+      - name: Install dependencies
+        run: npm install -g @angular/cli@12.2.7 && npm install
+
+      - name: Build Angular app
+        run: npm run build-actions
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "dist"
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
