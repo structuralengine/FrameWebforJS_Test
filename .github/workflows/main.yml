@@ -3,9 +3,7 @@ name: Deploy Angular App
 on:
   push:
     tags:
-      - 1.*
       - 2.*
-      - 3.*
 
 jobs:
   build:
