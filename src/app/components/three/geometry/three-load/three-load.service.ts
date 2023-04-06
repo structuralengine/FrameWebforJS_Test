@@ -364,7 +364,6 @@ export class ThreeLoadService {
     for (let child of ThreeObject.children) {
       const item: any = child;
       if (!("editor" in item)) continue;
-
       const editor: any = item["editor"];
 
       let column = ``;
@@ -378,6 +377,7 @@ export class ThreeLoadService {
         if (editor.id !== "PointLoad" && editor.id !== "MomentLoad") {
           if (item.name.indexOf(key) !== -1) {
             editor.setColor(item, "select");
+            this.scene.getScreenPosition(item);
           } else {
             editor.setColor(item, "clear");
           }
@@ -388,6 +388,7 @@ export class ThreeLoadService {
         if (editor.id === "PointLoad" || editor.id === "MomentLoad") {
           if (item.name.indexOf(key) !== -1) {
             editor.setColor(item, "select");
+            this.scene.getScreenPosition(item);
           } else {
             editor.setColor(item, "clear");
           }

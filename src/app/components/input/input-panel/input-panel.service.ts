@@ -43,7 +43,7 @@ export class InputPanelService {
   }
 
   public setPanelJson(jsonData: {}): void {
-    console.log('setPanelJson', jsonData);
+    // console.log('setPanelJson', jsonData);
     if (!('shell' in jsonData)) {
       return;
     }

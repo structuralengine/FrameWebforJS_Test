@@ -97,11 +97,11 @@ export class InputNodesComponent implements OnInit {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = this.columnKeys[range[0].c1];
-      if (this.currentRow !== row){
+      // if (this.currentRow !== row){
         //選択行の変更があるとき，ハイライトを実行する
-        this.three.selectChange('nodes', row, '');
-      }
-      this.currentRow = row;
+      this.three.selectChange('nodes', row, '');
+      // }
+      // this.currentRow = row;
     },
     change: (evt, ui) => {
       const changes = ui.updateList;

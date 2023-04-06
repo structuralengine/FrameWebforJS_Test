@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable,ElementRef } from "@angular/core";
 import * as THREE from "three";
 import { ThreeComponent } from "./three.component";
 import { GUI } from "./libs/dat.gui.module.js";
@@ -22,6 +22,7 @@ export class SceneService {
 
   // ギズモ
   private controlsGizmo: HTMLCanvasElement = null;
+  private id = null;
   //private controlsGizmoParent: OrbitControlsGizmo;
 
   // カメラ
@@ -165,7 +166,6 @@ export class SceneService {
 
     this.initCamera();  // カメラをシーンに登録する
     this.controls.object = this.camera; // OrbitControl の登録カメラを変更
-
     if (this.helper.dimension === 2) {
       // 2次元に切り替わった場合は、ポジションと回転角をリセットする
       const pos = this.OrthographicCamera.position;
@@ -330,6 +330,57 @@ export class SceneService {
 
   public labelRendererDomElement(): Node {
     return this.labelRenderer.domElement;
+  }
+
+  public toScreenPosition(obj:any, camera:any)
+  {
+    var vector = new THREE.Vector3();
+
+    var widthHalf = 0.5*this.Width;
+    var heightHalf = 0.5*this.Height;
+
+    obj.updateMatrixWorld();
+    vector.setFromMatrixPosition(obj.matrixWorld);
+    vector.project(camera);
+
+    vector.x = ( vector.x * widthHalf ) + widthHalf;
+    vector.y = - ( vector.y * heightHalf ) + heightHalf;
+
+    return { 
+        x: vector.x,
+        y: vector.y
+    };
+
+  };
+
+  public myMove(x:any,y:any) {
+      var parent = document.getElementById("graphics-locator");
+      var child = document.getElementById("graphics-locator-child");
+      var pos = 50;
+      parent.style.left = x + 'px';
+      parent.style.top = y + 'px';
+      parent.style.display = "block";
+      clearInterval(this.id);
+      this.id = setInterval(frame, 10);
+      function frame() {
+          if (pos <= 0) {
+              clearInterval(this.id);
+              parent.style.display = "none";
+          } else {
+              pos -= 1;
+              child.style.width = pos + '%';
+              child.style.height = pos + '%';
+              child.style.top = 50 - pos/2 + '%';
+              child.style.left = 50 - pos/2 + '%';
+          }
+      }
+  }
+
+  public getScreenPosition(obj){
+    var position = this.toScreenPosition(obj,this.camera)
+    // var header = document.querySelector('.header');
+    // var body_container = document.querySelector('.body-container');
+    this.myMove(position.x,(position.y + 133))
   }
 
   // リサイズ

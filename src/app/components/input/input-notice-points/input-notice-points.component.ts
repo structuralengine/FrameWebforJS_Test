@@ -8,6 +8,8 @@ import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
 
+import * as THREE from 'three';
+
 @Component({
   selector: "app-input-notice-points",
   templateUrl: "./input-notice-points.component.html",
@@ -78,6 +80,7 @@ export class InputNoticePointsComponent implements OnInit {
     this.ROWS_COUNT = this.rowsCount();
     // three.js にモードの変更を通知する
     this.three.ChangeMode("notice_points");
+    this.three.changeData('notice-points');
   }
 
   // 指定行row 以降のデータを読み取る
@@ -136,10 +139,10 @@ export class InputNoticePointsComponent implements OnInit {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = this.columnKeys[range[0].c1];
-      if (this.currentIndex !== row){
+      // if (this.currentIndex !== row){
         //選択行の変更があるとき，ハイライトを実行する
         this.three.selectChange("notice-points", row, column);
-      }
+      // }
       this.currentIndex = row;
     },
     change: (evt, ui) => {

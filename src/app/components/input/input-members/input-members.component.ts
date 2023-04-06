@@ -241,11 +241,11 @@ export class InputMembersComponent implements OnInit {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = this.columnKeys[range[0].c1];
-      if (this.currentIndex !== row){
+      // if (this.currentIndex !== row){
         //選択行の変更があるとき，ハイライトを実行する
         this.three.selectChange("members", row, '');
-      }
-      this.currentIndex = row;
+      // }
+      // this.currentIndex = row;
     },
     change: (evt, ui) => {
       const changes = ui.updateList;

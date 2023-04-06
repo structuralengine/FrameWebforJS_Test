@@ -7,6 +7,7 @@ import { InputNodesService } from '../input-nodes/input-nodes.service';
 })
 export class InputMembersService {
   public member: any[];
+  public points: any[];
 
   constructor(private node: InputNodesService,
               private helper: DataHelperModule) {
@@ -15,6 +16,7 @@ export class InputMembersService {
 
   public clear(): void {
     this.member = new Array();
+    this.points = new Array();
   }
   
   public getMemberColumns(index: number): any {
@@ -105,6 +107,43 @@ export class InputMembersService {
 
     return member;
 
+  }
+
+  public getAxis(memberNo: string, m_len: number, m_length: number):any {
+
+    const memb = this.getMember(memberNo.toString());
+    if (memb.ni === undefined || memb.nj === undefined) {
+      return null;
+    }
+
+    const ni: string = memb.ni;
+    const nj: string = memb.nj;
+    if (ni === null || nj === null) {
+      return null;
+    }
+
+    const iPos = this.node.getNodePos(ni)
+    const jPos = this.node.getNodePos(nj)
+    if (iPos == null || jPos == null) {
+      return null;
+    }
+
+    const xi: number = iPos['x'];
+    const yi: number = iPos['y'];
+    const zi: number = iPos['z'];
+    const xj: number = jPos['x'];
+    const yj: number = jPos['y'];
+    const zj: number = jPos['z'];
+
+    const x: string = (xi + (xj - xi) * m_length / m_len).toFixed(3);
+    const y: string = (yi + (yj - yi) * m_length / m_len).toFixed(3);
+    const z: string = (zi + (zj - zi) * m_length / m_len).toFixed(3);
+
+    return {
+      x,
+      y,
+      z
+    };
   }
 
   public getMemberLength(memberNo: string): number {

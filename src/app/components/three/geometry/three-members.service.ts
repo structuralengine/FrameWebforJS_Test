@@ -197,6 +197,7 @@ export class ThreeMembersService {
       } else {
         if (item.name === 'member' + index.toString()){
           item['material']['color'].setHex(0XFF0000);
+          this.scene.getScreenPosition(item);
         }
       }
     }
@@ -234,6 +235,16 @@ export class ThreeMembersService {
       if (item.name === 'member' + m_no.toString()){
         item['material']['color'].setHex(0XFF0000);
       }
+    }
+
+  }
+
+  // 着目点のselectChange
+  public selectChange_clear_points(): void {
+
+    // 全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
+    for (let item of this.memberList.children){
+      item['material']['color'].setHex(0X000000);
     }
 
   }

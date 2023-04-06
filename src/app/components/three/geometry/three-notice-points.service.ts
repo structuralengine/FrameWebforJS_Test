@@ -14,7 +14,7 @@ import { ThreeMembersService } from "./three-members.service";
 })
 export class ThreeNoticePointsService {
 
-  private geometry: THREE.CylinderBufferGeometry;
+  private geometry: THREE.SphereBufferGeometry;
 
   public maxDistance: number;
   public minDistance: number;
@@ -39,7 +39,7 @@ export class ThreeNoticePointsService {
               private member: InputMembersService,
               private memberThree: ThreeMembersService) {
 
-    // this.geometry = new THREE.CylinderBufferGeometry();
+    this.geometry = new THREE.SphereBufferGeometry(1);
     this.noticePointList = new THREE.Object3D();
     // this.axisList = new Array();
     this.ClearData();
@@ -47,34 +47,34 @@ export class ThreeNoticePointsService {
     // this.currentIndex = null;
 
     this.objVisible = true;
-    // this.txtVisible = false;
+    this.txtVisible = false;
 
     // gui
-    // this.scale = 100;
-    // this.params = {
-    //   memberNo: this.txtVisible,
-    //   memberScale: this.scale,
-    // };
-    // this.gui = null;
+    this.scale = 100;
+    this.params = {
+      nodeNo: this.txtVisible,
+      nodeScale: this.scale
+    };
+    this.gui = null;
   }
 
   // 初期化
   public OnInit(): void {
     // 部材番号の表示を制御する gui を登録する
-    // this.scene.gui.add(this.params, "memberNo").onChange((value) => {
-    //   for (const mesh of this.memberList.children) {
-    //     mesh.getObjectByName("font").visible = value;
-    //   }
-    //   this.txtVisible = value;
-    //   this.scene.render();
-    // });
+    this.scene.gui.add(this.params, "pointNo").onChange((value) => {
+      for (const mesh of this.noticePointList.children) {
+        mesh.getObjectByName("font").visible = value;
+      }
+      this.txtVisible = value;
+      this.scene.render();
+    });
 
   }
 
   // 要素の太さを決定する基準値
   public baseScale(): number {
     // const scale = this.nodeThree.baseScale;
-    return 1;// scale * 0.3;
+    return 0.018895766721676047;// scale * 0.3;
   }
 
   // データが変更された時の処理
@@ -85,7 +85,6 @@ export class ThreeNoticePointsService {
     if (Object.keys(nodeData).length <= 0) {
       return;
     }
-
     // メンバーデータを入手
     const memberData = this.member.getMemberJson(0);
     if (Object.keys(memberData).length <= 0) {
@@ -98,15 +97,55 @@ export class ThreeNoticePointsService {
       return;
     }
 
+    // let jsonData = this.data.getNoticePointsJson()
+    for (let target of jsonData) {
+      let point:[] = target['Points'];
+      let m: string = target['m'];
+      let row: string = target['row'];
+      const l: number = this.member.getMemberLength(m);
+      for(let i = 0 ; i < point.length ; i++) {
+        const item = this.noticePointList.children.find((target) => {
+          return (target.name === 'points' + row + 'L' + (i + 1));
+        });
+        let length: number = point[i];
+        let axis = this.member.getAxis(m, l, length);
+        // console.log(axis)
+        if (item !== undefined) {
+          // すでに同じ名前の要素が存在している場合座標の更新
+          item.position.x = axis.x;
+          item.position.y = axis.y;
+          item.position.z = axis.z;
+        } else {
+          const mesh = new THREE.Mesh(this.geometry,
+            new THREE.MeshBasicMaterial({ color: 0X00A5FF }));
+          mesh.name = 'points' + row + 'L' + (i + 1);
+          mesh.position.x = axis.x;
+          mesh.position.y = axis.y;
+          mesh.position.z = axis.z;
+          mesh.material.color.setHex(0X00A5FF);
+  
+          let sc = this.scale / 100; // this.scale は 100 が基準値なので、100 のとき 1 となるように変換する
+          sc = Math.max(sc, 0.001); // ゼロは許容しない
+      
+          let scale: number = this.baseScale() * sc;
+  
+          mesh.scale.set(scale, scale, scale)
+  
+          this.noticePointList.children.push(mesh);
+        }
+      }
+    }
+
+    this.scene.render();
+
     // 新しい入力を適用する
     // for (const key of jsonKeys) {
 
     // }
-    // this.onResize();
   }
 
   //シートの選択行が指すオブジェクトをハイライトする
-  public selectChange(index): void{
+  public selectChange(index,index_sub): void{
 
     // if (this.currentIndex === index){
     //   //選択行の変更がないとき，何もしない
@@ -119,6 +158,14 @@ export class ThreeNoticePointsService {
     const target = jsonData.find( (e) => e.row === index );
     const m_no = (target !== undefined) ? target.m: '0';
     this.memberThree.selectChange_points(m_no);
+
+    for (let item of this.noticePointList.children){
+      item['material']['color'].setHex(0X00A5FF);
+      if (item.name === 'points' + index.toString() + index_sub.toString()){
+        this.memberThree.selectChange_clear_points();
+        item['material']['color'].setHex(0XFF0000);
+      }
+    }
 
     // const axisKey_list = [];
 
@@ -145,6 +192,20 @@ export class ThreeNoticePointsService {
 
   // データをクリアする
   public ClearData(): void {
+
+      // データをクリアする
+
+      console.log("noticePointList clear")
+      for (const mesh of this.noticePointList.children) {
+        // 文字を削除する
+        while (mesh.children.length > 0) {
+          const object = mesh.children[0];
+          object.parent.remove(object);
+        }
+        // オブジェクトを削除する
+        this.scene.remove(mesh);
+      }
+      this.noticePointList.children = new Array();
     // 線を削除する
     // for (const mesh of this.memberList.children) {
     //   // 文字を削除する
@@ -169,16 +230,16 @@ export class ThreeNoticePointsService {
   // スケールを反映する
   private onResize(): void {
 
-    // let sc = this.scale / 100; // this.scale は 100 が基準値なので、100 のとき 1 となるように変換する
-    // sc = Math.max(sc, 0.001); // ゼロは許容しない
+    let sc = this.scale / 100; // this.scale は 100 が基準値なので、100 のとき 1 となるように変換する
+    sc = Math.max(sc, 0.001); // ゼロは許容しない
 
-    // let scale: number = this.baseScale() * sc;
+    let scale: number = this.baseScale() * sc;
   
-    // for (const item of this.memberList.children) {
-    //   item.scale.set(scale, 1, scale);
-    // }
+    for (const item of this.noticePointList.children) {
+      item.scale.set(scale, 1, scale);
+    }
     // scale *= 50 ;
-    // for (const arrows of this.axisList) {
+    // for (const arrows of this.noticePointList) {
     //   for (const item of arrows.children) {
     //     item.scale.set(scale, scale, scale);
     //   }
@@ -186,8 +247,17 @@ export class ThreeNoticePointsService {
   }
 
   // 表示設定を変更する
-  public visibleChange(flag: boolean, text: boolean, gui: boolean): void {
+  public visibleChange(flag: boolean): void {
 
+    // this.selectChange(-1, -1)
+
+    if( this.objVisible === flag){
+      return;
+    }
+    for (const mesh of this.noticePointList.children) {
+      mesh.visible = flag;
+    }
+    this.objVisible = flag;
     // this.selectChange(-1);
 
     // 表示設定
