@@ -4,6 +4,8 @@ import { InputNodesService } from '../../../components/input/input-nodes/input-n
 import * as THREE from 'three';
 import { CSS2DObject } from '../libs/CSS2DRenderer.js';
 
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +17,7 @@ export class ThreeNodesService {
 
   public maxDistance: number;
   public minDistance: number;
+  private currentIndex: string;
 
   private nodeList: THREE.Object3D;
   private selectionItem: THREE.Object3D;     // 選択中のアイテム
@@ -74,7 +77,6 @@ export class ThreeNodesService {
       this.ClearData();
       return null;
     }
-
     // 入力データに無い要素を排除する
     for (let i = this.nodeList.children.length - 1; i >= 0; i--) {
       const item = jsonKeys.find((key) => {
@@ -133,6 +135,26 @@ export class ThreeNodesService {
     return jsonData;
   }
 
+//   public toScreenPosition(obj, camera)
+// {
+//     var vector = new THREE.Vector3();
+
+//     var widthHalf = 0.5*renderer.context.canvas.width;
+//     var heightHalf = 0.5*renderer.context.canvas.height;
+
+//     obj.updateMatrixWorld();
+//     vector.setFromMatrixPosition(obj.matrixWorld);
+//     vector.project(camera);
+
+//     vector.x = ( vector.x * widthHalf ) + widthHalf;
+//     vector.y = - ( vector.y * heightHalf ) + heightHalf;
+
+//     return { 
+//         x: vector.x,
+//         y: vector.y
+//     };
+
+// };
   //シートの選択行が指すオブジェクトをハイライトする
   public selectChange(index): void{
 
@@ -140,7 +162,6 @@ export class ThreeNodesService {
     //   //選択行の変更がないとき，何もしない
     //   return
     // }
-
     //全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
     for (let item of this.nodeList.children){
 
@@ -149,6 +170,11 @@ export class ThreeNodesService {
       if (item.name === 'node' + index.toString()){
 
         item['material']['color'].setHex(0X00A5FF);
+
+        this.scene.getScreenPosition(item);
+
+        // item['scale']['x']
+
       }
     }
 
