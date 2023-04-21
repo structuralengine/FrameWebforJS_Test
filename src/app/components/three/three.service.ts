@@ -79,6 +79,7 @@ export class ThreeService {
     this.fixNode.ClearData();
     this.fixMember.ClearData();
     this.joint.ClearData();
+    this.points.ClearData();
     this.panel.changeData();
     this.load.ResetData();
     this.disg.ClearData();
@@ -165,7 +166,6 @@ export class ThreeService {
   // データの選択を処理する
   public selectChange(mode: string, index: number, index_sub: any): void {
     //console.log("selectChange", mode, index, index_sub);
-
     switch (mode) {
       case "nodes":
         this.node.selectChange(index);
@@ -180,7 +180,7 @@ export class ThreeService {
         break;
 
       case "notice-points":
-        this.points.selectChange(index);
+        this.points.selectChange(index,index_sub);
         break;
 
       case "joints":
@@ -218,6 +218,7 @@ export class ThreeService {
     this.fixNode.ClearData();
     this.fixMember.ClearData();
     this.joint.ClearData();
+    this.points.ClearData();
     this.panel.ClearData();
     this.load.ClearData();
     this.disg.ClearData();
@@ -236,7 +237,6 @@ export class ThreeService {
     if (this.currentIndex === currentPage) {
       return;
     }
-
     switch (this.mode) {
       case "elements":
         break;
@@ -294,7 +294,6 @@ export class ThreeService {
         );
         break;
 
-      // 断面力
       case "fsec":
       case "comb_fsec":
       case "pick_fsec":
@@ -310,14 +309,6 @@ export class ThreeService {
           this.secForce.currentRadio === 'momentZ') {
           key = 'z';
         }
-
-        // console.log('#this.secForce.currentRadio', this.secForce.currentRadio);
-        // console.log('#this.secForce.value_ranges', this.secForce.value_ranges);
-        // console.log('#this.mode', this.mode);
-        // console.log('#currentPage', currentPage);
-        // console.log('#this.secForce.currentRadio', this.secForce.currentRadio);
-        // console.log('#key', key);
-
         this.max_min.getMaxMinValue(
           this.secForce.value_ranges,
           this.mode,
@@ -346,6 +337,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(true, 0.3);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -359,6 +351,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(true, 0.3);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -372,6 +365,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(true);
       this.panel.visibleChange(true, 0.3);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -385,6 +379,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(true);
+      this.points.visibleChange(false);
       this.panel.visibleChange(true, 0.3);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -398,6 +393,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(true);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -411,6 +407,7 @@ export class ThreeService {
       this.fixNode.visibleChange(true);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(true, 0.3);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -424,6 +421,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(true);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(true, 0.3);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -442,6 +440,7 @@ export class ThreeService {
         this.fixNode.visibleChange(true);
         this.fixMember.visibleChange(true);
         this.joint.visibleChange(true);
+        this.points.visibleChange(false);
         this.panel.visibleChange(true, 0.3);
         this.load.visibleChange(true, true);
       }
@@ -452,6 +451,7 @@ export class ThreeService {
         this.fixNode.visibleChange(false);
         this.fixMember.visibleChange(false);
         this.joint.visibleChange(false);
+        this.points.visibleChange(false);
         this.panel.visibleChange(true, 0.3);
         this.load.visibleChange(true, true);
       }
@@ -467,6 +467,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(true, 0.3);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(true);
@@ -481,6 +482,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(false);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -494,6 +496,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(false);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -508,6 +511,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(false);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -522,6 +526,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(false);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);
@@ -557,6 +562,7 @@ export class ThreeService {
       this.fixNode.visibleChange(false);
       this.fixMember.visibleChange(false);
       this.joint.visibleChange(false);
+      this.points.visibleChange(false);
       this.panel.visibleChange(false);
       this.load.visibleChange(false, false);
       this.disg.visibleChange(false);

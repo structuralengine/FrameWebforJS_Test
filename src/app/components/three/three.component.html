@@ -3,7 +3,10 @@
     <div id="screenArea">
         <app-max-min></app-max-min>
         <canvas #myCanvas id="myCanvas" style="overflow: hidden; position: absolute" (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)">
-    </canvas>
+        </canvas>
+        <div id="graphics-locator" style="left: 396px; top: 456.106px; ">
+            <div id="graphics-locator-child" style="width: 60%; height: 60%; top: 20%; left: 20%;"></div>
+        </div>
     </div>
 </div>
 <div id="download">

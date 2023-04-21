@@ -18,7 +18,6 @@ export class InputNoticePointsService {
 
   public getNoticePointsColumns(row: number): any {
     let result: any = null;
-
     for (const tmp of this.notice_points) {
       if (tmp["row"] === row) {
         result = tmp;
@@ -92,7 +91,6 @@ export class InputNoticePointsService {
         Points: points,
       });
     }
-
     return result;
   }
 }

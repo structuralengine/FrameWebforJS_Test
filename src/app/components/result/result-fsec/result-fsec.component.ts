@@ -8,7 +8,6 @@ import { ResultCombineFsecService } from "../result-combine-fsec/result-combine-
 import { ResultPickupFsecService } from "../result-pickup-fsec/result-pickup-fsec.service";
 import { AppComponent } from "src/app/app.component";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
-import { ThreeSectionForceService } from "../../three/geometry/three-section-force/three-section-force.service";
 
 @Component({
   selector: "app-result-fsec",
@@ -42,8 +41,7 @@ export class ResultFsecComponent implements OnInit {
     private three: ThreeService,
     private comb: ResultCombineFsecService,
     private pic: ResultPickupFsecService,
-    private helper: DataHelperModule,
-    private fsec: ThreeSectionForceService,
+    private helper: DataHelperModule
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -53,18 +51,14 @@ export class ResultFsecComponent implements OnInit {
       this.circleBox.push(i);
     }
 
-    if (this.result.case != "basic") {
+    if(this.result.case != "basic"){
       this.result.page = 1
       this.result.case = "basic"
     }
   }
 
   ngOnInit() {
-    // グローバル・パラメータをリセットする
-    this.fsec.resetGuiParams();
-
     this.loadPage(this.result.page);
-
     setTimeout(() => {
       const circle = document.getElementById(String(this.cal + 20));
       if (circle !== null) {
@@ -101,18 +95,18 @@ export class ResultFsecComponent implements OnInit {
 
     this.load_name = this.load.getLoadName(currentPage);
 
-    if (this.result.page <= this.data.LL_flg.length) {
-      this.LL_page = this.data.LL_flg[this.result.page - 1];
+    if(this.result.page <= this.data.LL_flg.length){
+      this.LL_page =this.data.LL_flg[this.result.page - 1];
     } else {
       this.LL_page = false;
     }
-
-    if (this.LL_page === true) {
+    
+    if(this.LL_page===true){
       this.dataset = new Array();
       for (const key of this.KEYS) {
         this.dataset.push(this.data.getFsecColumns(this.result.page, key));
       }
-    } else {
+    } else{
       this.dataset = this.data.getFsecColumns(this.result.page);
     }
 

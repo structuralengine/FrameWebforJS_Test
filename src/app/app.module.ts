@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatRadioModule } from "@angular/material/radio";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -117,7 +118,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         deps: [HttpClient],
       },
     }),
-    NgxElectronModule
+    NgxElectronModule,
+    ScrollingModule
   ],
   declarations: [
     AppComponent,
