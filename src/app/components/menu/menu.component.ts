@@ -17,7 +17,7 @@ import * as pako from "pako";
 
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { SceneService } from "../three/scene.service";
-import { AngularFireAuth } from "@angular/fire/auth";
+import { Auth, getAuth } from "@angular/fire/auth";
 import { UserInfoService } from "src/app/providers/user-info.service";
 import { environment } from "src/environments/environment";
 import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-custom-fsec.service";
@@ -48,7 +48,7 @@ export class MenuComponent implements OnInit {
     private http: HttpClient,
     private three: ThreeService,
     public printService: PrintService,
-    public auth: AngularFireAuth,
+    public auth: Auth,
     public user: UserInfoService,
     public language: LanguagesService,
     public electronService: ElectronService,
@@ -58,6 +58,8 @@ export class MenuComponent implements OnInit {
     this.fileName = "";
     this.three.fileName = "";
     this.version = packageJson.version;
+    this.auth = getAuth();
+    this.auth.currentUser
   }
 
   ngOnInit() {
@@ -223,33 +225,32 @@ export class MenuComponent implements OnInit {
   public calcrate(): void {
     const modalRef = this.modalService.open(WaitDialogComponent);
 
-    this.auth.currentUser.then((user) => {
-      if (user === null) {
-        modalRef.close();
-        this.helper.alert(this.translate.instant("menu.P_login"));
-        return;
-      }
+    const user = this.auth.currentUser;
+    if (user === null) {
+      modalRef.close();
+      this.helper.alert(this.translate.instant("menu.P_login"));
+      return;
+    }
 
-      const jsonData: {} = this.InputData.getInputJson(0);
+    const jsonData: {} = this.InputData.getInputJson(0);
 
-      if ("error" in jsonData) {
-        this.helper.alert(jsonData["error"]);
-        modalRef.close(); // モーダルダイアログを消す
-        return;
-      }
+    if ("error" in jsonData) {
+      this.helper.alert(jsonData["error"] as string);
+      modalRef.close(); // モーダルダイアログを消す
+      return;
+    }
 
-      if (!window.confirm(this.translate.instant("menu.calc_start"))) {
-        modalRef.close(); // モーダルダイアログを消す
-        return;
-      }
+    if (!window.confirm(this.translate.instant("menu.calc_start"))) {
+      modalRef.close(); // モーダルダイアログを消す
+      return;
+    }
 
-      jsonData["uid"] = user.uid;
-      jsonData["production"] = environment.production;
+    jsonData["uid"] = user.uid;
+    jsonData["production"] = environment.production;
 
-      this.ResultData.clear(); // 解析結果情報をクリア
+    this.ResultData.clear(); // 解析結果情報をクリア
 
-      this.post_compress(jsonData, modalRef);
-    });
+    this.post_compress(jsonData, modalRef);
   }
 
   private post_compress(jsonData: {}, modalRef: NgbModalRef) {

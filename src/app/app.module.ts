@@ -13,7 +13,9 @@ import { AppComponent } from "./app.component";
 import { MatInputModule } from "@angular/material/input";
 import {MatExpansionModule} from '@angular/material/expansion';
 
-import { AngularFireModule } from "@angular/fire";
+import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from "../environments/environment";
 
 import { InputDataService } from "./providers/input-data.service";
@@ -110,7 +112,9 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         MatInputModule,
         MatRadioModule,
         MatExpansionModule,
-        AngularFireModule.initializeApp(environment.firebase),
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideAuth(() => getAuth()),
+        provideFirestore(() => getFirestore()),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

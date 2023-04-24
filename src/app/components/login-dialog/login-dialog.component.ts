@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Auth, getAuth, signInWithEmailAndPassword } from '@angular/fire/auth';
 
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
@@ -24,13 +24,14 @@ export class LoginDialogComponent implements OnInit {
   connecting: boolean;
 
   constructor(public activeModal: NgbActiveModal,
-    public auth: AngularFireAuth,
+    public auth: Auth,
     private fb: FormBuilder,
     private translate: TranslateService,
     private helper: DataHelperModule
     ) {
     this.loginError = false;
     this.connecting = false;
+    this.auth = getAuth();
   }
 
   ngOnInit() {
@@ -44,23 +45,22 @@ export class LoginDialogComponent implements OnInit {
     this.connecting = true;
     const email = this.loginForm.get('email').value;
     const password = this.loginForm.get('password').value;
-    this.auth
-    .signInWithEmailAndPassword(email, password)
-    .then(auth => {
-      this.connecting = false;
-      // メールアドレス確認が済んでいるかどうか
-      if (!auth.user.emailVerified) {
-        this.auth.signOut();
-        return Promise.reject(this.translate.instant("login-dialog.mail_check"));
-      }
-      return this.activeModal.close('Submit');
-    })
-    .catch( err => {
-      this.connecting = false;
-      this.loginError = true;
-      this.errorMessage = err;
-      this.helper.alert(this.translate.instant("login-dialog.fail") + err);
-    });
+    signInWithEmailAndPassword(this.auth, email, password)
+      .then(auth => {
+        this.connecting = false;
+        // メールアドレス確認が済んでいるかどうか
+        if (!auth.user.emailVerified) {
+          this.auth.signOut();
+          return Promise.reject(this.translate.instant("login-dialog.mail_check"));
+        }
+        return this.activeModal.close('Submit');
+      })
+      .catch( err => {
+        this.connecting = false;
+        this.loginError = true;
+        this.errorMessage = err;
+        this.helper.alert(this.translate.instant("login-dialog.fail") + err);
+      });
   }
 
   public goToLink(){
