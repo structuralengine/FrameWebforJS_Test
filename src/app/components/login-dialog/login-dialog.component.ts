@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Auth, getAuth, signInWithEmailAndPassword } from '@angular/fire/auth';
 
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from "@ngx-translate/core";
 import { DataHelperModule } from 'src/app/providers/data-helper.module';
@@ -15,7 +15,7 @@ import { DataHelperModule } from 'src/app/providers/data-helper.module';
 
 
 export class LoginDialogComponent implements OnInit {
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   loginUserName: string;
   loginPassword: string;
 
@@ -25,7 +25,7 @@ export class LoginDialogComponent implements OnInit {
 
   constructor(public activeModal: NgbActiveModal,
     public auth: Auth,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private translate: TranslateService,
     private helper: DataHelperModule
     ) {
