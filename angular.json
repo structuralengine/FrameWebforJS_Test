@@ -28,9 +28,14 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/bootstrap.css",
+              "node_modules/bootstrap/scss/bootstrap.scss",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/fontisto/css/fontisto/fontisto.min.css"
+              "node_modules/fontisto/css/fontisto/fontisto.min.css",
+              "node_modules/jquery-ui-pack/jquery-ui.css",
+              "node_modules/jquery-ui-pack/jquery-ui.theme.css",
+              "node_modules/jquery-ui-pack/jquery-ui.structure.css",
+              "node_modules/pqgrid/pqgrid.ui.min.css",
+              "node_modules/pqgrid/themes/steelblue/pqgrid.css"
             ],
             "scripts": [
               "node_modules/@fortawesome/fontawesome-free/js/all.min.js"
@@ -38,7 +43,9 @@
             "webWorkerTsConfig": "tsconfig.worker.json",
             "allowedCommonJsDependencies": [
               "file-saver",
-              "pqgrid"
+              "pqgrid",
+              "html2canvas",
+              "print-js"
             ],
             "vendorChunk": true,
             "extractLicenses": false,

@@ -60,10 +60,6 @@ a[href="https://paramquery.com/pro"] {
     size: A4;
 }
 
-
-/* Importing Bootstrap SCSS file. */
-
-@import "~bootstrap/scss/bootstrap";
 @media print {
     .isPrinting>* {
         display: none;
@@ -76,19 +72,4 @@ a[href="https://paramquery.com/pro"] {
 
 /* Add application styles & imports to this file! */
 
-@import url("https://unpkg.com/jquery-ui-pack@1.12.3/jquery-ui.css");
-@import url("https://unpkg.com/jquery-ui-pack@1.12.3/jquery-ui.structure.css");
-@import url("https://unpkg.com/jquery-ui-pack@1.12.3/jquery-ui.theme.css");
 @import url("https://unpkg.com/pqgrid@7.5.0/pqgrid.min.css");
-@import "~pqgrid/pqgrid.ui.min.css";
-@import "~pqgrid/themes/steelblue/pqgrid.css";
-
-/* Importing Bootstrap SCSS file. */
-
-@import "~bootstrap/scss/bootstrap";
-
-/* Importing Bootstrap SCSS file. */
-
-@import "~bootstrap/scss/bootstrap";
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
