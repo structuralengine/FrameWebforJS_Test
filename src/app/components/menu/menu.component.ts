@@ -366,7 +366,7 @@ export class MenuComponent implements OnInit {
   // ログイン関係
   logIn(): void {
     this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.modalService.open(LoginDialogComponent).result.then((result) => { });
+    this.modalService.open(LoginDialogComponent, {backdrop: false}).result.then((result) => { });
   }
 
   logOut(): void {
