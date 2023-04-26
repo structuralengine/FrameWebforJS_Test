@@ -5,7 +5,7 @@ import { Vector2, Vector3 } from 'three';
 import { ThreeLoadText } from "./three-load-text";
 import { ThreeLoadDimension } from "./three-load-dimension";
 import { ThreeLoadPoint } from './three-load-point';
-import { RouterLinkWithHref } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'

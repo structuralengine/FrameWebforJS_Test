@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { RouterLinkWithHref } from "@angular/router";
+import { RouterLink } from "@angular/router";
 import { DataHelperModule } from "../../../providers/data-helper.module";
 import { InputMembersService } from "../input-members/input-members.service";
 
