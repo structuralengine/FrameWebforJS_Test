@@ -47,7 +47,7 @@ export class InputNoticePointsService {
     if (!("notice_points" in jsonData)) {
       return;
     }
-    const js: any[] = jsonData["notice_points"];
+    const js: any = jsonData["notice_points"];
     for (let i = 0; i < js.length; i++) {
       const item = js[i];
       const row: string = "row" in item ? item["row"] : (i + 1).toString();

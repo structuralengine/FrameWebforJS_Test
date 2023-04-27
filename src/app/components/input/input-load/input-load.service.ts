@@ -115,15 +115,15 @@ export class InputLoadService {
 
       const item1: {} = json[index];
 
-      const _rate: string = "rate" in item1 ? item1["rate"] : "";
-      const _symbol: string = "symbol" in item1 ? item1["symbol"] : "";
-      const _name: string = "name" in item1 ? item1["name"] : "";
-      const _fix_node: string = "fix_node" in item1 ? item1["fix_node"] : "";
+      const _rate: string = ("rate" in item1 ? item1["rate"] : "") as string;
+      const _symbol: string = ("symbol" in item1 ? item1["symbol"] : "") as string;
+      const _name: string = ("name" in item1 ? item1["name"] : "") as string;
+      const _fix_node: string = ("fix_node" in item1 ? item1["fix_node"] : "") as string;
       const _fix_member: string =
-        "fix_member" in item1 ? item1["fix_member"] : "";
-      const _element: string = "element" in item1 ? item1["element"] : "";
-      const _joint: string = "joint" in item1 ? item1["joint"] : "";
-      const _LL_pitch: number =  "LL_pitch" in item1 ? item1["LL_pitch"] : 0.1;
+        ("fix_member" in item1 ? item1["fix_member"] : "") as string;
+      const _element: string = ("element" in item1 ? item1["element"] : "") as string;
+      const _joint: string = ("joint" in item1 ? item1["joint"] : "") as string;
+      const _LL_pitch: number =  "LL_pitch" in item1 ? item1["LL_pitch"] as number : 0.1;
 
       this.load_name.push({
         id: index,
@@ -138,7 +138,7 @@ export class InputLoadService {
       });
 
       if ("load_node" in item1) {
-        const load_node_list: any[] = item1["load_node"];
+        const load_node_list: any = item1["load_node"];
         if(load_node_list != null){
           for (let i = 0; i < load_node_list.length; i++) {
             const item2 = load_node_list[i];
@@ -179,7 +179,7 @@ export class InputLoadService {
         }
       }
       if ("load_member" in item1) {
-        const load_member_list: any[] = item1["load_member"];
+        const load_member_list: any = item1["load_member"];
         if(load_member_list != null){
           for (let i = 0; i < load_member_list.length; i++) {
             const item3 = load_member_list[i];
