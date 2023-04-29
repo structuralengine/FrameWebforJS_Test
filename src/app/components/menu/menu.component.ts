@@ -22,7 +22,7 @@ import { UserInfoService } from "src/app/providers/user-info.service";
 import { environment } from "src/environments/environment";
 import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-custom-fsec.service";
 import { LanguagesService } from "src/app/providers/languages.service";
-import { ElectronService } from 'ngx-electron';
+import { ElectronService } from "src/app/providers/electron.service";
 import { TranslateService } from "@ngx-translate/core";
 import packageJson from '../../../../package.json';
 
@@ -213,7 +213,7 @@ export class MenuComponent implements OnInit {
       this.fileName += ".json";
     }
     // 保存する
-    if (this.electronService.isElectronApp) {
+    if (this.electronService.isElectron) {
       this.fileName = this.electronService.ipcRenderer.sendSync('saveFile', this.fileName, inputJson, "json");
     } else {
       const blob = new window.Blob([inputJson], { type: "text/plain" });
@@ -354,7 +354,7 @@ export class MenuComponent implements OnInit {
       filename = this.fileName.split(".").slice(0, -1).join(".");
     }
     // 保存する
-    if (this.electronService.isElectronApp) {
+    if (this.electronService.isElectron) {
       this.electronService.ipcRenderer.sendSync('saveFile', filename, pickupJson, ext);
     } else {
       filename += '.';

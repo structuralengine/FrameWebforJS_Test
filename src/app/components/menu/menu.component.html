@@ -11,7 +11,7 @@
                         <button ngbDropdownItem (click)="renew()" translate>menu.newEntry</button>
 
                         <!-- ファイルを開く(ブラウザ) -->
-                        <ng-container *ngIf="!electronService.isElectronApp">
+                        <ng-container *ngIf="!electronService.isElectron">
                             <label style="width: 100%; margin: 0px">
                                 <span ngbDropdownItem style="padding: 8px" translate>menu.openFile
                                     <input type="file" accept="application/json" (change)="open($event)"
@@ -21,7 +21,7 @@
                         </ng-container>
 
                         <!-- ファイルを開く(Electron) -->
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="open_electron()"
+                        <button *ngIf="electronService.isElectron" ngbDropdownItem (click)="open_electron()"
                             translate>
                             menu.openFile
                         </button>
@@ -30,7 +30,7 @@
                         <button ngbDropdownItem (click)="save()" translate>menu.saveFile</button>
 
                         <!--  -->
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()"
+                        <button *ngIf="electronService.isElectron" ngbDropdownItem (click)="overWrite()"
                             translate>menu.overwrite</button>
 
                         <!--  -->

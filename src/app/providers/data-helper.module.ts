@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { ElectronService } from "ngx-electron";
+import { ElectronService } from "src/app/providers/electron.service";
 
 @NgModule({
   imports: [],
@@ -17,7 +17,7 @@ export class DataHelperModule {
 
   // アラートを表示する
   public alert(message: string): void{
-    if(this.electronService.isElectronApp) {
+    if(this.electronService.isElectron) {
       this.electronService.ipcRenderer.sendSync('alert', message);
     }else{
       alert(message);
