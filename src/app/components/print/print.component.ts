@@ -6,7 +6,7 @@ import { ThreeService } from "../three/three.service";
 import { PrintService } from "./print.service";
 import printJS from "print-js";
 import * as pako from "pako";
-import { ElectronService } from "ngx-electron";
+import { ElectronService } from "src/app/providers/electron.service";
 import { MaxMinService } from "../three/max-min/max-min.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { TranslateService } from "@ngx-translate/core";
@@ -293,7 +293,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   private showPDF(base64: string) {
     this.loadind_desable();
 
-    if (this.electronService.isElectronApp) {
+    if (this.electronService.isElectron) {
       // electron の場合
       const byteCharacters = atob(base64);
       let byteNumbers = new Array(byteCharacters.length);

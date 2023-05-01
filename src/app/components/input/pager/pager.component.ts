@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { ResultDataService } from "../../../providers/result-data.service";
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ export class PagerComponent implements OnInit {
 
   public liActive = [false, false, false, false, false];
   public liNumber = [1, 2, 3, 4, 5];
-  public myControl: FormGroup;
+  public myControl: UntypedFormGroup;
   public Editing: boolean = false;
   public page: number = 0;
 
@@ -35,8 +35,8 @@ export class PagerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.myControl = new FormGroup({
-      number2: new FormControl(),
+    this.myControl = new UntypedFormGroup({
+      number2: new UntypedFormControl(),
     });
   }
 

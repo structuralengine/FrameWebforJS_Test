@@ -235,8 +235,8 @@ $md-radio-ripple-size: 12px;
             border: 2px solid $md-radio-border-color;
         }
         &:after {
-            top: $md-radio-size / 2 - $md-radio-checked-size / 2;
-            left: $md-radio-size / 2 - $md-radio-checked-size / 2;
+            top: calc($md-radio-size / 2 - $md-radio-checked-size / 2);
+            left: calc($md-radio-size / 2 - $md-radio-checked-size / 2);
             width: $md-radio-checked-size;
             height: $md-radio-checked-size;
             transform: scale(0);
@@ -268,8 +268,8 @@ $toggleInactiveColor: #ccc;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: $toggleBtnRadius / 2.2;
-            height: $toggleBtnRadius / 2.2;
+            width: calc($toggleBtnRadius / 2.2);
+            height: calc($toggleBtnRadius / 2.2);
             border-radius: 50%;
             background-color: $toggleActiveColor;
             box-shadow: inset 0 0 0 5px $toggleInactiveColor, inset 0 0 0 14px $toggleBtnColor;

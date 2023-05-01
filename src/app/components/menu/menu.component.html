@@ -11,7 +11,7 @@
                         <button ngbDropdownItem (click)="renew()" translate>menu.newEntry</button>
 
                         <!-- ファイルを開く(ブラウザ) -->
-                        <ng-container *ngIf="!electronService.isElectronApp">
+                        <ng-container *ngIf="!electronService.isElectron">
                             <label style="width: 100%; margin: 0px">
                                 <span ngbDropdownItem style="padding: 8px" translate>menu.openFile
                                     <input type="file" accept="application/json" (change)="open($event)"
@@ -21,7 +21,7 @@
                         </ng-container>
 
                         <!-- ファイルを開く(Electron) -->
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="open_electron()"
+                        <button *ngIf="electronService.isElectron" ngbDropdownItem (click)="open_electron()"
                             translate>
                             menu.openFile
                         </button>
@@ -30,7 +30,7 @@
                         <button ngbDropdownItem (click)="save()" translate>menu.saveFile</button>
 
                         <!--  -->
-                        <button *ngIf="electronService.isElectronApp" ngbDropdownItem (click)="overWrite()"
+                        <button *ngIf="electronService.isElectron" ngbDropdownItem (click)="overWrite()"
                             translate>menu.overwrite</button>
 
                         <!--  -->
@@ -92,7 +92,7 @@
         </div>
 
         <div class="login-area">
-            <div *ngIf="auth.user | async as user; else showLogin" class="userInfo">
+            <div *ngIf="auth.currentUser as user; else showLogin" class="userInfo">
                 <div ngbDropdown>
                     <a class="icon file" id="dropdownBasic1" class="menu-btn" ngbDropdownToggle
                         onfocus="this.blur();"><i class="far fa-user-circle"></i>{{ user.displayName }}</a>

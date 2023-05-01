@@ -60,7 +60,7 @@ export class InputFixNodeService {
       return;
     }
 
-    const json: object = jsonData["fix_node"];
+    const json: object = jsonData["fix_node"] as object;
 
     for (const typNo of Object.keys(json)) {
       const js: any[] = json[typNo];

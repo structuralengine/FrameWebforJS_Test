@@ -13,7 +13,9 @@ import { AppComponent } from "./app.component";
 import { MatInputModule } from "@angular/material/input";
 import {MatExpansionModule} from '@angular/material/expansion';
 
-import { AngularFireModule } from "@angular/fire";
+import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from "../environments/environment";
 
 import { InputDataService } from "./providers/input-data.service";
@@ -88,118 +90,111 @@ import { PrintCustomReacComponent } from "./components/print/custom/print-custom
 import { PrintCustomDisgComponent } from "./components/print/custom/print-custom-disg/print-custom-disg.component";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { ElectronService, NgxElectronModule } from "ngx-electron";
 import { MaxMinComponent } from './components/three/max-min/max-min.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ElectronService } from "./providers/electron.service";
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    DragDropModule,
-    BrowserAnimationsModule,
-    NgbModule,
-    DataHelperModule,
-    MatInputModule,
-    MatRadioModule,
-    MatExpansionModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: httpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
-    NgxElectronModule,
-    ScrollingModule
-  ],
-  declarations: [
-    AppComponent,
-    MenuComponent,
-    LoginDialogComponent,
-    WaitDialogComponent,
-
-    InputNodesComponent,
-    InputMembersComponent,
-    InputFixNodeComponent,
-    InputElementsComponent,
-    InputJointComponent,
-    InputNoticePointsComponent,
-    InputFixMemberComponent,
-    InputLoadNameComponent,
-    InputLoadComponent,
-    InputDefineComponent,
-    InputCombineComponent,
-    InputPickupComponent,
-
-    ResultDisgComponent,
-    ResultReacComponent,
-    ResultFsecComponent,
-    ResultCombineDisgComponent,
-    ResultPickupDisgComponent,
-    ResultCombineReacComponent,
-    ResultPickupReacComponent,
-    ResultPickupFsecComponent,
-    ResultCombineFsecComponent,
-    ThreeComponent,
-    InputPanelComponent,
-
-    PrintComponent,
-    PrintLayoutComponent,
-    InvoiceComponent,
-
-    PagerComponent,
-    SheetComponent,
-    PrintThreeComponent,
-    PrintCustomFsecComponent,
-    PrintCustomThreeComponent,
-    PrintCustomComponent,
-    PrintCustomReacComponent,
-    PrintCustomDisgComponent,
-    MaxMinComponent,
-    ChatComponent,
-  ],
-  entryComponents: [LoginDialogComponent, WaitDialogComponent],
-  providers: [
-    InputDataService,
-    InputNodesService,
-    InputMembersService,
-    InputFixNodeService,
-    InputElementsService,
-    InputJointService,
-    InputNoticePointsService,
-    InputFixMemberService,
-    InputLoadService,
-    InputDefineService,
-    InputCombineService,
-    InputPickupService,
-
-    PrintService,
-    ResultDataService,
-    ResultDisgService,
-    ResultReacService,
-    ResultFsecService,
-    ResultCombineDisgService,
-    ResultPickupDisgService,
-    ResultCombineReacService,
-    ResultPickupReacService,
-    ResultPickupFsecService,
-    ResultCombineFsecService,
-
-    UserInfoService,
-    SceneService,
-
-    ElectronService
-  ],
-  bootstrap: [AppComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        DragDropModule,
+        BrowserAnimationsModule,
+        NgbModule,
+        DataHelperModule,
+        MatInputModule,
+        MatRadioModule,
+        MatExpansionModule,
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideAuth(() => getAuth()),
+        provideFirestore(() => getFirestore()),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: httpLoaderFactory,
+                deps: [HttpClient],
+            },
+        }),
+        ScrollingModule
+    ],
+    declarations: [
+        AppComponent,
+        MenuComponent,
+        LoginDialogComponent,
+        WaitDialogComponent,
+        InputNodesComponent,
+        InputMembersComponent,
+        InputFixNodeComponent,
+        InputElementsComponent,
+        InputJointComponent,
+        InputNoticePointsComponent,
+        InputFixMemberComponent,
+        InputLoadNameComponent,
+        InputLoadComponent,
+        InputDefineComponent,
+        InputCombineComponent,
+        InputPickupComponent,
+        ResultDisgComponent,
+        ResultReacComponent,
+        ResultFsecComponent,
+        ResultCombineDisgComponent,
+        ResultPickupDisgComponent,
+        ResultCombineReacComponent,
+        ResultPickupReacComponent,
+        ResultPickupFsecComponent,
+        ResultCombineFsecComponent,
+        ThreeComponent,
+        InputPanelComponent,
+        PrintComponent,
+        PrintLayoutComponent,
+        InvoiceComponent,
+        PagerComponent,
+        SheetComponent,
+        PrintThreeComponent,
+        PrintCustomFsecComponent,
+        PrintCustomThreeComponent,
+        PrintCustomComponent,
+        PrintCustomReacComponent,
+        PrintCustomDisgComponent,
+        MaxMinComponent,
+        ChatComponent,
+    ],
+    providers: [
+        InputDataService,
+        InputNodesService,
+        InputMembersService,
+        InputFixNodeService,
+        InputElementsService,
+        InputJointService,
+        InputNoticePointsService,
+        InputFixMemberService,
+        InputLoadService,
+        InputDefineService,
+        InputCombineService,
+        InputPickupService,
+        PrintService,
+        ResultDataService,
+        ResultDisgService,
+        ResultReacService,
+        ResultFsecService,
+        ResultCombineDisgService,
+        ResultPickupDisgService,
+        ResultCombineReacService,
+        ResultPickupReacService,
+        ResultPickupFsecService,
+        ResultCombineFsecService,
+        UserInfoService,
+        SceneService,
+        ElectronService
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}
 

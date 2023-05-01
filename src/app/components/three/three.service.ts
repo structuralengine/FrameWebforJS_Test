@@ -259,9 +259,9 @@ export class ThreeService {
 
       case "load_names":
         if ("fixMemberPage" in option)
-          this.fixMember.changeData(option["fixMemberPage"]);
+          this.fixMember.changeData(option["fixMemberPage"] as number);
         if ("fixNodePage" in option)
-          this.fixNode.changeData(option["fixNodePage"]);
+          this.fixNode.changeData(option["fixNodePage"] as number);
         this.load.changeCase(currentPage);
         break;
 
