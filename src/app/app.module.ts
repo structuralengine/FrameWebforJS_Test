@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -17,6 +17,8 @@ import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from "../environments/environment";
+
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 import { InputDataService } from "./providers/input-data.service";
 import { DataHelperModule } from "./providers/data-helper.module";
@@ -97,6 +99,20 @@ import { ElectronService } from "./providers/electron.service";
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 
+function initializeKeycloak(keycloak: KeycloakService) {
+    console.log("initializaing keycloak");
+    return () =>
+        keycloak.init({
+            config: {
+                url: 'https://auth.structuralengine.com',
+                realm: 'structural-engine',
+                clientId: 'structural-engine'
+            },
+            initOptions: {
+            onLoad: 'check-sso',
+        }
+    });
+}
 
 @NgModule({
     imports: [
@@ -112,6 +128,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         MatInputModule,
         MatRadioModule,
         MatExpansionModule,
+        KeycloakAngularModule,
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => getAuth()),
         provideFirestore(() => getFirestore()),
@@ -192,7 +209,13 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         ResultCombineFsecService,
         UserInfoService,
         SceneService,
-        ElectronService
+        ElectronService,
+        {
+          provide: APP_INITIALIZER,
+          useFactory: initializeKeycloak,
+          multi: true,
+          deps: [KeycloakService]
+        },
     ],
     bootstrap: [AppComponent]
 })
