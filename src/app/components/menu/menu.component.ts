@@ -13,13 +13,10 @@ import { InputDataService } from "../../providers/input-data.service";
 import { ResultDataService } from "../../providers/result-data.service";
 import { ThreeService } from "../three/three.service";
 
-import * as pako from "pako";
-
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { SceneService } from "../three/scene.service";
 import { Auth, getAuth } from "@angular/fire/auth";
 import { UserInfoService } from "src/app/providers/user-info.service";
-import { environment } from "src/environments/environment";
 import { PrintCustomFsecService } from "../print/custom/print-custom-fsec/print-custom-fsec.service";
 import { LanguagesService } from "src/app/providers/languages.service";
 import { ElectronService } from "src/app/providers/electron.service";
@@ -95,6 +92,7 @@ export class MenuComponent implements OnInit {
       return;
     }
     this.app.dialogClose(); // 現在表示中の画面を閉じる
+    this.app.addHiddenFromElements();
     this.InputData.clear();
     this.ResultData.clear();
     this.PrintData.clear();
@@ -221,122 +219,7 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  // 計算
-  public calcrate(): void {
-    const modalRef = this.modalService.open(WaitDialogComponent);
-
-    const user = this.auth.currentUser;
-    if (user === null) {
-      modalRef.close();
-      this.helper.alert(this.translate.instant("menu.P_login"));
-      return;
-    }
-
-    const jsonData: {} = this.InputData.getInputJson(0);
-
-    if ("error" in jsonData) {
-      this.helper.alert(jsonData["error"] as string);
-      modalRef.close(); // モーダルダイアログを消す
-      return;
-    }
-
-    if (!window.confirm(this.translate.instant("menu.calc_start"))) {
-      modalRef.close(); // モーダルダイアログを消す
-      return;
-    }
-
-    jsonData["uid"] = user.uid;
-    jsonData["production"] = environment.production;
-
-    this.ResultData.clear(); // 解析結果情報をクリア
-
-    this.post_compress(jsonData, modalRef);
-  }
-
-  private post_compress(jsonData: {}, modalRef: NgbModalRef) {
-    const url = environment.calcURL; // 'https://asia-northeast1-the-structural-engine.cloudfunctions.net/frameWeb-2';
-
-    // json string にする
-    const json = JSON.stringify(jsonData, null, 0);
-    console.log(json);
-    // pako を使ってgzip圧縮する
-    const compressed = pako.gzip(json);
-    //btoa() を使ってBase64エンコードする
-    const base64Encoded = btoa(compressed);
-
-    this.http
-      .post(url, base64Encoded, {
-        headers: new HttpHeaders({
-          "Content-Type": "application/json",
-          "Content-Encoding": "gzip,base64",
-        }),
-        responseType: "text",
-      })
-      .subscribe(
-        (response) => {
-          // 通信成功時の処理（成功コールバック）
-          console.log(this.translate.instant("menu.success"));
-          try {
-            if (response.includes("error") || response.includes("exceeded")) {
-              throw response;
-            }
-            // Decode base64 (convert ascii to binary)
-            const strData = atob(response);
-            // Convert binary string to character-number array
-            const charData = strData.split("").map(function (x) {
-              return x.charCodeAt(0);
-            });
-            // Turn number array into byte-array
-            const binData = new Uint8Array(charData);
-            // Pako magic
-            const json = pako.ungzip(binData, { to: "string" });
-
-            const jsonData = JSON.parse(json);
-            // サーバーのレスポンスを集計する
-            console.log(jsonData);
-            if ("error" in jsonData) {
-              throw jsonData.error;
-            }
-
-            // ポイントの処理
-            const _jsonData = {};
-            for (const key of Object.keys(jsonData)) {
-              if ((typeof jsonData[key]).toLowerCase() === "number") {
-                this.user[key] = jsonData[key];
-              } else {
-                _jsonData[key] = jsonData[key];
-              }
-            }
-
-            this.InputData.getResult(jsonData);
-
-            // 解析結果を集計する
-            this.ResultData.loadResultData(_jsonData);
-            this.ResultData.isCalculated = true;
-          } catch (e) {
-            this.helper.alert(e);
-          } finally {
-            modalRef.close(); // モーダルダイアログを消す
-            this.helper.alert(
-              this.user.deduct_points
-              + this.translate.instant("menu.deduct_points")
-              + this.user.new_points
-              + this.translate.instant("menu.new_points")
-            );
-          }
-        },
-        (error) => {
-          let messege: string = "通信 " + error.statusText;
-          if ("_body" in error) {
-            messege += "\n" + error._body;
-          }
-          this.helper.alert(messege);
-          console.error(error);
-          modalRef.close();
-        }
-      );
-  }
-
+  
   // ピックアップファイル出力
   public pickup(): void {
     let pickupJson: string;
@@ -407,6 +290,7 @@ export class MenuComponent implements OnInit {
   }
 
   public setDimension(dim: number = null) {
+    this.scene.changeGui(this.helper.dimension);
     if (dim === null) {
       if (this.helper.dimension === 2) {
         this.helper.dimension = 3;
@@ -415,8 +299,6 @@ export class MenuComponent implements OnInit {
       }
     } else {
       this.helper.dimension = dim;
-      const g23D: any = document.getElementById("toggle--switch");
-      g23D.checked = this.helper.dimension === 3;
     }
     this.app.dialogClose(); // 現在表示中の画面を閉じる
     this.scene.changeGui(this.helper.dimension);

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { InputLoadService } from "./input-load.service";
 import { DataHelperModule } from "../../../providers/data-helper.module";
 import { ThreeService } from "../../three/three.service";
@@ -11,15 +11,18 @@ import { SceneService } from "../../three/scene.service";
 import { TranslateService } from "@ngx-translate/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { WaitDialogComponent } from "../../wait-dialog/wait-dialog.component";
+import { Subscription } from "rxjs";
+import { PagerService } from "../pager/pager.service";
 
 @Component({
   selector: "app-input-load",
   templateUrl: "./input-load.component.html",
   styleUrls: ["./input-load.component.scss", "../../../app.component.scss"],
 })
-export class InputLoadComponent implements OnInit {
+export class InputLoadComponent implements OnInit, OnDestroy {
   @ViewChild("grid") grid: SheetComponent;
 
+  private subscription: Subscription;
   public load_name: string;
   public LL_flg: boolean = false;
 
@@ -700,7 +703,8 @@ export class InputLoadComponent implements OnInit {
     private three: ThreeService,
     private threeLoad: ThreeLoadService,
     private modalService: NgbModal,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private pagerService: PagerService
   ) {
 
     this.currentRow = null;
@@ -817,8 +821,9 @@ export class InputLoadComponent implements OnInit {
         this.three.selectChange("load_values", row, column);
       },
     };
-
-
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
   ngOnInit() {
@@ -832,6 +837,9 @@ export class InputLoadComponent implements OnInit {
 
     this.three.ChangeMode("load_values");
     this.three.ChangePage(1);
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   //　pager.component からの通知を受け取る

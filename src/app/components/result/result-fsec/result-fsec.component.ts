@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ResultFsecService } from "./result-fsec.service";
 import { InputLoadService } from "../../input/input-load/input-load.service";
 import { ThreeService } from "../../three/three.service";
@@ -8,6 +8,8 @@ import { ResultCombineFsecService } from "../result-combine-fsec/result-combine-
 import { ResultPickupFsecService } from "../result-pickup-fsec/result-pickup-fsec.service";
 import { AppComponent } from "src/app/app.component";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { Subscription } from "rxjs";
+import { PagerService } from "../../input/pager/pager.service";
 
 @Component({
   selector: "app-result-fsec",
@@ -18,7 +20,8 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
     "../../../floater.component.scss",
   ],
 })
-export class ResultFsecComponent implements OnInit {
+export class ResultFsecComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   public KEYS: string[];
   public TITLES: string[];
   dataset: any[];
@@ -41,7 +44,8 @@ export class ResultFsecComponent implements OnInit {
     private three: ThreeService,
     private comb: ResultCombineFsecService,
     private pic: ResultPickupFsecService,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private pagerService: PagerService
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -55,6 +59,9 @@ export class ResultFsecComponent implements OnInit {
       this.result.page = 1
       this.result.case = "basic"
     }
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
   ngOnInit() {
@@ -80,6 +87,9 @@ export class ResultFsecComponent implements OnInit {
     } else {
       this.btnPickup = "btn-change disabled";
     }
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   //　pager.component からの通知を受け取る

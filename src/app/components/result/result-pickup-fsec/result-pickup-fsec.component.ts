@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ResultPickupFsecService } from "./result-pickup-fsec.service";
 import { InputPickupService } from "../../input/input-pickup/input-pickup.service";
 import { ThreeService } from "../../three/three.service";
@@ -6,6 +6,9 @@ import { ThreeService } from "../../three/three.service";
 import { ResultCombineFsecService } from "../result-combine-fsec/result-combine-fsec.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { ResultDataService } from "../../../providers/result-data.service";
+import { Subscription } from "rxjs";
+import { PagerDirectionService } from "../../input/pager-direction/pager-direction.service";
+import { PagerService } from "../../input/pager/pager.service";
 
 @Component({
   selector: "app-result-pickup-fsec",
@@ -16,7 +19,9 @@ import { ResultDataService } from "../../../providers/result-data.service";
     "../../../floater.component.scss",
   ],
 })
-export class ResultPickupFsecComponent implements OnInit {
+export class ResultPickupFsecComponent implements OnInit, OnDestroy {
+  private directionSubscription: Subscription;
+  private subscription: Subscription;
   public KEYS: string[];
   public TITLES: string[];
 
@@ -36,7 +41,9 @@ export class ResultPickupFsecComponent implements OnInit {
     private three: ThreeService,
     private result: ResultDataService,
     private comb: ResultCombineFsecService,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private pagerDirectionService: PagerDirectionService,
+    private pagerService: PagerService
   ) {
     this.dataset = new Array();
     this.KEYS = this.comb.fsecKeys;
@@ -50,6 +57,13 @@ export class ResultPickupFsecComponent implements OnInit {
       this.result.page = 1
       this.result.case = "pic"
     }
+    this.directionSubscription =
+      this.pagerDirectionService.pageSelected$.subscribe((text) => {
+        this.calPage(text - 1);
+      });
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
   ngOnInit() {
@@ -65,6 +79,10 @@ export class ResultPickupFsecComponent implements OnInit {
 
     // テーブルの高さを計算する
     this.tableHeight = (this.dataset[0].length + 1) * 30;
+  }
+  ngOnDestroy() {
+    this.directionSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   //　pager.component からの通知を受け取る
