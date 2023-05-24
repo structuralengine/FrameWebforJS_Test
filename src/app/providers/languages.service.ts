@@ -27,5 +27,19 @@ export class LanguagesService {
     this.browserLang = key;
     this.translate.use(this.browserLang);
     this.helper.isContentsDailogShow = false;
+    this.addHiddenFromElements();
+  }
+  
+  private addHiddenFromElements(): void {
+    this.addHiddenFromClass(".panel-element-content-container");
+    this.addHiddenFromClass("#my_dock_manager");
+    this.addHiddenFromClass(".dialog-floating");
+  }
+
+  private addHiddenFromClass(selector: string): void {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.classList.add("hidden");
+    }
   }
 }

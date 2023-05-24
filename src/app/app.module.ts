@@ -28,6 +28,7 @@ import { UserInfoService } from "./providers/user-info.service";
 import { MenuComponent } from "./components/menu/menu.component";
 import { LoginDialogComponent } from "./components/login-dialog/login-dialog.component";
 import { WaitDialogComponent } from "./components/wait-dialog/wait-dialog.component";
+import { AlertDialogComponent } from "./components/alert-dialog/alert-dialog.component";
 
 import { InputNodesComponent } from "./components/input/input-nodes/input-nodes.component";
 import { InputNodesService } from "./components/input/input-nodes/input-nodes.service";
@@ -84,6 +85,7 @@ import { InvoiceComponent } from "./components/print/invoice/invoice.component";
 import { PrintThreeComponent } from "./components/print/invoice/print-three/print-three.component";
 
 import { PagerComponent } from "./components/input/pager/pager.component";
+import { PagerDirectionComponent } from "./components/input/pager-direction/pager-direction.component";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
 import { PrintCustomFsecComponent } from "./components/print/custom/print-custom-fsec/print-custom-fsec.component";
 import { PrintCustomThreeComponent } from "./components/print/custom/print-custom-three/print-custom-three.component";
@@ -95,6 +97,8 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { MaxMinComponent } from './components/three/max-min/max-min.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ElectronService } from "./providers/electron.service";
+import { DocLayoutComponent } from "./components/doc-layout/doc-layout.component";
+import { OptionalHeaderComponent } from "./components/optional-header/optional-header.component";
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -146,6 +150,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         MenuComponent,
         LoginDialogComponent,
         WaitDialogComponent,
+        AlertDialogComponent,
         InputNodesComponent,
         InputMembersComponent,
         InputFixNodeComponent,
@@ -173,6 +178,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         PrintLayoutComponent,
         InvoiceComponent,
         PagerComponent,
+        PagerDirectionComponent,
         SheetComponent,
         PrintThreeComponent,
         PrintCustomFsecComponent,
@@ -182,6 +188,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
         PrintCustomDisgComponent,
         MaxMinComponent,
         ChatComponent,
+        DocLayoutComponent,
+        OptionalHeaderComponent,
     ],
     providers: [
         InputDataService,

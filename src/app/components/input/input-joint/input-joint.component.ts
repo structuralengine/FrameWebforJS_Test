@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { InputJointService } from "./input-joint.service";
 import { DataHelperModule } from "../../../providers/data-helper.module";
 import { ThreeService } from "../../three/three.service";
@@ -6,16 +6,18 @@ import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from 'src/app/app.component';
 import { TranslateService } from "@ngx-translate/core";
-
+import { Subscription } from "rxjs";
+import { PagerService } from "../pager/pager.service";
 
 @Component({
   selector: "app-input-joint",
   templateUrl: "./input-joint.component.html",
   styleUrls: ["./input-joint.component.scss", "../../../app.component.scss"],
 })
-export class InputJointComponent implements OnInit {
+export class InputJointComponent implements OnInit, OnDestroy {
   @ViewChild("grid") grid!: SheetComponent;
 
+  private subscription: Subscription;
   private dataset = [];
   private columnKeys3D = ['m', 'xi', 'yi', 'zi', 'xj', 'yj', 'zj'];
   private columnKeys2D = ['m', 'zi', 'zj'];
@@ -66,11 +68,15 @@ export class InputJointComponent implements OnInit {
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private pagerService: PagerService
   ) {
 
     this.currentRow = null;
     this.currentColumn = null;
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
   ngOnInit() {
@@ -78,6 +84,9 @@ export class InputJointComponent implements OnInit {
     this.loadPage(1, this.ROWS_COUNT);
     this.three.ChangeMode("joints");
     this.three.ChangePage(1);
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   //　pager.component からの通知を受け取る

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ResultPickupDisgService } from "./result-pickup-disg.service";
 import { ResultDisgService } from "../result-disg/result-disg.service";
 import { InputPickupService } from "../../input/input-pickup/input-pickup.service";
@@ -8,6 +8,9 @@ import { ThreeService } from "../../three/three.service";
 import { ResultCombineDisgService } from "../result-combine-disg/result-combine-disg.service";
 import { AppComponent } from "src/app/app.component";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { Subscription } from "rxjs";
+import { PagerDirectionService } from "../../input/pager-direction/pager-direction.service";
+import { PagerService } from "../../input/pager/pager.service";
 
 @Component({
   selector: "app-result-pickup-disg",
@@ -18,7 +21,9 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
     "../../../floater.component.scss",
   ],
 })
-export class ResultPickupDisgComponent implements OnInit {
+export class ResultPickupDisgComponent implements OnInit, OnDestroy {
+  private directionSubscription: Subscription;
+  private subscription: Subscription;
   public KEYS: string[];
   public TITLES: string[];
 
@@ -38,7 +43,9 @@ export class ResultPickupDisgComponent implements OnInit {
     private three: ThreeService,
     private comb: ResultCombineDisgService,
     private result: ResultDataService,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private pagerDirectionService: PagerDirectionService,
+    private pagerService: PagerService
   ) {
     this.dataset = new Array();
     this.KEYS = this.comb.disgKeys;
@@ -52,6 +59,13 @@ export class ResultPickupDisgComponent implements OnInit {
       this.result.page = 1
       this.result.case = "pic"
     }
+    this.directionSubscription =
+      this.pagerDirectionService.pageSelected$.subscribe((text) => {
+        this.calPage(text - 1);
+      });
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
   ngOnInit() {
@@ -67,6 +81,10 @@ export class ResultPickupDisgComponent implements OnInit {
 
     // テーブルの高さを計算する
     this.tableHeight = (this.dataset[0].length + 1) * 30;
+  }
+  ngOnDestroy() {
+    this.directionSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   //　pager.component からの通知を受け取る

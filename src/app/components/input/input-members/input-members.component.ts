@@ -53,7 +53,7 @@ export class InputMembersComponent implements OnInit {
           sortable: false,
           width: 100,
           editable: false,
-          style: { background: "#dae6f0" },
+          style: { background: "#33363c !important" },
         },
       ],
     },
@@ -92,7 +92,7 @@ export class InputMembersComponent implements OnInit {
       sortable: false,
       width: 100,
       editable: false,
-      style: { background: "#dae6f0" },
+      style: { background: "#33363c !important" },
     },
   ];
   private columnHeaders2D = [
@@ -130,7 +130,7 @@ export class InputMembersComponent implements OnInit {
           sortable: false,
           width: 100,
           editable: false,
-          style: { background: "#dae6f0" },
+          style: { background: "#33363c !important" },
         },
       ],
     },
@@ -156,7 +156,7 @@ export class InputMembersComponent implements OnInit {
       sortable: false,
       width: 100,
       editable: false,
-      style: { background: "#dae6f0" },
+      style: { background: "#33363c !important" },
     },
   ];
 
