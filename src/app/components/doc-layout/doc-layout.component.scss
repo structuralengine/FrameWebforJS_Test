@@ -34,5 +34,6 @@
 }
 #edt1 {
   background-color: var(--table_empty_bg);
-  overflow: scroll;
+  overflow-y: hidden;
+  overflow-x: scroll;
 }
