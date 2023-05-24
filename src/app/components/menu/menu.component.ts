@@ -23,6 +23,9 @@ import { ElectronService } from "src/app/providers/electron.service";
 import { TranslateService } from "@ngx-translate/core";
 import packageJson from '../../../../package.json';
 
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
+
 @Component({
   selector: "app-menu",
   templateUrl: "./menu.component.html",
@@ -32,6 +35,7 @@ export class MenuComponent implements OnInit {
   loginUserName: string;
   public fileName: string;
   public version: string;
+  public userProfile: KeycloakProfile | null = null;
 
   constructor(
     private modalService: NgbModal,
@@ -51,12 +55,13 @@ export class MenuComponent implements OnInit {
     public electronService: ElectronService,
     private translate: TranslateService,
     public printCustomFsecService: PrintCustomFsecService,
+    private readonly keycloak: KeycloakService
   ) {
     this.fileName = "";
     this.three.fileName = "";
     this.version = packageJson.version;
     this.auth = getAuth();
-    this.auth.currentUser
+    this.auth.currentUser;
   }
 
   ngOnInit() {
@@ -247,13 +252,15 @@ export class MenuComponent implements OnInit {
   }
 
   // ログイン関係
-  logIn(): void {
-    this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.modalService.open(LoginDialogComponent, {backdrop: false}).result.then((result) => { });
+  async logIn() {
+    this.keycloak.login();
+    // this.app.dialogClose(); // 現在表示中の画面を閉じる
+    // this.modalService.open(LoginDialogComponent, {backdrop: false}).result.then((result) => { });
   }
 
   logOut(): void {
-    this.auth.signOut();
+    this.keycloak.logout(window.location.origin);
+    // this.auth.signOut();
   }
 
   //　印刷フロート画面用
