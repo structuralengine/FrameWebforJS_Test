@@ -105,14 +105,13 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
 
 function initializeKeycloak(keycloak: KeycloakService) {
     console.log("initializaing keycloak");
-    return () =>
-        keycloak.init({
-            config: {
-                url: 'https://auth.structuralengine.com',
-                realm: 'structural-engine',
-                clientId: 'structural-engine'
-            },
-            initOptions: {
+    return () => keycloak.init({
+        config: {
+            url: 'https://auth.structuralengine.com',
+            realm: 'structural-engine',
+            clientId: 'structural-engine'
+        },
+        initOptions: {
             onLoad: 'check-sso',
         }
     });
