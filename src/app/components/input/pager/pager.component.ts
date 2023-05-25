@@ -44,7 +44,8 @@ export class PagerComponent implements OnInit {
     if (
       this.router.url.includes("result-disg") ||
       this.router.url.includes("result-reac") ||
-      this.router.url.includes("result-fsec")
+      this.router.url.includes("result-fsec") ||
+      this.router.url.includes("input-loads")
     ) {
       return `${page}.${this.load.getLoadName(page)}`;
     } else {
