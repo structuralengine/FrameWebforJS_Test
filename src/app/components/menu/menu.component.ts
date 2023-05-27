@@ -253,9 +253,12 @@ export class MenuComponent implements OnInit {
 
   // ログイン関係
   async logIn() {
-    this.keycloak.login();
-    // this.app.dialogClose(); // 現在表示中の画面を閉じる
-    // this.modalService.open(LoginDialogComponent, {backdrop: false}).result.then((result) => { });
+    if (this.electronService.isElectron) {
+      this.app.dialogClose(); // 現在表示中の画面を閉じる
+      this.modalService.open(LoginDialogComponent, {backdrop: false}).result.then((result) => { });
+    } else {
+      this.keycloak.login();
+    }
   }
 
   logOut(): void {
