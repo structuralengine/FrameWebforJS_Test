@@ -228,14 +228,16 @@
     </div>
     <div class="footerArea">
       <a routerLink="/" class="button cancel" (click)="onPageBack()">キャンセル</a>
-      <input
-        id="printButton"
-        type="button"
-        name="printButton"
-        value="{{ 'print.prt' | translate }}"
-        (click)="onPrintPDF()"
-        class="button printPdf"
-      />
+      <a routerLink="/">
+        <input
+          id="printButton"
+          type="button"
+          name="printButton"
+          value="{{ 'print.prt' | translate }}"
+          (click)="onPrintPDF()"
+          class="button printPdf"
+        />
+      </a>
     </div>
   </div>
 

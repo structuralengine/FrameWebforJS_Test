@@ -353,8 +353,9 @@ body {
   #print-loading {
     display: none;
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: 15px;
+    bottom: 8px;
+    z-index: 1;
     svg {
       width: 60px;
       margin-bottom: 8px;
