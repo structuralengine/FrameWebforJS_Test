@@ -3,6 +3,7 @@ import { KeycloakService } from 'keycloak-angular';
 import { ElectronService } from './electron.service';
 import { nanoid } from 'nanoid';
 import axios from 'axios';
+import { Firestore, collection, doc, getDocs, getFirestore, onSnapshot } from '@angular/fire/firestore';
 
 const APP = 'FrameWeb';
 const USER_PROFILE = 'userProfile';
@@ -24,11 +25,14 @@ export class UserInfoService {
   public old_points: number = 0;
   public userProfile: UserProfile | null = null;
   public clientId: string = null;
+  public activeSession: string = null;
 
   constructor(
     public electronService: ElectronService,
     private readonly keycloak: KeycloakService,
+    private db: Firestore,
   ) {
+    this.db = getFirestore();
     const clientId = window.sessionStorage.getItem(CLIENT_ID);
     if (clientId) {
       this.clientId = clientId;
@@ -36,6 +40,7 @@ export class UserInfoService {
       this.clientId = nanoid();
       window.sessionStorage.setItem(CLIENT_ID, this.clientId);
     }
+    
     this.initializeUserProfile();
   }
 
@@ -68,6 +73,11 @@ export class UserInfoService {
     window.localStorage.setItem(USER_PROFILE, JSON.stringify(userProfile));
     if (this.userProfile) {
       this.setActiveSession();
+      onSnapshot(doc(this.db, "sessions", this.userProfile.uid, "active_sessions", APP), (doc) => {
+        this.activeSession = doc.data().session_id;
+      });
+    } else {
+      this.activeSession = null;
     }
   }
 
@@ -77,7 +87,7 @@ export class UserInfoService {
         uid: this.userProfile.uid,
         app: APP,
         session_id: this.clientId,
-      })
+      });
     }
   }
 }

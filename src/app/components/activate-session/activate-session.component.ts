@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { UserInfoService } from 'src/app/providers/user-info.service';
+
 
 @Component({
   selector: 'app-activate-session',
@@ -6,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./activate-session.component.scss']
 })
 export class ActivateSessionComponent {
-
+  constructor(
+    public userInfoService: UserInfoService,
+  ) { }
 }

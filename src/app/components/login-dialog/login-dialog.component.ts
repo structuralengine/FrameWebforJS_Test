@@ -70,7 +70,6 @@ export class LoginDialogComponent implements OnInit {
     
     axios.request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         const keycloakInstance = this.keycloak.getKeycloakInstance();
 
         keycloakInstance.token = response.data.access_token;
@@ -89,8 +88,6 @@ export class LoginDialogComponent implements OnInit {
               firstName: profile.given_name,
               lastName: profile.family_name,
             });
-
-            console.log("Response:", response);
           })
           .catch(error => {
             console.error("Error:", error);
