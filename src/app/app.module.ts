@@ -99,6 +99,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { ElectronService } from "./providers/electron.service";
 import { DocLayoutComponent } from "./components/doc-layout/doc-layout.component";
 import { OptionalHeaderComponent } from "./components/optional-header/optional-header.component";
+import { ActivateSessionComponent } from './components/activate-session/activate-session.component';
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -189,6 +190,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         ChatComponent,
         DocLayoutComponent,
         OptionalHeaderComponent,
+        ActivateSessionComponent,
     ],
     providers: [
         InputDataService,
