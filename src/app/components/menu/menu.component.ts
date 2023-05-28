@@ -262,7 +262,12 @@ export class MenuComponent implements OnInit {
   }
 
   logOut(): void {
-    this.keycloak.logout(window.location.origin);
+    if (this.electronService.isElectron) {
+      this.user.setUserProfile(null);
+    } else {
+      this.keycloak.logout(window.location.origin);
+      this.user.setUserProfile(null);
+    }
     // this.auth.signOut();
   }
 

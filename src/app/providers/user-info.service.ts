@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
+import { ElectronService } from './electron.service';
+import { nanoid } from 'nanoid';
+
+const USER_PROFILE = 'userProfile';
+const CLIENT_ID = 'clientId';
 
 interface UserProfile {
   uid: string;
@@ -18,31 +23,41 @@ export class UserInfoService {
   public userProfile: UserProfile | null = null;
 
   constructor(
-    private readonly keycloak: KeycloakService
+    public electronService: ElectronService,
+    private readonly keycloak: KeycloakService,
   ) {
     this.initializeUserProfile();
-    if(!window.sessionStorage.getItem("client_id")) {
-      window.sessionStorage.setItem("client_id", Math.random().toString())
+    if(!window.sessionStorage.getItem(CLIENT_ID)) {
+      window.sessionStorage.setItem(CLIENT_ID, nanoid())
     }
   }
 
   async initializeUserProfile() {
-    const isLoggedIn = await this.keycloak.isLoggedIn();
-    if (isLoggedIn) {
-      const keycloakProfile = await this.keycloak.loadUserProfile();
-      this.setUserProfile({
-        uid: keycloakProfile.id,
-        email: keycloakProfile.email,
-        firstName: keycloakProfile.firstName,
-        lastName: keycloakProfile.lastName,
-      });
+    if (this.electronService.isElectron) {
+      const userProfile = window.localStorage.getItem(USER_PROFILE);
+      if (userProfile) {
+        this.setUserProfile(JSON.parse(userProfile));
+      } else {
+        this.setUserProfile(null);
+      }
     } else {
-      this.setUserProfile(null);
+      const isLoggedIn = await this.keycloak.isLoggedIn();
+      if (isLoggedIn) {
+        const keycloakProfile = await this.keycloak.loadUserProfile();
+        this.setUserProfile({
+          uid: keycloakProfile.id,
+          email: keycloakProfile.email,
+          firstName: keycloakProfile.firstName,
+          lastName: keycloakProfile.lastName,
+        });
+      } else {
+        this.setUserProfile(null);
+      }
     }
   }
 
   setUserProfile(userProfile: UserProfile | null) {
     this.userProfile = userProfile;
-    window.localStorage.setItem('userProfile', JSON.stringify(userProfile));
+    window.localStorage.setItem(USER_PROFILE, JSON.stringify(userProfile));
   }
 }

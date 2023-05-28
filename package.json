@@ -64,6 +64,7 @@
     "jszip": "^3.10.1",
     "keycloak-angular": "^13.1.0",
     "keycloak-js": "^20.0.5",
+    "nanoid": "^4.0.2",
     "pako": "^2.0.2",
     "pqgrid": "file:./paramquery-8.4.0/",
     "print-js": "^1.6.0",
