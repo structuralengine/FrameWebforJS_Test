@@ -137,20 +137,20 @@
         },
         "input-define": {
             "DEFINE": "DEFINE",
-            "COMBINE": "COMBINE",
-            "PICKUP": "PICKUP"
+            "COMBINE": "コンバイン",
+            "PICKUP": "ピックアップ"
         },
         "input-combine": {
             "name": "名称　　　　　　　　　　　　　　",
             "DEFINE": "DEFINE",
-            "COMBINE": "COMBINE",
-            "PICKUP": "PICKUP"
+            "COMBINE": "コンバイン",
+            "PICKUP": "ピックアップ"
         },
         "input-pickup": {
             "name": "名称　　　　　　　　　　　　　　",
             "DEFINE": "DEFINE",
-            "COMBINE": "COMBINE",
-            "PICKUP": "PICKUP"
+            "COMBINE": "コンバイン",
+            "PICKUP": "ピックアップ"
         }
     },
     "result": {
