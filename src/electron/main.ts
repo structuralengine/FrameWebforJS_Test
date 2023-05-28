@@ -16,7 +16,7 @@ async function createWindow() {
   });
   mainWindow.maximize();
   mainWindow.setMenuBarVisibility(false);
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
   await mainWindow.loadFile('index.html');
 }
 
