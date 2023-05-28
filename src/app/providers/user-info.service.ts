@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 import { ElectronService } from './electron.service';
 import { nanoid } from 'nanoid';
+import axios from 'axios';
 
+const APP = 'FrameWeb';
 const USER_PROFILE = 'userProfile';
 const CLIENT_ID = 'clientId';
 
@@ -21,15 +23,20 @@ export class UserInfoService {
   public new_points: number = 0;
   public old_points: number = 0;
   public userProfile: UserProfile | null = null;
+  public clientId: string = null;
 
   constructor(
     public electronService: ElectronService,
     private readonly keycloak: KeycloakService,
   ) {
-    this.initializeUserProfile();
-    if(!window.sessionStorage.getItem(CLIENT_ID)) {
-      window.sessionStorage.setItem(CLIENT_ID, nanoid())
+    const clientId = window.sessionStorage.getItem(CLIENT_ID);
+    if (clientId) {
+      this.clientId = clientId;
+    } else {
+      this.clientId = nanoid();
+      window.sessionStorage.setItem(CLIENT_ID, this.clientId);
     }
+    this.initializeUserProfile();
   }
 
   async initializeUserProfile() {
@@ -59,5 +66,18 @@ export class UserInfoService {
   setUserProfile(userProfile: UserProfile | null) {
     this.userProfile = userProfile;
     window.localStorage.setItem(USER_PROFILE, JSON.stringify(userProfile));
+    if (this.userProfile) {
+      this.setActiveSession();
+    }
+  }
+
+  setActiveSession() {
+    if (this.userProfile) {
+      axios.post('https://asia-northeast1-strcutural-engine.cloudfunctions.net/manage-session/', {
+        uid: this.userProfile.uid,
+        app: APP,
+        session_id: this.clientId,
+      })
+    }
   }
 }
