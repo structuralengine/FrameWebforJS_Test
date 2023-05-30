@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
   
   btnReac!: string;
-  isToggled: Boolean = false;
+  isToggled: Boolean = true;
   eventFromChild: number;
   constructor(
     private _router: Router,
