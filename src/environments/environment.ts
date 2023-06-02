@@ -9,7 +9,7 @@ export const environment = {
       messagingSenderId: "424393809904",
       appId: "1:424393809904:web:da2eb60ab855cf4e76c735"
     },
-    calcURL: "https://asia-northeast1-strcutural-engine.cloudfunctions.net/FrameWeb",
+    calcURL: "https://asia-northeast1-strcutural-engine.cloudfunctions.net/FrameWebTest",
     environment: "LOCAL",
     loginURL: 'https://platform.structuralengine.com/signup',
   };

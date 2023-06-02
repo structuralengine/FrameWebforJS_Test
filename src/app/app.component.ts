@@ -194,8 +194,9 @@ export class AppComponent implements OnInit {
   }
   // 計算
   public async calcrate(): Promise<void> {
-    const user = await this.auth.currentUser;
-    if (user === null) {
+    // const user = await this.auth.currentUser;
+    const user = this.user.userProfile;
+    if (!user) {
       this.helper.alert(this.translate.instant("menu.P_login"));
       return;
     }
