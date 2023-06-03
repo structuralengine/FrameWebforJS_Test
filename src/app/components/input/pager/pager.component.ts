@@ -4,6 +4,8 @@ import { filter } from "rxjs/operators";
 import { PagerService } from "./pager.service";
 import { InputLoadService } from "../input-load/input-load.service";
 import { ResultDataService } from "../../../providers/result-data.service";
+import { InputCombineService } from "../input-combine/input-combine.service";
+import { InputPickupService } from "../input-pickup/input-pickup.service";
 
 @Component({
   selector: "app-pager",
@@ -23,7 +25,9 @@ export class PagerComponent implements OnInit {
     private router: Router,
     private pagerService: PagerService,
     private load: InputLoadService,
-    private result: ResultDataService
+    private result: ResultDataService,
+    private comb: InputCombineService,
+    private pickup: InputPickupService
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -44,9 +48,22 @@ export class PagerComponent implements OnInit {
     if (
       this.router.url.includes("result-disg") ||
       this.router.url.includes("result-reac") ||
-      this.router.url.includes("result-fsec")
+      this.router.url.includes("result-fsec") ||
+      this.router.url.includes("input-loads")
     ) {
       return `${page}.${this.load.getLoadName(page)}`;
+    } else if (
+      this.router.url.includes("result-comb_disg") ||
+      this.router.url.includes("result-comb_reac") ||
+      this.router.url.includes("result-comb_fsec")
+    ) {
+      return `${page}.${this.comb.getCombineName(page)}`;
+    } else if (
+      this.router.url.includes("result-pic_disg") ||
+      this.router.url.includes("result-pic_reac") ||
+      this.router.url.includes("result-pic_fsec")
+    ) {
+      return `${page}.${this.pickup.getPickUpName(page)}`;
     } else {
       return `${page}ページ`;
     }

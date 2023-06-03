@@ -157,7 +157,7 @@ body {
     background: transparent !important;
   }
   div.pq-theme {
-    color: #333;
+    color: var(--primary);
     border-color: #63676c !important;
     background: none;
   }
