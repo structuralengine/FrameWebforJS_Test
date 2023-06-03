@@ -17,6 +17,18 @@ async function createWindow() {
   mainWindow.maximize();
   mainWindow.setMenuBarVisibility(false);
   // mainWindow.webContents.openDevTools();
+  mainWindow.on('close', function (e) {
+    let choice = dialog.showMessageBoxSync(this,
+      {
+        type: 'question',
+        buttons: ['Yes', 'No'],
+        title: 'Confirm',
+        message: 'Changed you made may not be saved. Are you sure you want to quit?'
+      });
+    if (choice==1) {
+      e.preventDefault();
+    }
+  });
   await mainWindow.loadFile('index.html');
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { AppComponent } from "../../app.component";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -69,6 +69,13 @@ export class MenuComponent implements OnInit {
     this.three.fileName = "";
     this.helper.isContentsDailogShow = false;
     this.setDimension(2);
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload($event: BeforeUnloadEvent) {
+    if (!this.electronService.isElectron) {
+      $event.returnValue = "Your work will be lost. Do you want to leave this site?";
+    }
   }
 
   // 新規作成
@@ -268,7 +275,6 @@ export class MenuComponent implements OnInit {
       this.keycloak.logout(window.location.origin);
       this.user.setUserProfile(null);
     }
-    // this.auth.signOut();
   }
 
   //　印刷フロート画面用
