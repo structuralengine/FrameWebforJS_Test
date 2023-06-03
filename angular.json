@@ -54,7 +54,10 @@
               "file-saver",
               "pqgrid",
               "html2canvas",
-              "print-js"
+              "print-js",
+              "base64-js",
+              "js-sha256",
+              "qs"
             ],
             "vendorChunk": true,
             "extractLicenses": false,
