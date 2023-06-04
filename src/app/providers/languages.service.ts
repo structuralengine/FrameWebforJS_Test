@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { InputFixNodeService } from "../components/input/input-fix-node/input-fix-node.service";
 import { DataHelperModule } from "./data-helper.module";
+import { ElectronService } from "./electron.service";
 
 @Injectable({
   providedIn: "root",
@@ -17,10 +18,14 @@ export class LanguagesService {
   constructor(
     public translate: TranslateService,
     private inputFixNode: InputFixNodeService,
-    public helper: DataHelperModule
+    public helper: DataHelperModule,
+    public electronService: ElectronService,
   ) {
     this.browserLang = translate.getBrowserLang();
     translate.use(this.browserLang);
+    if (this.electronService.isElectron) {
+      this.electronService.ipcRenderer.send('change-lang', this.browserLang);
+    }
   }
 
   public trans(key: string) {
@@ -28,6 +33,9 @@ export class LanguagesService {
     this.translate.use(this.browserLang);
     this.helper.isContentsDailogShow = false;
     this.addHiddenFromElements();
+    if (this.electronService.isElectron) {
+      this.electronService.ipcRenderer.send('change-lang', this.browserLang);
+    }
   }
   
   private addHiddenFromElements(): void {

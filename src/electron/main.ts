@@ -6,6 +6,7 @@ import isDev from 'electron-is-dev';
 // 起動 --------------------------------------------------------------
 
 let mainWindow: BrowserWindow;
+let locale = 'ja';
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
@@ -18,12 +19,13 @@ async function createWindow() {
   mainWindow.setMenuBarVisibility(false);
   // mainWindow.webContents.openDevTools();
   mainWindow.on('close', function (e) {
+    let langText = require(`../assets/i18n/${locale}.json`)
     let choice = dialog.showMessageBoxSync(this,
       {
         type: 'question',
         buttons: ['Yes', 'No'],
-        title: 'Confirm',
-        message: 'Changed you made may not be saved. Are you sure you want to quit?'
+        title: langText.window.closeTitle,
+        message: langText.window.closeMessage,
       });
     if (choice==1) {
       e.preventDefault();
@@ -131,3 +133,8 @@ ipcMain.on(
     event.returnValue = '';
   }
 );
+
+ipcMain.on(
+  'change-lang', (event, lang) => {
+  locale = lang;
+})

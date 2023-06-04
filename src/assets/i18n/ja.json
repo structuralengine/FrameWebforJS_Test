@@ -384,5 +384,9 @@
         "close": "閉じる",
         "cancel": "キャンセル",
         "ok": "OK"
+    },
+    "window": {
+        "closeTitle": "確認",
+        "closeMessage": "変更内容が保存されません。本当に終了しますか？"
     }
 }

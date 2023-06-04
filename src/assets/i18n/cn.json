@@ -383,5 +383,9 @@
         "close": "关闭",
         "cancel": "取消",
         "ok": "确定"
+    },
+    "window": {
+        "closeTitle": "查看",
+        "closeMessage": "不会保存更改。 您确定要完成它吗?"
     }
 }
