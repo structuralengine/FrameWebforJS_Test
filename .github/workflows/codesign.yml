@@ -27,6 +27,7 @@ jobs:
           JSON_DECODE: ${{ secrets.environment }}
         run: |
           echo $JSON_DECODE | base64 --decode > ./src/environments/environment.ts
+          
       - name: Install dependencies
         run: npm install -g @angular/cli@12.2.7 && npm install
 
@@ -38,4 +39,3 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
           windows_certs: ${{ secrets.CODESIGN }}
           windows_certs_password: ${{ secrets.PASSWORD }}
-
