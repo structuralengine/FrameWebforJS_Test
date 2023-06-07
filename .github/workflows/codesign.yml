@@ -16,12 +16,17 @@ jobs:
         with:
           node-version: "14.18.1"
       
-      - name: Set environments folder
+      - name: Set environment.prod
         env:
-          JSON_DECODE: ${{ secrets.environments_prod }}
+          JSON_DECODE: ${{ secrets.environment_prod }}
         run: |
           echo-n $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.json
-
+          
+      - name: Set environment
+        env:
+          JSON_DECODE: ${{ secrets.environment }}
+        run: |
+          echo-n $JSON_DECODE | base64 --decode > ./src/environments/environment.json
       - name: Install dependencies
         run: npm install -g @angular/cli@12.2.7 && npm install
 
