@@ -16,14 +16,14 @@ jobs:
           JSON_DECODE: ${{ secrets.environment_prod }}
           
         run: |
-          echo $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.ts
+          echo %JSON_DECODE% | base64 -d > ./src/environments/environment.prod.ts
           
       - name: Set environment
         env:
           JSON_DECODE: ${{ secrets.environment }}
           
         run: |
-          echo $JSON_DECODE | base64 --decode > ./src/environments/environment.ts
+          echo %JSON_DECODE% | base64 -d > ./src/environments/environment.ts
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
