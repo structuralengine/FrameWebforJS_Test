@@ -9,6 +9,8 @@ jobs:
   set:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      
       - name: Set environment.prod
         env:
           JSON_DECODE: ${{ secrets.environment_prod }}
@@ -24,8 +26,6 @@ jobs:
   release:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
