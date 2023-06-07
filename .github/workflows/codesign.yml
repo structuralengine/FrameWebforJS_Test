@@ -20,13 +20,13 @@ jobs:
         env:
           JSON_DECODE: ${{ secrets.environment_prod }}
         run: |
-          echo-n $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.json
+          echo $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.json
           
       - name: Set environment
         env:
           JSON_DECODE: ${{ secrets.environment }}
         run: |
-          echo-n $JSON_DECODE | base64 --decode > ./src/environments/environment.json
+          echo $JSON_DECODE | base64 --decode > ./src/environments/environment.json
       - name: Install dependencies
         run: npm install -g @angular/cli@12.2.7 && npm install
 
