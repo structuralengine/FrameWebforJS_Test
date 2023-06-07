@@ -6,16 +6,9 @@ on:
       - v*
 
 jobs:
-  release:
+  set:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "14.18.1"
-      
       - name: Set environment.prod
         env:
           JSON_DECODE: ${{ secrets.environment_prod }}
@@ -27,6 +20,16 @@ jobs:
           JSON_DECODE: ${{ secrets.environment }}
         run: |
           echo $JSON_DECODE | base64 --decode > ./src/environments/environment.ts
+          
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14.18.1"
           
       - name: Install dependencies
         run: npm install -g @angular/cli@12.2.7 && npm install
