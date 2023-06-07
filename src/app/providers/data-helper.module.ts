@@ -1,5 +1,7 @@
 import { NgModule } from "@angular/core";
 import { ElectronService } from "src/app/providers/electron.service";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { AlertDialogComponent } from "../components/alert-dialog/alert-dialog.component";
 
 @NgModule({
   imports: [],
@@ -8,7 +10,8 @@ import { ElectronService } from "src/app/providers/electron.service";
 export class DataHelperModule {
 
   constructor(
-    public electronService: ElectronService
+    public electronService: ElectronService,
+    private modalService: NgbModal
   ) {}
 
   // ３次元解析=3, ２次元解析=2
@@ -19,8 +22,35 @@ export class DataHelperModule {
   public alert(message: string): void{
     if(this.electronService.isElectron) {
       this.electronService.ipcRenderer.sendSync('alert', message);
-    }else{
-      alert(message);
+    } else {
+      const modalRef = this.modalService.open(AlertDialogComponent, {
+        centered: true,
+        backdrop: true,
+        keyboard: true,
+        size: "sm",
+        windowClass: "alert-modal",
+      });
+      modalRef.componentInstance.message = message;
+    }
+  }
+
+  // Yes/Noのダイアログを表示する
+  public async confirm(message: string): Promise<boolean> {
+    if (this.electronService.isElectron) {
+      return window.confirm(message);
+    } else {
+      const modalRef = this.modalService.open(AlertDialogComponent, {
+        centered: true,
+        backdrop: true,
+        keyboard: true,
+        size: "sm",
+        windowClass: "confirm-modal",
+      });
+      modalRef.componentInstance.message = message;
+      modalRef.componentInstance.dialogMode = "confirm";
+
+      const result = await modalRef.result;
+      return result === "yes";
     }
   }
 

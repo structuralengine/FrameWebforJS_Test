@@ -1,4 +1,8 @@
-<div class="datasheet_inner" [style.width.px]="width">
-  <p>(m)</p>
-  <app-sheet  #grid [options]="options"></app-sheet>
+<div
+  class="datasheet_inner"
+  [style.width.px]="width"
+  [ngStyle]="{ 'z-index': helper.isContentsDailogShow ? '99999' : '-9999' }"
+>
+  <p style="color: #fff">(m)</p>
+  <app-sheet #grid [options]="options"></app-sheet>
 </div>

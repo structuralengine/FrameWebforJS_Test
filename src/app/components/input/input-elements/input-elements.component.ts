@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { InputElementsService } from "./input-elements.service";
 import { DataHelperModule } from "../../../providers/data-helper.module";
 import { ThreeService } from "../../three/three.service";
@@ -6,15 +6,18 @@ import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
+import { Subscription } from "rxjs";
+import { PagerService } from "../pager/pager.service";
 
 @Component({
   selector: "app-input-elements",
   templateUrl: "./input-elements.component.html",
   styleUrls: ["./input-elements.component.scss", "../../../app.component.scss"],
 })
-export class InputElementsComponent implements OnInit {
+export class InputElementsComponent implements OnInit, OnDestroy {
   @ViewChild("grid") grid: SheetComponent;
 
+  private subscription: Subscription;
   private dataset = [];
   private columnKeys = ["E", "G", 'Xp', 'A', 'J', 'Iy', 'Iz', 'n']
   private columnHeaders3D = [
@@ -194,11 +197,14 @@ export class InputElementsComponent implements OnInit {
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private pagerService: PagerService
   ) {
 
     this.currentRow = null;
-
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
   ngOnInit() {
@@ -206,6 +212,9 @@ export class InputElementsComponent implements OnInit {
     this.loadPage(1, this.ROWS_COUNT);
     this.three.ChangeMode("elements");
     this.three.ChangePage(1);
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   //　pager.component からの通知を受け取る

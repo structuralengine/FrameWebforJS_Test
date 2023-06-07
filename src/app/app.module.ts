@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -18,6 +18,8 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from "../environments/environment";
 
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+
 import { InputDataService } from "./providers/input-data.service";
 import { DataHelperModule } from "./providers/data-helper.module";
 import { ResultDataService } from "./providers/result-data.service";
@@ -26,6 +28,7 @@ import { UserInfoService } from "./providers/user-info.service";
 import { MenuComponent } from "./components/menu/menu.component";
 import { LoginDialogComponent } from "./components/login-dialog/login-dialog.component";
 import { WaitDialogComponent } from "./components/wait-dialog/wait-dialog.component";
+import { AlertDialogComponent } from "./components/alert-dialog/alert-dialog.component";
 
 import { InputNodesComponent } from "./components/input/input-nodes/input-nodes.component";
 import { InputNodesService } from "./components/input/input-nodes/input-nodes.service";
@@ -82,6 +85,7 @@ import { InvoiceComponent } from "./components/print/invoice/invoice.component";
 import { PrintThreeComponent } from "./components/print/invoice/print-three/print-three.component";
 
 import { PagerComponent } from "./components/input/pager/pager.component";
+import { PagerDirectionComponent } from "./components/input/pager-direction/pager-direction.component";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
 import { PrintCustomFsecComponent } from "./components/print/custom/print-custom-fsec/print-custom-fsec.component";
 import { PrintCustomThreeComponent } from "./components/print/custom/print-custom-three/print-custom-three.component";
@@ -93,10 +97,26 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { MaxMinComponent } from './components/three/max-min/max-min.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ElectronService } from "./providers/electron.service";
+import { DocLayoutComponent } from "./components/doc-layout/doc-layout.component";
+import { OptionalHeaderComponent } from "./components/optional-header/optional-header.component";
+import { ActivateSessionComponent } from './components/activate-session/activate-session.component';
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 
+function initializeKeycloak(keycloak: KeycloakService) {
+    console.log("initializaing keycloak");
+    return () => keycloak.init({
+        config: {
+            url: 'https://auth.structuralengine.com',
+            realm: 'structural-engine',
+            clientId: 'structural-engine'
+        },
+        initOptions: {
+            onLoad: 'check-sso',
+        }
+    });
+}
 
 @NgModule({
     imports: [
@@ -112,6 +132,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         MatInputModule,
         MatRadioModule,
         MatExpansionModule,
+        KeycloakAngularModule,
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => getAuth()),
         provideFirestore(() => getFirestore()),
@@ -129,6 +150,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         MenuComponent,
         LoginDialogComponent,
         WaitDialogComponent,
+        AlertDialogComponent,
         InputNodesComponent,
         InputMembersComponent,
         InputFixNodeComponent,
@@ -156,6 +178,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         PrintLayoutComponent,
         InvoiceComponent,
         PagerComponent,
+        PagerDirectionComponent,
         SheetComponent,
         PrintThreeComponent,
         PrintCustomFsecComponent,
@@ -165,6 +188,9 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         PrintCustomDisgComponent,
         MaxMinComponent,
         ChatComponent,
+        DocLayoutComponent,
+        OptionalHeaderComponent,
+        ActivateSessionComponent,
     ],
     providers: [
         InputDataService,
@@ -192,7 +218,13 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         ResultCombineFsecService,
         UserInfoService,
         SceneService,
-        ElectronService
+        ElectronService,
+        {
+          provide: APP_INITIALIZER,
+          useFactory: initializeKeycloak,
+          multi: true,
+          deps: [KeycloakService]
+        },
     ],
     bootstrap: [AppComponent]
 })

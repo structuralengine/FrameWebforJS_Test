@@ -34,7 +34,7 @@ export class InputNodesComponent implements OnInit {
   private currentRow: string;
 
   constructor( private data: InputNodesService,
-              private helper: DataHelperModule,
+              public helper: DataHelperModule,
               private app: AppComponent,
               private three: ThreeService) {
 

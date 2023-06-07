@@ -57,6 +57,7 @@ export class SceneService {
 
     // gui
     this.params = {
+      "3D": false,
       GridHelper: true,
       Perspective: true,
       ReDraw: this.render,
@@ -108,6 +109,12 @@ export class SceneService {
     this.gui = new GUI();
     this.gui.domElement.id = "gui_css";
 
+    // 3D・2Dの表示を制御するスイッチの登録
+    this.gui.add(this.params, "3D").onChange((value) => {
+      this.helper.dimension = value ? 3 : 2;
+      this.changeGui(this.helper.dimension);
+    });
+
     // GridHelper の表示・非表示を制御するスイッチの登録
     this.gui.add(this.params, "GridHelper").onChange((value) => {
       this.axisHelper.visible = value;
@@ -143,6 +150,10 @@ export class SceneService {
     // カメラのGUIを取り出し、可変かどうかを設定する。
     let camera_gui: any = null;
     for (const controller of this.gui.__controllers) {
+      if (controller.property === "3D") {
+        this.params["3D"] = this.helper.dimension === 3 ? true : false;
+        controller.updateDisplay();
+      }
       if (controller.property === "Perspective") {
         camera_gui = controller; // カメラのGUIを取り出す
         if (dimension === 2) {
@@ -502,6 +513,11 @@ export class SceneService {
     } 
 
   }
+  public open() {
+    this.gui.open();
+  }
 
-
+  public close() {
+    this.gui.close();
+  }
 }

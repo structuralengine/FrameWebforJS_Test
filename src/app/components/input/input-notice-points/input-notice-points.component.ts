@@ -40,7 +40,7 @@ export class InputNoticePointsComponent implements OnInit {
       sortable: false,
       width: 80,
       editable: false,
-      style: { background: "#dae6f0" },
+      style: { background: "#33363c !important" },
     },
     { 
       title: this.translate.instant("input.input-notice-points.distance_from_node_i"),

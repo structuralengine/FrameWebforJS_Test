@@ -1,5 +1,7 @@
 {
     "app": {
+        "calculate": "計算",
+        "close": "最小化",
         "node": "節点",
         "fixNode": "支点",
         "member": "部材",
@@ -15,22 +17,43 @@
         "reaction": "支点反力",
         "memberSectionForce": "部材断面力",
         "output": "出力",
-        "preparing": "印刷の準備中"
+        "preparing": "印刷の準備中",
+        "description": {
+            "node-2D": "X, Y 方向の座標を指定し、節点情報を設定します。",
+            "node-3D": "X, Y, Z 方向の座標を指定し、節点情報を設定します。",
+            "fixNode": "節点の拘束条件を設定します。",
+            "member": "節点を2点指定し、部材断面諸元を作成します。",
+            "element": "断面二次モーメント等、部材の材料特性を設定します。",
+            "panel": "節点を4点指定し、シェル要素を作成します。",
+            "joint": "各部材の両端の結合条件を設定します。\n通常、部材と部材の接合は剛結合ですが、\nここではピン結合の（曲げモーメントは伝達しない）\n部材の結合条件を設定できます。",
+            "noticePoint": "断面力を算出したい部材の中間点を設定します。",
+            "fixMember": "部材の分布バネを設定します。",
+            "loadName": "基本荷重ケースとして、割増係数、\n名称、構造系条件を設定します。",
+            "inputDefine": "基本荷重ケースをグループ化して、\n組合せデータ作成（COMBINE）を簡素化して設定します。",
+            "detail": "詳細"
+        }
+    
     },
     "menu": {
+        "file": "ファイル",
         "softName": "立体骨組構造解析ソフト",
         "newEntry": "新規作成",
         "openFile": "ファイルを開く",
         "saveFile": "ファイルを保存",
         "overwrite": "上書き保存",
+        "print": "印刷",
         "outputFile": "ピックアップファイル出力",
+        "language": "言語",
+        "help": "ヘルプ",
         "logout": "ログアウト",
         "login": "ログイン",
         "P_login": "ログインしてください",
         "calc_start": "計算を開始します",
         "success": "通信成功!!",
         "deduct_points": "ポイント消費しました。本日の使用量は、",
-        "new_points": "です。"
+        "new_points": "です。",
+        "control": "コントロール",
+        "today_used_point": "本日の使用ポイント"
     },
     "input": {
         "input-fix-node": {
@@ -114,25 +137,25 @@
         },
         "input-define": {
             "DEFINE": "DEFINE",
-            "COMBINE": "COMBINE",
-            "PICKUP": "PICKUP"
+            "COMBINE": "コンバイン",
+            "PICKUP": "ピックアップ"
         },
         "input-combine": {
             "name": "名称　　　　　　　　　　　　　　",
             "DEFINE": "DEFINE",
-            "COMBINE": "COMBINE",
-            "PICKUP": "PICKUP"
+            "COMBINE": "コンバイン",
+            "PICKUP": "ピックアップ"
         },
         "input-pickup": {
             "name": "名称　　　　　　　　　　　　　　",
             "DEFINE": "DEFINE",
-            "COMBINE": "COMBINE",
-            "PICKUP": "PICKUP"
+            "COMBINE": "コンバイン",
+            "PICKUP": "ピックアップ"
         }
     },
     "result": {
-        "COMBINE": "COMBINE",
-        "PICKUP": "PICKUP",
+        "COMBINE": "コンバイン",
+        "PICKUP": "ピックアップ",
         "result-fsec": {
             "basicCase": "基本ケース",
             "memberNo": "部材No",
@@ -261,20 +284,20 @@
         "inputData": "入力データ",
         "calc": "計算結果",
         "displacement": "変位量",
-        "combine_displacement": "COMBINE 変位量",
-        "pickup_displacement": "PICKUP 変位量",
+        "combine_displacement": "コンバイン 変位量",
+        "pickup_displacement": "ピックアップ 変位量",
         "reaction": "反力",
-        "combine_reaction": "COMBINE 反力",
-        "pickup_reaction": "PICKUP 反力",
+        "combine_reaction": "コンバイン 反力",
+        "pickup_reaction": "ピックアップ 反力",
         "SectionForce": "断面力",
-        "combine_SectionForce": "COMBINE 断面力",
-        "pickup_SectionForce": "PICKUP 断面力",
+        "combine_SectionForce": "コンバイン 断面力",
+        "pickup_SectionForce": "ピックアップ 断面力",
         "PrintScreen": "画面印刷",
         "PrintLoad": "荷重図",
         "PrintDiagram": "断面力図",
         "disgDiagram": "変位図",
-        "combPrintDiagram": "Combine 断面力図",
-        "pickPrintDiagram": "Pickup 断面力図",
+        "combPrintDiagram": "コンバイン 断面力図",
+        "pickPrintDiagram": "ピックアップ 断面力図",
         "prt": "印刷する",
         "pages": "想定枚数:",
         "about": "枚程度",
@@ -356,5 +379,14 @@
             "SprType": "バネTYPE.",
             "SupSpr": "は、支点もバネもありません。"
         }
+    },
+    "modal": {
+        "close": "閉じる",
+        "cancel": "キャンセル",
+        "ok": "OK"
+    },
+    "window": {
+        "closeTitle": "確認",
+        "closeMessage": "変更内容が保存されません。本当に終了しますか？"
     }
 }
