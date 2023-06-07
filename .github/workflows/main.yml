@@ -15,6 +15,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "14.18.1"
+          
+      - name: Set environments folder
+        env:
+          JSON_DECODE: ${{ secrets.environments_prod }}
+        run: |
+          echo-n $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.json
 
       - name: Install dependencies
         run: npm install -g @angular/cli@12.2.7 && npm install
