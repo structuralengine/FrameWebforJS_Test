@@ -5,28 +5,25 @@ on:
     tags:
       - v*
 
-jobs:
-  set:
-    runs-on: ubuntu-latest
+jobs:   
+  release:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       
       - name: Set environment.prod
         env:
           JSON_DECODE: ${{ secrets.environment_prod }}
+          
         run: |
           echo $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.ts
           
       - name: Set environment
         env:
           JSON_DECODE: ${{ secrets.environment }}
+          
         run: |
           echo $JSON_DECODE | base64 --decode > ./src/environments/environment.ts
-          
-  release:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
