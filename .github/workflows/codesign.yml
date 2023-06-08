@@ -12,21 +12,16 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Set environment.prod
+        env:
+          JSON_DECODE: ${{ secrets.environment_prod }}
         run: |
-          $encodedText = ${{ secrets.environment_prod }} # デコードしたいbase64エンコードされた文字列を指定します
-          $decodedBytes = [System.Convert]::FromBase64String($encodedText)
-          $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
-          Set-Content -Path "./src/environments/environment.prod.ts" -Value $decodedText
-
+          echo $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.ts
           
       - name: Set environment
         env:
           JSON_DECODE: ${{ secrets.environment }}
         run: |
-          $encodedText = ${{ secrets.environment }} # デコードしたいbase64エンコードされた文字列を指定します
-          $decodedBytes = [System.Convert]::FromBase64String($encodedText)
-          $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
-          Set-Content -Path "./src/environments/environment.ts" -Value $decodedText
+          echo $JSON_DECODE | base64 --decode > ./src/environments/environment.ts
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
