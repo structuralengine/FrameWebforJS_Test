@@ -13,14 +13,20 @@ jobs:
       
       - name: Set environment.prod
         run: |
-          certutil -f -decode ${{ secrets.environment_prod }} ./src/environments/environment.prod.ts
+          $encodedText = ${{ secrets.environment_prod }} # デコードしたいbase64エンコードされた文字列を指定します
+          $decodedBytes = [System.Convert]::FromBase64String($encodedText)
+          $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
+          Set-Content -Path "./src/environments/environment.prod.ts" -Value $decodedText
 
           
       - name: Set environment
         env:
           JSON_DECODE: ${{ secrets.environment }}
         run: |
-          base64 -d %JSON_DECODE% > ./src/environments/environment.ts
+          $encodedText = ${{ secrets.environment }} # デコードしたいbase64エンコードされた文字列を指定します
+          $decodedBytes = [System.Convert]::FromBase64String($encodedText)
+          $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
+          Set-Content -Path "./src/environments/environment.ts" -Value $decodedText
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
