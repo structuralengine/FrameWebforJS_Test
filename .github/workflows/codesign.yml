@@ -16,8 +16,7 @@ jobs:
           JSON_DECODE: ${{ secrets.environment_prod }}
         shell: pwsh
         run: |
-          $encodedText = ${{ secrets.environment_prod }}
-          Set-Content -Path "./src/environments/environment.prod.txt" -Value $encodedText 
+          Set-Content -Path "./src/environments/environment.prod.txt" -Value %JSON_DECODE
           $decodedBytes = [System.Convert]::FromBase64String($encodedText)
           $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
           Set-Content -Path "./src/environments/environment.prod.ts" -Value $decodedText 
@@ -28,7 +27,7 @@ jobs:
         shell: pwsh
         run: |
           $encodedText = ${{ secrets.environment }}
-          Set-Content -Path "./src/environments/environment.txt" -Value $encodedText 
+          Set-Content -Path "./src/environments/environment.txt" -Value %JSON_DECODE
           $decodedBytes = [System.Convert]::FromBase64String($encodedText)
           $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
           Set-Content -Path "./src/environments/environment.ts" -Value $decodedText 
