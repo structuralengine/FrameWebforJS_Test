@@ -14,12 +14,14 @@ jobs:
       - name: Set environment.prod
         env:
           JSON_DECODE: ${{ secrets.environment_prod }}
+        shell: pwsh
         run: |
           Write-Output $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.ts
           
       - name: Set environment
         env:
           JSON_DECODE: ${{ secrets.environment }}
+        shell: pwsh
         run: |
           Write-Output $JSON_DECODE | base64 --decode > ./src/environments/environment.ts
       
