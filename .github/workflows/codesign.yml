@@ -16,14 +16,20 @@ jobs:
           JSON_DECODE: ${{ secrets.environment_prod }}
         shell: pwsh
         run: |
-          Write-Output $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.ts
+          $encodedText = ${{ secrets.environment_prod }}
+          $decodedBytes = [System.Convert]::FromBase64String($encodedText)
+          $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
+          Set-Content -Path "./src/environments/environment.prod.ts" -Value $decodedText 
           
       - name: Set environment
         env:
           JSON_DECODE: ${{ secrets.environment }}
         shell: pwsh
         run: |
-          Write-Output $JSON_DECODE | base64 --decode > ./src/environments/environment.ts
+          $encodedText = ${{ secrets.environment }}
+          $decodedBytes = [System.Convert]::FromBase64String($encodedText)
+          $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
+          Set-Content -Path "./src/environments/environment.ts" -Value $decodedText 
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
