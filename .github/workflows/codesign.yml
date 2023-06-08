@@ -12,10 +12,8 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Set environment.prod
-        env:
-          JSON_DECODE: ${{ secrets.environment_prod }}
         run: |
-          base64 -d %JSON_DECODE% > ./src/environments/environment.prod.ts
+          certutil -f -decode ${{ secrets.environment_prod }} ./src/environments/environment.prod.ts
 
           
       - name: Set environment
