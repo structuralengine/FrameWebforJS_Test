@@ -26,7 +26,6 @@ jobs:
           JSON_DECODE: ${{ secrets.environment }}
         shell: pwsh
         run: |
-          $encodedText = ${{ secrets.environment }}
           Set-Content -Path "./src/environments/environment.txt" -Value %JSON_DECODE
           $decodedBytes = [System.Convert]::FromBase64String($encodedText)
           $decodedText = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
