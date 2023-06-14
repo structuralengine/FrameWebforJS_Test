@@ -102,7 +102,7 @@ export class PrintCustomFsecComponent implements OnInit {
     sortable: false,
     locale: "jp",
     height: 420,
-    width: 397,
+    width: 418,
     rowBorders: true,
     columnBorders: false,
     numberCell: {
