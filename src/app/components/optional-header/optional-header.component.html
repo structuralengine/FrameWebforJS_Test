@@ -9,17 +9,17 @@
           (click)="previousLoadPage()"
           [disabled]="selectedLoadPage == loadPages[0]"
         >
-          <img src="../../../assets/icons/icon-vector.svg" class="top" />
+          <img src="./assets/icons/icon-vector.svg" class="top" />
         </button>
         <button
           (click)="nextLoadPage()"
           [disabled]="selectedLoadPage == loadPages[loadPages.length - 1]"
         >
-          <img src="../../../assets/icons/icon-vector.svg" class="bottom" />
+          <img src="./assets/icons/icon-vector.svg" class="bottom" />
         </button>
       </div>
       <div class="selectArea">
-        <img src="../../../assets/icons/icon-list.svg" />
+        <img src="./assets/icons/icon-list.svg" />
         <select
           [(ngModel)]="selectedLink"
           (change)="onLinkChange($event.target['value'])"
@@ -42,17 +42,17 @@
           (click)="previousDefinePage()"
           [disabled]="selectedDefinePage == definePages[0]"
         >
-          <img src="../../../assets/icons/icon-vector.svg" class="top" />
+          <img src="./assets/icons/icon-vector.svg" class="top" />
         </button>
         <button
           (click)="nextDefinePage()"
           [disabled]="selectedDefinePage == definePages[definePages.length - 1]"
         >
-          <img src="../../../assets/icons/icon-vector.svg" class="bottom" />
+          <img src="./assets/icons/icon-vector.svg" class="bottom" />
         </button>
       </div>
       <div class="selectArea">
-        <img src="../../../assets/icons/icon-list.svg" />
+        <img src="./assets/icons/icon-list.svg" />
         <select
           [(ngModel)]="selectedDefineLink"
           (change)="onLinkChange($event.target['value'])"
@@ -78,17 +78,17 @@
           (click)="previousResultPage()"
           [disabled]="selectedResultPage == resultPages[0]"
         >
-          <img src="../../../assets/icons/icon-vector.svg" class="top" />
+          <img src="./assets/icons/icon-vector.svg" class="top" />
         </button>
         <button
           (click)="nextResultPage()"
           [disabled]="selectedResultPage == resultPages[resultPages.length - 1]"
         >
-          <img src="../../../assets/icons/icon-vector.svg" class="bottom" />
+          <img src="./assets/icons/icon-vector.svg" class="bottom" />
         </button>
       </div>
       <div class="selectArea">
-        <img src="../../../assets/icons/icon-list.svg" />
+        <img src="./assets/icons/icon-list.svg" />
         <select
           [(ngModel)]="selectedResultPage"
           (change)="onResultLinkChange($event.target['value'])"
