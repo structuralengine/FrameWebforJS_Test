@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ResultDisgService } from "./result-disg.service";
 import { ResultDataService } from "../../../providers/result-data.service";
 import { InputLoadService } from "../../input/input-load/input-load.service";
@@ -8,6 +8,8 @@ import { ResultCombineDisgService } from "../result-combine-disg/result-combine-
 import { ResultPickupDisgService } from "../result-pickup-disg/result-pickup-disg.service";
 
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { Subscription } from "rxjs";
+import { PagerService } from "../../input/pager/pager.service";
 
 @Component({
   selector: "app-result-disg",
@@ -18,7 +20,8 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
     "../../../floater.component.scss",
   ],
 })
-export class ResultDisgComponent implements OnInit {
+export class ResultDisgComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   public KEYS: string[];
   public TITLES: string[];
   dataset: any[];
@@ -41,7 +44,8 @@ export class ResultDisgComponent implements OnInit {
     private result: ResultDataService,
     private comb: ResultCombineDisgService,
     private pic: ResultPickupDisgService,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private pagerService: PagerService
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -55,6 +59,9 @@ export class ResultDisgComponent implements OnInit {
       this.result.page = 1
       this.result.case = "basic"
     }
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
   ngOnInit() {
@@ -80,6 +87,9 @@ export class ResultDisgComponent implements OnInit {
     } else {
       this.btnPickup = "btn-change disabled";
     }
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   //　pager.component からの通知を受け取る

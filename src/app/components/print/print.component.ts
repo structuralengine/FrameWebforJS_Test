@@ -6,11 +6,12 @@ import { ThreeService } from "../three/three.service";
 import { PrintService } from "./print.service";
 import printJS from "print-js";
 import * as pako from "pako";
-import { ElectronService } from "ngx-electron";
+import { ElectronService } from "src/app/providers/electron.service";
 import { MaxMinService } from "../three/max-min/max-min.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { TranslateService } from "@ngx-translate/core";
 import packageJson from '../../../../package.json';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: "app-print",
@@ -22,7 +23,8 @@ export class PrintComponent implements OnInit, OnDestroy {
   public combineJson: any;
   public pickupJson: any;
   public id;
-  private url = "https://frameprintpdf.azurewebsites.net/api/Function1";
+  private url =  "https://frameprint.azurewebsites.net/api/Function1?";
+  //"http://localhost:7071/api/Function1";
   public PrintScreen: string;
 
   constructor(
@@ -34,7 +36,8 @@ export class PrintComponent implements OnInit, OnDestroy {
     public max_min: MaxMinService,
     public electronService: ElectronService,
     public helper: DataHelperModule,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private app: AppComponent,
   ) { }
 
   private a: boolean;
@@ -70,6 +73,10 @@ export class PrintComponent implements OnInit, OnDestroy {
     this.last_ts = performance.now();
     return this.last_ts - tmp;
   };
+
+  public onPageBack(): void {
+    this.app.dialogClose();
+  }
 
   public onPrintPDF(): void {
     this.reset_ts();
@@ -293,7 +300,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   private showPDF(base64: string) {
     this.loadind_desable();
 
-    if (this.electronService.isElectronApp) {
+    if (this.electronService.isElectron) {
       // electron の場合
       const byteCharacters = atob(base64);
       let byteNumbers = new Array(byteCharacters.length);

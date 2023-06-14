@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { UserInfoService } from "./providers/user-info.service";
 import { ResultDataService } from "./providers/result-data.service";
@@ -11,6 +11,15 @@ import { DataHelperModule } from "./providers/data-helper.module";
 import { TranslateService } from "@ngx-translate/core";
 
 import html2canvas from "html2canvas";
+import * as pako from "pako";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { WaitDialogComponent } from "./components/wait-dialog/wait-dialog.component";
+import { Auth, getAuth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { InputDataService } from "./providers/input-data.service";
+import { environment } from "src/environments/environment";
+import { SheetComponent } from "./components/input/sheet/sheet.component";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { LanguagesService } from './providers/languages.service';
 
 @Component({
   selector: "app-root",
@@ -18,7 +27,12 @@ import html2canvas from "html2canvas";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
+  @Output() pagerEvent = new EventEmitter<number>();
+  @ViewChild("grid") grid: SheetComponent;
+  
   btnReac!: string;
+  isToggled: Boolean = true;
+  eventFromChild: number;
   constructor(
     private _router: Router,
     public ResultData: ResultDataService,
@@ -29,6 +43,12 @@ export class AppComponent implements OnInit {
     public reac: ResultReacService,
     public print: PrintService,
     private translate: TranslateService,
+    private modalService: NgbModal,
+    public auth: Auth,
+    private InputData: InputDataService,
+    private http: HttpClient,
+    public user: UserInfoService,
+    public language: LanguagesService
   ) {
     this.translate.setDefaultLang("ja");
   }
@@ -46,6 +66,7 @@ export class AppComponent implements OnInit {
 
   public dialogClose(): void {
     this.helper.isContentsDailogShow = false;
+    this.addHiddenFromElements();
 
     // 印刷ウィンドウの変数をリセット
     this.resetPrintdialog();
@@ -67,8 +88,59 @@ export class AppComponent implements OnInit {
     this.deactiveButtons();
     document.getElementById(id).classList.add("active");
     this.changePosition();
+
+    if (this.isSameURL(id)) {
+      this.toggleContentsDailogShow();
+      this.toggleVisibilityOfElements();
+    } else {
+      this.removeHiddenFromElements();
+      this.setContentsDailogShow(true);
+    }
     this.print.mode = id;
-    this.helper.isContentsDailogShow = true;
+  }
+
+  private isSameURL(id: number): boolean {
+    return id === this.print.mode;
+  }
+  private toggleContentsDailogShow(): void {
+    this.helper.isContentsDailogShow = !this.helper.isContentsDailogShow;
+  }
+  private toggleVisibilityOfElements(): void {
+    this.toggleElementVisibility(".panel-element-content-container");
+    this.toggleElementVisibility("#my_dock_manager");
+    this.toggleElementVisibility(".dialog-floating");
+  }
+  private toggleElementVisibility(selector: string): void {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.classList.toggle("hidden");
+    }
+  }
+  private setContentsDailogShow(state: boolean): void {
+    this.helper.isContentsDailogShow = state;
+  }
+  private removeHiddenFromElements(): void {
+    this.removeHiddenFromClass(".panel-element-content-container");
+    this.removeHiddenFromClass("#my_dock_manager");
+    this.removeHiddenFromClass(".dialog-floating");
+  }
+  public addHiddenFromElements(): void {
+    this.addHiddenFromClass(".panel-element-content-container");
+    this.addHiddenFromClass("#my_dock_manager");
+    this.addHiddenFromClass(".dialog-floating");
+  }
+
+  private removeHiddenFromClass(selector: string): void {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.classList.remove("hidden");
+    }
+  }
+  private addHiddenFromClass(selector: string): void {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.classList.add("hidden");
+    }
   }
 
   // フローティングウィンドウの位置
@@ -110,11 +182,196 @@ export class AppComponent implements OnInit {
     const dialog = document.getElementById("contents-dialog-id");
     let dialogHeight = parseFloat(dialog.style.height); // ヘッダー高さを引く
     if (isNaN(dialogHeight)) {
-      dialogHeight = window.innerHeight - 300; // メニューとヘッダー高さを引く
+      dialogHeight = window.innerHeight - 84; // メニューとヘッダー高さを引く
     } else {
       dialogHeight -= 80;
     }
     return dialogHeight;
+  }
+
+  toggle(): void {
+    this.isToggled = !this.isToggled;
+  }
+  // 計算
+  public async calcrate(): Promise<void> {
+    // const user = await this.auth.currentUser;
+    const user = this.user.userProfile;
+    if (!user) {
+      this.helper.alert(this.translate.instant("menu.P_login"));
+      return;
+    }
+    
+    const jsonData: {} = this.InputData.getInputJson(0);
+
+    if ("error" in jsonData) {
+      this.helper.alert(jsonData["error"] as string);
+      return;
+    }
+
+    const isConfirm = await this.helper.confirm(this.translate.instant("menu.calc_start"));
+    if (!isConfirm) {
+      return;
+    }
+    const modalRef = this.modalService.open(WaitDialogComponent, {
+      backdrop: 'static'
+    });
+    jsonData["uid"] = user.uid;
+    jsonData["production"] = environment.production;
+
+    this.ResultData.clear(); // 解析結果情報をクリア
+
+    this.post_compress(jsonData, modalRef);
+  }
+
+  private post_compress(jsonData: {}, modalRef: NgbModalRef) {
+    const url = environment.calcURL; // 'https://asia-northeast1-the-structural-engine.cloudfunctions.net/frameWeb-2';
+
+    // json string にする
+    const json = JSON.stringify(jsonData, null, 0);
+    console.log(json);
+    // pako を使ってgzip圧縮する
+    const compressed = pako.gzip(json);
+    //btoa() を使ってBase64エンコードする
+    const base64Encoded = btoa(compressed);
+
+    this.http
+      .post(url, base64Encoded, {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+          "Content-Encoding": "gzip,base64",
+        }),
+        responseType: "text",
+      })
+      .subscribe(
+        (response) => {
+          // 通信成功時の処理（成功コールバック）
+          console.log(this.translate.instant("menu.success"));
+          try {
+            if (response.includes("error") || response.includes("exceeded")) {
+              throw response;
+            }
+            // Decode base64 (convert ascii to binary)
+            const strData = atob(response);
+            // Convert binary string to character-number array
+            const charData = strData.split("").map(function (x) {
+              return x.charCodeAt(0);
+            });
+            // Turn number array into byte-array
+            const binData = new Uint8Array(charData);
+            // Pako magic
+            const json = pako.ungzip(binData, { to: "string" });
+
+            const jsonData = JSON.parse(json);
+            // サーバーのレスポンスを集計する
+            console.log(jsonData);
+            if ("error" in jsonData) {
+              throw jsonData.error;
+            }
+
+            // ポイントの処理
+            const _jsonData = {};
+            for (const key of Object.keys(jsonData)) {
+              if ((typeof jsonData[key]).toLowerCase() === "number") {
+                this.user[key] = jsonData[key];
+              } else {
+                _jsonData[key] = jsonData[key];
+              }
+            }
+
+            this.InputData.getResult(jsonData);
+
+            // 解析結果を集計する
+            this.ResultData.loadResultData(_jsonData);
+            this.ResultData.isCalculated = true;
+          } catch (e) {
+            this.helper.alert(e);
+          } finally {
+            modalRef.close(); // モーダルダイアログを消す
+            this.helper.alert(
+              this.user.deduct_points
+              + this.translate.instant("menu.deduct_points")
+              + this.user.new_points
+              + this.translate.instant("menu.new_points")
+            );
+          }
+        },
+        (error) => {
+          let messege: string = "通信 " + error.statusText;
+          if ("_body" in error) {
+            messege += "\n" + error._body;
+          }
+          this.helper.alert(messege);
+          console.error(error);
+          modalRef.close();
+        }
+      );
+  }
+
+  onPagerEvent(eventData: number) {
+    this.pagerEvent.emit(eventData);
+  }
+  onReceiveEventFromChild(event: number) {
+    this.eventFromChild = event;
+  }
+  getDisgLink(): string {
+    if (!this.disg.isCalculated) {
+      return this._router.url;
+    }
+    let link: string;
+    switch (this.ResultData.case) {
+      case "basic":
+        link = "./result-disg";
+        break;
+      case "comb":
+        link = "./result-comb_disg";
+        break;
+      case "pic":
+        link = "./result-pic_disg";
+        break;
+      default:
+        link = "";
+    }
+    return link;
+  }
+  getReacLink(): string {
+    if (!this.disg.isCalculated) {
+      return this._router.url;
+    }
+    let link: string;
+    switch (this.ResultData.case) {
+      case "basic":
+        link = "./result-reac";
+        break;
+      case "comb":
+        link = "./result-comb_reac";
+        break;
+      case "pic":
+        link = "./result-pic_reac";
+        break;
+      default:
+        link = "";
+    }
+    return link;
+  }
+  getFsecLink(): string {
+    if (!this.disg.isCalculated) {
+      return this._router.url;
+    }
+    let link: string;
+    switch (this.ResultData.case) {
+      case "basic":
+        link = "./result-fsec";
+        break;
+      case "comb":
+        link = "./result-comb_fsec";
+        break;
+      case "pic":
+        link = "./result-pic_fsec";
+        break;
+      default:
+        link = "";
+    }
+    return link;
   }
 
   // public onPrintInvoice() {

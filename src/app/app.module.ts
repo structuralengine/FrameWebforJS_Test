@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -13,8 +13,12 @@ import { AppComponent } from "./app.component";
 import { MatInputModule } from "@angular/material/input";
 import {MatExpansionModule} from '@angular/material/expansion';
 
-import { AngularFireModule } from "@angular/fire";
+import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { environment } from "../environments/environment";
+
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 import { InputDataService } from "./providers/input-data.service";
 import { DataHelperModule } from "./providers/data-helper.module";
@@ -24,6 +28,7 @@ import { UserInfoService } from "./providers/user-info.service";
 import { MenuComponent } from "./components/menu/menu.component";
 import { LoginDialogComponent } from "./components/login-dialog/login-dialog.component";
 import { WaitDialogComponent } from "./components/wait-dialog/wait-dialog.component";
+import { AlertDialogComponent } from "./components/alert-dialog/alert-dialog.component";
 
 import { InputNodesComponent } from "./components/input/input-nodes/input-nodes.component";
 import { InputNodesService } from "./components/input/input-nodes/input-nodes.service";
@@ -80,6 +85,7 @@ import { InvoiceComponent } from "./components/print/invoice/invoice.component";
 import { PrintThreeComponent } from "./components/print/invoice/print-three/print-three.component";
 
 import { PagerComponent } from "./components/input/pager/pager.component";
+import { PagerDirectionComponent } from "./components/input/pager-direction/pager-direction.component";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
 import { PrintCustomFsecComponent } from "./components/print/custom/print-custom-fsec/print-custom-fsec.component";
 import { PrintCustomThreeComponent } from "./components/print/custom/print-custom-three/print-custom-three.component";
@@ -88,118 +94,139 @@ import { PrintCustomReacComponent } from "./components/print/custom/print-custom
 import { PrintCustomDisgComponent } from "./components/print/custom/print-custom-disg/print-custom-disg.component";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { ElectronService, NgxElectronModule } from "ngx-electron";
 import { MaxMinComponent } from './components/three/max-min/max-min.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ElectronService } from "./providers/electron.service";
+import { DocLayoutComponent } from "./components/doc-layout/doc-layout.component";
+import { OptionalHeaderComponent } from "./components/optional-header/optional-header.component";
+import { ActivateSessionComponent } from './components/activate-session/activate-session.component';
 
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 
+function initializeKeycloak(keycloak: KeycloakService) {
+    console.log("initializaing keycloak");
+    return () => keycloak.init({
+        config: {
+            url: 'https://auth.structuralengine.com',
+            realm: 'structural-engine',
+            clientId: 'structural-engine'
+        },
+        initOptions: {
+            onLoad: 'check-sso',
+        }
+    });
+}
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    DragDropModule,
-    BrowserAnimationsModule,
-    NgbModule,
-    DataHelperModule,
-    MatInputModule,
-    MatRadioModule,
-    MatExpansionModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: httpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
-    NgxElectronModule,
-    ScrollingModule
-  ],
-  declarations: [
-    AppComponent,
-    MenuComponent,
-    LoginDialogComponent,
-    WaitDialogComponent,
-
-    InputNodesComponent,
-    InputMembersComponent,
-    InputFixNodeComponent,
-    InputElementsComponent,
-    InputJointComponent,
-    InputNoticePointsComponent,
-    InputFixMemberComponent,
-    InputLoadNameComponent,
-    InputLoadComponent,
-    InputDefineComponent,
-    InputCombineComponent,
-    InputPickupComponent,
-
-    ResultDisgComponent,
-    ResultReacComponent,
-    ResultFsecComponent,
-    ResultCombineDisgComponent,
-    ResultPickupDisgComponent,
-    ResultCombineReacComponent,
-    ResultPickupReacComponent,
-    ResultPickupFsecComponent,
-    ResultCombineFsecComponent,
-    ThreeComponent,
-    InputPanelComponent,
-
-    PrintComponent,
-    PrintLayoutComponent,
-    InvoiceComponent,
-
-    PagerComponent,
-    SheetComponent,
-    PrintThreeComponent,
-    PrintCustomFsecComponent,
-    PrintCustomThreeComponent,
-    PrintCustomComponent,
-    PrintCustomReacComponent,
-    PrintCustomDisgComponent,
-    MaxMinComponent,
-    ChatComponent,
-  ],
-  entryComponents: [LoginDialogComponent, WaitDialogComponent],
-  providers: [
-    InputDataService,
-    InputNodesService,
-    InputMembersService,
-    InputFixNodeService,
-    InputElementsService,
-    InputJointService,
-    InputNoticePointsService,
-    InputFixMemberService,
-    InputLoadService,
-    InputDefineService,
-    InputCombineService,
-    InputPickupService,
-
-    PrintService,
-    ResultDataService,
-    ResultDisgService,
-    ResultReacService,
-    ResultFsecService,
-    ResultCombineDisgService,
-    ResultPickupDisgService,
-    ResultCombineReacService,
-    ResultPickupReacService,
-    ResultPickupFsecService,
-    ResultCombineFsecService,
-
-    UserInfoService,
-    SceneService,
-
-    ElectronService
-  ],
-  bootstrap: [AppComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        DragDropModule,
+        BrowserAnimationsModule,
+        NgbModule,
+        DataHelperModule,
+        MatInputModule,
+        MatRadioModule,
+        MatExpansionModule,
+        KeycloakAngularModule,
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideAuth(() => getAuth()),
+        provideFirestore(() => getFirestore()),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: httpLoaderFactory,
+                deps: [HttpClient],
+            },
+        }),
+        ScrollingModule
+    ],
+    declarations: [
+        AppComponent,
+        MenuComponent,
+        LoginDialogComponent,
+        WaitDialogComponent,
+        AlertDialogComponent,
+        InputNodesComponent,
+        InputMembersComponent,
+        InputFixNodeComponent,
+        InputElementsComponent,
+        InputJointComponent,
+        InputNoticePointsComponent,
+        InputFixMemberComponent,
+        InputLoadNameComponent,
+        InputLoadComponent,
+        InputDefineComponent,
+        InputCombineComponent,
+        InputPickupComponent,
+        ResultDisgComponent,
+        ResultReacComponent,
+        ResultFsecComponent,
+        ResultCombineDisgComponent,
+        ResultPickupDisgComponent,
+        ResultCombineReacComponent,
+        ResultPickupReacComponent,
+        ResultPickupFsecComponent,
+        ResultCombineFsecComponent,
+        ThreeComponent,
+        InputPanelComponent,
+        PrintComponent,
+        PrintLayoutComponent,
+        InvoiceComponent,
+        PagerComponent,
+        PagerDirectionComponent,
+        SheetComponent,
+        PrintThreeComponent,
+        PrintCustomFsecComponent,
+        PrintCustomThreeComponent,
+        PrintCustomComponent,
+        PrintCustomReacComponent,
+        PrintCustomDisgComponent,
+        MaxMinComponent,
+        ChatComponent,
+        DocLayoutComponent,
+        OptionalHeaderComponent,
+        ActivateSessionComponent,
+    ],
+    providers: [
+        InputDataService,
+        InputNodesService,
+        InputMembersService,
+        InputFixNodeService,
+        InputElementsService,
+        InputJointService,
+        InputNoticePointsService,
+        InputFixMemberService,
+        InputLoadService,
+        InputDefineService,
+        InputCombineService,
+        InputPickupService,
+        PrintService,
+        ResultDataService,
+        ResultDisgService,
+        ResultReacService,
+        ResultFsecService,
+        ResultCombineDisgService,
+        ResultPickupDisgService,
+        ResultCombineReacService,
+        ResultPickupReacService,
+        ResultPickupFsecService,
+        ResultCombineFsecService,
+        UserInfoService,
+        SceneService,
+        ElectronService,
+        {
+          provide: APP_INITIALIZER,
+          useFactory: initializeKeycloak,
+          multi: true,
+          deps: [KeycloakService]
+        },
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}
 

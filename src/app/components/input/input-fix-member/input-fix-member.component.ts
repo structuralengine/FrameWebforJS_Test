@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { InputFixMemberService } from './input-fix-member.service';
 import { DataHelperModule } from '../../../providers/data-helper.module';
 import { ThreeService } from '../../three/three.service';
@@ -6,16 +6,19 @@ import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from 'src/app/app.component';
 import { TranslateService } from "@ngx-translate/core";
+import { Subscription } from "rxjs";
+import { PagerService } from "../pager/pager.service";
 
 @Component({
   selector: 'app-input-fix-member',
   templateUrl: './input-fix-member.component.html',
   styleUrls: ['./input-fix-member.component.scss','../../../app.component.scss']
 })
-export class InputFixMemberComponent implements OnInit {
+export class InputFixMemberComponent implements OnInit, OnDestroy {
 
   @ViewChild('grid') grid: SheetComponent;
 
+  private subscription: Subscription;
   private dataset = [];
   private columnKeys3D = ['m', 'tx', 'ty', 'tz', 'tr'];
   private columnKeys2D = ['m', 'tx', 'ty'];
@@ -79,12 +82,15 @@ export class InputFixMemberComponent implements OnInit {
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private pagerService: PagerService
   ) {
 
     this.currentRow = null;
     this.currentColumn = null;
-
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
 
@@ -93,6 +99,9 @@ export class InputFixMemberComponent implements OnInit {
       this.loadPage(1, this.ROWS_COUNT);
       this.three.ChangeMode("fix_member");
       this.three.ChangePage(1);
+    }
+    ngOnDestroy() {
+      this.subscription.unsubscribe();
     }
 
     //　pager.component からの通知を受け取る

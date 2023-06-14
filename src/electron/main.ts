@@ -6,18 +6,31 @@ import isDev from 'electron-is-dev';
 // 起動 --------------------------------------------------------------
 
 let mainWindow: BrowserWindow;
+let locale = 'ja';
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      nativeWindowOpen: true,
     },
   });
   mainWindow.maximize();
   mainWindow.setMenuBarVisibility(false);
   // mainWindow.webContents.openDevTools();
+  mainWindow.on('close', function (e) {
+    let langText = require(`../assets/i18n/${locale}.json`)
+    let choice = dialog.showMessageBoxSync(this,
+      {
+        type: 'question',
+        buttons: ['Yes', 'No'],
+        title: langText.window.closeTitle,
+        message: langText.window.closeMessage,
+      });
+    if (choice==1) {
+      e.preventDefault();
+    }
+  });
   await mainWindow.loadFile('index.html');
 }
 
@@ -32,31 +45,7 @@ app.whenReady().then(async () => {
   }
 });
 
-// アップデート --------------------------------------------------
-autoUpdater.on(
-  'update-downloaded',
-  async (event, releaseNotes, releaseName) => {
-    log.info('アップデートを開始します。');
-
-    const dialogOpts = {
-      type: 'info',
-      buttons: ['Restart', 'Later'],
-      title: 'Application Update',
-      message: process.platform === 'win32' ? releaseNotes : releaseName,
-      detail:
-        'A new version has been downloaded. Restart the application to apply the updates.',
-    };
-
-    await dialog.showMessageBox(dialogOpts).then((returnValue) => {
-      if (returnValue.response === 0) autoUpdater.quitAndInstall();
-    });
-  }
-);
-
-autoUpdater.on('error', (message) => {
-  log.warn('There was a problem updating the application');
-  log.warn(message);
-});
+autoUpdater.checkForUpdatesAndNotify();
 
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
@@ -144,3 +133,8 @@ ipcMain.on(
     event.returnValue = '';
   }
 );
+
+ipcMain.on(
+  'change-lang', (event, lang) => {
+  locale = lang;
+})

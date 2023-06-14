@@ -1,5 +1,7 @@
 {
     "app": {
+        "calculate": "Calculate",
+        "close": "Close",
         "node": "Node",
         "fixNode": "Support",
         "member": "Member",
@@ -15,22 +17,42 @@
         "reaction": "Reaction",
         "memberSectionForce": "MemberSectionForce",
         "output": "Output",
-        "preparing": "Preparing for printing"
+        "preparing": "Preparing for printing",
+        "description": {
+            "node-2D": "Specify coordinates in the X and Y directions and set node information",
+            "node-3D": "Specify coordinates in the X, Y, and Z directions and set node information",
+            "fixNode": "Sets nodes' constraint conditions",
+            "member": "Specify 2 nodes and create the sectional properties of the member",
+            "element": "Sets material properties of the member, such as area moment of inertia",
+            "panel": "Specify 4 nodes and create a shell element",
+            "joint": "Sets the joint conditions at both ends of each member.\nNormally, member-to-member connections are rigid, but here you can set the connection conditions for pin-connected members",
+            "noticePoint": "Set the midpoint of the member for which you want to calculate the cross-sectional force",
+            "fixMember": "Sets the distribution spring of the member",
+            "loadName": "Set the surcharge factor, name, and structural system conditions as the base load case",
+            "inputDefine": "Basic load cases are grouped together to simplify and set up combination data creation",
+            "detail": "Detail"
+        }
     },
     "menu": {
+        "file": "file",
         "softName": "FrameWebForJS",
         "newEntry": "Create a new file",
         "openFile": "Open file",
         "saveFile": "Save a file",
         "overwrite": "overwrite save",
+        "print": "Print",
         "outputFile": "Pickup file output",
+        "language": "Language",
+        "help": "Help",
         "logout": "Logout",
         "login": "Login",
         "P_login": "Please login",
         "calc_start": "start the calculation",
         "success": "Communication success!!",
         "deduct_points": "points consumed. Today's usage is",
-        "new_points": "points."
+        "new_points": "points.",
+        "control": "Control",
+        "today_used_point": "Points Used Today"
     },
     "input": {
         "input-fix-node": {
@@ -356,5 +378,14 @@
             "SprType": "Spring TYPE.",
             "SupSpr": "has neither a Support nor a Spring."
         }
+    },
+    "modal": {
+        "close": "Close",
+        "cancel": "Cancel",
+        "ok": "OK"
+    },
+    "window": {
+        "closeTitle": "Confirm",
+        "closeMessage": "Changes may not to be saved. Are you sure you want to quit?"
     }
 }

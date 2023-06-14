@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ResultReacService } from "./result-reac.service";
 import { InputLoadService } from "../../input/input-load/input-load.service";
 import { ThreeService } from "../../three/three.service";
@@ -8,6 +8,8 @@ import { ResultCombineReacService } from "../result-combine-reac/result-combine-
 import { ResultPickupReacService } from "../result-pickup-reac/result-pickup-reac.service";
 import { AppComponent } from "src/app/app.component";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
+import { Subscription } from "rxjs";
+import { PagerService } from "../../input/pager/pager.service";
 
 @Component({
   selector: "app-result-reac",
@@ -18,7 +20,8 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
     "../../../floater.component.scss",
   ],
 })
-export class ResultReacComponent implements OnInit {
+export class ResultReacComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   public KEYS: string[];
   public TITLES: string[];
   dataset: any[];
@@ -41,7 +44,8 @@ export class ResultReacComponent implements OnInit {
     private result: ResultDataService,
     private comb: ResultCombineReacService,
     private pic: ResultPickupReacService,
-    private helper: DataHelperModule
+    private helper: DataHelperModule,
+    private pagerService: PagerService
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -55,6 +59,9 @@ export class ResultReacComponent implements OnInit {
       this.result.page = 1
       this.result.case = "basic"
     }
+    this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
+      this.onReceiveEventFromChild(text);
+    });
   }
 
   ngOnInit() {
@@ -80,6 +87,9 @@ export class ResultReacComponent implements OnInit {
     } else {
       this.btnPickup = "btn-change disabled";
     }
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   //　pager.component からの通知を受け取る

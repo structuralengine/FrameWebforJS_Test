@@ -1,5 +1,7 @@
 {
     "app": {
+        "calculate": "计算",
+        "close": "最小化",
         "node": "节点",
         "fixNode": "支点",
         "member": "构件",
@@ -15,22 +17,42 @@
         "reaction": "支座反力",
         "memberSectionForce": "构件截面力",
         "output": "输出",
-        "preparing": "准备打印"
+        "preparing": "准备打印",
+        "description": {
+            "node-2D": "指定X和Y方向的坐标并设置节点信息",
+            "node-3D": "指定X、Y和Z方向的坐标并设置节点信息",
+            "fixNode": "设置节点的约束条件",
+            "member": "指定2个节点并创建构件的截面属性",
+            "element": "设置构件的材料属性，如面积惯性矩",
+            "panel": "指定4个节点并创建一个壳元素",
+            "joint": "设置每个构件两端的连接条件\n通常情况下，构件与构件之间的连接是刚性的，但在这里你可以设置销钉连接的构件的连接条件",
+            "noticePoint": "设置要计算横截面力的构件的中点",
+            "fixMember": "设置构件的分配弹簧",
+            "loadName": "将附加系数、名称和结构系统条件设为基本载重情况",
+            "inputDefine": "基本的载重案例被分组，以简化和设置组合数据的创建",
+            "detail": "详细"
+        }
     },
     "menu": {
+        "file": "文件",
         "softName": "分析立体构架的软件程式",
         "newEntry": "创建新的",
         "openFile": "打开档案",
         "saveFile": "保存档案",
         "overwrite": "覆盖保存",
+        "print": "打印",
         "outputFile": "聚集输出",
+        "language": "言語",
+        "help": "帮助",
         "logout": "登出",
         "login": "登录",
         "P_login": "请登录",
         "calc_start": "开始计算",
         "success": "沟通成功!!",
         "deduct_points": "消耗的积分。今天的使用量是",
-        "new_points": "分。"
+        "new_points": "分。",
+        "control": "控制",
+        "today_used_point": "今天使用的积分"
     },
     "input": {
         "input-fix-node": {
@@ -356,5 +378,14 @@
             "SprType": "弹簧种类",
             "SupSpr": "没有支点或弹簧。"
         }
+    },
+    "modal": {
+        "close": "关闭",
+        "cancel": "取消",
+        "ok": "确定"
+    },
+    "window": {
+        "closeTitle": "查看",
+        "closeMessage": "不会保存更改。 您确定要完成它吗?"
     }
 }

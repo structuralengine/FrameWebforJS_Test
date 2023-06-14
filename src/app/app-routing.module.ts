@@ -44,7 +44,7 @@ const routes: Routes = [
   { path: 'input-combine', component: InputCombineComponent },
   { path: 'input-pickup', component: InputPickupComponent },
 
-  { path: 'print', component: PrintComponent },
+  { path: 'print', outlet:'printOutlet',component: PrintComponent },
 
   { path: 'result-disg', component: ResultDisgComponent },
   { path: 'result-reac', component: ResultReacComponent },
@@ -69,7 +69,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  //@ts-ignore
+  imports: [RouterModule.forRoot(routes, {})],
+  // imports: [RouterModule.forRoot(routes, { })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

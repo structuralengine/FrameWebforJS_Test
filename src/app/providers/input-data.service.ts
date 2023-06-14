@@ -88,7 +88,7 @@ export class InputDataService {
     this.versionChecker(jsonData);
 
     if ("dimension" in jsonData) {
-      this.helper.dimension = jsonData["dimension"];
+      this.helper.dimension = jsonData["dimension"] as number;
     }
   }
 
@@ -99,7 +99,7 @@ export class InputDataService {
     const programVer: string = packageJson.version;
     let filetVer: string = '0.0.0';
     if('ver' in jsonData)
-      filetVer = jsonData['ver'];
+      filetVer = jsonData['ver'] as string;
 
     if(!this.isOlder('2.0.0', filetVer)) {
       this.three.setSetting(jsonData);
@@ -385,7 +385,7 @@ export class InputDataService {
     if (!("node" in jsonData)) {
       return this.translate.instant("providers.input-data.node_nodata");
     }
-    const nodes: object = jsonData["node"];
+    const nodes: object = jsonData["node"] as object;
     if (Object.keys(nodes).length <= 0) {
       return this.translate.instant("providers.input-data.node_nodata");
     }
@@ -451,7 +451,7 @@ export class InputDataService {
     if (!("load" in jsonData)) {
       return this.translate.instant("providers.input-data.load_nodata");
     }
-    const loads: object = jsonData["load"];
+    const loads: object = jsonData["load"] as object;
     const loadKeys = Object.keys(loads);
     if (loadKeys.length <= 0) {
       return this.translate.instant("providers.input-data.load_nodata");
@@ -481,8 +481,8 @@ export class InputDataService {
       const fn = load.fix_node.toString();
       const fm = load.fix_member.toString();
 
-      const fix_node = fn in fix_nodes ? fix_nodes[fn] : [];
-      const fix_member = fm in fix_members ? fix_members[fm] : [];
+      const fix_node = fn in (fix_nodes as object) ? fix_nodes[fn] : [];
+      const fix_member = fm in (fix_members as object) ? fix_members[fm] : [];
 
       if (fix_node.length + fix_member.length <= 0) {
         return (
