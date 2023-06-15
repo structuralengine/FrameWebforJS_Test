@@ -36,7 +36,7 @@ jobs:
       - name: Build Windows app
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
-          build_script_name: "build:win"
+          build_script_name: "electron:windows"
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
           windows_certs: ${{ secrets.CODESIGN }}
