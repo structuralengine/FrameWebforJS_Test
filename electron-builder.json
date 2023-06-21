@@ -48,6 +48,7 @@
   },
   "publish": [
     {
+      "releaseType": "release",
       "provider": "github",
       "owner": "structuralengine",
       "repo": "FrameWebforJS"

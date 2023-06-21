@@ -1,38 +1,43 @@
-name: Code Signing
+name: Codesign Windows App
 
 on:
-  push: 
-    branches: master
+  push:
+    tags:
+      - v*
 
-jobs:
+jobs:   
   release:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [windows-latest]
-
+    runs-on: windows-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-
+      - uses: actions/checkout@v3
+      
+      - name: Set environment.prod
+        env:
+          JSON_DECODE: ${{ secrets.environment_prod }}
+        shell: bash
+        run: |
+          echo $JSON_DECODE | base64 --decode > ./src/environments/environment.prod.ts
+          
+      - name: Set environment
+        env:
+          JSON_DECODE: ${{ secrets.environment }}
+        shell: bash
+        run: |
+          echo $JSON_DECODE | base64 --decode > ./src/environments/environment.ts
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 14.18.1
-      - name: Install NPM packages
-        run: npm install
+          node-version: "18.16.0"
+          
+      - name: Install dependencies
+        run: npm install -g @angular/cli@12.2.7 && npm install
 
-      - name: Code Signing
-        uses: dlemstra/code-sign-action@v1
+      - name: Build Windows app
+        uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
-          certificate: '${{ secrets.CODESIGN }}'
-          folder: 'files'
-          recursive: true
-
-      - name: Push Build to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "dist/angular-githubaction/*"
-          token: ${{ secrets.TOKEN }}
-        
+          build_script_name: "electron:windows"
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          windows_certs: ${{ secrets.CODESIGN }}
+          windows_certs_password: ${{ secrets.PASSWORD }}
