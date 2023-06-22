@@ -391,7 +391,7 @@ export class SceneService {
     var position = this.toScreenPosition(obj,this.camera)
     // var header = document.querySelector('.header');
     // var body_container = document.querySelector('.body-container');
-    this.myMove(position.x,(position.y + 133))
+    this.myMove(position.x,(position.y + 84))
   }
 
   // リサイズ
