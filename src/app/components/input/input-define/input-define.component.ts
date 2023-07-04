@@ -66,7 +66,7 @@ export class InputDefineComponent implements OnInit {
 
   // 表の高さを計算する
   private tableHeight(): string {
-    const containerHeight = this.app.getDialogHeight();
+    const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;
     return containerHeight.toString();
   }
   // 表高さに合わせた行数を計算する
