@@ -6,6 +6,7 @@ import { ThreeService } from "../../three/three.service";
 import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { DocLayoutService } from "src/app/providers/doc-layout.service";
 
 @Component({
   selector: "app-input-nodes",
@@ -36,7 +37,7 @@ export class InputNodesComponent implements OnInit {
   constructor( private data: InputNodesService,
               public helper: DataHelperModule,
               private app: AppComponent,
-              private three: ThreeService) {
+              private three: ThreeService, public docLayout:DocLayoutService) {
 
     this.currentRow = null;
 
@@ -47,7 +48,11 @@ export class InputNodesComponent implements OnInit {
     // three.js にモードの変更を通知する
     this.three.ChangeMode("nodes");
   }
-
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+     this.options.height = data - 80;
+    })
+  }
   // 指定行row 以降のデータを読み取る
   private loadData(row: number): void {
     for (let i = this.dataset.length + 1; i <= row; i++) {
@@ -66,9 +71,8 @@ export class InputNodesComponent implements OnInit {
     const containerHeight = this.app.getDialogHeight();
     return Math.round(containerHeight / 30);
   }
-
   // グリッドの設定
-  options: pq.gridT.options = {
+  public options: pq.gridT.options = {
     showTop: false,
     reactive: true,
     sortable: false,

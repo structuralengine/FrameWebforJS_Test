@@ -7,6 +7,7 @@ import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
+import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 
 @Component({
   selector: 'app-input-panel',
@@ -43,7 +44,8 @@ export class InputPanelComponent {
               private helper: DataHelperModule,
               private app: AppComponent,
               private three: ThreeService,        
-              private translate: TranslateService
+              private translate: TranslateService, 
+              public docLayout:DocLayoutService
             ) {
 
     for (let i = 1; i <= this.data.PANEL_VERTEXS_COUNT; i++) {
@@ -67,6 +69,12 @@ export class InputPanelComponent {
     // three.js にモードの変更を通知する
     this.three.ChangeMode('panel');
     this.three.ChangePage(1);
+  }
+
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+    this.options.height = data - 60;
+    })
   }
 
   // 指定行row 以降のデータを読み取る

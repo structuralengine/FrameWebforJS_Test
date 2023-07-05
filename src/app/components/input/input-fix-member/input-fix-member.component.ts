@@ -8,6 +8,7 @@ import { AppComponent } from 'src/app/app.component';
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { PagerService } from "../pager/pager.service";
+import { DocLayoutService } from "src/app/providers/doc-layout.service";
 
 @Component({
   selector: 'app-input-fix-member',
@@ -83,7 +84,8 @@ export class InputFixMemberComponent implements OnInit, OnDestroy {
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService,
-    private pagerService: PagerService
+    private pagerService: PagerService,
+    public docLayout:DocLayoutService
   ) {
 
     this.currentRow = null;
@@ -100,6 +102,12 @@ export class InputFixMemberComponent implements OnInit, OnDestroy {
       this.three.ChangeMode("fix_member");
       this.three.ChangePage(1);
     }
+
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+    this.options.height = data - 60;
+    })
+  }
     ngOnDestroy() {
       this.subscription.unsubscribe();
     }
