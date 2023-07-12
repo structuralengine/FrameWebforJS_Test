@@ -1,21 +1,22 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ResultCombineReacService } from "./result-combine-reac.service";
-import { InputCombineService } from "../../input/input-combine/input-combine.service";
-import { ThreeService } from "../../three/three.service";
-import { ResultPickupReacService } from "../result-pickup-reac/result-pickup-reac.service";
-import { DataHelperModule } from "src/app/providers/data-helper.module";
-import { ResultDataService } from "../../../providers/result-data.service";
-import { Subscription } from "rxjs";
-import { PagerDirectionService } from "../../input/pager-direction/pager-direction.service";
-import { PagerService } from "../../input/pager/pager.service";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ResultCombineReacService } from './result-combine-reac.service';
+import { InputCombineService } from '../../input/input-combine/input-combine.service';
+import { ThreeService } from '../../three/three.service';
+import { ResultPickupReacService } from '../result-pickup-reac/result-pickup-reac.service';
+import { DataHelperModule } from 'src/app/providers/data-helper.module';
+import { ResultDataService } from '../../../providers/result-data.service';
+import { Subscription } from 'rxjs';
+import { PagerDirectionService } from '../../input/pager-direction/pager-direction.service';
+import { PagerService } from '../../input/pager/pager.service';
+import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 
 @Component({
-  selector: "app-result-combine-reac",
-  templateUrl: "./result-combine-reac.component.html",
+  selector: 'app-result-combine-reac',
+  templateUrl: './result-combine-reac.component.html',
   styleUrls: [
-    "./result-combine-reac.component.scss",
-    "../../../app.component.scss",
-    "../../../floater.component.scss",
+    './result-combine-reac.component.scss',
+    '../../../app.component.scss',
+    '../../../floater.component.scss',
   ],
 })
 export class ResultCombineReacComponent implements OnInit, OnDestroy {
@@ -23,7 +24,7 @@ export class ResultCombineReacComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   public KEYS: string[];
   public TITLES: string[];
-
+  public height: any;
   dataset: any[];
   page: number;
   load_name: string;
@@ -43,24 +44,25 @@ export class ResultCombineReacComponent implements OnInit, OnDestroy {
     private result: ResultDataService,
     private helper: DataHelperModule,
     private pagerDirectionService: PagerDirectionService,
-    private pagerService: PagerService
+    private pagerService: PagerService,
+    public docLayout: DocLayoutService
   ) {
     this.dataset = new Array();
     this.KEYS = this.data.reacKeys;
     this.TITLES = this.data.titles;
-    for (let i = 0;i<this.TITLES.length;i++) {
+    for (let i = 0; i < this.TITLES.length; i++) {
       this.circleBox.push(i);
     }
     this.dimension = this.helper.dimension;
 
-    if(this.result.case != "comb"){
-      this.result.page = 1
-      this.result.case = "comb"
+    if (this.result.case != 'comb') {
+      this.result.page = 1;
+      this.result.case = 'comb';
     }
     this.directionSubscription =
-    this.pagerDirectionService.pageSelected$.subscribe((text) => {
-      this.calPage(text - 1);
-    });
+      this.pagerDirectionService.pageSelected$.subscribe((text) => {
+        this.calPage(text - 1);
+      });
     this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
       this.onReceiveEventFromChild(text);
     });
@@ -81,15 +83,19 @@ export class ResultCombineReacComponent implements OnInit, OnDestroy {
 
     // ピックアップデータがあればボタンを表示する
     if (this.pic.isCalculated === true) {
-      this.btnPickup = "btn-change";
+      this.btnPickup = 'btn-change';
     } else {
-      this.btnPickup = "btn-change disabled";
+      this.btnPickup = 'btn-change disabled';
     }
 
     // テーブルの高さを計算する
     this.tableHeight = (this.dataset[0].length + 1) * 30;
   }
-
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe((data) => {
+      this.height = data - 100;
+    });
+  }
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
     let pageNew: number = eventData;
@@ -103,7 +109,7 @@ export class ResultCombineReacComponent implements OnInit, OnDestroy {
     this.dataset = new Array();
     for (const key of this.KEYS) {
       const d = this.data.getCombineReacColumns(this.result.page, key);
-      if(d==null){
+      if (d == null) {
         this.dataset = new Array();
         break;
       }
@@ -111,14 +117,14 @@ export class ResultCombineReacComponent implements OnInit, OnDestroy {
     }
     this.load_name = this.comb.getCombineName(currentPage);
 
-    this.three.ChangeMode("comb_reac");
+    this.three.ChangeMode('comb_reac');
     this.three.ChangePage(currentPage);
   }
 
   calPage(calPage: any) {
-    const carousel = document.getElementById("carousel");
+    const carousel = document.getElementById('carousel');
     if (carousel != null) {
-      carousel.classList.add("add");
+      carousel.classList.add('add');
     }
     const time = this.TITLES.length;
     let cal = this.cal;
@@ -127,13 +133,13 @@ export class ResultCombineReacComponent implements OnInit, OnDestroy {
     }, 100);
     setTimeout(function () {
       if (carousel != null) {
-        carousel.classList.remove("add");
+        carousel.classList.remove('add');
       }
     }, 500);
   }
 
   calcal(calpage: any) {
-    if (calpage === "-1" || calpage === "1") {
+    if (calpage === '-1' || calpage === '1') {
       this.cal += Number(calpage);
       if (this.cal >= this.TITLES.length) {
         this.cal = 0;
@@ -145,9 +151,9 @@ export class ResultCombineReacComponent implements OnInit, OnDestroy {
       this.cal = calpage;
     }
     setTimeout(() => {
-      const circle = document.getElementById(String(this.cal+20));
+      const circle = document.getElementById(String(this.cal + 20));
       if (circle !== null) {
-        circle.classList.add("active");
+        circle.classList.add('active');
       }
     }, 10);
   }
