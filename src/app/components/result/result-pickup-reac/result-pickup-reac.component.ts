@@ -1,24 +1,25 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ResultPickupReacService } from "./result-pickup-reac.service";
-import { ResultReacService } from "../result-reac/result-reac.service";
-import { InputPickupService } from "../../input/input-pickup/input-pickup.service";
-import { ResultDataService } from "../../../providers/result-data.service";
-import { ThreeService } from "../../three/three.service";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ResultPickupReacService } from './result-pickup-reac.service';
+import { ResultReacService } from '../result-reac/result-reac.service';
+import { InputPickupService } from '../../input/input-pickup/input-pickup.service';
+import { ResultDataService } from '../../../providers/result-data.service';
+import { ThreeService } from '../../three/three.service';
 
-import { ResultCombineReacService } from "../result-combine-reac/result-combine-reac.service";
-import { AppComponent } from "src/app/app.component";
-import { DataHelperModule } from "src/app/providers/data-helper.module";
-import { Subscription } from "rxjs";
-import { PagerDirectionService } from "../../input/pager-direction/pager-direction.service";
-import { PagerService } from "../../input/pager/pager.service";
+import { ResultCombineReacService } from '../result-combine-reac/result-combine-reac.service';
+import { AppComponent } from 'src/app/app.component';
+import { DataHelperModule } from 'src/app/providers/data-helper.module';
+import { Subscription } from 'rxjs';
+import { PagerDirectionService } from '../../input/pager-direction/pager-direction.service';
+import { PagerService } from '../../input/pager/pager.service';
+import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 
 @Component({
-  selector: "app-result-pickup-reac",
-  templateUrl: "./result-pickup-reac.component.html",
+  selector: 'app-result-pickup-reac',
+  templateUrl: './result-pickup-reac.component.html',
   styleUrls: [
-    "../result-combine-reac/result-combine-reac.component.scss",
-    "../../../app.component.scss",
-    "../../../floater.component.scss",
+    '../result-combine-reac/result-combine-reac.component.scss',
+    '../../../app.component.scss',
+    '../../../floater.component.scss',
   ],
 })
 export class ResultPickupReacComponent implements OnInit, OnDestroy {
@@ -26,7 +27,7 @@ export class ResultPickupReacComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   public KEYS: string[];
   public TITLES: string[];
-
+  public height: any;
   dataset: any[];
   page: number;
   load_name: string;
@@ -47,19 +48,20 @@ export class ResultPickupReacComponent implements OnInit, OnDestroy {
     private comb: ResultCombineReacService,
     private helper: DataHelperModule,
     private pagerDirectionService: PagerDirectionService,
-    private pagerService: PagerService
+    private pagerService: PagerService,
+    public docLayout: DocLayoutService
   ) {
     this.dataset = new Array();
     this.KEYS = this.comb.reacKeys;
     this.TITLES = this.comb.titles;
-    for (let i = 0;i<this.TITLES.length;i++) {
+    for (let i = 0; i < this.TITLES.length; i++) {
       this.circleBox.push(i);
     }
     this.dimension = this.helper.dimension;
 
-    if(this.result.case != "pic"){
-      this.result.page = 1
-      this.result.case = "pic"
+    if (this.result.case != 'pic') {
+      this.result.page = 1;
+      this.result.case = 'pic';
     }
     this.directionSubscription =
       this.pagerDirectionService.pageSelected$.subscribe((text) => {
@@ -76,19 +78,24 @@ export class ResultPickupReacComponent implements OnInit, OnDestroy {
 
     // コンバインデータがあればボタンを表示する
     if (this.comb.isCalculated === true) {
-      this.btnCombine = "btn-change";
+      this.btnCombine = 'btn-change';
     } else {
-      this.btnCombine = "btn-change disabled";
+      this.btnCombine = 'btn-change disabled';
     }
 
     // テーブルの高さを計算する
     this.tableHeight = (this.dataset[0].length + 1) * 30;
   }
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe((data) => {
+      this.height = data - 100;
+    });
+  }
   ngOnDestroy() {
     this.directionSubscription.unsubscribe();
     this.subscription.unsubscribe();
   }
-  
+
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
     let pageNew: number = eventData;
@@ -102,7 +109,7 @@ export class ResultPickupReacComponent implements OnInit, OnDestroy {
     this.dataset = new Array();
     for (const key of this.KEYS) {
       const d = this.data.getPickupReacColumns(this.result.page, key);
-      if(d==null){
+      if (d == null) {
         this.dataset = new Array();
         break;
       }
@@ -110,14 +117,14 @@ export class ResultPickupReacComponent implements OnInit, OnDestroy {
     }
     this.load_name = this.pickup.getPickUpName(currentPage);
 
-    this.three.ChangeMode("pik_reac");
+    this.three.ChangeMode('pik_reac');
     this.three.ChangePage(currentPage);
   }
 
   calPage(calPage: any) {
-    const carousel = document.getElementById("carousel");
+    const carousel = document.getElementById('carousel');
     if (carousel != null) {
-      carousel.classList.add("add");
+      carousel.classList.add('add');
     }
     const time = this.TITLES.length;
     let cal = this.cal;
@@ -126,13 +133,13 @@ export class ResultPickupReacComponent implements OnInit, OnDestroy {
     }, 100);
     setTimeout(function () {
       if (carousel != null) {
-        carousel.classList.remove("add");
+        carousel.classList.remove('add');
       }
     }, 500);
   }
 
   calcal(calpage: any) {
-    if (calpage === "-1" || calpage === "1") {
+    if (calpage === '-1' || calpage === '1') {
       this.cal += Number(calpage);
       if (this.cal >= this.TITLES.length) {
         this.cal = 0;
@@ -144,9 +151,9 @@ export class ResultPickupReacComponent implements OnInit, OnDestroy {
       this.cal = calpage;
     }
     setTimeout(() => {
-      const circle = document.getElementById(String(this.cal+20));
+      const circle = document.getElementById(String(this.cal + 20));
       if (circle !== null) {
-        circle.classList.add("active");
+        circle.classList.add('active');
       }
     }, 10);
   }

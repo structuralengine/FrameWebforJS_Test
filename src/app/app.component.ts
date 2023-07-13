@@ -189,6 +189,20 @@ export class AppComponent implements OnInit {
     return dialogHeight;
   }
 
+  public getPanelElementContentContainerHeight(): number {
+    let dialog = (document.getElementsByClassName("panel-element-content-container"))[0];
+    if (dialog instanceof HTMLElement) {
+      let dialogHeight = parseFloat(dialog.style.height); // ヘッダー高さを引く
+      if (isNaN(dialogHeight)) {
+        dialogHeight = window.innerHeight - 84; // メニューとヘッダー高さを引く
+      } else {
+        dialogHeight -= 80;
+      }
+      return dialogHeight;
+    }
+    return 0;
+  }
+
   toggle(): void {
     this.isToggled = !this.isToggled;
   }

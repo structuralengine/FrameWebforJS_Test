@@ -7,6 +7,7 @@ import { DataHelperModule } from '../../../providers/data-helper.module';
 import { SheetComponent } from '../sheet/sheet.component';
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
+import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class InputDefineComponent implements OnInit {
     private load: InputLoadService,
     private result: ResultDataService,
     private helper: DataHelperModule,
-    private app: AppComponent) {
+    private app: AppComponent, public docLayout:DocLayoutService) {
 
       this.COLUMNS_COUNT = this.load.getLoadCaseCount() * 2 + 1;
       if (this.COLUMNS_COUNT <= 10) {
@@ -55,6 +56,11 @@ export class InputDefineComponent implements OnInit {
     //datasheet_inner.style.width = String(window.innerWidth - 40 ) + "px";
   }
 
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+    this.options.height = data - 60;
+    })
+  }
   // 指定行row 以降のデータを読み取る
   private loadData(row: number): void {
     for (let i = this.dataset.length + 1; i <= row; i++) {
@@ -66,7 +72,7 @@ export class InputDefineComponent implements OnInit {
 
   // 表の高さを計算する
   private tableHeight(): string {
-    const containerHeight = this.app.getDialogHeight();
+    const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;
     return containerHeight.toString();
   }
   // 表高さに合わせた行数を計算する
