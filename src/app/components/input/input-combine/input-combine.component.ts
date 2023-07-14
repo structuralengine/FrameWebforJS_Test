@@ -8,6 +8,7 @@ import { SheetComponent } from "../sheet/sheet.component";
 import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
+import { DocLayoutService } from "src/app/providers/doc-layout.service";
 
 @Component({
   selector: "app-input-combine",
@@ -31,7 +32,7 @@ export class InputCombineComponent implements OnInit {
     private result: ResultDataService,
     private helper: DataHelperModule,
     private app: AppComponent,
-    private translate: TranslateService
+    private translate: TranslateService, public docLayout:DocLayoutService
     ) { }
 
   ngOnInit() {
@@ -70,6 +71,11 @@ export class InputCombineComponent implements OnInit {
     // datasheet_inner.style.width = String(window.innerWidth - 40 ) + "px";
   }
 
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+    this.options.height = data - 60;
+    })
+  }
   // 指定行row 以降のデータを読み取る
   private loadData(row: number): void {
     for (let i = this.dataset.length + 1; i <= row; i++) {

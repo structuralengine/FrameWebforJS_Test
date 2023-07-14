@@ -8,6 +8,7 @@ import { AppComponent } from 'src/app/app.component';
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { PagerService } from "../pager/pager.service";
+import { DocLayoutService } from "src/app/providers/doc-layout.service";
 
 @Component({
   selector: "app-input-joint",
@@ -69,7 +70,8 @@ export class InputJointComponent implements OnInit, OnDestroy {
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService,
-    private pagerService: PagerService
+    private pagerService: PagerService,
+    public docLayout:DocLayoutService
   ) {
 
     this.currentRow = null;
@@ -84,6 +86,13 @@ export class InputJointComponent implements OnInit, OnDestroy {
     this.loadPage(1, this.ROWS_COUNT);
     this.three.ChangeMode("joints");
     this.three.ChangePage(1);
+  }
+
+
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+    this.options.height = data - 60;
+    })
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
@@ -108,7 +117,7 @@ export class InputJointComponent implements OnInit, OnDestroy {
 
   // 表の高さを計算する
   private tableHeight(): string {
-    const containerHeight = this.app.getDialogHeight() - 70; // pagerの分減じる
+    const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;
     return containerHeight.toString();
   }
   // 表高さに合わせた行数を計算する

@@ -46,7 +46,7 @@
           </div>
         </thead>
         <tbody>
-          <div *ngIf="dimension === 3">
+          <div [style.height.px]="height" *ngIf="dimension === 3">
             <tr *ngFor="let resultData of dataset; index as i">
               <td class="result-sm">{{ resultData.id }}</td>
               <td class="result-lg">{{ resultData.dx }}</td>
@@ -57,7 +57,7 @@
               <td class="result-lg">{{ resultData.rz }}</td>
             </tr>
           </div>
-          <div *ngIf="dimension === 2">
+          <div [style.height.px]="height" *ngIf="dimension === 2">
             <tr *ngFor="let resultData of dataset; index as i">
               <td class="result-sm">{{ resultData.id }}</td>
               <td class="result-lg">{{ resultData.dx }}</td>
@@ -150,7 +150,7 @@
                     </div>
                   </thead>
                   <tbody>
-                    <div *ngIf="dimension === 3">
+                    <div [style.height.px]="height" *ngIf="dimension === 3">
                       <tr *ngFor="let resultData of dataset[i]">
                         <td class="result-sm">{{ resultData.id }}</td>
                         <td class="result-lg">{{ resultData.dx }}</td>
@@ -161,7 +161,7 @@
                         <td class="result-lg">{{ resultData.rz }}</td>
                       </tr>
                     </div>
-                    <div *ngIf="dimension === 2">
+                    <div [style.height.px]="height" *ngIf="dimension === 2">
                       <tr *ngFor="let resultData of dataset[i]">
                         <td class="result-sm">{{ resultData.id }}</td>
                         <td class="result-lg">{{ resultData.dx }}</td>

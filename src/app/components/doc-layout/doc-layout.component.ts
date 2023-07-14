@@ -6,6 +6,9 @@ import {
 } from "dock-spawn-ts/lib/js/Exports";
 import { PanelType } from "dock-spawn-ts/lib/js/enums/PanelType";
 import { DataHelperModule } from "./../../providers/data-helper.module";
+import { DocLayoutService } from "src/app/providers/doc-layout.service";
+import { AppComponent } from "src/app/app.component";
+
 
 @Component({
   selector: "app-doc-layout",
@@ -13,7 +16,9 @@ import { DataHelperModule } from "./../../providers/data-helper.module";
   styleUrls: ["./doc-layout.component.scss"],
 })
 export class DocLayoutComponent implements OnInit {
-  constructor(public helper: DataHelperModule) {}
+
+
+  constructor(public helper: DataHelperModule,  public docLayOut: DocLayoutService,private app: AppComponent,) {}
 
   ngOnInit() {
     const divDockContainer = document.getElementById("dock_div");
@@ -31,13 +36,28 @@ export class DocLayoutComponent implements OnInit {
       onClosePanel: (dockManager, panel) => {
         localStorage.setItem("framewebfor", dockManager.saveState());
       },
+      onResumeLayout:  (dockManager, dockContainer) => {
+        this.docLayOut.handleMove.next(dockContainer.height);
+      },
+      onChangeDialogPosition: (dockManager, dialog , x , y) => {
+        if(x > 0 && y > 0){
+          this.docLayOut.handleMove.next(this.app.getPanelElementContentContainerHeight() + 100);
+        }
+        else{
+          this.docLayOut.handleMove.next(this.app.getPanelElementContentContainerHeight() + 30);
+         
+        }
+      }
     });
 
-    window.onresize = () =>
+    window.onresize = () =>{
+
+    
       dockManager.resize(
         divDockContainer?.clientWidth!,
         divDockContainer?.clientHeight!
       );
+    }
     window.onresize(null);
 
     const panelType = PanelType.panel;
@@ -61,7 +81,9 @@ export class DocLayoutComponent implements OnInit {
           divDockContainer?.clientHeight! * 0.8
         );
       },
+      
     });
+    this.docLayOut.handleMove.next(this.app.getPanelElementContentContainerHeight() + 30);
   }
 
   ngAfterViewInit() {

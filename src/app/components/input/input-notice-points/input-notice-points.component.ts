@@ -9,6 +9,7 @@ import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
 
 import * as THREE from 'three';
+import { DocLayoutService } from "src/app/providers/doc-layout.service";
 
 @Component({
   selector: "app-input-notice-points",
@@ -57,7 +58,7 @@ export class InputNoticePointsComponent implements OnInit {
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
-    private translate: TranslateService
+    private translate: TranslateService, public docLayout:DocLayoutService
   ) {
     for (let i = 1; i <= this.data.NOTICE_POINTS_COUNT; i++) {
       // this.columnKeysの情報追加
@@ -82,7 +83,11 @@ export class InputNoticePointsComponent implements OnInit {
     this.three.ChangeMode("notice_points");
     this.three.changeData('notice-points');
   }
-
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+    this.options.height = data - 60;
+    })
+  }
   // 指定行row 以降のデータを読み取る
   private loadData(row: number): void {
     for (let i = this.dataset.length + 1; i <= row; i++) {
@@ -98,7 +103,7 @@ export class InputNoticePointsComponent implements OnInit {
 
   // 表の高さを計算する
   private tableHeight(): string {
-    const containerHeight = this.app.getDialogHeight();
+    const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;
     return containerHeight.toString();
   }
   // 表高さに合わせた行数を計算する

@@ -13,6 +13,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { WaitDialogComponent } from "../../wait-dialog/wait-dialog.component";
 import { Subscription } from "rxjs";
 import { PagerService } from "../pager/pager.service";
+import { DocLayoutService } from "src/app/providers/doc-layout.service";
 
 @Component({
   selector: "app-input-load",
@@ -704,7 +705,7 @@ export class InputLoadComponent implements OnInit, OnDestroy {
     private threeLoad: ThreeLoadService,
     private modalService: NgbModal,
     private translate: TranslateService,
-    private pagerService: PagerService
+    private pagerService: PagerService, public docLayout:DocLayoutService
   ) {
 
     this.currentRow = null;
@@ -837,6 +838,13 @@ export class InputLoadComponent implements OnInit, OnDestroy {
 
     this.three.ChangeMode("load_values");
     this.three.ChangePage(1);
+  }
+
+ 
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+    this.options.height = data - 60;
+    })
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
