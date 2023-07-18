@@ -11,9 +11,9 @@
 
     .printArea {
         position: relative;
-        height: 500px;
+        height: 540px;
         width: 1062px;
-        overflow: scroll;
+        // overflow: scroll;
         border-radius: 4px;
     }
 
@@ -114,7 +114,9 @@
     min-width: 100%;
     max-width: 100%;
 }
-
+#cutom-three .printdata-choice{
+    overflow: hidden;
+}
 .printdata-choice {
     font-size: 12px;
     height: 471px;
