@@ -238,7 +238,7 @@ export class AppComponent implements OnInit {
   }
 
   private post_compress(jsonData: {}, modalRef: NgbModalRef) {
-    const url = environment.calcURL; // 'https://asia-northeast1-the-structural-engine.cloudfunctions.net/frameWeb-2';
+    const url = environment.calcURL;
 
     // json string にする
     const json = JSON.stringify(jsonData, null, 0);

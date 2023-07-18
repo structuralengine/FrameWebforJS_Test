@@ -12,6 +12,7 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { TranslateService } from "@ngx-translate/core";
 import packageJson from '../../../../package.json';
 import { AppComponent } from '../../app.component';
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-print",
@@ -23,8 +24,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   public combineJson: any;
   public pickupJson: any;
   public id;
-  private url =  "https://frameprint.azurewebsites.net/api/Function1?";
-  //"http://localhost:7071/api/Function1";
+  private url =  environment.printURL;
   public PrintScreen: string;
 
   constructor(
