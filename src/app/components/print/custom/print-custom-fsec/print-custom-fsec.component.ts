@@ -101,7 +101,7 @@ export class PrintCustomFsecComponent implements OnInit {
     reactive: true,
     sortable: false,
     locale: "jp",
-    height: 420,
+    height: 400,
     width: 418,
     rowBorders: true,
     columnBorders: false,
