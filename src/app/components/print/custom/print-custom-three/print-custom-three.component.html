@@ -59,7 +59,7 @@
             </label>
           </li>
 
-          <li *ngIf="(printService.flg != 14 && helper.dimension != 2) || helper.dimension == 2">
+          <li *ngIf="(printService.flg != 14 && printService.flg != 12 && printService.flg != 13 && printService.flg != 11 && helper.dimension != 2) || helper.dimension == 2">
             <label class="three-label">
               <!--  [(ngModel)]="printCustomThreeService.threeEditable[6]"/> -->
               <input type="checkbox" name="checkbox-print" class="checkbox-input" id="printCus6"
