@@ -90,7 +90,7 @@ export class ResultCombineDisgService {
     return this.columns[combNo][mode];
   }
 
-  public getDataColumns(currentPage:number, row: number):any{
+  public getDataColumns(currentPage:number, row: number, mode: string):any{
     let results: any = this.disgCombine[currentPage];
     if(results == undefined){
       return {
@@ -104,7 +104,11 @@ export class ResultCombineDisgService {
         case: ""
       }
     };
-    let result = results[row] != undefined ? results[row] : undefined;
+    let result = undefined;
+    let modes = results.dx_max;// [mode] != undefined ? results[row] : undefined;
+    if(modes != undefined){
+      result = modes[row];
+    }
     // 対象データが無かった時に処理
     if (result === undefined) {
       result = {

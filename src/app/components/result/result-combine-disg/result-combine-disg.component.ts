@@ -294,9 +294,11 @@ export class ResultCombineDisgComponent implements OnInit, OnDestroy {
   private COLUMNS_COUNT = 5;
 
   private loadData(currentPage: number, row: number): void {
-    for (let i = this.datasetNew.length; i <= row; i++) {
-      const define = this.data.getDataColumns(currentPage, i);
-      this.datasetNew.push(define);  
+    for (const key of this.KEYS) {
+       for (let i = this.datasetNew.length + 1; i <= row; i++) {
+        const define = this.data.getDataColumns(currentPage, i, key);
+        this.datasetNew.push(define);  
+       }
     }
     this.page = currentPage;
     this.three.ChangeMode('comb_disg');
