@@ -48,14 +48,14 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     dataType: "integer",
     dataIndx: this.columnKeys[0],
     sortable: false,
-    width: 50
+    width: 70
     },
     {
     title: this.translate.instant("result.result-fsec.nodeNo"),
     dataType: "integer",
     dataIndx: this.columnKeys[1],
     sortable: false,
-    width: 50
+    width: 70
     },
   {
     title: this.translate.instant("result.result-fsec.stationLocation"),
@@ -63,7 +63,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.000',
     dataIndx: this.columnKeys[2],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.axialForce"),
@@ -71,7 +71,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[3],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.y_shear"),
@@ -79,7 +79,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[4],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.z_shear"),
@@ -87,7 +87,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[5],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.x_torsion"),
@@ -95,7 +95,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[6],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.y_moment"),
@@ -103,7 +103,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[7],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.z_moment"),
@@ -111,7 +111,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[8],
     sortable: false,
-    width: 50
+    width: 70
   }];
 
   private columnHeaders2D = [
@@ -120,14 +120,14 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     dataType: "integer",
     dataIndx: this.columnKeys[0],
     sortable: false,
-    width: 50
+    width: 70
     },
     {
     title: this.translate.instant("result.result-fsec.nodeNo"),
     dataType: "integer",
     dataIndx: this.columnKeys[1],
     sortable: false,
-    width: 50
+    width: 70
     },
   {
     title: this.translate.instant("result.result-fsec.stationLocation"),
@@ -135,7 +135,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.000',
     dataIndx: this.columnKeys[2],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.axialForce"),
@@ -143,7 +143,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[3],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.y_shear"),
@@ -151,7 +151,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[4],
     sortable: false,
-    width: 50
+    width: 70
   },
   {
     title: this.translate.instant("result.result-fsec.z_moment"),
@@ -159,7 +159,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     format: '#.00',
     dataIndx: this.columnKeys[8],
     sortable: false,
-    width: 50
+    width: 70
   }];
 
 
@@ -229,9 +229,10 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     }
   }
   ngAfterViewInit() {
-    this.docLayout.handleMove.subscribe((data) => {
-      this.height = 400//data - 100;
-    });
+    this.docLayout.handleMove.subscribe(data => {
+      // this.height = data - 100;
+      this.options.height = data - 60;
+      });
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();

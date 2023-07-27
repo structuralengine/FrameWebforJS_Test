@@ -1,4 +1,4 @@
-<div *ngIf="LL_page == false">
+<!-- <div *ngIf="LL_page == false">
   <div class="wrapper">
     <div class="result_table">
       <table #userinput id="userinput">
@@ -59,7 +59,7 @@
         </thead>
         <tbody>
           <div [style.height.px]="height" *ngIf="dimension === 3">
-            <!-- <cdk-virtual-scroll-viewport itemSize="25"> -->
+            <cdk-virtual-scroll-viewport itemSize="25">
             <tr *ngFor="let resultData of dataset; index as i">
               <td class="result-sm">{{ resultData.m }}</td>
               <td class="result-sm">{{ resultData.n }}</td>
@@ -71,10 +71,10 @@
               <td class="result-lg">{{ resultData.my }}</td>
               <td class="result-lg">{{ resultData.mz }}</td>
             </tr>
-            <!-- </cdk-virtual-scroll-viewport> -->
+            </cdk-virtual-scroll-viewport>
           </div>
           <div [style.height.px]="height" *ngIf="dimension === 2">
-            <!-- <cdk-virtual-scroll-viewport itemSize="25"> -->
+            <cdk-virtual-scroll-viewport itemSize="25">
             <tr *ngFor="let resultData of dataset; index as i">
               <td class="result-sm">{{ resultData.m }}</td>
               <td class="result-sm">{{ resultData.n }}</td>
@@ -83,7 +83,7 @@
               <td class="result-lg">{{ resultData.fy }}</td>
               <td class="result-lg">{{ resultData.mz }}</td>
             </tr>
-            <!-- </cdk-virtual-scroll-viewport> -->
+            </cdk-virtual-scroll-viewport>
           </div>
         </tbody>
       </table>
@@ -203,7 +203,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 
 <div id="datasheet_inner" class="datasheet_inner">
