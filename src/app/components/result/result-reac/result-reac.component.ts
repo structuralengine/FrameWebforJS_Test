@@ -72,7 +72,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   {
     title: this.translate.instant("result.result-reac.z_SupportReaction"),
     dataType: "integer",
-    format: '#.0000',
+    format: '#.00',
     dataIndx: this.columnKeys[3],
     sortable: false,
     width: 80
@@ -80,7 +80,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   {
     title: this.translate.instant("result.result-reac.x_RotationalReaction"),
     dataType: "integer",
-    format: '#.0000',
+    format: '#.00',
     dataIndx: this.columnKeys[4],
     sortable: false,
     width: 80
@@ -88,7 +88,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   {
     title: this.translate.instant("result.result-reac.y_RotationalReaction"),
     dataType: "integer",
-    format: '#.0000',
+    format: '#.00',
     dataIndx: this.columnKeys[5],
     sortable: false,
     width: 80
@@ -96,7 +96,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   {
     title: this.translate.instant("result.result-reac.z_RotationalReaction"),
     dataType: "integer",
-    format: '#.0000',
+    format: '#.00',
     dataIndx: this.columnKeys[6],
     sortable: false,
     width: 80
@@ -104,7 +104,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   {
     title: this.translate.instant("result.result-reac.comb"),
     dataType: "integer",
-    format: '#.0000',
+    format: '#.00',
     dataIndx: this.columnKeys[7],
     sortable: false,
     width: 80
@@ -136,7 +136,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
     {
       title: this.translate.instant("result.result-reac.z_RotationalReaction"),
       dataType: "integer",
-      format: '#.0000',
+      format: '#.00',
       dataIndx: this.columnKeys[6],
       sortable: false,
       width: 80
@@ -144,7 +144,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
     {
       title: this.translate.instant("result.result-reac.comb"),
       dataType: "integer",
-      format: '#.0000',
+      format: '#.00',
       dataIndx: this.columnKeys[7],
       sortable: false,
       width: 80
@@ -181,7 +181,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.loadPage(this.result.page);
+    // this.loadPage(this.result.page);
     this.ROWS_COUNT = this.rowsCount();
     this.loadData(1, this.ROWS_COUNT);
     setTimeout(() => {
@@ -208,7 +208,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   }
   ngAfterViewInit() {
     this.docLayout.handleMove.subscribe((data) => {
-      this.height = data - 100;
+      //this.height = data - 100;
       this.options.height = data - 60;
     });
   }
@@ -219,7 +219,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
     let pageNew: number = eventData;
-    this.loadPage(pageNew);
+    // this.loadPage(pageNew);
 
     this.datasetNew.splice(0);
     this.loadData(pageNew, this.ROWS_COUNT);
