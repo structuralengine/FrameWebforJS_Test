@@ -9,7 +9,7 @@ import { ResultCombineDisgService } from "../result-combine-disg/result-combine-
 })
 export class ResultDisgService {
   public isCalculated: boolean;
-  public disg: any;
+  public disg: any[];
   private worker1: Worker;
   private worker2: Worker;
   private worker3: Worker;
@@ -52,7 +52,7 @@ export class ResultDisgService {
   }
 
   public clear(): void {
-    this.disg = {};
+    this.disg = [];
     this.isCalculated = false;
   }
 
@@ -72,6 +72,36 @@ export class ResultDisgService {
 
     return new Array();
   }
+
+  public getDataColumns(currentPage:number, row: number):any{
+    let results: any = this.disg[currentPage];
+    if(results == undefined){
+      return {
+        id : "",
+        dx : "", 
+        dy : "", 
+        dz : "", 
+        rx : "", 
+        ry : "", 
+        rz : ""
+      }
+    };
+    let result = results[row] != undefined ? results[row] : undefined;
+    // 対象データが無かった時に処理
+    if (result === undefined) {
+      result = {
+        id : "",
+        dx : "", 
+        dy : "", 
+        dz : "", 
+        rx : "", 
+        ry : "", 
+        rz : ""
+      };
+    }
+    return result;
+  }
+
 
   // three-section-force.service から呼ばれる
   public getDisgJson(): object {

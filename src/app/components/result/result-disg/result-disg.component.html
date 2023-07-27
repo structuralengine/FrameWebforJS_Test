@@ -1,4 +1,4 @@
-<div *ngIf="LL_page == false">
+<!-- <div *ngIf="LL_page == false">
   <div class="wrapper">
     <div class="result_table">
       <table #userinput id="userinput">
@@ -178,4 +178,8 @@
       </div>
     </div>
   </div>
+</div> -->
+
+<div id="datasheet_inner" class="datasheet_inner">
+  <app-sheet #grid [options]="options"></app-sheet>
 </div>
