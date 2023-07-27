@@ -10,7 +10,7 @@ import { data } from 'jquery';
 })
 export class ResultCombineDisgService {
 
-  public disgCombine: any;
+  public disgCombine: any[];
   public value_range: any;
   public isCalculated: boolean;
   private worker1: Worker;
@@ -74,7 +74,7 @@ export class ResultCombineDisgService {
   }
 
   public clear(): void {
-    this.disgCombine = {};
+    this.disgCombine = [];
   }
 
   // three.js で必要
@@ -88,6 +88,37 @@ export class ResultCombineDisgService {
     if(!(mode in this.columns[combNo]))
       return null;
     return this.columns[combNo][mode];
+  }
+
+  public getDataColumns(currentPage:number, row: number):any{
+    let results: any = this.disgCombine[currentPage];
+    if(results == undefined){
+      return {
+        id : "",
+        dx : "", 
+        dy : "", 
+        dz : "", 
+        rx : "", 
+        ry : "", 
+        rz : "",
+        case: ""
+      }
+    };
+    let result = results[row] != undefined ? results[row] : undefined;
+    // 対象データが無かった時に処理
+    if (result === undefined) {
+      result = {
+        id : "",
+        dx : "", 
+        dy : "", 
+        dz : "", 
+        rx : "", 
+        ry : "", 
+        rz : "",
+        case: ""
+      };
+    }
+    return result;
   }
 
   public setDisgCombineJson(disg: any, defList: any, combList: any, pickList: any): void {
