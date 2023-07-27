@@ -156,6 +156,7 @@ export class ResultCombineDisgComponent implements OnInit, OnDestroy {
       width: 80
     }];
 
+    private currentKey: any = 0;
 
   constructor(
     private app: AppComponent,
@@ -184,7 +185,10 @@ export class ResultCombineDisgComponent implements OnInit, OnDestroy {
     }
     this.directionSubscription =
       this.pagerDirectionService.pageSelected$.subscribe((text) => {
+        
         this.calPage(text - 1);
+        this.onChangeKey(text);
+       
       });
     this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
       this.onReceiveEventFromChild(text);
@@ -197,7 +201,7 @@ export class ResultCombineDisgComponent implements OnInit, OnDestroy {
     });
   }
   ngOnInit() {
-    this.loadPage(this.result.page);
+    // this.loadPage(this.result.page);
 
     this.ROWS_COUNT = this.rowsCount();
     this.loadData(1, this.ROWS_COUNT);
@@ -223,12 +227,23 @@ export class ResultCombineDisgComponent implements OnInit, OnDestroy {
   //　pager.component からの通知を受け取る
   onReceiveEventFromChild(eventData: number) {
     let pageNew: number = eventData;
-    this.loadPage(pageNew);
+    // this.loadPage(pageNew);
 
     this.datasetNew.splice(0);
     this.loadData(pageNew, this.ROWS_COUNT);
     this.grid.refreshDataAndView();
     this.three.ChangePage(pageNew);
+  }
+
+
+  onChangeKey(text: any) {
+    this.currentKey = text - 1;
+
+    this.datasetNew.splice(0);
+    this.ROWS_COUNT = this.rowsCount();
+    this.loadData(this.page, this.ROWS_COUNT);
+    this.grid.refreshDataAndView();
+    this.three.ChangePage(1);
   }
 
   loadPage(currentPage: number) {
@@ -294,16 +309,15 @@ export class ResultCombineDisgComponent implements OnInit, OnDestroy {
   private COLUMNS_COUNT = 5;
 
   private loadData(currentPage: number, row: number): void {
-    for (const key of this.KEYS) {
-       for (let i = this.datasetNew.length + 1; i <= row; i++) {
+    let key = this.KEYS[this.currentKey];
+       for (let i = this.datasetNew.length; i <= row; i++) {
         const define = this.data.getDataColumns(currentPage, i, key);
         this.datasetNew.push(define);  
        }
-    }
     this.page = currentPage;
     this.three.ChangeMode('comb_disg');
     this.three.ChangePage(currentPage);
-  }
+      }
 
   private tableHeightf(): string {
     const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;

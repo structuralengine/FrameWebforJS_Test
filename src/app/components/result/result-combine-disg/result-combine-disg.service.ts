@@ -91,7 +91,7 @@ export class ResultCombineDisgService {
   }
 
   public getDataColumns(currentPage:number, row: number, mode: string):any{
-    let results: any = this.disgCombine[currentPage];
+    let results: any = this.columns[currentPage];
     if(results == undefined){
       return {
         id : "",
@@ -105,7 +105,7 @@ export class ResultCombineDisgService {
       }
     };
     let result = undefined;
-    let modes = results.dx_max;// [mode] != undefined ? results[row] : undefined;
+    let modes = results[mode] != undefined ? results[mode] : undefined;
     if(modes != undefined){
       result = modes[row];
     }
