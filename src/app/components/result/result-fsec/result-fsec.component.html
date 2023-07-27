@@ -58,31 +58,31 @@
           </div>
         </thead>
         <tbody>
-          <div  [style.height.px]="height" *ngIf="dimension === 3">
+          <div [style.height.px]="height" *ngIf="dimension === 3">
             <!-- <cdk-virtual-scroll-viewport itemSize="25"> -->
-              <tr *ngFor="let resultData of dataset; index as i">
-                <td class="result-sm">{{ resultData.m }}</td>
-                <td class="result-sm">{{ resultData.n }}</td>
-                <td class="result-lg">{{ resultData.l }}</td>
-                <td class="result-lg">{{ resultData.fx }}</td>
-                <td class="result-lg">{{ resultData.fy }}</td>
-                <td class="result-lg">{{ resultData.fz }}</td>
-                <td class="result-lg">{{ resultData.mx }}</td>
-                <td class="result-lg">{{ resultData.my }}</td>
-                <td class="result-lg">{{ resultData.mz }}</td>
-              </tr>
+            <tr *ngFor="let resultData of dataset; index as i">
+              <td class="result-sm">{{ resultData.m }}</td>
+              <td class="result-sm">{{ resultData.n }}</td>
+              <td class="result-lg">{{ resultData.l }}</td>
+              <td class="result-lg">{{ resultData.fx }}</td>
+              <td class="result-lg">{{ resultData.fy }}</td>
+              <td class="result-lg">{{ resultData.fz }}</td>
+              <td class="result-lg">{{ resultData.mx }}</td>
+              <td class="result-lg">{{ resultData.my }}</td>
+              <td class="result-lg">{{ resultData.mz }}</td>
+            </tr>
             <!-- </cdk-virtual-scroll-viewport> -->
           </div>
-          <div  [style.height.px]="height" *ngIf="dimension === 2">
+          <div [style.height.px]="height" *ngIf="dimension === 2">
             <!-- <cdk-virtual-scroll-viewport itemSize="25"> -->
-              <tr *ngFor="let resultData of dataset; index as i">
-                <td class="result-sm">{{ resultData.m }}</td>
-                <td class="result-sm">{{ resultData.n }}</td>
-                <td class="result-lg">{{ resultData.l }}</td>
-                <td class="result-lg">{{ resultData.fx }}</td>
-                <td class="result-lg">{{ resultData.fy }}</td>
-                <td class="result-lg">{{ resultData.mz }}</td>
-              </tr>
+            <tr *ngFor="let resultData of dataset; index as i">
+              <td class="result-sm">{{ resultData.m }}</td>
+              <td class="result-sm">{{ resultData.n }}</td>
+              <td class="result-lg">{{ resultData.l }}</td>
+              <td class="result-lg">{{ resultData.fx }}</td>
+              <td class="result-lg">{{ resultData.fy }}</td>
+              <td class="result-lg">{{ resultData.mz }}</td>
+            </tr>
             <!-- </cdk-virtual-scroll-viewport> -->
           </div>
         </tbody>
@@ -100,28 +100,16 @@
             <div class="card-header">
               <p class="loadName">{{ load_name }}</p>
               <div class="detailName">
-                <a
-                  id="prev"
-                  link="130"
-                  (click)="calPage('-1')"
-                  class="move"
-                  aria-label="previous"
-                  ><i class="fas fa-caret-left"></i
-                ></a>
+                <a id="prev" link="130" (click)="calPage('-1')" class="move" aria-label="previous"><i
+                    class="fas fa-caret-left"></i></a>
                 <ul class="move_case">
                   <li *ngFor="let i of circleBox">
                     <a class="circle" (click)="calPage(i)" [id]="i + 20"></a>
                   </li>
                 </ul>
                 <p class="detailTitle">{{ TITLES[i] }}</p>
-                <a
-                  id="next"
-                  link="136"
-                  (click)="calPage('1')"
-                  class="move"
-                  aria-label="Next"
-                  ><i class="fas fa-caret-right"></i
-                ></a>
+                <a id="next" link="136" (click)="calPage('1')" class="move" aria-label="Next"><i
+                    class="fas fa-caret-right"></i></a>
               </div>
             </div>
             <div class="card-body">
@@ -183,7 +171,7 @@
                     </div>
                   </thead>
                   <tbody>
-                    <div  [style.height.px]="height"  *ngIf="dimension === 3">
+                    <div [style.height.px]="height" *ngIf="dimension === 3">
                       <tr *ngFor="let resultData of dataset[i]">
                         <td class="result-sm">{{ resultData.m }}</td>
                         <td class="result-sm">{{ resultData.n }}</td>
@@ -196,7 +184,7 @@
                         <td class="result-lg">{{ resultData.mz }}</td>
                       </tr>
                     </div>
-                    <div  [style.height.px]="height" *ngIf="dimension === 2">
+                    <div [style.height.px]="height" *ngIf="dimension === 2">
                       <tr *ngFor="let resultData of dataset[i]">
                         <td class="result-sm">{{ resultData.m }}</td>
                         <td class="result-sm">{{ resultData.n }}</td>
@@ -215,4 +203,9 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<div id="datasheet_inner" class="datasheet_inner">
+  <app-sheet #grid [options]="options"></app-sheet>
 </div>
