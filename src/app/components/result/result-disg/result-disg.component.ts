@@ -290,7 +290,7 @@ export class ResultDisgComponent implements OnInit, OnDestroy {
       this.datasetNew.push(define);  
     }
     this.page = currentPage;
-    this.three.ChangeMode('fsec');
+    this.three.ChangeMode('disg');
     this.three.ChangePage(currentPage);
   }
 
