@@ -37,6 +37,41 @@ export class ResultPickupDisgService {
     return this.columns[combNo][mode];
   }
 
+  public getDataColumns(currentPage:number, row: number, mode: string):any{
+    let results: any = this.columns[currentPage];
+    if(results == undefined){
+      return {
+        id : "",
+        dx : "", 
+        dy : "", 
+        dz : "", 
+        rx : "", 
+        ry : "", 
+        rz : "",
+        case: ""
+      }
+    };
+    let result = undefined;
+    let modes = results[mode] != undefined ? results[mode] : undefined;
+    if(modes != undefined){
+      result = modes[row];
+    }
+    // 対象データが無かった時に処理
+    if (result === undefined) {
+      result = {
+        id : "",
+        dx : "", 
+        dy : "", 
+        dz : "", 
+        rx : "", 
+        ry : "", 
+        rz : "",
+        case: ""
+      };
+    }
+    return result;
+  }
+
   public setDisgPickupJson(pickList: any, disgCombine: any): void {
 
     this.isCalculated = false;

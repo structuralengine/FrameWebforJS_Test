@@ -41,127 +41,28 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
 
   circleBox = new Array();
 
-  private columnKeys: string[] = ['m', 'n', 'l', 'fx', 'fy', 'fz', 'mx', 'my', 'mz'];
-  private columnHeaders3D = [
-    {
-    title: this.translate.instant("result.result-fsec.memberNo"),
-    dataType: "integer",
-    dataIndx: this.columnKeys[0],
-    sortable: false,
-    width: 70
-    },
-    {
-    title: this.translate.instant("result.result-fsec.nodeNo"),
-    dataType: "integer",
-    dataIndx: this.columnKeys[1],
-    sortable: false,
-    width: 70
-    },
-  {
-    title: this.translate.instant("result.result-fsec.stationLocation"),
-    dataType: "integer",
-    format: '#.000',
-    dataIndx: this.columnKeys[2],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.axialForce"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[3],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.y_shear"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[4],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.z_shear"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[5],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.x_torsion"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[6],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.y_moment"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[7],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.z_moment"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[8],
-    sortable: false,
-    width: 70
-  }];
+  private column3Ds: any[] = [
+    { title: "result.result-fsec.memberNo", id: "m", format: "", width: -40 },
+    { title: "result.result-fsec.nodeNo", id: "n", format: "", width: -40 },
+    { title: "result.result-fsec.stationLocation", id: "l", format: "#.000" },
+    { title: "result.result-fsec.axialForce", id: "fx", format:'#.00' },
+    { title: "result.result-fsec.y_shear", id: "fy", format:'#.00' },
+    { title: "result.result-fsec.z_shear", id: "fz", format:'#.00' },
+    { title: "result.result-fsec.x_torsion", id: "mx", format:'#.00' },
+    { title: "result.result-fsec.y_moment", id: "my", format:'#.00' },
+    { title: "result.result-fsec.z_moment", id: "mz", format:'#.00' },
+  ];
+  private columnHeaders3D = this.result.initColumnTable(this.column3Ds, 80);
 
-  private columnHeaders2D = [
-    {
-    title: this.translate.instant("result.result-fsec.memberNo"),
-    dataType: "integer",
-    dataIndx: this.columnKeys[0],
-    sortable: false,
-    width: 70
-    },
-    {
-    title: this.translate.instant("result.result-fsec.nodeNo"),
-    dataType: "integer",
-    dataIndx: this.columnKeys[1],
-    sortable: false,
-    width: 70
-    },
-  {
-    title: this.translate.instant("result.result-fsec.stationLocation"),
-    dataType: "integer",
-    format: '#.000',
-    dataIndx: this.columnKeys[2],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.axialForce"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[3],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.y_shear"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[4],
-    sortable: false,
-    width: 70
-  },
-  {
-    title: this.translate.instant("result.result-fsec.z_moment"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[8],
-    sortable: false,
-    width: 70
-  }];
-
+  private column2Ds: any[] = [
+    { title: "result.result-fsec.memberNo", id: "m", format: "", width: -40 },
+    { title: "result.result-fsec.nodeNo", id: "n", format: "", width: -40 },
+    { title: "result.result-fsec.stationLocation", id: "l", format: "#.000" },
+    { title: "result.result-fsec.axialForce", id: "fx", format:'#.00' },
+    { title: "result.result-fsec.shear", id: "fy", format:'#.00' },
+    { title: "result.result-fsec.moment", id: "mz", format:'#.00' },
+  ];
+  private columnHeaders2D = this.result.initColumnTable(this.column2Ds, 80);
 
 
   constructor(

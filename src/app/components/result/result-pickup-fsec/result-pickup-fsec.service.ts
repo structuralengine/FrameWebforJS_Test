@@ -88,6 +88,45 @@ export class ResultPickupFsecService {
     return this.columns[combNo][mode];
   }
 
+  public getDataColumns(currentPage: number, row: number, mode: string): any {
+    let results: any = this.columns[currentPage];
+    if (results == undefined) {
+      return {
+        m: "",
+        n: "",
+        l: "",
+        fx: "",
+        fy: "",
+        fz: "",
+        mx: "",
+        my: "",
+        mz: "",
+        case: "",
+      };
+    }
+    let result = undefined;
+    let modes = results[mode] != undefined ? results[mode] : undefined;
+    if (modes != undefined) {
+      result = modes[row];
+    }
+    // 対象データが無かった時に処理
+    if (result === undefined) {
+      result = {
+        m: "",
+        n: "",
+        l: "",
+        fx: "",
+        fy: "",
+        fz: "",
+        mx: "",
+        my: "",
+        mz: "",
+        case: "",
+      };
+    }
+    return result;
+  }
+
   public setFsecPickupJson(pickList: any, fsecCombine: any): void {
     this.isCalculated = false;
     const startTime = performance.now(); // 開始時間

@@ -1,4 +1,4 @@
-<div *ngFor="let r of KEYS; index as i">
+<!-- <div *ngFor="let r of KEYS; index as i">
   <div *ngIf="i === cal">
     <div class="wrapper">
       <div class="result_table">
@@ -79,4 +79,9 @@
       </div>
     </div>
   </div>
+</div> -->
+
+
+<div id="datasheet_inner" class="datasheet_inner">
+  <app-sheet #grid [options]="options"></app-sheet>
 </div>

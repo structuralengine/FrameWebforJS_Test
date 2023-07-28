@@ -16,12 +16,12 @@ import pq from "pqgrid";
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-result-reac',
-  templateUrl: './result-reac.component.html',
+  selector: "app-result-reac",
+  templateUrl: "./result-reac.component.html",
   styleUrls: [
-    './result-reac.component.scss',
-    '../../../app.component.scss',
-    '../../../floater.component.scss',
+    "./result-reac.component.scss",
+    "../../../app.component.scss",
+    "../../../floater.component.scss",
   ],
 })
 export class ResultReacComponent implements OnInit, OnDestroy {
@@ -42,113 +42,26 @@ export class ResultReacComponent implements OnInit, OnDestroy {
 
   circleBox = new Array();
 
+  private column3Ds: any[] = [
+    { title: "result.result-reac.nodeNo", id: "id", format: "", width: -40 },
+    { title: "result.result-reac.x_SupportReaction", id: "tx", format: "#.00" },
+    { title: "result.result-reac.y_SupportReaction", id: "ty", format: "#.00" },
+    { title: "result.result-reac.z_SupportReaction", id: "tz", format: "#.00" },
+    { title: "result.result-reac.x_RotationalReaction", id: "mx", format: "#.00" },
+    { title: "result.result-reac.y_RotationalReaction", id: "my", format: "#.00" },
+    { title: "result.result-reac.z_RotationalReaction", id: "mz", format: "#.00" },
+    { title: "result.result-reac.comb", id: "case", format: "#.00" },
+  ];
+  private columnHeaders3D = this.result.initColumnTable(this.column3Ds, 80);
 
-
-
-  private columnKeys: string[] = ['id', 'tx', 'ty', 'tz', 'mx', 'my', 'mz', "case"];
-  private columnHeaders3D = [
-    {
-    title: this.translate.instant("result.result-reac.nodeNo"),
-    dataType: "integer",
-    dataIndx: this.columnKeys[0],
-    sortable: false,
-    width: 80
-    },
-    {
-    title: this.translate.instant("result.result-reac.x_SupportReaction"),
-    dataType: "integer",
-    dataIndx: this.columnKeys[1],
-    sortable: false,
-    width: 80
-    },
-  {
-    title: this.translate.instant("result.result-reac.y_SupportReaction"),
-    dataType: "integer",
-    format: '#.000',
-    dataIndx: this.columnKeys[2],
-    sortable: false,
-    width: 80
-  },
-  {
-    title: this.translate.instant("result.result-reac.z_SupportReaction"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[3],
-    sortable: false,
-    width: 80
-  },
-  {
-    title: this.translate.instant("result.result-reac.x_RotationalReaction"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[4],
-    sortable: false,
-    width: 80
-  },
-  {
-    title: this.translate.instant("result.result-reac.y_RotationalReaction"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[5],
-    sortable: false,
-    width: 80
-  },
-  {
-    title: this.translate.instant("result.result-reac.z_RotationalReaction"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[6],
-    sortable: false,
-    width: 80
-  },
-  {
-    title: this.translate.instant("result.result-reac.comb"),
-    dataType: "integer",
-    format: '#.00',
-    dataIndx: this.columnKeys[7],
-    sortable: false,
-    width: 80
-  }];
-
-  private columnHeaders2D = [
-    {
-      title: this.translate.instant("result.result-reac.nodeNo"),
-      dataType: "integer",
-      dataIndx: this.columnKeys[0],
-      sortable: false,
-      width: 80
-      },
-      {
-      title: this.translate.instant("result.result-reac.x_SupportReaction"),
-      dataType: "integer",
-      dataIndx: this.columnKeys[1],
-      sortable: false,
-      width: 80
-      },
-    {
-      title: this.translate.instant("result.result-reac.y_SupportReaction"),
-      dataType: "integer",
-      format: '#.000',
-      dataIndx: this.columnKeys[2],
-      sortable: false,
-      width: 80
-    },
-    {
-      title: this.translate.instant("result.result-reac.z_RotationalReaction"),
-      dataType: "integer",
-      format: '#.00',
-      dataIndx: this.columnKeys[6],
-      sortable: false,
-      width: 80
-    },
-    {
-      title: this.translate.instant("result.result-reac.comb"),
-      dataType: "integer",
-      format: '#.00',
-      dataIndx: this.columnKeys[7],
-      sortable: false,
-      width: 80
-    }];
+  private column2Ds: any[] = [
+    { title: "result.result-reac.nodeNo", id: "id", format: "", width: -40 },
+    { title: "result.result-reac.x_SupportReaction", id: "tx", format: "#.00" },
+    { title: "result.result-reac.y_SupportReaction", id: "ty", format: "#.00" },
+    { title: "result.result-reac.rotationalRestraint", id: "mz", format: "#.00" },
+    { title: "result.result-reac.comb", id: "case", format: "#.00" },
+  ];
+  private columnHeaders2D = this.result.initColumnTable(this.column2Ds, 80);
 
   constructor(
     private app: AppComponent,
@@ -171,9 +84,9 @@ export class ResultReacComponent implements OnInit, OnDestroy {
       this.circleBox.push(i);
     }
 
-    if (this.result.case != 'basic') {
+    if (this.result.case != "basic") {
       this.result.page = 1;
-      this.result.case = 'basic';
+      this.result.case = "basic";
     }
     this.subscription = this.pagerService.pageSelected$.subscribe((text) => {
       this.onReceiveEventFromChild(text);
@@ -187,7 +100,7 @@ export class ResultReacComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const circle = document.getElementById(String(this.cal + 20));
       if (circle !== null) {
-        circle.classList.add('active');
+        circle.classList.add("active");
       }
     }, 10);
 
@@ -195,15 +108,15 @@ export class ResultReacComponent implements OnInit, OnDestroy {
 
     // コンバインデータがあればボタンを表示する
     if (this.comb.isCalculated === true) {
-      this.btnCombine = 'btn-change';
+      this.btnCombine = "btn-change";
     } else {
-      this.btnCombine = 'btn-change disabled';
+      this.btnCombine = "btn-change disabled";
     }
     // ピックアップデータがあればボタンを表示する
     if (this.pic.isCalculated === true) {
-      this.btnPickup = 'btn-change';
+      this.btnPickup = "btn-change";
     } else {
-      this.btnPickup = 'btn-change disabled';
+      this.btnPickup = "btn-change disabled";
     }
   }
   ngAfterViewInit() {
@@ -249,14 +162,14 @@ export class ResultReacComponent implements OnInit, OnDestroy {
       this.dataset = this.data.getReacColumns(this.result.page);
     }
 
-    this.three.ChangeMode('reac');
+    this.three.ChangeMode("reac");
     this.three.ChangePage(currentPage);
   }
 
   calPage(calPage: any) {
-    const carousel = document.getElementById('carousel');
+    const carousel = document.getElementById("carousel");
     if (carousel != null) {
-      carousel.classList.add('add');
+      carousel.classList.add("add");
     }
     const time = this.TITLES.length;
     let cal = this.cal;
@@ -265,13 +178,13 @@ export class ResultReacComponent implements OnInit, OnDestroy {
     }, 100);
     setTimeout(function () {
       if (carousel != null) {
-        carousel.classList.remove('add');
+        carousel.classList.remove("add");
       }
     }, 500);
   }
 
   calcal(calpage: any) {
-    if (calpage === '-1' || calpage === '1') {
+    if (calpage === "-1" || calpage === "1") {
       this.cal += Number(calpage);
       if (this.cal >= this.TITLES.length) {
         this.cal = 0;
@@ -285,16 +198,15 @@ export class ResultReacComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const circle = document.getElementById(String(this.cal + 20));
       if (circle !== null) {
-        circle.classList.add('active');
+        circle.classList.add("active");
       }
     }, 10);
   }
 
-  
-  @ViewChild('grid') grid: SheetComponent;
+  @ViewChild("grid") grid: SheetComponent;
 
   private datasetNew = [];
-  private columnHeaders =[];
+  private columnHeaders = [];
 
   private ROWS_COUNT = 15;
   private COLUMNS_COUNT = 5;
@@ -302,15 +214,16 @@ export class ResultReacComponent implements OnInit, OnDestroy {
   private loadData(currentPage: number, row: number): void {
     for (let i = this.datasetNew.length; i <= row; i++) {
       const define = this.data.getDataColumns(currentPage, i);
-      this.datasetNew.push(define);  
+      this.datasetNew.push(define);
     }
     this.page = currentPage;
-    this.three.ChangeMode('reac');
+    this.three.ChangeMode("reac");
     this.three.ChangePage(currentPage);
   }
 
   private tableHeight(): string {
-    const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;
+    const containerHeight =
+      this.app.getPanelElementContentContainerHeight() - 10;
     return containerHeight.toString();
   }
   // 表高さに合わせた行数を計算する
@@ -324,17 +237,18 @@ export class ResultReacComponent implements OnInit, OnDestroy {
     reactive: true,
     sortable: false,
     scrollModel: {
-      horizontal: true
+      horizontal: true,
     },
     locale: "jp",
     height: this.tableHeight(),
     numberCell: {
       show: true, // 行番号
-      width:40
+      width: 40,
     },
-    colModel: this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
+    colModel:
+      this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
     dataModel: {
-      data: this.datasetNew
+      data: this.datasetNew,
     },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;
