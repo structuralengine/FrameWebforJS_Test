@@ -408,7 +408,7 @@ export class ResultDataService {
     return this.combList;
   }
 
-  public initColumnTable(dataColumn: any[], width: number) : any[]{
+  public initColumnTable(dataColumn: any[], width: number, editable: boolean = false) : any[]{
     let dataReturn: any = [];
     for(let i = 0; i < dataColumn.length; i++){
       let w = width;
@@ -420,7 +420,8 @@ export class ResultDataService {
         format: dataColumn[i].format,
         dataIndx: dataColumn[i].id,
         sortable: false,
-        width: w 
+        width: w,
+        editable: editable 
       })
     }
     return dataReturn;

@@ -72,6 +72,7 @@ export class InputNoticePointsComponent implements OnInit {
         dataIndx: id,
         sortable: false,
         width: 80,
+        editable: false
       });
     }
     this.currentIndex = null;
