@@ -468,6 +468,12 @@ export class ThreeLoadDistribute {
       }
       const textString: string = value.toFixed(2) + " kN/m";
       const text = this.text.create(textString, pos[i], 0.1, offset);
+
+      var canvas = document.createElement("canvas");
+      var context = canvas.getContext("2d");
+      context.font = "0.1pt Arial";
+      var textWidth = context.measureText(textString).width;
+      
       const height = Math.abs(text.geometry.boundingBox.max.y - text.geometry.boundingBox.min.y);
       const width = Math.abs(text.geometry.boundingBox.max.x - text.geometry.boundingBox.min.x);
       if (vartical[i] === 'bottom') {
@@ -479,6 +485,7 @@ export class ThreeLoadDistribute {
       // 独自の回転処理
       // text.rotateX(Math.PI)
       text.rotateZ(Math.PI / 2)
+      text.scale.y = 0.8 * textWidth
       //this.setRotate(direction, text, localAxis, true);
       //if (direction === "z") text.rotateX(-Math.PI / 2);
       //if (localAxis.x.y !== 1 && localAxis.x.y !== -1) text.rotateZ(Math.PI/2);
