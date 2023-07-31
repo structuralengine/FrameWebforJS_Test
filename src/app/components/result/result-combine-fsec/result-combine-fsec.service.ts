@@ -7,10 +7,9 @@ import { ThreeSectionForceService } from '../../three/geometry/three-section-for
 import { DataHelperModule } from 'src/app/providers/data-helper.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ResultCombineFsecService {
-
   public fsecCombine: any;
   public value_range: any;
   public isCalculated: boolean;
@@ -61,48 +60,100 @@ export class ResultCombineFsecService {
     "z軸回りの曲げモーメント 最小",
   ];
   public fsecKeys = this.fsecKeys3D || this.fsecKeys2D;
-  public titles = this.titles3D || this.titles2D
+  public titles = this.titles3D || this.titles2D;
 
   private columns: any;
- 
 
-  constructor(private pickfsec: ResultPickupFsecService,
-              private three: ThreeSectionForceService,
-              private helper: DataHelperModule) {
+  constructor(
+    private pickfsec: ResultPickupFsecService,
+    private three: ThreeSectionForceService,
+    private helper: DataHelperModule
+  ) {
     this.clear();
     this.isCalculated = false;
-    this.worker1 = new Worker(new URL('./result-combine-fsec1.worker', import.meta.url), { name: 'combine-fsec1', type: 'module' });
-    this.worker2 = new Worker(new URL('./result-combine-fsec2.worker', import.meta.url), { name: 'combine-fsec2', type: 'module' });
+    this.worker1 = new Worker(
+      new URL("./result-combine-fsec1.worker", import.meta.url),
+      { name: "combine-fsec1", type: "module" }
+    );
+    this.worker2 = new Worker(
+      new URL("./result-combine-fsec2.worker", import.meta.url),
+      { name: "combine-fsec2", type: "module" }
+    );
   }
 
   public clear(): void {
     this.fsecCombine = {};
   }
-  
+
   // three.js で必要
   public getFsecJson(): object {
     return this.fsecCombine;
   }
 
   public getCombineFsecColumns(combNo: number, mode: string): any {
-    if(!(combNo in this.columns))
-      return null;
-    if(!(mode in this.columns[combNo]))
-      return null;
+    if (!(combNo in this.columns)) return null;
+    if (!(mode in this.columns[combNo])) return null;
     return this.columns[combNo][mode];
   }
 
-  public setFsecCombineJson(fsec: any, defList: any, combList: any, pickList: any): void {
+  public getDataColumns(currentPage: number, row: number, mode: string): any {
+    let results: any = this.columns[currentPage];
+    if (results == undefined) {
+      return {
+        m: "",
+        n: "",
+        l: "",
+        fx: "",
+        fy: "",
+        fz: "",
+        mx: "",
+        my: "",
+        mz: "",
+        case: "",
+      };
+    }
+    let result = undefined;
+    let modes = results[mode] != undefined ? results[mode] : undefined;
+    if (modes != undefined) {
+      result = modes[row];
+    }
+    // 対象データが無かった時に処理
+    if (result === undefined) {
+      result = {
+        m: "",
+        n: "",
+        l: "",
+        fx: "",
+        fy: "",
+        fz: "",
+        mx: "",
+        my: "",
+        mz: "",
+        case: "",
+      };
+    }
+    return result;
+  }
 
-    this.fsecKeys = (this.helper.dimension === 3) ? this.fsecKeys3D : this.fsecKeys2D ;
-    this.titles = (this.helper.dimension === 3) ? this.titles3D : this.titles2D ;
+  public setFsecCombineJson(
+    fsec: any,
+    defList: any,
+    combList: any,
+    pickList: any
+  ): void {
+    this.fsecKeys =
+      this.helper.dimension === 3 ? this.fsecKeys3D : this.fsecKeys2D;
+    this.titles = this.helper.dimension === 3 ? this.titles3D : this.titles2D;
 
     this.isCalculated = false;
     const startTime = performance.now(); // 開始時間
-    if (typeof Worker !== 'undefined') {
+    if (typeof Worker !== "undefined") {
       // Create a new
       this.worker1.onmessage = ({ data }) => {
-        console.log('断面fsec の 組み合わせ Combine 集計が終わりました', performance.now() - startTime);
+        console.log(
+          "断面fsec の 組み合わせ Combine 集計が終わりました",
+          performance.now() - startTime
+        );
         this.fsecCombine = data.fsecCombine;
         const max_values = data.max_values;
         this.value_range = data.value_range;
@@ -112,37 +163,41 @@ export class ResultCombineFsecService {
 
         // 断面力テーブルの集計
         this.worker2.onmessage = ({ data }) => {
-          console.log('断面fsec の 組み合わせ Combine テーブル集計が終わりました', performance.now() - startTime);
+          console.log(
+            "断面fsec の 組み合わせ Combine テーブル集計が終わりました",
+            performance.now() - startTime
+          );
           this.columns = data.result;
           this.isCalculated = true;
         };
-        this.worker2.postMessage({fsecCombine: this.fsecCombine});
-        this.three.setCombResultData(this.fsecCombine, max_values, this.value_range);
-
+        this.worker2.postMessage({ fsecCombine: this.fsecCombine });
+        this.three.setCombResultData(
+          this.fsecCombine,
+          max_values,
+          this.value_range
+        );
       };
       // this.worker1_test({ defList, combList, fsec, fsecKeys: this.fsecKeys});
-      this.worker1.postMessage({ defList, combList, fsec, fsecKeys: this.fsecKeys});
-
+      this.worker1.postMessage({
+        defList,
+        combList,
+        fsec,
+        fsecKeys: this.fsecKeys,
+      });
     } else {
       // Web workers are not supported in this environment.
       // You should add a fallback so that your program still executes correctly.
     }
-
-
   }
 
-
-
-  private worker1_test(data){
-
-
+  private worker1_test(data) {
     // 文字列string を数値にする
     const toNumber = (num: string) => {
       let result: number = null;
       try {
         const tmp: string = num.toString().trim();
         if (tmp.length > 0) {
-          result = ((n: number) => isNaN(n) ? null : n)(+tmp);
+          result = ((n: number) => (isNaN(n) ? null : n))(+tmp);
         }
       } catch {
         result = null;
@@ -164,8 +219,8 @@ export class ResultCombineFsecService {
       const temp = {};
       //
       for (const caseInfo of defList[defNo]) {
-        let baseNo: string = '';
-        if(typeof caseInfo === "number"){
+        let baseNo: string = "";
+        if (typeof caseInfo === "number") {
           baseNo = Math.abs(caseInfo).toString();
         } else {
           baseNo = caseInfo;
@@ -173,10 +228,10 @@ export class ResultCombineFsecService {
         const coef: number = Math.sign(caseInfo);
 
         if (!(baseNo in fsec)) {
-          if(caseInfo === 0 ){
+          if (caseInfo === 0) {
             // 値が全て0 の case 0 という架空のケースを用意する
             // 値は coef=0 であるため 0 となる
-            fsec['0'] = Object.values(fsec)[0];
+            fsec["0"] = Object.values(fsec)[0];
           } else {
             continue;
           }
@@ -188,10 +243,10 @@ export class ResultCombineFsecService {
           const obj = {};
           let m: string;
           for (const d of fsec[baseNo]) {
-            if(d.m.length> 0){
+            if (d.m.length > 0) {
               m = d.m;
             }
-            let id = m + '-' + d.l.toFixed(3);
+            let id = m + "-" + d.l.toFixed(3);
             obj[id] = {
               m: d.m,
               l: d.l,
@@ -208,7 +263,7 @@ export class ResultCombineFsecService {
 
           if (key in temp) {
             // 大小を比較する
-            const kk = key.split('_');
+            const kk = key.split("_");
             const k1 = kk[0]; // dx, dy, dz, rx, ry, rz
             const k2 = kk[1]; // max, min
 
@@ -217,11 +272,11 @@ export class ResultCombineFsecService {
                 delList.push(id);
                 continue;
               }
-              if (k2 === 'max') {
+              if (k2 === "max") {
                 if (temp[key][id][k1] < obj[id][k1]) {
                   temp[key][id] = obj[id];
                 }
-              } else if (k2 === 'min') {
+              } else if (k2 === "min") {
                 if (temp[key][id][k1] > obj[id][k1]) {
                   temp[key][id] = obj[id];
                 }
@@ -253,9 +308,13 @@ export class ResultCombineFsecService {
     const fsecCombine = {};
     for (const combNo of Object.keys(combList)) {
       const max_value = {
-        fx: 0, fy: 0, fz: 0,
-        mx: 0, my: 0, mz: 0
-      }
+        fx: 0,
+        fy: 0,
+        fz: 0,
+        mx: 0,
+        my: 0,
+        mz: 0,
+      };
       const temp = {};
       //
       for (const caseInfo of combList[combNo]) {
@@ -271,7 +330,7 @@ export class ResultCombineFsecService {
         }
 
         const fsecs = fsecDefine[defNo];
-        if(Object.keys(fsecs).length < 1) continue;
+        if (Object.keys(fsecs).length < 1) continue;
 
         // カレントケースを集計する
         const c2 = Math.abs(caseNo).toString().trim();
@@ -281,8 +340,8 @@ export class ResultCombineFsecService {
           for (const id of Object.keys(fsecs[key])) {
             const d = fsecs[key][id];
             const c1 = Math.sign(coef) < 0 ? -1 : 1 * d.case;
-            let caseStr = '';
-            if (c1 !== 0){
+            let caseStr = "";
+            if (c1 !== 0) {
               caseStr = (c1 < 0 ? "-" : "+") + c1;
             }
             obj1.push({
@@ -295,26 +354,26 @@ export class ResultCombineFsecService {
               mx: coef * d.mx,
               my: coef * d.my,
               mz: coef * d.mz,
-              case: caseStr
+              case: caseStr,
             });
           }
           if (key in temp) {
             for (let row = 0; row < obj1.length; row++) {
               for (const k of Object.keys(obj1[row])) {
                 const value = obj1[row][k];
-                if (k === 'm' || k === 'l') {
+                if (k === "m" || k === "l") {
                   temp[key][row][k] = value;
-                } else if (k === 'n') {
-                  temp[key][row][k] = (toNumber(value) !== null) ? value : '';
+                } else if (k === "n") {
+                  temp[key][row][k] = toNumber(value) !== null ? value : "";
                 } else {
                   temp[key][row][k] += value;
                 }
               }
-              temp[key][row]['comb']= combNo;
+              temp[key][row]["comb"] = combNo;
             }
           } else {
             for (const obj of obj1) {
-              obj['comb']= combNo;
+              obj["comb"] = combNo;
             }
             temp[key] = obj1;
           }
@@ -343,23 +402,26 @@ export class ResultCombineFsecService {
       // dx～rzの最大最小をそれぞれ探す
       for (const key of key_list) {
         const datas = caseData[key];
-      /* */  let key2: string;
-        if (key.includes('fx')) {
-          key2 = 'fx';
-        } else if (key.includes('fy')) {
-          key2 = 'fy';
-        } else if (key.includes('fz')) {
-          key2 = 'fz';
-        } else if (key.includes('mx')) {
-          key2 = 'mx';
-        } else if (key.includes('my')) {
-          key2 = 'my';
-        } else if (key.includes('mz')) {
-          key2 = 'mz';
+        /* */ let key2: string;
+        if (key.includes("fx")) {
+          key2 = "fx";
+        } else if (key.includes("fy")) {
+          key2 = "fy";
+        } else if (key.includes("fz")) {
+          key2 = "fz";
+        } else if (key.includes("mx")) {
+          key2 = "mx";
+        } else if (key.includes("my")) {
+          key2 = "my";
+        } else if (key.includes("mz")) {
+          key2 = "mz";
         }
-        let targetValue = (key.includes('max')) ? Number.MIN_VALUE: Number.MAX_VALUE;
-        let targetValue_m = '0';
-        if (key.includes('max')) {  // 最大値を探す
+        let targetValue = key.includes("max")
+          ? Number.MIN_VALUE
+          : Number.MAX_VALUE;
+        let targetValue_m = "0";
+        if (key.includes("max")) {
+          // 最大値を探す
           //for (const row of Object.keys(datas)) {
           for (let num = 0; num < datas.length; num++) {
             const row = num.toString();
@@ -367,11 +429,11 @@ export class ResultCombineFsecService {
             if (data >= targetValue) {
               targetValue = data;
               // memberNoがないとき(着目点が最大)の分岐
-              if (datas[row].m === '') {
-                let m_no: string
+              if (datas[row].m === "") {
+                let m_no: string;
                 for (let num2 = num - 1; num2 > 0; num2--) {
                   const row2 = num2.toString();
-                  if (datas[row2].m !== '') {
+                  if (datas[row2].m !== "") {
                     m_no = datas[row2].m;
                     break;
                   }
@@ -382,7 +444,8 @@ export class ResultCombineFsecService {
               }
             }
           }
-        } else {  // 最小値を探す
+        } else {
+          // 最小値を探す
           // for (const row of Object.keys(datas)) {
           for (let num = 0; num < datas.length; num++) {
             const row = num.toString();
@@ -390,11 +453,11 @@ export class ResultCombineFsecService {
             if (data <= targetValue) {
               targetValue = data;
               // memberNoがないとき(着目点が最小)の分岐
-              if (datas[row].m === '') {
-                let m_no: string
+              if (datas[row].m === "") {
+                let m_no: string;
                 for (let num2 = num - 1; num2 > 0; num2--) {
                   const row2 = num2.toString();
-                  if (datas[row2].m !== '') {
+                  if (datas[row2].m !== "") {
                     m_no = datas[row2].m;
                     break;
                   }
@@ -409,7 +472,7 @@ export class ResultCombineFsecService {
         if (Math.abs(targetValue) === Number.MAX_VALUE) {
           continue;
         }
-        values[key] = {max: targetValue, max_m: targetValue_m};
+        values[key] = { max: targetValue, max_m: targetValue_m };
       }
       if (Object.keys(values).length === 0) {
         continue;
@@ -417,44 +480,56 @@ export class ResultCombineFsecService {
 
       const values2 = {
         x: {
-          max_d: 0, max_d_m: 0,
-          min_d: 0, min_d_m: 0,
-          max_r: 0, max_r_m: 0,
-          min_r: 0, min_r_m: 0,
+          max_d: 0,
+          max_d_m: 0,
+          min_d: 0,
+          min_d_m: 0,
+          max_r: 0,
+          max_r_m: 0,
+          min_r: 0,
+          min_r_m: 0,
         },
         y: {
-          max_d: 0, max_d_m: 0,
-          min_d: 0, min_d_m: 0,
-          max_r: 0, max_r_m: 0,
-          min_r: 0, min_r_m: 0,
+          max_d: 0,
+          max_d_m: 0,
+          min_d: 0,
+          min_d_m: 0,
+          max_r: 0,
+          max_r_m: 0,
+          min_r: 0,
+          min_r_m: 0,
         },
         z: {
-          max_d: 0, max_d_m: 0,
-          min_d: 0, min_d_m: 0,
-          max_r: 0, max_r_m: 0,
-          min_r: 0, min_r_m: 0,
-        }
-      }
-      for(const key of Object.keys(values2)){
-        let kf = 'f' + key + '_max';
-        if(kf in values){
+          max_d: 0,
+          max_d_m: 0,
+          min_d: 0,
+          min_d_m: 0,
+          max_r: 0,
+          max_r_m: 0,
+          min_r: 0,
+          min_r_m: 0,
+        },
+      };
+      for (const key of Object.keys(values2)) {
+        let kf = "f" + key + "_max";
+        if (kf in values) {
           values2[key].max_d = values[kf].max;
-          values2[key].max_d_m = values[kf].max_m
+          values2[key].max_d_m = values[kf].max_m;
         }
-        kf = 'f' + key + '_min';
-        if(kf in values){
+        kf = "f" + key + "_min";
+        if (kf in values) {
           values2[key].min_d = values[kf].max;
-          values2[key].min_d_m = values[kf].max_m
+          values2[key].min_d_m = values[kf].max_m;
         }
-        let km = 'm' + key + '_max';
-        if(km in values){
+        let km = "m" + key + "_max";
+        if (km in values) {
           values2[key].max_r = values[km].max;
-          values2[key].max_r_m = values[km].max_m
+          values2[key].max_r_m = values[km].max_m;
         }
-        km = 'm' + key + '_min';
-        if(km in values){
+        km = "m" + key + "_min";
+        if (km in values) {
           values2[key].min_r = values[km].max;
-          values2[key].min_r_m = values[km].max_m
+          values2[key].min_r_m = values[km].max_m;
         }
       }
 
@@ -463,5 +538,4 @@ export class ResultCombineFsecService {
 
     return { fsecCombine, max_values, value_range };
   }
-
 }

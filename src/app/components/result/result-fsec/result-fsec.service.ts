@@ -4,13 +4,14 @@ import { InputLoadService } from "../../input/input-load/input-load.service";
 import { InputMembersService } from "../../input/input-members/input-members.service";
 import { ThreeSectionForceService } from "../../three/geometry/three-section-force/three-section-force.service";
 import { ResultCombineFsecService } from "../result-combine-fsec/result-combine-fsec.service";
+import { forEach } from "jszip";
 
 @Injectable({
   providedIn: "root",
 })
 export class ResultFsecService {
   public isCalculated: boolean;
-  public fsec: any;
+  public fsec: any[];
   private worker1: Worker;
   private worker2: Worker;
   private worker3: Worker;
@@ -54,8 +55,9 @@ export class ResultFsecService {
   }
 
   public clear(): void {
-    this.fsec = {};
+    // this.fsec = {};
     this.isCalculated = false;
+    this.fsec =  new Array();
   }
 
   public getFsecColumns(typNo: number, mode: string = null): any {
@@ -73,6 +75,40 @@ export class ResultFsecService {
     }
 
     return new Array();
+  }
+
+
+  public getDataColumns(currentPage:number, row: number):any{
+    let results: any = this.fsec[currentPage];
+    if(results == undefined){
+      return {
+        n: "",
+        m: "",
+        l:"",
+        mx: "",
+        my: "",
+        mz: "",
+        fx: "",
+        fy: "",
+        fz: ""
+      }
+    };
+    let result = results[row] != undefined ? results[row] : undefined;
+    // 対象データが無かった時に処理
+    if (result === undefined) {
+      result = {
+        n: "",
+        m: "",
+        l:"",
+        mx: "",
+        my: "",
+        mz: "",
+        fx: "",
+        fy: "",
+        fz: "",
+      };
+    }
+    return result;
   }
 
   // three-section-force.service から呼ばれる

@@ -21,6 +21,7 @@ import { ThreeDisplacementService } from "../components/three/geometry/three-dis
 
 import { DataHelperModule } from "./data-helper.module";
 import { InputDataService } from "./input-data.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable({
   providedIn: "root",
@@ -54,7 +55,7 @@ export class ResultDataService {
     private three_fsec: ThreeSectionForceService,
     private three_reac: ThreeReactService,
     private three_disg: ThreeDisplacementService,
-
+    private translate: TranslateService,
     private helper: DataHelperModule
   ) {
     this.clear();
@@ -405,5 +406,24 @@ export class ResultDataService {
       return this.InputData.combine.getCombineJson();
     }
     return this.combList;
+  }
+
+  public initColumnTable(dataColumn: any[], width: number, editable: boolean = false) : any[]{
+    let dataReturn: any = [];
+    for(let i = 0; i < dataColumn.length; i++){
+      let w = width;
+      if(dataColumn[i].width)
+        w = w + dataColumn[i].width;
+      dataReturn.push({
+        title: this.translate.instant(dataColumn[i].title),
+        dataType: "integer",
+        format: dataColumn[i].format,
+        dataIndx: dataColumn[i].id,
+        sortable: false,
+        width: w,
+        editable: editable 
+      })
+    }
+    return dataReturn;
   }
 }
