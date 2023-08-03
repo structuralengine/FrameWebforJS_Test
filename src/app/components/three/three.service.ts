@@ -870,6 +870,8 @@ export class ThreeService {
           // });
         }
       }
+      screenArea.style.width = "";
+      screenArea.style.height = "";
     });
   }
 
