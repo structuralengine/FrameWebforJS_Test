@@ -107,7 +107,10 @@ export class PrintService {
       PrintDiagram: { id: 11, value: false, name: "PrintDiagram" },
       CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram" },
       PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram" },
-      disgDiagram: { id: 14, value: false, name: "disgDiagram" } // 3Dのときだけ
+      disgDiagram: { id: 14, value: false, name: "disgDiagram" }, // 3Dのときだけ,
+      ReactionDiagram: { id: 16, value: false, name: "reactionDiagram" }, // 3Dのときだけ,
+      CombReactionDiagram: { id: 17, value: false, name: "combReactionDiagram" }, // 3Dのときだけ,
+      PikReactionDiagram: { id: 18, value: false, name: "pikReactionDiagram" } // 3Dのときだけ,
     };
   }
 
@@ -190,7 +193,7 @@ export class PrintService {
         this.flg = id;
         this.selectedIndex = this.optionList[key].id;
 
-        if ([10, 11, 12, 13, 14, 15].includes(this.optionList[key].id)) {
+        if ([10, 11, 12, 13, 14, 15, 16, 17, 18].includes(this.optionList[key].id)) {
           this.printCase = key;
         }
       }
