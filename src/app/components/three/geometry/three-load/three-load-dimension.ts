@@ -81,13 +81,13 @@ export class ThreeLoadDimension {
       if (points[1].y > points[0].y) vartical = 'bottom';
     }
 
-    const text = this.text.create(textStr, new THREE.Vector2(x, y), 0.1);
+    const text = this.text.create(textStr, new THREE.Vector2(x, y), 0.08);
     const height = Math.abs(text.geometry.boundingBox.max.y - text.geometry.boundingBox.min.y);
     const width = Math.abs(text.geometry.boundingBox.max.x - text.geometry.boundingBox.min.x);
     if (vartical === 'bottom') {
       text.position.y -= 0.5 * height;
     } else if (vartical === 'top') {
-      text.position.y += 0.5 * height;
+      text.position.y += 0.9 * height;
     }
     if (horizontal === 'left') {
       text.position.x += 0.5 * width;
@@ -98,7 +98,7 @@ export class ThreeLoadDimension {
     // text.rotateZ(Math.PI);
     // text.rotateY(Math.PI);
     text.name = "text";
-
+    text.scale.y = 2.0;
     group.add(text);
 
     return group;
