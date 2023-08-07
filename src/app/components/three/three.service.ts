@@ -816,6 +816,9 @@ export class ThreeService {
                 name = title3[i];
               }
               this.ChangePage(number);
+              //Set Min max for each Case
+              let max_three = this.max_min.max_Three;
+              let min_three = this.max_min.min_Three;
 
               // this.ChangePage(number,this.mode).finally(() => {
               this.secForce.changeRadioButtons(loadType);
@@ -825,6 +828,8 @@ export class ThreeService {
                   title: title2 + name,
                   type: loadTypeJa,
                   src: canvas.toDataURL(),
+                  max_three: max_three,
+                  min_three: min_three,
                 });
                 counter++;
 
