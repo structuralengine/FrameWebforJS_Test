@@ -13,6 +13,7 @@ import { TranslateService } from "@ngx-translate/core";
 import packageJson from '../../../../package.json';
 import { AppComponent } from '../../app.component';
 import { environment } from "src/environments/environment";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-print",
@@ -28,6 +29,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   public PrintScreen: string;
 
   constructor(
+    private router: Router,
     public InputData: InputDataService,
     public printService: PrintService,
     public ResultData: ResultDataService,
@@ -225,16 +227,22 @@ export class PrintComponent implements OnInit, OnDestroy {
         //console.log("this.pdfPreView(base64Encoded);が終了: " + this.check_ts() + " msec");
       } else {
         // 3D図の印刷
-        console.log('3D図の印刷: ' + this.check_ts() + " msec");
-
-        this.three.getCaptureImage().then((print_target) => {
-          console.log('getCaptureImage.then start: ' + this.check_ts() + " msec");
-
-          this.printService.print_target = print_target;
-          this.printService.printDocument("invoice", [""]);
-
-          console.log('getCaptureImage.then last: ' + this.check_ts() + " msec");
-        });
+        
+        if(this.printService.customThree.threeEditable.filter(x => x === true).length > 0){
+          console.log('3D図の印刷: ' + this.check_ts() + " msec");
+          this.router.navigate(['/']);
+          this.three.getCaptureImage().then((print_target) => {
+            console.log('getCaptureImage.then start: ' + this.check_ts() + " msec");
+  
+            this.printService.print_target = print_target;
+            this.printService.printDocument("invoice", [""]);
+           
+            console.log('getCaptureImage.then last: ' + this.check_ts() + " msec");
+          });
+        }else{
+          this.helper.alert(this.translate.instant("print.selectTarget"));
+          return;
+        }
       }
     } else {
       // 図以外の数字だけページの印刷
@@ -244,6 +252,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.loadind_enable();
         // PDFサーバーに送る
         this.pdfPreView(this.getPostJson(json));
+        this.router.navigate(['/']);
       }
     }
   }
@@ -264,6 +273,7 @@ export class PrintComponent implements OnInit, OnDestroy {
             if ("error" in err) {
               if ("text" in err.error) {
                 this.showPDF(err.error.text.toString());
+                this.router.navigate(['/']);
                 return;
               }
             }
@@ -319,7 +329,7 @@ export class PrintComponent implements OnInit, OnDestroy {
       let file = new Blob([byteArray], { type: 'application/pdf;base64' });
       let fileURL = URL.createObjectURL(file);
       window.open(fileURL, "_blank");
-
+      this.router.navigate(['/']);
     } else {
       //Webアプリの場合
       printJS({ printable: base64, type: "pdf", base64: true });
