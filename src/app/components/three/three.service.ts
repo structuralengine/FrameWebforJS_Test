@@ -304,7 +304,7 @@ export class ThreeService {
         this.fsec.changeData(currentPage, this.mode);
         let key: string;
         if (this.secForce.currentRadio === 'axialForce' ||
-          this.secForce.currentRadio === 'torsionalMorment') {
+          this.secForce.currentRadio === 'torsionalMoment') {
           key = 'x';
         } else if (this.secForce.currentRadio === 'shearForceY' ||
           this.secForce.currentRadio === 'momentY') {
@@ -538,7 +538,7 @@ export class ThreeService {
       this.fsec.visibleChange(ModeName);
       let key: string;
       if (this.secForce.currentRadio === 'axialForce' ||
-        this.secForce.currentRadio === 'torsionalMorment') {
+        this.secForce.currentRadio === 'torsionalMoment') {
         key = 'x';
       } else if (this.secForce.currentRadio === 'shearForceY' ||
         this.secForce.currentRadio === 'momentY') {
@@ -574,7 +574,7 @@ export class ThreeService {
       this.fsec.visibleChange(ModeName);
       let key: string;
       if (this.secForce.currentRadio === 'axialForce' ||
-        this.secForce.currentRadio === 'torsionalMorment') {
+        this.secForce.currentRadio === 'torsionalMoment') {
         key = 'x';
       } else if (this.secForce.currentRadio === 'shearForceY' ||
         this.secForce.currentRadio === 'momentY') {
