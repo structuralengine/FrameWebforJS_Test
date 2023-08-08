@@ -235,7 +235,11 @@ export class ThreeService {
   // 編集ページの変更通知を処理する
   public ChangePage(currentPage: number, option = {}): void {
     if (this.currentIndex === currentPage) {
-      return;
+        if(option['isContinue'] === true) {
+          //Out if parent
+        }
+        else
+           return;
     }
     switch (this.mode) {
       case "elements":
@@ -300,7 +304,7 @@ export class ThreeService {
         this.fsec.changeData(currentPage, this.mode);
         let key: string;
         if (this.secForce.currentRadio === 'axialForce' ||
-          this.secForce.currentRadio === 'torsionalMorment') {
+          this.secForce.currentRadio === 'torsionalMoment') {
           key = 'x';
         } else if (this.secForce.currentRadio === 'shearForceY' ||
           this.secForce.currentRadio === 'momentY') {
@@ -534,7 +538,7 @@ export class ThreeService {
       this.fsec.visibleChange(ModeName);
       let key: string;
       if (this.secForce.currentRadio === 'axialForce' ||
-        this.secForce.currentRadio === 'torsionalMorment') {
+        this.secForce.currentRadio === 'torsionalMoment') {
         key = 'x';
       } else if (this.secForce.currentRadio === 'shearForceY' ||
         this.secForce.currentRadio === 'momentY') {
@@ -570,7 +574,7 @@ export class ThreeService {
       this.fsec.visibleChange(ModeName);
       let key: string;
       if (this.secForce.currentRadio === 'axialForce' ||
-        this.secForce.currentRadio === 'torsionalMorment') {
+        this.secForce.currentRadio === 'torsionalMoment') {
         key = 'x';
       } else if (this.secForce.currentRadio === 'shearForceY' ||
         this.secForce.currentRadio === 'momentY') {
@@ -798,6 +802,7 @@ export class ThreeService {
         const title5: string[] = captureInfo.title5;
         for (let i = 0; i < captureCase.length; i++) {
           this.selectedNumber = 0;
+          let isContinue = false;
           for (let j = 0; j < this.customThree.threeEditable.length; j++) {
             if (this.customThree.threeEditable[j] === true) {
               this.selectedNumber += 1;
@@ -815,16 +820,22 @@ export class ThreeService {
               if (title3.length > i) {
                 name = title3[i];
               }
-              this.ChangePage(number);
+              isContinue = this.selectedNumber > 1 ? true : false;
+              this.secForce.changeRadioButtons(loadType);
+              this.ChangePage(number, {isContinue: isContinue});
+              //Set Min max for each Case
+              let max_three = this.max_min.max_Three;
+              let min_three = this.max_min.min_Three;
 
               // this.ChangePage(number,this.mode).finally(() => {
-              this.secForce.changeRadioButtons(loadType);
               html2canvas(screenArea).then((canvas) => {
                 console.log(title2, name, loadTypeJa);
                 result.push({
                   title: title2 + name,
                   type: loadTypeJa,
                   src: canvas.toDataURL(),
+                  max_three: max_three,
+                  min_three: min_three,
                 });
                 counter++;
 

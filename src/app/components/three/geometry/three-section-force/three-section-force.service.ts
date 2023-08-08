@@ -191,9 +191,7 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
-          const key1: string =
-          ( key === 'axialForce' || key === 'torsionalMorment' ) ? 'x' :
-          ( key === 'shearForceY' || key === 'momentY' ) ? 'y' : 'z';
+          const key1: string = ( key === 'axialForce' || key === 'torsionalMoment' ) ? 'x' : ( key === 'shearForceY' || key === 'momentY' ) ? 'y' : 'z';
           this.max_min._getMaxMinValue(
             this.value_ranges[this.currentMode][this.currentIndex][key1], 
             'fsec',
