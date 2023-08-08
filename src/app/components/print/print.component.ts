@@ -111,12 +111,13 @@ export class PrintComponent implements OnInit, OnDestroy {
     this.three.mode = mode;
 
     // 印刷対象を取得して、セット
-    if(this.printService.flg === 14 && this.helper.dimension === 3){
+    if((this.printService.flg === 14 && this.helper.dimension === 3) || this.printService.flg === 10 || this.printService.flg === 15){
       for (let i = 0; i < this.printService.printTargetValues.length; i++) {
         if(i < this.printService.printTargetValues.length - 1)
           this.printService.customThree.threeEditable[i] = true;
       }
-    }else{
+    }
+    else{
       for (let i = 0; i < this.printService.printTargetValues.length; i++) {
         const isSelected = this.printService.printTargetValues[i].value;
   
