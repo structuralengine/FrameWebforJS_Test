@@ -9,6 +9,14 @@ $border-color: #42c1ca;
 
 .dropdownmenu {
     z-index: 1050;
+    .save-file{
+    pointer-events: none;
+    opacity: 0.4;  
+    }
+    .active-save{
+        pointer-events:all;
+        opacity: 1;  
+    }
 }
 
 .menu-item {
