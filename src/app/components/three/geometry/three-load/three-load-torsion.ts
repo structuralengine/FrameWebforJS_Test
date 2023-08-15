@@ -361,6 +361,22 @@ export class ThreeLoadTorsion {
       }
       const textString: string = value.toFixed(2) + " kN･m";
       const text = this.text.create(textString, pos[i], 0.1);
+      // const height = Math.abs(text.geometry.boundingBox.max.y - text.geometry.boundingBox.min.y);
+      // const width = Math.abs(text.geometry.boundingBox.max.x - text.geometry.boundingBox.min.x);
+      // if (vartical[i] === 'bottom') {
+      //   text.position.x += 0.5 * height;
+      // } else {
+      //   text.position.x -= 0.5 * height;
+      // }
+      // text.position.y -= 0.5 * width;
+      // this.setRotate(direction, text, localAxis);
+      // text.rotateZ(Math.PI/2);
+
+      var canvas = document.createElement("canvas");
+      var context = canvas.getContext("2d");
+      context.font = "0.1pt Arial";
+      var textWidth = context.measureText(textString).width;
+      
       const height = Math.abs(text.geometry.boundingBox.max.y - text.geometry.boundingBox.min.y);
       const width = Math.abs(text.geometry.boundingBox.max.x - text.geometry.boundingBox.min.x);
       if (vartical[i] === 'bottom') {
@@ -368,9 +384,11 @@ export class ThreeLoadTorsion {
       } else {
         text.position.x -= 0.5 * height;
       }
-      text.position.y -= 0.5 * width;
-      this.setRotate(direction, text, localAxis);
-      text.rotateZ(Math.PI/2);
+      
+      text.rotateZ(Math.PI / 2)
+      text.rotateY(Math.PI)
+      text.scale.y = 0.8 * textWidth
+
       text.name = key;
       group.add(text);
     }
