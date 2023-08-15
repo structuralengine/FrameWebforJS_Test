@@ -51,6 +51,12 @@ addEventListener('message', ({ data }) => {
   // CombineNoごとの最大最小を探す
   for (const combNo of Object.keys(disgPickup)) {
     const caseData = disgPickup[combNo];
+
+    if (caseData == null || caseData == undefined) {
+      console.log('CaseData' + combNo + 'がない');
+      continue;
+    }
+    
     const key_list = Object.keys(caseData);
     const values_d = {};
     const values_r = {};
