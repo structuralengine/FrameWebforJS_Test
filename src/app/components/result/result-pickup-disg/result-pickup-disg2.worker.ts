@@ -10,6 +10,11 @@ addEventListener('message', ({ data }) => {
     // 組み合わせを探す
     let target1: any[] = disgPickup[combNo];
 
+    if (target1 == null || target1 == undefined) {
+      console.log('Target1 - ' + combNo + ' がない');
+      continue;
+    }
+    
     const result2 = {};
     for (const mode of Object.keys(target1)) {
 

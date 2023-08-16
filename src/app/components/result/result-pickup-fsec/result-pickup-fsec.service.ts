@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ThreeSectionForceService } from "../../three/geometry/three-section-force/three-section-force.service";
+import { log } from "console";
 
 @Injectable({
   providedIn: "root",
@@ -81,9 +82,9 @@ export class ResultPickupFsecService {
   }
 
   public getPickupFsecColumns(combNo: number, mode: string): any {
-    if(!(combNo in this.columns))
+    if (!(combNo in this.columns))
       return null;
-    if(!(mode in this.columns[combNo]))
+    if (!(mode in this.columns[combNo]))
       return null;
     return this.columns[combNo][mode];
   }
@@ -164,6 +165,7 @@ export class ResultPickupFsecService {
 
   private worker1_test(data) {
 
+    console.log("Start wk");
     const pickList = data.pickList;
     const fsecCombine = data.fsecCombine;
     const fsecPickup = {};
@@ -184,6 +186,12 @@ export class ResultPickupFsecService {
             temp: fsecCombine[combNo]
           })
         ).temp;
+
+        if (com == null || com == undefined) {
+          console.log('Combine' + combNo + 'がない');
+          continue;
+        }
+
         if (tmp == null) {
           tmp = com;
           for (const k of Object.keys(com)) { // 最大値を 集計する
@@ -198,39 +206,36 @@ export class ResultPickupFsecService {
           }
           continue;
         }
-        if(com==null){
-          console.log('Combine' + combNo + 'がない');
-        } else{
-          for (const k of Object.keys(com)) {
-            const key = k.split('_');
-            const target = com[k];
-            const comparison = tmp[k];
-            for (const id of Object.keys(comparison)) {
-              const a = comparison[id];
-              if (!(id in target)) {
-                continue;
-              }
-              const b = target[id];
-              if (key[1] === 'max') {
-                if (b[key[0]] > a[key[0]]) {
-                  tmp[k][id] = com[k][id];
-                }
-              } else {
-                if (b[key[0]] < a[key[0]]) {
-                  tmp[k][id] = com[k][id];
-                }
-              }
-            }
 
-            // 最大値を 集計する
-            for (const value of tmp[k]) {
-              max_value.fx = Math.max(Math.abs(value.fx), max_value.fx);
-              max_value.fy = Math.max(Math.abs(value.fy), max_value.fy);
-              max_value.fz = Math.max(Math.abs(value.fz), max_value.fz);
-              max_value.mx = Math.max(Math.abs(value.mx), max_value.mx);
-              max_value.my = Math.max(Math.abs(value.my), max_value.my);
-              max_value.mz = Math.max(Math.abs(value.mz), max_value.mz);
+        for (const k of Object.keys(com)) {
+          const key = k.split('_');
+          const target = com[k];
+          const comparison = tmp[k];
+          for (const id of Object.keys(comparison)) {
+            const a = comparison[id];
+            if (!(id in target)) {
+              continue;
             }
+            const b = target[id];
+            if (key[1] === 'max') {
+              if (b[key[0]] > a[key[0]]) {
+                tmp[k][id] = com[k][id];
+              }
+            } else {
+              if (b[key[0]] < a[key[0]]) {
+                tmp[k][id] = com[k][id];
+              }
+            }
+          }
+
+          // 最大値を 集計する
+          for (const value of tmp[k]) {
+            max_value.fx = Math.max(Math.abs(value.fx), max_value.fx);
+            max_value.fy = Math.max(Math.abs(value.fy), max_value.fy);
+            max_value.fz = Math.max(Math.abs(value.fz), max_value.fz);
+            max_value.mx = Math.max(Math.abs(value.mx), max_value.mx);
+            max_value.my = Math.max(Math.abs(value.my), max_value.my);
+            max_value.mz = Math.max(Math.abs(value.mz), max_value.mz);
           }
         }
 
@@ -244,6 +249,10 @@ export class ResultPickupFsecService {
     // CombineNoごとの最大最小を探す
     for (const combNo of Object.keys(fsecPickup)) {
       const caseData = fsecPickup[combNo];
+      if (caseData == null || caseData == undefined) {
+        console.log('CaseData ' + combNo + 'がない');
+        continue;
+      }
       const key_list = Object.keys(caseData);
       const values = {};
       // dx～rzの最大最小をそれぞれ探す
@@ -263,7 +272,7 @@ export class ResultPickupFsecService {
         } else if (key.includes('mz')) {
           key2 = 'mz';
         }
-        let targetValue = (key.includes('max')) ? Number.MIN_VALUE: Number.MAX_VALUE;
+        let targetValue = (key.includes('max')) ? Number.MIN_VALUE : Number.MAX_VALUE;
         let targetValue_m = '0';
         if (key.includes('max')) {  // 最大値を探す
           //for (const row of Object.keys(datas)) {
@@ -315,7 +324,7 @@ export class ResultPickupFsecService {
         if (Math.abs(targetValue) === Number.MAX_VALUE) {
           continue;
         }
-        values[key] = {max: targetValue, max_m: targetValue_m};
+        values[key] = { max: targetValue, max_m: targetValue_m };
       }
       if (Object.keys(values).length === 0) {
         continue;
@@ -341,24 +350,24 @@ export class ResultPickupFsecService {
           min_r: 0, min_r_m: 0,
         }
       }
-      for(const key of Object.keys(values2)){
+      for (const key of Object.keys(values2)) {
         let kf = 'f' + key + '_max';
-        if(kf in values){
+        if (kf in values) {
           values2[key].max_d = values[kf].max;
           values2[key].max_d_m = values[kf].max_m
         }
         kf = 'f' + key + '_min';
-        if(kf in values){
+        if (kf in values) {
           values2[key].min_d = values[kf].max;
           values2[key].min_d_m = values[kf].max_m
         }
         let km = 'm' + key + '_max';
-        if(km in values){
+        if (km in values) {
           values2[key].max_r = values[km].max;
           values2[key].max_r_m = values[km].max_m
         }
         km = 'm' + key + '_min';
-        if(km in values){
+        if (km in values) {
           values2[key].min_r = values[km].max;
           values2[key].min_r_m = values[km].max_m
         }
@@ -367,6 +376,6 @@ export class ResultPickupFsecService {
       value_range[combNo] = values2;
     }
 
-    return{ fsecPickup, max_values, value_range };
+    return { fsecPickup, max_values, value_range };
   }
 }
