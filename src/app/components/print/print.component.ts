@@ -206,7 +206,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         //For printLoad
         if (this.printService.flg == 15) {
           output.push("axis"); // default load, axis
-          output.push("load"); 
+          output.push("load");
           json["load"] = this.printService.json["load"];
           json["loadName"] = this.printService.json["loadName"];
           json["fix_node"] = this.printService.json["fix_node"];
@@ -226,25 +226,35 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
 
         json["pageOrientation"] = this.printService.pageOrientation;
-        if (this.printService.flg == 15)
+        if (this.printService.flg == 15) {
           json["diagramInput"] = {
             layout: this.printService.printLayout,
             output,
             //single_layout_cases: [1, 2, 3,]
           };
-        else
+          if (null !== this.printService.axis_scale_x.value)
+            json["diagramInput"].scaleX =
+              1.0 / Number(this.printService.axis_scale_x.value);
+
+          if (null !== this.printService.axis_scale_y.value)
+            json["diagramInput"].scaleY =
+              1.0 / Number(this.printService.axis_scale_y.value);
+        }
+        else {
           json["diagramResult"] = {
             layout: this.printService.printLayout,
             output,
           };
 
-        if (null !== this.printService.axis_scale_x.value)
-          json["diagramResult"].scaleX =
-            1.0 / Number(this.printService.axis_scale_x.value);
+          if (null !== this.printService.axis_scale_x.value)
+            json["diagramResult"].scaleX =
+              1.0 / Number(this.printService.axis_scale_x.value);
 
-        if (null !== this.printService.axis_scale_y.value)
-          json["diagramResult"].scaleY =
-            1.0 / Number(this.printService.axis_scale_y.value);
+          if (null !== this.printService.axis_scale_y.value)
+            json["diagramResult"].scaleY =
+              1.0 / Number(this.printService.axis_scale_y.value);
+
+        }
 
         json["ver"] = packageJson.version;
         const base64Encoded = this.getPostJson(json);
