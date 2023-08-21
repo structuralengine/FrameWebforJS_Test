@@ -40,7 +40,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     public helper: DataHelperModule,
     private translate: TranslateService,
     private app: AppComponent
-  ) {}
+  ) { }
 
   private a: boolean;
   ngOnInit() {
@@ -91,7 +91,7 @@ export class PrintComponent implements OnInit, OnDestroy {
       mode = "default";
     } else if (this.printService.printCase === "PrintLoad") {
       // 荷重図
-      mode = "print_load";
+      mode = "PrintLoad";
     } else if (this.printService.printCase === "PrintDiagram") {
       // 断面力図
       mode = "fsec";
@@ -132,7 +132,7 @@ export class PrintComponent implements OnInit, OnDestroy {
       // 図の印刷
       if (
         this.helper.dimension === 2 &&
-        ["fsec", "comb_fsec", "pick_fsec"].includes(this.three.mode)
+        ["fsec", "comb_fsec", "pick_fsec", 'PrintLoad'].includes(this.three.mode)
       ) {
         console.log("図の印刷: " + this.check_ts() + " msec");
 
@@ -173,19 +173,19 @@ export class PrintComponent implements OnInit, OnDestroy {
         // 断面力図の種類を指定する
         const output = [];
         var selected: boolean = false;
-        if (this.printService.customThree.threeEditable[5]) {
+        if (this.printService.customThree.threeEditable[5] && this.printService.flg !== 15) {
           // z軸周りのモーメント図
           output.push("mz");
           selected = true;
         }
 
-        if (this.printService.customThree.threeEditable[1]) {
+        if (this.printService.customThree.threeEditable[1] && this.printService.flg !== 15) {
           // y方向のせん断力図
           output.push("fy");
           selected = true;
         }
 
-        if (this.printService.customThree.threeEditable[0]) {
+        if (this.printService.customThree.threeEditable[0] && this.printService.flg !== 15) {
           // 軸力図
           output.push("fx");
           selected = true;
@@ -202,6 +202,19 @@ export class PrintComponent implements OnInit, OnDestroy {
           json["disg"] = this.printService.json["disg"];
           json["disgName"] = this.printService.json["disgName"];
         }
+
+        //For printLoad
+        if (this.printService.flg == 15) {
+          output.push("axis"); // default load, axis
+          output.push("load"); 
+          json["load"] = this.printService.json["load"];
+          json["loadName"] = this.printService.json["loadName"];
+          json["fix_node"] = this.printService.json["fix_node"];
+          json["element"] = this.printService.json["element"];
+          json["fix_member"] = this.printService.json["fix_member"];
+          selected = true;
+        }
+
         // 印刷対象を選択 ここまで
 
         //console.log("印刷対象を選択 ここまで: " + this.check_ts() + " msec");
@@ -213,11 +226,17 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
 
         json["pageOrientation"] = this.printService.pageOrientation;
-
-        json["diagramResult"] = {
-          layout: this.printService.printLayout,
-          output,
-        };
+        if (this.printService.flg == 15)
+          json["diagramInput"] = {
+            layout: this.printService.printLayout,
+            output,
+            //single_layout_cases: [1, 2, 3,]
+          };
+        else
+          json["diagramResult"] = {
+            layout: this.printService.printLayout,
+            output,
+          };
 
         if (null !== this.printService.axis_scale_x.value)
           json["diagramResult"].scaleX =
@@ -298,7 +317,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           case 8: {
             var checkSelect = json.fsecCombine;
             checkSelectItem = this.checkDataExisted(checkSelect);
-            if(!checkSelectItem){
+            if (!checkSelectItem) {
               const checkChild = Object.values(checkSelect).map(v => {
                 return Object.values(v).map(v2 => Object.values(v2)?.length > 0).filter(v2 => v2 === true);
               })
@@ -309,7 +328,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           case 9: {
             var checkSelect = json.fsecPickup;
             checkSelectItem = this.checkDataExisted(checkSelect);
-            if(!checkSelectItem){
+            if (!checkSelectItem) {
               const checkChild = Object.values(checkSelect).map(v => {
                 return Object.values(v).map(v2 => Object.values(v2)?.length > 0).filter(v2 => v2 === true);
               })
@@ -355,7 +374,7 @@ export class PrintComponent implements OnInit, OnDestroy {
               return;
             }
           }
-        } catch (e) {}
+        } catch (e) { }
         this.loadind_desable();
         this.helper.alert(err["message"]);
       }
