@@ -6,13 +6,13 @@ import { DataHelperModule } from "../../../../providers/data-helper.module";
 
 import { InputNodesService } from "../../../input/input-nodes/input-nodes.service";
 import { InputMembersService } from "../../../input/input-members/input-members.service";
-
+import { InputNoticePointsService} from "../../../input/input-notice-points/input-notice-points.service";
 import { ThreeMembersService } from "../three-members.service";
 import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
 import { ThreeService } from "../../three.service";
 import { MaxMinService } from "../../max-min/max-min.service";
-
+import { data } from "jquery";
 @Injectable({
   providedIn: "root",
 })
@@ -57,7 +57,8 @@ export class ThreeSectionForceService {
     private node: InputNodesService,
     private member: InputMembersService,
     private three_node: ThreeNodesService,
-    private three_member: ThreeMembersService
+    private three_member: ThreeMembersService,
+    private data: InputNoticePointsService    
   ) {
     this.ThreeObject1 = new THREE.Object3D();
     this.ThreeObject1.visible = false; // 呼び出されるまで非表示
@@ -75,7 +76,7 @@ export class ThreeSectionForceService {
 
     // gui
     this.scale = 100;
-    this.textCount = 15; // 上位 15% の文字だけ出力する
+    this.textCount = 5; // 上位 15% の文字だけ出力する
     this.gui = null;
   }
 
@@ -355,6 +356,7 @@ export class ThreeSectionForceService {
     ];
 
     const textValues = [];
+    const textValMem = [];
     for (let i = 0; i < fsecDatas.length; i++) {
       const fsecData = fsecDatas[i];
       const ThreeObject = ThreeObjects[i];
@@ -400,6 +402,7 @@ export class ThreeSectionForceService {
           L1 = 0;
           P1 = fsec[key1];
           textValues.push(P1);
+          textValMem.push(P1);
         } else {
           let item = null;
           if (ThreeObject.children.length > counter) {
@@ -440,25 +443,53 @@ export class ThreeSectionForceService {
         }
       }
     }
-
+    var memberNo = this.getMemberNoLocation();
+    const textMember = new Array();
+    textValMem.map((data: any, index: any) =>{
+      if(memberNo.includes((index + 1).toString())){
+        textMember.push(data);
+      }
+    })      
     // 主な点に文字を追加する
     // if(this.helper.dimension === 3) return;
     // 断面力の大きい順に並び変える
     textValues.sort((a, b) => {
-      return Math.abs(a) < Math.abs(b) ? 1 : -1;
-    });
+      return a < b ? 1 : -1;
+    });   
+    let arr: any = [];
+    this.ThreeObject1.children.forEach((item: any, index: any)=> {      
+      var t = item.getObjectByName("group");     
+      for(let i=0; i<2; i++){
+        const key = 'P' + (i+1);
+        const text = t.getObjectByName(key);
+        if(text !== undefined){          
+          arr.push({
+            position: text.position,
+            value: item[key],
+            key,
+            index
+          });          
+        }       
+      }        
+    })
 
-    // 上位、下位の順位の数値を選出する
-    const targetValues = Array.from(new Set(textValues));
+    var arrE = this.findDuplicateVectors(arr);
+    console.log(arr);
+    console.log(arrE);
+    //上位、下位の順位の数値を選出する
+    let targetValues = Array.from(new Set(textValues));
     this.max = targetValues[0];
     this.min = targetValues[targetValues.length - 1];
-    const count = Math.floor(textValues.length * (this.textCount / 100));
+    const count = Math.floor(textValues.length * (this.textCount / 100));   
     let Upper = targetValues;
+  
     if (count < targetValues.length) {
       Upper = targetValues.slice(1, count);
-    }
-    const targetList = Array.from(new Set(Upper));
-
+    } 
+    Upper.push(this.max);
+    Upper.push(this.min);  
+    const Upper1 = [...Upper, ...textMember];
+    const targetList = Array.from(new Set(Upper1));
     for (let i = 0; i < ThreeObjects.length; i++) {
       const ThreeObject = ThreeObjects[i];
       if (ThreeObject.visible === false) {
@@ -466,18 +497,65 @@ export class ThreeSectionForceService {
       }
       for (const mesh of ThreeObject.children) {
         let f1 = false;
-        if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
-          f1 = true;
-        }
+        if (targetList.find((v) => v === mesh["P1"]) !== undefined ) {
+          f1 = true
+        } 
         let f2 = false;
         if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
           f2 = true;
-        }
+        }        
+      //   let min = 0;
+      //   if(arr.length > 0) {          
+      //     let p = "";
+      //     for (let i = 0; i < arrE.length - 1; i++) {
+      //       for (let j = i + 1; j < arrE.length; j++) {
+      //         if (arrE[i].position.equals(arrE[j].position)) {
+      //           if(arrE[i].value < arr[j].value){
+      //             min = arrE[i].value;
+      //             p=arrE[i].key;
+      //           }
+      //           else{
+      //             min = arrE[j].value;
+      //             p=arrE[j].key
+      //           } 
+      //         }
+      //       }
+      //     } 
+        
+      // }
+            
         this.mesh.setText(mesh, f1, f2);
       }
-    }
+    } 
+      
   }
-
+  private findDuplicateVectors(array) {
+    const vectorCountMap = new Map();
+  
+    for (const vector of array) {
+      const serialized = vector.position.toArray().toString();
+      if (vectorCountMap.has(serialized)) {
+        vectorCountMap.set(serialized, vectorCountMap.get(serialized) + 1);
+      } else {
+        vectorCountMap.set(serialized, 1);
+      }
+    }
+  
+    const duplicateVal = [];
+    for (const [serialized, count] of vectorCountMap.entries()) {
+      if (count > 1) {
+        const components = serialized.split(',').map(parseFloat);
+        var ver = new THREE.Vector3(components[0], components[1], components[2]);
+        array.map((item: any, index: any) =>{
+          if(item.position.equals(ver)){        
+            duplicateVal.push(item);
+          }
+        })        
+      }
+    }
+  
+    return duplicateVal;
+  }
   // データが変更された時に呼び出される
   // 変数 this.targetData に値をセットする
   public changeData(index: number, ModeName: string): void {
@@ -545,5 +623,13 @@ export class ThreeSectionForceService {
         this.mesh.setScale(item, scale);
       });
     }
+  }
+  private getMemberNoLocation(){
+    const num = new Array();
+    var member = this.data.getNoticePointsJson();
+    member.forEach(item => {
+      num.push(item["m"])
+    });
+    return num;
   }
 }
