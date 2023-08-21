@@ -297,8 +297,6 @@
         "PrintDiagram": "断面力図",
         "disgDiagram": "変位図",
         "reactionDiagram": "反力図",
-        "combReactionDiagram":"コンバイン反力図",
-        "pikReactionDiagram":"ピックアップ反力図",
         "combPrintDiagram": "コンバイン 断面力図",
         "pickPrintDiagram": "ピックアップ 断面力図",
         "prt": "印刷する",

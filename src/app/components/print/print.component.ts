@@ -107,14 +107,6 @@ export class PrintComponent implements OnInit, OnDestroy {
       // Pickup 断面力図
       mode = 'reac';
     }
-    else if (this.printService.printCase === 'CombReactionDiagram') {
-      // Pickup 断面力図
-      mode = 'comb_reac';
-    }
-    else if (this.printService.printCase === 'PikReactionDiagram') {
-      // Pickup 断面力図
-      mode = 'pik_reac';
-    }
 
     this.three.ChangeMode(mode);
 

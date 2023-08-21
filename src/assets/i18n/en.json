@@ -296,8 +296,6 @@
         "PrintDiagram": "Sectional force diagram",
         "disgDiagram": "Displacement diagram",
         "reactionDiagram": "Reaction diagram",
-        "combReactionDiagram":"Combine reaction diagram",
-        "pikReactionDiagram":"Pickup reaction diagram",
         "combPrintDiagram": "Combine force diagram",
         "pickPrintDiagram": "Pickup force diagram",
         "prt": "Print",

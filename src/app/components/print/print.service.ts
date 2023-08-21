@@ -108,9 +108,7 @@ export class PrintService {
       CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram" },
       PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram" },
       disgDiagram: { id: 14, value: false, name: "disgDiagram" }, // 3Dのときだけ,
-      ReactionDiagram: { id: 16, value: false, name: "reactionDiagram" }, 
-      CombReactionDiagram: { id: 17, value: false, name: "combReactionDiagram" }, 
-      PikReactionDiagram: { id: 18, value: false, name: "pikReactionDiagram" }
+      ReactionDiagram: { id: 16, value: false, name: "reactionDiagram" }
     };
   }
 
@@ -193,7 +191,7 @@ export class PrintService {
         this.flg = id;
         this.selectedIndex = this.optionList[key].id;
 
-        if ([10, 11, 12, 13, 14, 15, 16, 17, 18].includes(this.optionList[key].id)) {
+        if ([10, 11, 12, 13, 14, 15, 16].includes(this.optionList[key].id)) {
           this.printCase = key;
         }
       }
@@ -257,8 +255,6 @@ export class PrintService {
       || this.optionList['PickPrintDiagram'].value === true
       || this.optionList['disgDiagram'].value === true
       || this.optionList['ReactionDiagram'].value === true
-      || this.optionList['CombReactionDiagram'].value === true
-      || this.optionList['PikReactionDiagram'].value === true;
   }
 
   // ページ予想枚数を計算する
@@ -395,18 +391,6 @@ export class PrintService {
 
       // PICKUP 断面力
       if (this.optionList['pick_reak'].value &&
-        Object.keys(this.ResultData.pickreac.reacPickup).length !== 0) {
-        this.json["reacPickup"] = this.dataChoice(
-          this.ResultData.pickreac.reacPickup
-        );
-        this.json["reacPickupName"] = this.getNames(
-          this.json["reacPickup"],
-          "Pickup"
-        );
-      }
-      
-      // PICKUP 断面力
-      if (this.optionList['ReactionDiagram'].value &&
         Object.keys(this.ResultData.pickreac.reacPickup).length !== 0) {
         this.json["reacPickup"] = this.dataChoice(
           this.ResultData.pickreac.reacPickup
