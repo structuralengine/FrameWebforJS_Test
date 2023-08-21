@@ -170,6 +170,15 @@
                     </label>
                   </li>
 
+                  
+                  <li>
+                    <label style="width: 100%">
+                      <input type="radio" name="radio-print" class="radio-input" id="printCase6"
+                        (click)="printService.selectRadio(16)" [disabled]="ResultData.isCalculated?null:'1'" />
+                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                        print.reactionDiagram</span>
+                    </label>
+                  </li>
                   <!-- Combine 断面力図 -->
                   <li>
                     <label style="width: 100%">

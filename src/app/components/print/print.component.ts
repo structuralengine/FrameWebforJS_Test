@@ -105,6 +105,10 @@ export class PrintComponent implements OnInit, OnDestroy {
       // Pickup 断面力図
       mode = "pick_fsec";
     }
+    else if (this.printService.printCase === 'ReactionDiagram') {
+      // Pickup 断面力図
+      mode = 'reac';
+    }
 
     this.three.ChangeMode(mode);
 
