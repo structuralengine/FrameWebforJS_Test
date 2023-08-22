@@ -230,7 +230,7 @@
           </div> -->
       </div>
       <div class="resultArea">
-        <ng-container *ngIf="ResultData.isCalculated">
+        <ng-container *ngIf="ResultData.isCalculated || printService.flg == 15">
           <app-print-custom class="result"></app-print-custom>
         </ng-container>
       </div>

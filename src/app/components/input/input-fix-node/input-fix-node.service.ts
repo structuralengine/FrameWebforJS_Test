@@ -93,7 +93,7 @@ export class InputFixNodeService {
 
     for (const typNo of Object.keys(this.fix_node)) {
       // ケースの指定がある場合、カレントケース以外は無視する
-      if (targetCase.length > 0 && typNo !== targetCase) {
+      if ((targetCase.length > 0 && typNo !== targetCase) || this.fix_node[typNo].length == 0) {
         continue;
       }
 

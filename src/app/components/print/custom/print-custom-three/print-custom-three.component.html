@@ -1,9 +1,10 @@
 <div class="printdata" id="cutom-three">
   <div class="resultWrap">
-    <h2 *ngIf="((printService.flg != 14 && helper.dimension != 2)  && (printService.flg != 16 && helper.dimension != 2)) || helper.dimension == 2" translate class="title">print.custom.print-custom-three.selectTarget</h2>
+    <h2 *ngIf="(printService.flg != 14 && helper.dimension != 2) && (printService.flg != 16 && helper.dimension != 2)) || helper.dimension == 2 || (helper.dimension == 2 && printService.flg != 15)" translate class="title">print.custom.print-custom-three.selectTarget</h2>
+
       <div class="print-choice result">
       <!-- オプション -->
-      <ng-container *ngIf="ResultData.isCalculated">
+      <ng-container *ngIf="ResultData.isCalculated && printService.flg != 15">
         <ul>
           <li *ngIf="((printService.flg != 14 && helper.dimension != 2)  && (printService.flg != 16 && helper.dimension != 2)) || helper.dimension == 2">
             <label class="three-label">
@@ -80,7 +81,7 @@
   <div *ngIf="helper.dimension == 2" class="printdata-choice result">
     <h2 translate>print.custom.print-custom-three.selectLayout</h2>
     <div class="print-choice result">
-      <ng-container *ngIf="ResultData.isCalculated">
+      <ng-container *ngIf="ResultData.isCalculated || printService.flg === 15">
         <ul>
           <li>
             <label class="three-label">
@@ -111,7 +112,7 @@
   <div *ngIf="helper.dimension == 2" class="printdata-choice result">
     <h2 translate>print.custom.print-custom-three.orientation</h2>
     <div class="print-choice result">
-      <ng-container *ngIf="ResultData.isCalculated">
+      <ng-container *ngIf="ResultData.isCalculated || printService.flg === 15">
         <ul>
           <li>
             <label class="three-label">
@@ -136,7 +137,7 @@
   <div *ngIf="helper.dimension == 2" class="printdata-choice result">
     <h2 translate>print.custom.print-custom-three.axis_scale</h2>
     <div class="print-choice result">
-      <ng-container *ngIf="ResultData.isCalculated">
+      <ng-container *ngIf="ResultData.isCalculated || printService.flg === 15">
         <ul>
           <li>
             <label class="three-label scale">
