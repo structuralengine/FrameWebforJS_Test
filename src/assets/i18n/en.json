@@ -295,6 +295,7 @@
         "PrintLoad": "Load diagram",
         "PrintDiagram": "Sectional force diagram",
         "disgDiagram": "Displacement diagram",
+        "reactionDiagram": "Reaction diagram",
         "combPrintDiagram": "Combine force diagram",
         "pickPrintDiagram": "Pickup force diagram",
         "prt": "Print",
