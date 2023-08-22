@@ -10,6 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 
 import * as THREE from 'three';
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
+import { ThreeNoticePointsService } from "../../three/geometry/three-notice-points.service";
 
 @Component({
   selector: "app-input-notice-points",
@@ -58,6 +59,7 @@ export class InputNoticePointsComponent implements OnInit {
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
+    private threeNoticePointsService: ThreeNoticePointsService,
     private translate: TranslateService, public docLayout:DocLayoutService
   ) {
     for (let i = 1; i <= this.data.NOTICE_POINTS_COUNT; i++) {
@@ -87,7 +89,37 @@ export class InputNoticePointsComponent implements OnInit {
   ngAfterViewInit() {
     this.docLayout.handleMove.subscribe(data => {
     this.options.height = data - 60;
-    })
+    });
+
+    this.threeNoticePointsService.noticePointSelected$.subscribe((item: any) => {
+      var name = item.name.replace("points", "");
+      var indexL = name.indexOf('L');
+      var indexRow = name.substring(0, indexL);
+      var col = name.substring(indexL, indexL.length);
+      var indexCol = this.columnKeys.findIndex((x) => x === col);
+      
+      if (indexRow >= 29) {
+        let d = Math.ceil(indexRow / 29);
+        this.grid.grid.scrollY(
+          d * this.grid.div.nativeElement.clientHeight,
+          () => {
+            this.grid.grid.setSelection({
+              rowIndx: indexRow - 1,
+              rowIndxPage: 1,
+              colIndx: indexCol,
+              focus: true,
+            });
+          }
+        );
+      } else {
+        this.grid.grid.setSelection({
+          rowIndx: indexRow - 1,
+          rowIndxPage: 1,
+          colIndx: indexCol,
+          focus: true,
+        });
+      }
+    });
   }
   // 指定行row 以降のデータを読み取る
   private loadData(row: number): void {

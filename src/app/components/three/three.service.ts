@@ -61,6 +61,7 @@ export class ThreeService {
     private customThree: PrintCustomThreeService,
     private resultFsec: ResultCombineFsecService,
     private inputLoadData: InputLoadService,
+    private threeNoticePoints: ThreeNoticePointsService,
   ) { }
 
   //////////////////////////////////////////////////////
@@ -635,6 +636,10 @@ export class ThreeService {
       case "load_values":
         this.load.detectObject(raycaster, action);
         // this.member.detectObject(raycaster, action);
+        break;
+
+      case "notice_points":
+        this.threeNoticePoints.detectObject(raycaster, action);
         break;
 
       case "load_names":

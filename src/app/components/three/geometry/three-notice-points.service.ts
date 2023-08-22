@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { CSS2DObject } from "../libs/CSS2DRenderer.js";
 import { Vector3 } from "three";
 import { ThreeMembersService } from "./three-members.service";
+import { Subject } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -321,82 +322,89 @@ export class ThreeNoticePointsService {
   // マウス位置とぶつかったオブジェクトを検出する
   public detectObject(raycaster: THREE.Raycaster, action: string): void {
     
-    // if (this.memberList.children.length === 0) {
-    //   return; // 対象がなければ何もしない
-    // }
+    if (this.noticePointList.children.length === 0) {
+      return; // 対象がなければ何もしない
+    }
 
-    // 交差しているオブジェクトを取得
-    // const intersects = raycaster.intersectObjects(this.memberList.children);
-    // if ( intersects.length <= 0 ){
-    //   return;
-    // }
+    //交差しているオブジェクトを取得
+    const intersects = raycaster.intersectObjects(this.noticePointList.children, true);
+    if ( intersects.length <= 0 ){
+      return;
+    }
 
-    // switch (action) {
-    //   case "click":
-    //     this.memberList.children.map((item) => {
-    //       if (intersects.length > 0 && item === intersects[0].object) {
-    //         // 色を赤くする
-    //         const material = item['material'];
-    //         material["color"].setHex(0xff0000);
-    //         material["opacity"] = 1.0;
-    //       }
-    //     });
-    //     break;
+    switch (action) {
+      case "click":
+        this.noticePointList.children.map((item) => {
+          if (intersects.length > 0 && item === intersects[0].object) {
+            // 色を赤くする
+            this.sendNoticePointNodeSubject(item);
+            const material = item['material'];
+            material["color"].setHex(0xff0000);
+            material["opacity"] = 1.0;
+          }
+        });
+        break;
 
-    //   case "select":
-    //     if (intersects.length > 0) {
-    //       this.selectionItem = null;
-    //       this.memberList.children.map((item) => {
-    //         const material = item['material'];
-    //         if (item === intersects[0].object) {
-    //           // 色を赤くする
-    //           material["color"].setHex(0xff0000);
-    //           material["opacity"] = 1.0;
-    //           this.selectionItem = item;
-    //         } else {
-    //           // それ以外は元の色にする
-    //           material["color"].setHex(0x000000);
-    //           material["opacity"] = 1.0;
-    //         }
-    //       });
-    //       // 選択されたアイテムの軸を表示する
-    //       if (this.selectionItem !== null) {
-    //         this.axisList.map((item) => {
-    //           const key: string = this.selectionItem.name + "axis";
-    //           if (item.name === key) {
-    //             item.visible = true;
-    //           } else {
-    //             item.visible = false;
-    //           }
-    //         });
-    //       }
-    //     }
-    //     break;
+      // case "select":
+      //   if (intersects.length > 0) {
+      //     this.selectionItem = null;
+      //     this.noticePointList.children.map((item) => {
+      //       const material = item['material'];
+      //       if (item === intersects[0].object) {
+      //         // 色を赤くする
+      //         material["color"].setHex(0xff0000);
+      //         material["opacity"] = 1.0;
+      //         this.selectionItem = item;
+      //       } else {
+      //         // それ以外は元の色にする
+      //         material["color"].setHex(0x000000);
+      //         material["opacity"] = 1.0;
+      //       }
+      //     });
+      //     // 選択されたアイテムの軸を表示する
+      //     if (this.selectionItem !== null) {
+      //       this.axisList.map((item) => {
+      //         const key: string = this.selectionItem.name + "axis";
+      //         if (item.name === key) {
+      //           item.visible = true;
+      //         } else {
+      //           item.visible = false;
+      //         }
+      //       });
+      //     }
+      //   }
+      //   break;
 
-    //   case "hover":
-    //     this.memberList.children.map((item) => {
-    //       const material = item['material'];
-    //       if (intersects.length > 0 && item === intersects[0].object) {
-    //         // 色を赤くする
-    //         material["color"].setHex(0xff0000);
-    //         material["opacity"] = 0.25;
-    //       } else {
-    //         if (item === this.selectionItem) {
-    //           material["color"].setHex(0xff0000);
-    //           material["opacity"] = 1.0;
-    //         } else {
-    //           // それ以外は元の色にする
-    //           material["color"].setHex(0x000000);
-    //           material["opacity"] = 1.0;
-    //         }
-    //       }
-    //     });
-    //     break;
+      // case "hover":
+      //   this.noticePointList.children.map((item) => {
+      //     const material = item['material'];
+      //     if (intersects.length > 0 && item === intersects[0].object) {
+      //       // 色を赤くする
+      //       material["color"].setHex(0xff0000);
+      //       material["opacity"] = 0.25;
+      //     } else {
+      //       if (item === this.selectionItem) {
+      //         material["color"].setHex(0xff0000);
+      //         material["opacity"] = 1.0;
+      //       } else {
+      //         // それ以外は元の色にする
+      //         material["color"].setHex(0x000000);
+      //         material["opacity"] = 1.0;
+      //       }
+      //     }
+      //   });
+      //   break;
 
-    //   default:
-    //     return;
-    // }
-    // this.scene.render();
+      default:
+        return;
+    }
+    this.scene.render();
   }
 
+  private noticePointSelectedInThreeSubject = new Subject<any>();
+  noticePointSelected$ = this.noticePointSelectedInThreeSubject.asObservable();
+
+  sendNoticePointNodeSubject(item: any) {
+    this.noticePointSelectedInThreeSubject.next(item);
+  }
 }
