@@ -21,6 +21,7 @@ export class ThreeNoticePointsService {
   public minDistance: number;
 
   private noticePointList: THREE.Object3D;
+  private nPointList: any[];
   private axisList: THREE.Group[]; // 軸は、メンバーのスケールと関係ないので、分けて管理する
   private selectionItem: THREE.Object3D; // 選択中のアイテム
   private currentIndex: string;
@@ -42,6 +43,7 @@ export class ThreeNoticePointsService {
 
     this.geometry = new THREE.SphereBufferGeometry(1);
     this.noticePointList = new THREE.Object3D();
+    this.nPointList = new Array();
     // this.axisList = new Array();
     this.ClearData();
     this.scene.add(this.noticePointList);
@@ -131,7 +133,7 @@ export class ThreeNoticePointsService {
           let scale: number = this.baseScale() * sc;
   
           mesh.scale.set(scale, scale, scale)
-  
+          this.scene.add(mesh);
           this.noticePointList.children.push(mesh);
         }
       }
@@ -340,6 +342,11 @@ export class ThreeNoticePointsService {
             this.sendNoticePointNodeSubject(item);
             const material = item['material'];
             material["color"].setHex(0xff0000);
+            material["opacity"] = 1.0;
+          }
+          else{
+            const material = item['material'];
+            material['color'].setHex(0X00A5FF);
             material["opacity"] = 1.0;
           }
         });
