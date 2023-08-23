@@ -6,7 +6,7 @@ import { DataHelperModule } from "../../../../providers/data-helper.module";
 
 import { InputNodesService } from "../../../input/input-nodes/input-nodes.service";
 import { InputMembersService } from "../../../input/input-members/input-members.service";
-import { InputNoticePointsService} from "../../../input/input-notice-points/input-notice-points.service";
+import { InputNoticePointsService } from "../../../input/input-notice-points/input-notice-points.service";
 import { ThreeMembersService } from "../three-members.service";
 import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
@@ -58,7 +58,7 @@ export class ThreeSectionForceService {
     private member: InputMembersService,
     private three_node: ThreeNodesService,
     private three_member: ThreeMembersService,
-    private data: InputNoticePointsService    
+    private data: InputNoticePointsService
   ) {
     this.ThreeObject1 = new THREE.Object3D();
     this.ThreeObject1.visible = false; // 呼び出されるまで非表示
@@ -76,7 +76,7 @@ export class ThreeSectionForceService {
 
     // gui
     this.scale = 100;
-    this.textCount = 5; // 上位 15% の文字だけ出力する
+    this.textCount = 15; // 上位 15% の文字だけ出力する
     this.gui = null;
   }
 
@@ -192,9 +192,9 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
-          const key1: string = ( key === 'axialForce' || key === 'torsionalMoment' ) ? 'x' : ( key === 'shearForceY' || key === 'momentY' ) ? 'y' : 'z';
+          const key1: string = (key === 'axialForce' || key === 'torsionalMoment') ? 'x' : (key === 'shearForceY' || key === 'momentY') ? 'y' : 'z';
           this.max_min._getMaxMinValue(
-            this.value_ranges[this.currentMode][this.currentIndex][key1], 
+            this.value_ranges[this.currentMode][this.currentIndex][key1],
             'fsec',
             this.currentRadio
           );
@@ -414,28 +414,28 @@ export class ThreeSectionForceService {
           L2 = Math.round((len - LL) * 1000) / 1000;
           if (item === null) {
             const mesh = this.mesh.create(
-                    nodei,
-                    nodej,
-                    localAxis,
-                    key2,
-                    L1,
-                    L2,
-                    P1,
-                    P2
-                  );
+              nodei,
+              nodej,
+              localAxis,
+              key2,
+              L1,
+              L2,
+              P1,
+              P2
+            );
             ThreeObject.add(mesh);
           } else {
-              this.mesh.change(
-                item,
-                nodei,
-                nodej,
-                localAxis,
-                key2,
-                L1,
-                L2,
-                P1,
-                P2
-              );
+            this.mesh.change(
+              item,
+              nodei,
+              nodej,
+              localAxis,
+              key2,
+              L1,
+              L2,
+              P1,
+              P2
+            );
           }
           P1 = P2;
           L1 = LL;
@@ -445,115 +445,78 @@ export class ThreeSectionForceService {
     }
     var memberNo = this.getMemberNoLocation();
     const textMember = new Array();
-    textValMem.map((data: any, index: any) =>{
-      if(memberNo.includes((index + 1).toString())){
+    textValMem.map((data: any, index: any) => {
+      if (memberNo.includes((index + 1).toString())) {
         textMember.push(data);
       }
-    })      
+    })
     // 主な点に文字を追加する
     // if(this.helper.dimension === 3) return;
     // 断面力の大きい順に並び変える
     textValues.sort((a, b) => {
       return a < b ? 1 : -1;
-    });   
-    let arr: any = [];
-    this.ThreeObject1.children.forEach((item: any, index: any)=> {      
-      var t = item.getObjectByName("group");     
-      for(let i=0; i<2; i++){
-        const key = 'P' + (i+1);
-        const text = t.getObjectByName(key);
-        if(text !== undefined){          
-          arr.push({
-            position: text.position,
-            value: item[key],
-            key,
-            index
-          });          
-        }       
-      }        
-    })
-
-    var arrE = this.findDuplicateVectors(arr);
-    console.log(arr);
-    console.log(arrE);
+    });
+  
     //上位、下位の順位の数値を選出する
     let targetValues = Array.from(new Set(textValues));
     this.max = targetValues[0];
     this.min = targetValues[targetValues.length - 1];
-    const count = Math.floor(textValues.length * (this.textCount / 100));   
+    const count = Math.floor(textValues.length * (this.textCount / 100));
     let Upper = targetValues;
-  
+
     if (count < targetValues.length) {
       Upper = targetValues.slice(1, count);
-    } 
+    }
     Upper.push(this.max);
-    Upper.push(this.min);  
+    Upper.push(this.min);
     const Upper1 = [...Upper, ...textMember];
+
+
     const targetList = Array.from(new Set(Upper1));
     for (let i = 0; i < ThreeObjects.length; i++) {
       const ThreeObject = ThreeObjects[i];
       if (ThreeObject.visible === false) {
         continue; // 非表示の ThreeObject の文字は追加しない
-      }
+      }   
       for (const mesh of ThreeObject.children) {
         let f1 = false;
-        if (targetList.find((v) => v === mesh["P1"]) !== undefined ) {
+        if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
           f1 = true
-        } 
+        }
         let f2 = false;
         if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
           f2 = true;
-        }        
-      //   let min = 0;
-      //   if(arr.length > 0) {          
-      //     let p = "";
-      //     for (let i = 0; i < arrE.length - 1; i++) {
-      //       for (let j = i + 1; j < arrE.length; j++) {
-      //         if (arrE[i].position.equals(arrE[j].position)) {
-      //           if(arrE[i].value < arr[j].value){
-      //             min = arrE[i].value;
-      //             p=arrE[i].key;
-      //           }
-      //           else{
-      //             min = arrE[j].value;
-      //             p=arrE[j].key
-      //           } 
-      //         }
-      //       }
-      //     } 
+        }
+        this.mesh.setText(mesh, f1, f2);   
         
-      // }
-            
-        this.mesh.setText(mesh, f1, f2);
       }
-    } 
-      
+    }
+    var arrDisplay = this.getValueDisplay(ThreeObjects);
+    if ((arrDisplay.length / textValues.length) > 0.5) {
+      this.textCount = this.textCount - 1;
+      this.changeMesh();
+    }
+    var arrE = this.findDuplicateVectors(arrDisplay); 
+    console.log(arrE);
+    this.changeMeshData(ThreeObjects, arrE, targetList);
   }
   private findDuplicateVectors(array) {
-    const vectorCountMap = new Map();
-  
-    for (const vector of array) {
-      const serialized = vector.position.toArray().toString();
-      if (vectorCountMap.has(serialized)) {
-        vectorCountMap.set(serialized, vectorCountMap.get(serialized) + 1);
-      } else {
-        vectorCountMap.set(serialized, 1);
-      }
-    }
-  
     const duplicateVal = [];
-    for (const [serialized, count] of vectorCountMap.entries()) {
-      if (count > 1) {
-        const components = serialized.split(',').map(parseFloat);
-        var ver = new THREE.Vector3(components[0], components[1], components[2]);
-        array.map((item: any, index: any) =>{
-          if(item.position.equals(ver)){        
-            duplicateVal.push(item);
+    for (let i = 0; i < array.length - 1; i++) {
+      for (let j = i + 1; j < array.length; j++) {
+        if (i === 64 && j === 86) {
+          if (array[i].position.equals(array[j].position) && array[i].key === array[j].key) {
+            duplicateVal.push({
+              val1: array[i].value,
+              position1: array[i].position,
+              val2: array[j].value,
+              key: array[i].key
+            })
           }
-        })        
+        }
       }
     }
-  
+
     return duplicateVal;
   }
   // データが変更された時に呼び出される
@@ -624,12 +587,74 @@ export class ThreeSectionForceService {
       });
     }
   }
-  private getMemberNoLocation(){
+  private getMemberNoLocation() {
     const num = new Array();
     var member = this.data.getNoticePointsJson();
     member.forEach(item => {
       num.push(item["m"])
     });
     return num;
+  }
+  private getValueDisplay(ThreeObjects: any) {
+    let arr: any = [];
+    for (let i = 0; i < ThreeObjects.length; i++) {
+      const ThreeObject = ThreeObjects[i];
+      if (ThreeObject.visible === false) {
+        continue; // 非表示の ThreeObject の文字は追加しない
+      }
+      ThreeObject.children.forEach((item: any, index: any) => {
+        var t = item.getObjectByName("group");
+        for (let i = 0; i < 2; i++) {
+          const key = 'P' + (i + 1);
+          const text = t.getObjectByName(key);
+          if (text !== undefined) {
+            arr.push({
+              item: item,
+              position: text.position,
+              value: item[key],
+              key,
+              index
+            });
+          }
+        }
+      })
+    }
+    return arr;
+  }
+  private changeMeshData(ThreeObjects: any, arrE: any, targetList: any){
+    for (let i = 0; i < ThreeObjects.length; i++) {
+      const ThreeObject = ThreeObjects[i];
+      if (ThreeObject.visible === false) {
+        continue; // 非表示の ThreeObject の文字は追加しない
+      }   
+      for (const mesh of ThreeObject.children) {
+        let f1 = false;
+        if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
+          f1 = true
+        }
+        let f2 = false;
+        if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
+          f2 = true;
+        }
+        this.mesh.setText(mesh, f1, f2);   
+        if ( arrE != undefined && arrE.length > 0) {
+          arrE.forEach((d) => {
+            if (mesh[d.key] === d.val1) {
+              mesh.children.forEach((i: any) => {                
+                const text = i.getObjectByName(d.key);
+                if (text != undefined) {
+                  if (d.key === "P1") {
+                    f1 = false;
+                    this.mesh.setText(mesh, f1, f2);
+                  } 
+                  if(d.key ==="P2") f2 = false;
+                }
+              })
+            }            
+          })
+        }
+        
+      }
+    }
   }
 }
