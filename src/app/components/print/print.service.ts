@@ -235,6 +235,8 @@ export class PrintService {
     this.customDisg.reset_check();
     this.customFsec.reset_check();
     this.customReac.reset_check();
+    this.axis_scale_x.value = null;
+    this.axis_scale_y.value = null;
   }
 
   // レイアウト選択ハンドラ
