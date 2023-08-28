@@ -7,7 +7,7 @@ import { ThreeNodesService } from './three-nodes.service';
 
 import * as THREE from 'three';
 import { ThreeMembersService } from './three-members.service';
-import { Material, Object3D } from 'three';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,7 @@ import { Material, Object3D } from 'three';
 export class ThreeFixMemberService {
 
   private fixmemberList: any[];
+  private meshList: any[];
   private isVisible: boolean;
   // private currentIndex: string;
   // private currentIndex_sub: string;
@@ -32,6 +33,7 @@ export class ThreeFixMemberService {
               private three_member: ThreeMembersService) {
 
     this.fixmemberList = new Array();
+    this.meshList = new Array();
     this.isVisible = null;
     // this.currentIndex = null;
     // this.currentIndex_sub = null;
@@ -101,7 +103,7 @@ export class ThreeFixMemberService {
   }
 
   public changeData(index: number): void {
-
+    this.meshList = [];
     this.ClearData();
 
     // 格点データを入手
@@ -184,7 +186,7 @@ export class ThreeFixMemberService {
 
   // 複数回 描くために
   public MultipleDrawing(spring, position, localAxis, len, maxLength) {
-    let multipleList = new Object3D();
+    let multipleList = new THREE.Mesh();
     let interval = 0.3;
     let info = {count: 0, len: len};
     let local_position = { x: position.x, y: position.x, z: position.x };
@@ -200,6 +202,7 @@ export class ThreeFixMemberService {
         local_position.z = position.z;
         const mesh = this.CreateSpring(spring, local_position, localAxis, maxLength, info);
         multipleList.add(mesh);
+        this.meshList.push(mesh);
       } else {
         for (let k = - info.count; k <= info.count; k += 1) {
           local_position.x = position.x + localAxis.x.x * k * interval;
@@ -207,11 +210,12 @@ export class ThreeFixMemberService {
           local_position.z = position.z + localAxis.x.z * k * interval;
           const mesh = this.CreateSpring(spring, local_position, localAxis, maxLength, info);
           multipleList.add(mesh);
+          this.meshList.push(mesh);
         }
       }      
       this.fixmemberList.push(multipleList);
       this.scene.add(multipleList);
-      multipleList = new Object3D();  //multipleListの初期化
+      multipleList = new THREE.Mesh();  //multipleListの初期化
     }
 
     // 回転バネ用の分岐
@@ -225,6 +229,7 @@ export class ThreeFixMemberService {
         local_position.z = position.z;
         const mesh = this.CreateRotatingSpring(spring, local_position, localAxis, maxLength, info);
         multipleList.add(mesh);
+        this.meshList.push(mesh);
       } else {
         for (let k = - info.count; k <= info.count; k += 1) {
           local_position.x = position.x + localAxis.x.x * k * interval;
@@ -232,11 +237,12 @@ export class ThreeFixMemberService {
           local_position.z = position.z + localAxis.x.z * k * interval;
           const mesh = this.CreateRotatingSpring(spring, local_position, localAxis, maxLength, info);
           multipleList.add(mesh);
+          this.meshList.push(mesh);
         }
       }      
       this.fixmemberList.push(multipleList);
       this.scene.add(multipleList);
-      multipleList = new Object3D();  //multipleListの初期化
+      multipleList = new THREE.Mesh();  //multipleListの初期化
     }
   }
 
@@ -359,5 +365,81 @@ export class ThreeFixMemberService {
       }
     }
   }
+  public detectObject(raycaster: THREE.Raycaster, action: string): void {
+    raycaster.params.Line.threshold = 0.1;
+    if (this.meshList.length === 0) {
+      return; // 対象がなければ何もしない
+    }
 
+    //交差しているオブジェクトを取得
+    const intersects = raycaster.intersectObjects(this.meshList);
+    if ( intersects.length <= 0 ){
+      return;
+    }
+
+    switch (action) {
+      case "click":
+        this.meshList.map((item) => {
+          if (intersects.length > 0 && item === intersects[0].object) {
+            // 色を赤くする
+
+            const intersect = raycaster.intersectObject(item);
+            if (intersect) {
+              var parent = item.parent;
+              this.sendFixMemberSubject(parent);
+              if (parent != null) {
+                parent.children.forEach((c) => {
+                  const material = c["material"];
+                  material["color"].setHex(0xff0000);
+                  material["opacity"] = 1.0;
+                });
+              } else {
+                const material = item["material"];
+                material["color"].setHex(0xff0000);
+                material["opacity"] = 1.0;
+              }
+            }
+          } else {
+            var parent = item.parent;
+            if (parent != null) {
+              var name = parent.name.replace("fixmember", "");
+              var nameCol = name.substring(name.length - 1);
+              var colorParent = '';
+              switch(nameCol){
+                case 'x':
+                  colorParent = '0xff8888';
+                  break;
+                case 'y':
+                  colorParent = '0x88ff88';
+                  break;
+                 case 'z':
+                  colorParent = '0x8888ff';
+                  break;
+                 case 'r':
+                  colorParent = '0x808080';
+                  break;
+              }
+
+              parent.children.forEach((c) => {
+                const material = c["material"];
+                material["color"].setHex(colorParent);
+                material["opacity"] = 1.0;
+              });
+            }
+          }
+        });
+        break;
+
+      default:
+        return;
+    }
+    this.scene.render();
+  }
+
+  private fixMemberSelectedInThreeSubject = new Subject<any>();
+  fixMemberSelected$ = this.fixMemberSelectedInThreeSubject.asObservable();
+
+  sendFixMemberSubject(item: any) {
+    this.fixMemberSelectedInThreeSubject.next(item);
+  }
 }
