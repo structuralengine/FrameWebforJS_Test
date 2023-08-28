@@ -10,9 +10,8 @@ import { InputNoticePointsService } from "../../../input/input-notice-points/inp
 import { ThreeMembersService } from "../three-members.service";
 import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
-import { ThreeService } from "../../three.service";
 import { MaxMinService } from "../../max-min/max-min.service";
-import { data } from "jquery";
+
 @Injectable({
   providedIn: "root",
 })
@@ -356,6 +355,7 @@ export class ThreeSectionForceService {
     ];
 
     const textValues = [];
+    const textValMemNo = [];
     const textValMem = [];
     for (let i = 0; i < fsecDatas.length; i++) {
       const fsecData = fsecDatas[i];
@@ -376,6 +376,13 @@ export class ThreeSectionForceService {
       let P2: number = 0;
       let counter = 0;
       for (const fsec of fsecData) {
+        if (fsec["m"] === "" && fsec["n"] === "") {
+          textValMemNo.push({ val: fsec[key1], l: fsec["l"], key: "P2", m: fsec["m"], n: fsec["n"] })
+        } else {
+          if (fsec["m"] === "") {
+            textValMem.push({ val: fsec[key1], l: fsec["l"], key: "P2", m: fsec["m"], n: fsec["n"] })
+          } else textValMem.push({ val: fsec[key1], l: fsec["l"], key: "P1", m: fsec["m"], n: fsec["n"] })
+        }
         const id = fsec["m"].trim();
         if (id.length > 0) {
           // 節点データを集計する
@@ -402,7 +409,6 @@ export class ThreeSectionForceService {
           L1 = 0;
           P1 = fsec[key1];
           textValues.push(P1);
-          textValMem.push(P1);
         } else {
           let item = null;
           if (ThreeObject.children.length > counter) {
@@ -443,82 +449,80 @@ export class ThreeSectionForceService {
         }
       }
     }
-    var memberNo = this.getMemberNoLocation();
-    const textMember = new Array();
-    textValMem.map((data: any, index: any) => {
-      if (memberNo.includes((index + 1).toString())) {
-        textMember.push(data);
-      }
-    })
     // 主な点に文字を追加する
     // if(this.helper.dimension === 3) return;
     // 断面力の大きい順に並び変える
     textValues.sort((a, b) => {
       return a < b ? 1 : -1;
     });
-  
+    // textValMem.sort((a, b) =>{
+    //   return +a.n - (+b.n);
+    // })
+    // console.log("textValMem", textValMem);
+    let arrCheck = [];  
+    for (let i = 1; i <= this.getLengthNode(textValMem); i++) {
+      const arrD = [];
+      textValMem.map((data) => {
+        if (+data.n === i) {
+          arrD.push(data);
+        }
+      })
+      if(arrD.length > 0){
+        let max = arrD[0].val;
+        let p = 0;
+        arrD.forEach((a, index) => {
+          if (max < a.val) {
+            max = a.val;
+            p = index
+          }
+        })
+        arrCheck.push(arrD[p]);
+      }
+      
+    }
+
+
     //上位、下位の順位の数値を選出する
     let targetValues = Array.from(new Set(textValues));
     this.max = targetValues[0];
     this.min = targetValues[targetValues.length - 1];
     const count = Math.floor(textValues.length * (this.textCount / 100));
     let Upper = targetValues;
-
-    if (count < targetValues.length) {
-      Upper = targetValues.slice(1, count);
-    }
+    let target = [];
+    arrCheck.forEach((data) => {    
+      target.push(data.val)
+    }) 
+    target.sort((a, b) => {
+      return a < b ? 1 : -1;
+    });
+    if (count < target.length) {
+      Upper = target.slice(1, count);
+    } 
     Upper.push(this.max);
     Upper.push(this.min);
-    const Upper1 = [...Upper, ...textMember];
-
-
-    const targetList = Array.from(new Set(Upper1));
+    const targetList = Array.from(new Set(Upper));
     for (let i = 0; i < ThreeObjects.length; i++) {
       const ThreeObject = ThreeObjects[i];
       if (ThreeObject.visible === false) {
         continue; // 非表示の ThreeObject の文字は追加しない
-      }   
+      }
       for (const mesh of ThreeObject.children) {
         let f1 = false;
         if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
-          f1 = true
+          f1 = true        
         }
         let f2 = false;
         if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
-          f2 = true;
+          f2 = true;         
         }
-        this.mesh.setText(mesh, f1, f2);   
-        
-      }
-    }
-    var arrDisplay = this.getValueDisplay(ThreeObjects);
-    if ((arrDisplay.length / textValues.length) > 0.5) {
-      this.textCount = this.textCount - 1;
-      this.changeMesh();
-    }
-    var arrE = this.findDuplicateVectors(arrDisplay); 
-    console.log(arrE);
-    this.changeMeshData(ThreeObjects, arrE, targetList);
+        this.mesh.setText(mesh, f1, f2);
+      }     
+    }  
+    console.log(targetList);
+    console.log("arrTarget", arrCheck);
+    this.changeMeshData(ThreeObjects, arrCheck);   
   }
-  private findDuplicateVectors(array) {
-    const duplicateVal = [];
-    for (let i = 0; i < array.length - 1; i++) {
-      for (let j = i + 1; j < array.length; j++) {
-        if (i === 64 && j === 86) {
-          if (array[i].position.equals(array[j].position) && array[i].key === array[j].key) {
-            duplicateVal.push({
-              val1: array[i].value,
-              position1: array[i].position,
-              val2: array[j].value,
-              key: array[i].key
-            })
-          }
-        }
-      }
-    }
-
-    return duplicateVal;
-  }
+ 
   // データが変更された時に呼び出される
   // 変数 this.targetData に値をセットする
   public changeData(index: number, ModeName: string): void {
@@ -587,74 +591,48 @@ export class ThreeSectionForceService {
       });
     }
   }
-  private getMemberNoLocation() {
-    const num = new Array();
-    var member = this.data.getNoticePointsJson();
-    member.forEach(item => {
-      num.push(item["m"])
-    });
-    return num;
-  }
-  private getValueDisplay(ThreeObjects: any) {
-    let arr: any = [];
+ 
+  private changeMeshData(ThreeObjects: any, arrE: any) {
+    arrE.sort((a, b) => {
+      return a.val < b.val ? 1 : -1;
+    })  
     for (let i = 0; i < ThreeObjects.length; i++) {
       const ThreeObject = ThreeObjects[i];
       if (ThreeObject.visible === false) {
         continue; // 非表示の ThreeObject の文字は追加しない
       }
-      ThreeObject.children.forEach((item: any, index: any) => {
-        var t = item.getObjectByName("group");
-        for (let i = 0; i < 2; i++) {
-          const key = 'P' + (i + 1);
-          const text = t.getObjectByName(key);
-          if (text !== undefined) {
-            arr.push({
-              item: item,
-              position: text.position,
-              value: item[key],
-              key,
-              index
-            });
-          }
-        }
-      })
-    }
-    return arr;
-  }
-  private changeMeshData(ThreeObjects: any, arrE: any, targetList: any){
-    for (let i = 0; i < ThreeObjects.length; i++) {
-      const ThreeObject = ThreeObjects[i];
-      if (ThreeObject.visible === false) {
-        continue; // 非表示の ThreeObject の文字は追加しない
-      }   
-      for (const mesh of ThreeObject.children) {
-        let f1 = false;
-        if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
-          f1 = true
-        }
-        let f2 = false;
-        if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
-          f2 = true;
-        }
-        this.mesh.setText(mesh, f1, f2);   
-        if ( arrE != undefined && arrE.length > 0) {
+      for (const mesh of ThreeObject.children) {        
+        if (arrE != undefined && arrE.length > 0) {
           arrE.forEach((d) => {
-            if (mesh[d.key] === d.val1) {
-              mesh.children.forEach((i: any) => {                
+            if (mesh.value === d.val) {
+              mesh.children.forEach((i: any) => {
                 const text = i.getObjectByName(d.key);
                 if (text != undefined) {
+                  let f1 = false;  
                   if (d.key === "P1") {
-                    f1 = false;
-                    this.mesh.setText(mesh, f1, f2);
-                  } 
-                  if(d.key ==="P2") f2 = false;
+                    f1 = true;                    
+                  }
+                  let f2 = false; 
+                  if (d.key === "P2") {
+                    f2 = true;                    
+                  }
+                  this.mesh.setText(mesh, f1, f2);
                 }
               })
-            }            
+            }
           })
         }
-        
+
       }
     }
+  }
+  private getLengthNode(array: any) {
+    var node = [];
+    array.map(data => {
+      if (!node.includes(data.n)) {
+        node.push(data.n);
+      }
+    })
+    return node.length;
   }
 }
