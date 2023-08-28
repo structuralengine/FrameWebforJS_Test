@@ -21,7 +21,7 @@ export class InputPanelService {
   }
 
   public getPanelColumns(row: number): any {
-    let result: any = this.panel_points.find((e) => e.row === row.toString());
+    let result: any = this.panel_points.find((e) => e.row.toString() === row.toString());
 
     // 対象データが無かった時に処理
     if (result == undefined) {
