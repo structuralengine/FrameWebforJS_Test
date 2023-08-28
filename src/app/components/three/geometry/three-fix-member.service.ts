@@ -366,7 +366,7 @@ export class ThreeFixMemberService {
     }
   }
   public detectObject(raycaster: THREE.Raycaster, action: string): void {
-    raycaster.params.Line.threshold = 0.1;
+    raycaster.params.Line.threshold = 0.05;
     if (this.meshList.length === 0) {
       return; // 対象がなければ何もしない
     }
@@ -379,6 +379,7 @@ export class ThreeFixMemberService {
 
     switch (action) {
       case "click":
+        var listSelected = [];
         this.meshList.map((item) => {
           if (intersects.length > 0 && item === intersects[0].object) {
             // 色を赤くする
@@ -392,6 +393,7 @@ export class ThreeFixMemberService {
                   const material = c["material"];
                   material["color"].setHex(0xff0000);
                   material["opacity"] = 1.0;
+                  listSelected.push(c);
                 });
               } else {
                 const material = item["material"];
@@ -399,7 +401,8 @@ export class ThreeFixMemberService {
                 material["opacity"] = 1.0;
               }
             }
-          } else {
+          } 
+          else {
             var parent = item.parent;
             if (parent != null) {
               var name = parent.name.replace("fixmember", "");
@@ -421,9 +424,11 @@ export class ThreeFixMemberService {
               }
 
               parent.children.forEach((c) => {
+                if(listSelected.indexOf(c) == -1){
                 const material = c["material"];
                 material["color"].setHex(colorParent);
                 material["opacity"] = 1.0;
+                }
               });
             }
           }

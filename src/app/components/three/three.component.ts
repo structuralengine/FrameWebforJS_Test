@@ -114,7 +114,7 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
   }
 
   // マウスクリック時のイベント
-  @HostListener("pointerup", ["$event"])
+  // @HostListener("pointerup", ["$event"])
   public onMouseUp(event: MouseEvent) {
     const mouse: THREE.Vector2 = this.getMousePosition(event);
     this.three.detectObject(mouse, "select");
