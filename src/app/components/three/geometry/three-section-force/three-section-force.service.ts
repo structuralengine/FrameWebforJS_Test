@@ -459,26 +459,25 @@ export class ThreeSectionForceService {
     //   return +a.n - (+b.n);
     // })
     // console.log("textValMem", textValMem);
-    let arrCheck = [];  
-    for (let i = 1; i <= this.getLengthNode(textValMem); i++) {
+    let arrCheck = [];
+    for (let i = 1; i <= this.getLengthNode(textValMem); i++) {     
       const arrD = [];
       textValMem.map((data) => {
         if (+data.n === i) {
           arrD.push(data);
         }
       })
-      if(arrD.length > 0){
-        let max = arrD[0].val;
+      if (arrD.length > 0) {
         let p = 0;
-        arrD.forEach((a, index) => {
-          if (max < a.val) {
-            max = a.val;
-            p = index
+        let max = arrD[p].val;        
+        for (let i = 0; i < arrD.length; i++) {
+          if (arrD[i] >= max) {
+            p = i;
+            max = arrD[i];
           }
-        })
+        }
         arrCheck.push(arrD[p]);
-      }
-      
+      }      
     }
 
 
@@ -489,15 +488,15 @@ export class ThreeSectionForceService {
     const count = Math.floor(textValues.length * (this.textCount / 100));
     let Upper = targetValues;
     let target = [];
-    arrCheck.forEach((data) => {    
+    arrCheck.forEach((data) => {
       target.push(data.val)
-    }) 
+    })
     target.sort((a, b) => {
       return a < b ? 1 : -1;
     });
     if (count < target.length) {
       Upper = target.slice(1, count);
-    } 
+    }
     Upper.push(this.max);
     Upper.push(this.min);
     const targetList = Array.from(new Set(Upper));
@@ -509,20 +508,20 @@ export class ThreeSectionForceService {
       for (const mesh of ThreeObject.children) {
         let f1 = false;
         if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
-          f1 = true        
+          f1 = true
         }
         let f2 = false;
         if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
-          f2 = true;         
+          f2 = true;
         }
         this.mesh.setText(mesh, f1, f2);
-      }     
-    }  
-    console.log(targetList);
-    console.log("arrTarget", arrCheck);
-    this.changeMeshData(ThreeObjects, arrCheck);   
+      }
+    }
+    let arrC = [...arrCheck, ...textValMemNo];
+    console.log("arrTarget", arrC);
+    this.changeMeshData(ThreeObjects, arrC);
   }
- 
+
   // データが変更された時に呼び出される
   // 変数 this.targetData に値をセットする
   public changeData(index: number, ModeName: string): void {
@@ -591,30 +590,30 @@ export class ThreeSectionForceService {
       });
     }
   }
- 
+
   private changeMeshData(ThreeObjects: any, arrE: any) {
     arrE.sort((a, b) => {
       return a.val < b.val ? 1 : -1;
-    })  
+    })
     for (let i = 0; i < ThreeObjects.length; i++) {
       const ThreeObject = ThreeObjects[i];
       if (ThreeObject.visible === false) {
         continue; // 非表示の ThreeObject の文字は追加しない
       }
-      for (const mesh of ThreeObject.children) {        
+      for (const mesh of ThreeObject.children) {
         if (arrE != undefined && arrE.length > 0) {
           arrE.forEach((d) => {
             if (mesh.value === d.val) {
               mesh.children.forEach((i: any) => {
                 const text = i.getObjectByName(d.key);
                 if (text != undefined) {
-                  let f1 = false;  
+                  let f1 = false;
                   if (d.key === "P1") {
-                    f1 = true;                    
+                    f1 = true;
                   }
-                  let f2 = false; 
+                  let f2 = false;
                   if (d.key === "P2") {
-                    f2 = true;                    
+                    f2 = true;
                   }
                   this.mesh.setText(mesh, f1, f2);
                 }
