@@ -356,7 +356,7 @@ export class ThreeSectionForceService {
 
     const textValues = [];
     const textValMemNo = [];
-    const textValMem = [];
+    const ll = [];
     for (let i = 0; i < fsecDatas.length; i++) {
       const fsecData = fsecDatas[i];
       const ThreeObject = ThreeObjects[i];
@@ -376,13 +376,6 @@ export class ThreeSectionForceService {
       let P2: number = 0;
       let counter = 0;
       for (const fsec of fsecData) {
-        if (fsec["m"] === "" && fsec["n"] === "") {
-          textValMemNo.push({ val: fsec[key1], l: fsec["l"], key: "P2", m: fsec["m"], n: fsec["n"] })
-        } else {
-          if (fsec["m"] === "") {
-            textValMem.push({ val: fsec[key1], l: fsec["l"], key: "P2", m: fsec["m"], n: fsec["n"] })
-          } else textValMem.push({ val: fsec[key1], l: fsec["l"], key: "P1", m: fsec["m"], n: fsec["n"] })
-        }
         const id = fsec["m"].trim();
         if (id.length > 0) {
           // 節点データを集計する
@@ -409,6 +402,7 @@ export class ThreeSectionForceService {
           L1 = 0;
           P1 = fsec[key1];
           textValues.push(P1);
+          ll.push(L1);
         } else {
           let item = null;
           if (ThreeObject.children.length > counter) {
@@ -418,6 +412,7 @@ export class ThreeSectionForceService {
           P2 = fsec[key1] - 0;
           textValues.push(P2);
           L2 = Math.round((len - LL) * 1000) / 1000;
+          ll.push(L2);
           if (item === null) {
             const mesh = this.mesh.create(
               nodei,
@@ -445,6 +440,7 @@ export class ThreeSectionForceService {
           }
           P1 = P2;
           L1 = LL;
+          ll.push(L1);
           counter++;
         }
       }
@@ -452,35 +448,10 @@ export class ThreeSectionForceService {
     // 主な点に文字を追加する
     // if(this.helper.dimension === 3) return;
     // 断面力の大きい順に並び変える
+
     textValues.sort((a, b) => {
-      return a < b ? 1 : -1;
+      return Math.abs(a) < Math.abs(b) ? 1 : -1;
     });
-    // textValMem.sort((a, b) =>{
-    //   return +a.n - (+b.n);
-    // })
-    // console.log("textValMem", textValMem);
-    let arrCheck = [];
-    for (let i = 1; i <= this.getLengthNode(textValMem); i++) {     
-      const arrD = [];
-      textValMem.map((data) => {
-        if (+data.n === i) {
-          arrD.push(data);
-        }
-      })
-      if (arrD.length > 0) {
-        let p = 0;
-        let max = arrD[p].val;        
-        for (let i = 0; i < arrD.length; i++) {
-          if (arrD[i] >= max) {
-            p = i;
-            max = arrD[i];
-          }
-        }
-        arrCheck.push(arrD[p]);
-      }      
-    }
-
-
     //上位、下位の順位の数値を選出する
     let targetValues = Array.from(new Set(textValues));
     this.max = targetValues[0];
@@ -488,18 +459,18 @@ export class ThreeSectionForceService {
     const count = Math.floor(textValues.length * (this.textCount / 100));
     let Upper = targetValues;
     let target = [];
-    arrCheck.forEach((data) => {
+    textValMemNo.forEach((data) => {
       target.push(data.val)
     })
     target.sort((a, b) => {
-      return a < b ? 1 : -1;
+      return Math.abs(a) < Math.abs(b) ? 1 : -1;
     });
-    if (count < target.length) {
-      Upper = target.slice(1, count);
+    if (count < targetValues.length) {
+      Upper = targetValues.slice(1, count);
     }
-    Upper.push(this.max);
-    Upper.push(this.min);
     const targetList = Array.from(new Set(Upper));
+    targetList.push(this.max);
+    let c = [];
     for (let i = 0; i < ThreeObjects.length; i++) {
       const ThreeObject = ThreeObjects[i];
       if (ThreeObject.visible === false) {
@@ -509,17 +480,51 @@ export class ThreeSectionForceService {
         let f1 = false;
         if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
           f1 = true
+          c.push(mesh);
         }
         let f2 = false;
         if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
           f2 = true;
+          c.push(mesh);
         }
         this.mesh.setText(mesh, f1, f2);
       }
     }
-    let arrC = [...arrCheck, ...textValMemNo];
-    console.log("arrTarget", arrC);
-    this.changeMeshData(ThreeObjects, arrC);
+    var meshView = Array.from(new Set(c))
+    var memberNo = this.getMemberNoLocation();
+    memberNo.forEach(mem => {
+      let er = [];
+      meshView.forEach(th => {
+        let ni = new THREE.Vector3(mem.nodei.x, mem.nodei.y, mem.nodei.z);
+        let nj = new THREE.Vector3(mem.nodej.x, mem.nodej.y, mem.nodej.z);
+        if (th.position.equals(ni) || th.position.equals(nj)) {
+          er.push(th);
+        }
+      })
+      console.log(er)
+      if (er.length > 0) {
+        let p = [];
+        er.forEach(mesh => {
+          p.push(mesh["P1"])
+          p.push(mesh["P2"])
+        })
+        let max = p[0];
+        for (let i = 0; i < p.length; i++) {
+          if (p[i] > max) {
+            max = p[i];
+          }
+        }
+        for (let i = 0; i < er.length; i++) {
+          if (Number(er[i]['L'].toFixed(2)) <= this.findSmallestPositiveValue(er)) {
+            if (er[i]['P1'] < er[i]['P2']) {
+              this.mesh.setText(er[i], false, false)
+            } else
+              this.mesh.setText(er[i], false, false)
+          }
+        }
+      }     
+    })
+
   }
 
   // データが変更された時に呼び出される
@@ -590,48 +595,34 @@ export class ThreeSectionForceService {
       });
     }
   }
-
-  private changeMeshData(ThreeObjects: any, arrE: any) {
-    arrE.sort((a, b) => {
-      return a.val < b.val ? 1 : -1;
-    })
-    for (let i = 0; i < ThreeObjects.length; i++) {
-      const ThreeObject = ThreeObjects[i];
-      if (ThreeObject.visible === false) {
-        continue; // 非表示の ThreeObject の文字は追加しない
-      }
-      for (const mesh of ThreeObject.children) {
-        if (arrE != undefined && arrE.length > 0) {
-          arrE.forEach((d) => {
-            if (mesh.value === d.val) {
-              mesh.children.forEach((i: any) => {
-                const text = i.getObjectByName(d.key);
-                if (text != undefined) {
-                  let f1 = false;
-                  if (d.key === "P1") {
-                    f1 = true;
-                  }
-                  let f2 = false;
-                  if (d.key === "P2") {
-                    f2 = true;
-                  }
-                  this.mesh.setText(mesh, f1, f2);
-                }
-              })
-            }
-          })
+  private findSmallestPositiveValue(arr: any) {
+    let smallestPositive = arr[0]['L'];
+    arr.forEach(d => {
+      for (let i = 0; i < 2; i++) {
+        let key = 'L' + (i + 1);
+        if (smallestPositive > d[key] && d[key] > 0) {
+          smallestPositive = d[key]
         }
-
-      }
-    }
-  }
-  private getLengthNode(array: any) {
-    var node = [];
-    array.map(data => {
-      if (!node.includes(data.n)) {
-        node.push(data.n);
       }
     })
-    return node.length;
+
+    return Number(smallestPositive.toFixed(2));
+  }
+  private getMemberNoLocation() {
+    const num = new Array();
+    const arr = [];
+    var member = this.data.getNoticePointsJson();
+    member.forEach(item => {
+      num.push(item["m"])
+    });
+    num.forEach(obj => {
+      let mem = this.member.getMemberNo(obj.toString());
+      let nodei = this.node.getNodePos(mem.ni);
+      let nodej = this.node.getNodePos(mem.nj);
+      mem.nodei = nodei
+      mem.nodej = nodej
+      arr.push(mem);
+    })
+    return arr;
   }
 }
