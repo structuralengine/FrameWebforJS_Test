@@ -108,6 +108,19 @@ export class InputMembersService {
     return member;
 
   }
+  public getMemberNo(memberNo: string) {
+
+    const member = this.member.find((columns) => {
+      return columns.id === memberNo;
+    })
+
+    if (member === undefined) {
+      return { ni: null, nj: null };
+    }
+
+    return member;
+
+  }
 
   public getAxis(memberNo: string, m_len: number, m_length: number):any {
 

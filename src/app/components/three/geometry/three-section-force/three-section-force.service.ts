@@ -6,11 +6,10 @@ import { DataHelperModule } from "../../../../providers/data-helper.module";
 
 import { InputNodesService } from "../../../input/input-nodes/input-nodes.service";
 import { InputMembersService } from "../../../input/input-members/input-members.service";
-
+import { InputNoticePointsService } from "../../../input/input-notice-points/input-notice-points.service";
 import { ThreeMembersService } from "../three-members.service";
 import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
-import { ThreeService } from "../../three.service";
 import { MaxMinService } from "../../max-min/max-min.service";
 
 @Injectable({
@@ -57,7 +56,8 @@ export class ThreeSectionForceService {
     private node: InputNodesService,
     private member: InputMembersService,
     private three_node: ThreeNodesService,
-    private three_member: ThreeMembersService
+    private three_member: ThreeMembersService,
+    private data: InputNoticePointsService
   ) {
     this.ThreeObject1 = new THREE.Object3D();
     this.ThreeObject1.visible = false; // 呼び出されるまで非表示
@@ -191,9 +191,9 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
-          const key1: string = ( key === 'axialForce' || key === 'torsionalMoment' ) ? 'x' : ( key === 'shearForceY' || key === 'momentY' ) ? 'y' : 'z';
+          const key1: string = (key === 'axialForce' || key === 'torsionalMoment') ? 'x' : (key === 'shearForceY' || key === 'momentY') ? 'y' : 'z';
           this.max_min._getMaxMinValue(
-            this.value_ranges[this.currentMode][this.currentIndex][key1], 
+            this.value_ranges[this.currentMode][this.currentIndex][key1],
             'fsec',
             this.currentRadio
           );
@@ -355,6 +355,8 @@ export class ThreeSectionForceService {
     ];
 
     const textValues = [];
+    const textValMemNo = [];
+    const ll = [];
     for (let i = 0; i < fsecDatas.length; i++) {
       const fsecData = fsecDatas[i];
       const ThreeObject = ThreeObjects[i];
@@ -400,6 +402,7 @@ export class ThreeSectionForceService {
           L1 = 0;
           P1 = fsec[key1];
           textValues.push(P1);
+          ll.push(L1);
         } else {
           let item = null;
           if (ThreeObject.children.length > counter) {
@@ -409,56 +412,65 @@ export class ThreeSectionForceService {
           P2 = fsec[key1] - 0;
           textValues.push(P2);
           L2 = Math.round((len - LL) * 1000) / 1000;
+          ll.push(L2);
           if (item === null) {
             const mesh = this.mesh.create(
-                    nodei,
-                    nodej,
-                    localAxis,
-                    key2,
-                    L1,
-                    L2,
-                    P1,
-                    P2
-                  );
+              nodei,
+              nodej,
+              localAxis,
+              key2,
+              L1,
+              L2,
+              P1,
+              P2
+            );
             ThreeObject.add(mesh);
           } else {
-              this.mesh.change(
-                item,
-                nodei,
-                nodej,
-                localAxis,
-                key2,
-                L1,
-                L2,
-                P1,
-                P2
-              );
+            this.mesh.change(
+              item,
+              nodei,
+              nodej,
+              localAxis,
+              key2,
+              L1,
+              L2,
+              P1,
+              P2
+            );
           }
           P1 = P2;
           L1 = LL;
+          ll.push(L1);
           counter++;
         }
       }
     }
-
     // 主な点に文字を追加する
     // if(this.helper.dimension === 3) return;
     // 断面力の大きい順に並び変える
+
     textValues.sort((a, b) => {
       return Math.abs(a) < Math.abs(b) ? 1 : -1;
     });
-
-    // 上位、下位の順位の数値を選出する
-    const targetValues = Array.from(new Set(textValues));
+    //上位、下位の順位の数値を選出する
+    let targetValues = Array.from(new Set(textValues));
     this.max = targetValues[0];
     this.min = targetValues[targetValues.length - 1];
     const count = Math.floor(textValues.length * (this.textCount / 100));
     let Upper = targetValues;
+    let target = [];
+    textValMemNo.forEach((data) => {
+      target.push(data.val)
+    })
+    target.sort((a, b) => {
+      return Math.abs(a) < Math.abs(b) ? 1 : -1;
+    });
     if (count < targetValues.length) {
       Upper = targetValues.slice(1, count);
     }
     const targetList = Array.from(new Set(Upper));
-
+    targetList.push(this.max);
+    let c = [];
     for (let i = 0; i < ThreeObjects.length; i++) {
       const ThreeObject = ThreeObjects[i];
       if (ThreeObject.visible === false) {
@@ -467,15 +479,52 @@ export class ThreeSectionForceService {
       for (const mesh of ThreeObject.children) {
         let f1 = false;
         if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
-          f1 = true;
+          f1 = true
+          c.push(mesh);
         }
         let f2 = false;
         if (targetList.find((v) => v === mesh["P2"]) !== undefined) {
           f2 = true;
+          c.push(mesh);
         }
         this.mesh.setText(mesh, f1, f2);
       }
     }
+    var meshView = Array.from(new Set(c))
+    var memberNo = this.getMemberNoLocation();
+    memberNo.forEach(mem => {
+      let er = [];
+      meshView.forEach(th => {
+        let ni = new THREE.Vector3(mem.nodei.x, mem.nodei.y, mem.nodei.z);
+        let nj = new THREE.Vector3(mem.nodej.x, mem.nodej.y, mem.nodej.z);
+        if (th.position.equals(ni) || th.position.equals(nj)) {
+          er.push(th);
+        }
+      })
+      console.log(er)
+      if (er.length > 0) {
+        let p = [];
+        er.forEach(mesh => {
+          p.push(mesh["P1"])
+          p.push(mesh["P2"])
+        })
+        let max = p[0];
+        for (let i = 0; i < p.length; i++) {
+          if (p[i] > max) {
+            max = p[i];
+          }
+        }
+        for (let i = 0; i < er.length; i++) {
+          if (Number(er[i]['L'].toFixed(2)) <= this.findSmallestPositiveValue(er)) {
+            if (er[i]['P1'] < er[i]['P2']) {
+              this.mesh.setText(er[i], false, false)
+            } else
+              this.mesh.setText(er[i], false, false)
+          }
+        }
+      }     
+    })
+
   }
 
   // データが変更された時に呼び出される
@@ -545,5 +594,35 @@ export class ThreeSectionForceService {
         this.mesh.setScale(item, scale);
       });
     }
+  }
+  private findSmallestPositiveValue(arr: any) {
+    let smallestPositive = arr[0]['L'];
+    arr.forEach(d => {
+      for (let i = 0; i < 2; i++) {
+        let key = 'L' + (i + 1);
+        if (smallestPositive > d[key] && d[key] > 0) {
+          smallestPositive = d[key]
+        }
+      }
+    })
+
+    return Number(smallestPositive.toFixed(2));
+  }
+  private getMemberNoLocation() {
+    const num = new Array();
+    const arr = [];
+    var member = this.data.getNoticePointsJson();
+    member.forEach(item => {
+      num.push(item["m"])
+    });
+    num.forEach(obj => {
+      let mem = this.member.getMemberNo(obj.toString());
+      let nodei = this.node.getNodePos(mem.ni);
+      let nodej = this.node.getNodePos(mem.nj);
+      mem.nodei = nodei
+      mem.nodej = nodej
+      arr.push(mem);
+    })
+    return arr;
   }
 }
