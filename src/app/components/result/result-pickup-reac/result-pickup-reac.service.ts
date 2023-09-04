@@ -37,6 +37,41 @@ export class ResultPickupReacService {
     return this.columns[combNo][mode];
   }
 
+  public getDataColumns(currentPage: number, row: number, mode: string): any {
+    let results: any = this.columns[currentPage];
+    if (results == undefined) {
+      return {
+        id: "",
+        tx: "",
+        ty: "",
+        tz: "",
+        mx: "",
+        my: "",
+        mz: "",
+        case: "",
+      };
+    }
+    let result = undefined;
+    let modes = results[mode] != undefined ? results[mode] : undefined;
+    if (modes != undefined) {
+      result = modes[row];
+    }
+    // 対象データが無かった時に処理
+    if (result === undefined) {
+      result = {
+        id: "",
+        tx: "",
+        ty: "",
+        tz: "",
+        mx: "",
+        my: "",
+        mz: "",
+        case: "",
+      };
+    }
+    return result;
+  }
+
   public setReacPickupJson(pickList: any, reacCombine: any): void {
 
     this.isCalculated = false;

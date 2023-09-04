@@ -9,7 +9,7 @@ import { ResultCombineReacService } from "../result-combine-reac/result-combine-
 })
 export class ResultReacService {
   public isCalculated: boolean;
-  public reac: any;
+  public reac: any[];
   private worker1: Worker;
   private worker2: Worker;
   private worker3: Worker;
@@ -45,7 +45,7 @@ export class ResultReacService {
   }
 
   public clear(): void {
-    this.reac = {};
+    this.reac = [];
     this.isCalculated = false;
   }
 
@@ -65,6 +65,38 @@ export class ResultReacService {
     }
 
     return new Array();
+  }
+
+
+  public getDataColumns(currentPage:number, row: number):any{
+    let results: any = this.reac[currentPage];
+    if(results == undefined){
+      return {
+        id: "",
+        tx: "",
+        ty:"",
+        tz: "",
+        mx: "",
+        my: "",
+        fz: "",
+        comb: ""
+      }
+    };
+    let result = results[row] != undefined ? results[row] : undefined;
+    // 対象データが無かった時に処理
+    if (result === undefined) {
+      result = {
+        id: "",
+        tx: "",
+        ty:"",
+        tz: "",
+        mx: "",
+        my: "",
+        fz: "",
+        comb: ""
+      };
+    }
+    return result;
   }
 
   // three-section-force.service から呼ばれる

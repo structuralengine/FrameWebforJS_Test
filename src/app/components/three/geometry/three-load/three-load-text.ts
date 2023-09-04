@@ -8,9 +8,12 @@ export class ThreeLoadText {
 
   private font: THREE.Font;
   private text_mat: THREE.MeshBasicMaterial[];
-
   constructor(font: THREE.Font) {
-    this.font = font;
+  const loader = new THREE.FontLoader();
+   let self = this;
+    loader.load( './assets/fonts/optimer_regular.typeface.json', function ( font ) {
+      self.font = font;
+    } );
     this.text_mat = [
       new THREE.MeshBasicMaterial({ color: 0x000000 }),
       new THREE.MeshBasicMaterial({ color: 0x000000 }),

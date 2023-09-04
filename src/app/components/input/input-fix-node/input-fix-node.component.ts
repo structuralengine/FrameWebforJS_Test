@@ -167,7 +167,7 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
-    this.loadPage(1, this.ROWS_COUNT);
+    // this.loadPage(1, this.ROWS_COUNT);
     this.three.ChangeMode("fix_nodes");
     this.three.ChangePage(1);
   }

@@ -22,6 +22,12 @@ addEventListener('message', ({ data }) => {
           temp: fsecCombine[combNo]
         })
       ).temp;
+
+      if (com == null || com == undefined) {
+        console.log('Combine' + combNo + 'がない');
+        continue;
+      }
+
       if (tmp == null) {
         tmp = com;
         for (const k of Object.keys(com)) { // 最大値を 集計する
@@ -77,6 +83,11 @@ addEventListener('message', ({ data }) => {
   // CombineNoごとの最大最小を探す
   for (const combNo of Object.keys(fsecPickup)) {
     const caseData = fsecPickup[combNo];
+
+    if (caseData == null || caseData == undefined) {
+      console.log('CaseData' + combNo + 'がない');
+      continue;
+    }
     const key_list = Object.keys(caseData);
     const values = {};
     // dx～rzの最大最小をそれぞれ探す

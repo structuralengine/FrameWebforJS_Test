@@ -153,6 +153,7 @@ export class InputPanelComponent {
         const panel = this.data.getPanelColumns(no + 1);
         const newRow = target.newRow;
         panel['e'] = (newRow.e != undefined) ? newRow.e : '';
+        panel['row'] = (newRow.e != undefined) ? newRow.e.toString() : '';
         for (let num = 1; num <= this.data.PANEL_VERTEXS_COUNT; num++) {
           const key = "point-" + num.toString();
           panel[key] = (newRow[key] != undefined) ? newRow[key] : '';

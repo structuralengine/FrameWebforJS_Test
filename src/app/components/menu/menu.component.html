@@ -33,7 +33,7 @@
                         </button>
 
                         <!-- ファイルを保存 -->
-                        <button ngbDropdownItem (click)="save()" translate>menu.saveFile</button>
+                        <button class="save-file" [class.active-save]="user.userProfile" ngbDropdownItem (click)="save()"translate>menu.saveFile</button>
 
                         <!--  -->
                         <button *ngIf="electronService.isElectron" ngbDropdownItem (click)="overWrite()"

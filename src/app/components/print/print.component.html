@@ -170,6 +170,15 @@
                     </label>
                   </li>
 
+                  
+                  <li>
+                    <label style="width: 100%">
+                      <input type="radio" name="radio-print" class="radio-input" id="printCase6"
+                        (click)="printService.selectRadio(16)" [disabled]="ResultData.isCalculated?null:'1'" />
+                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
+                        print.reactionDiagram</span>
+                    </label>
+                  </li>
                   <!-- Combine 断面力図 -->
                   <li>
                     <label style="width: 100%">
@@ -221,14 +230,14 @@
           </div> -->
       </div>
       <div class="resultArea">
-        <ng-container *ngIf="ResultData.isCalculated">
+        <ng-container *ngIf="ResultData.isCalculated || printService.flg == 15">
           <app-print-custom class="result"></app-print-custom>
         </ng-container>
       </div>
     </div>
     <div class="footerArea">
       <a routerLink="/" class="button cancel" (click)="onPageBack()">キャンセル</a>
-      <a routerLink="/">
+      <a>
         <input
           id="printButton"
           type="button"

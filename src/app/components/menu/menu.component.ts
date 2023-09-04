@@ -292,7 +292,7 @@ export class MenuComponent implements OnInit {
 
       // 印刷パネルの選択状態をリセット
       this.printService.flg = 0;
-
+      this.printService.resetPrintOption();
       this.CustomFsecData.clear();
     }
     this.helper.isContentsDailogShow = true;

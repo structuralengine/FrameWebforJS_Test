@@ -107,7 +107,8 @@ export class PrintService {
       PrintDiagram: { id: 11, value: false, name: "PrintDiagram" },
       CombPrintDiagram: { id: 12, value: false, name: "CombPrintDiagram" },
       PickPrintDiagram: { id: 13, value: false, name: "PickPrintDiagram" },
-      disgDiagram: { id: 14, value: false, name: "disgDiagram" } // 3Dのときだけ
+      disgDiagram: { id: 14, value: false, name: "disgDiagram" }, // 3Dのときだけ,
+      ReactionDiagram: { id: 16, value: false, name: "reactionDiagram" }
     };
   }
 
@@ -190,7 +191,7 @@ export class PrintService {
         this.flg = id;
         this.selectedIndex = this.optionList[key].id;
 
-        if ([10, 11, 12, 13, 14, 15].includes(this.optionList[key].id)) {
+        if ([10, 11, 12, 13, 14, 15, 16].includes(this.optionList[key].id)) {
           this.printCase = key;
         }
       }
@@ -234,6 +235,8 @@ export class PrintService {
     this.customDisg.reset_check();
     this.customFsec.reset_check();
     this.customReac.reset_check();
+    this.axis_scale_x.value = null;
+    this.axis_scale_y.value = null;
   }
 
   // レイアウト選択ハンドラ
@@ -252,7 +255,8 @@ export class PrintService {
       || this.optionList['PrintDiagram'].value === true
       || this.optionList['CombPrintDiagram'].value === true
       || this.optionList['PickPrintDiagram'].value === true
-      || this.optionList['disgDiagram'].value === true;
+      || this.optionList['disgDiagram'].value === true
+      || this.optionList['ReactionDiagram'].value === true
   }
 
   // ページ予想枚数を計算する

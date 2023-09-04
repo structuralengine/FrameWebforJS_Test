@@ -80,13 +80,6 @@ export class InputPickupComponent implements OnInit {
     let combList  = this.result['combList'];
     for (let i = this.dataset.length + 1; i <= row; i++) {
       const pickup = this.data.getPickUpDataColumns(i, this.COLUMNS_COUNT + 1);
-      //Check value in each of pickup item that inside combList
-      for (const pKey of Object.keys(pickup)) {
-        const comNo: number = this.helper.toNumber(pickup[pKey]);
-        if (!(comNo in combList) || comNo === null) {
-          pickup[pKey] = ''
-        }
-      }
       this.dataset.push(pickup);
     }
   }
