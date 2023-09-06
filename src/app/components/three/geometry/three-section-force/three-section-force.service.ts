@@ -501,7 +501,6 @@ export class ThreeSectionForceService {
           er.push(th);
         }
       })
-      console.log(er)
       if (er.length > 0) {
         let p = [];
         er.forEach(mesh => {

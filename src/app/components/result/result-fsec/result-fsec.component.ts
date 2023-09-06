@@ -14,6 +14,7 @@ import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import { SheetComponent } from '../../input/sheet/sheet.component';
 import pq from "pqgrid";
 import { TranslateService } from '@ngx-translate/core';
+import { InputPanelService } from '../../input/input-panel/input-panel.service';
 
 @Component({
   selector: 'app-result-fsec',
@@ -29,6 +30,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   public KEYS: string[];
   public TITLES: string[];
   public height: any;
+  public panelData : any[] = [];
   dataset: any[];
   page: number = 1;
   load_name: string;
@@ -66,6 +68,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
 
 
   constructor(
+    private panel: InputPanelService,
     private data: ResultFsecService,
     private app: AppComponent,
     private result: ResultDataService,
@@ -228,6 +231,19 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     this.page = currentPage;
     this.three.ChangeMode('fsec');
     this.three.ChangePage(currentPage);
+
+    this.drawGradientPanel();
+  }
+
+  private drawGradientPanel(){
+    console.log(this.datasetNew)
+    this.panelData = [];
+    let pData = this.panel.getPanelJson(0);
+    for (const pk of Object.keys(pData)) {
+      const p = pData[pk];
+      this.panelData.push(p.nodes)
+    }
+    console.log(this.panelData)
   }
 
   private tableHeight(): string {
