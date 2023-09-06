@@ -502,6 +502,11 @@ export class ThreeMembersService {
             material["color"].setHex(0xff0000);
             material["opacity"] = 1.0;
           }
+          else{
+            const material = item['material'];
+            material['color'].setHex(0X212529);
+            material["opacity"] = 1.0;
+          }
         });
         break;
 
