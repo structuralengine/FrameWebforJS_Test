@@ -75,7 +75,9 @@
             "material": "Material",
             "codeAngle": "Angle of Rocation",
             "material_name": "Name of Material",
-            "No": "No"
+            "no": "No",
+            "member": "Member",
+            "rigid": "Rigid Zone"
         },
         "input-elements": {
             "elastic": "Elastic",
