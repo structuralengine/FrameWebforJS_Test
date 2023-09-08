@@ -8,6 +8,7 @@ import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
+import { ThreeMembersService } from "../../three/geometry/three-members.service";
 
 @Component({
   selector: "app-input-members",
@@ -171,6 +172,7 @@ export class InputMembersComponent implements OnInit {
     private helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
+    private threeMembersService: ThreeMembersService,
     private translate: TranslateService, public docLayout:DocLayoutService
   ) {
 
@@ -188,7 +190,27 @@ export class InputMembersComponent implements OnInit {
   ngAfterViewInit() {
     this.docLayout.handleMove.subscribe(data => {
     this.options.height = data - 60;
-    })
+    });
+
+    this.threeMembersService.memberSelected$.subscribe((item : any) => {
+      var name = item.name;
+      var dataNode = this.data.member.filter(m => "member" + m.id === name)[0];
+      if(dataNode.pq_ri === undefined){
+        let indexRow = dataNode.id;
+        if(indexRow >= 29){
+          let d = Math.ceil(indexRow / 29);
+          this.grid.grid.scrollY((d * this.grid.div.nativeElement.clientHeight), () => {
+            // this.grid.grid.goToPage({ rowIndx: indexRow, page: 2 } )
+            this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
+          });
+        }else{
+          this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
+        }
+      }else{
+        let indexRow = dataNode.pq_ri;
+        this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
+      }
+    });
   }
 
   // 指定行row 以降のデータを読み取る

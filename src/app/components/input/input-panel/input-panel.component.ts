@@ -8,6 +8,7 @@ import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from 'src/app/providers/doc-layout.service';
+import { ThreePanelService } from '../../three/geometry/three-panel.service';
 
 @Component({
   selector: 'app-input-panel',
@@ -45,7 +46,8 @@ export class InputPanelComponent {
               private app: AppComponent,
               private three: ThreeService,        
               private translate: TranslateService, 
-              public docLayout:DocLayoutService
+              public docLayout:DocLayoutService,
+              public threePanelService:ThreePanelService,
             ) {
 
     for (let i = 1; i <= this.data.PANEL_VERTEXS_COUNT; i++) {
@@ -74,7 +76,20 @@ export class InputPanelComponent {
   ngAfterViewInit() {
     this.docLayout.handleMove.subscribe(data => {
     this.options.height = data - 60;
-    })
+    });
+
+    this.threePanelService.panelSelected$.subscribe((item : any) => {
+      var indexRow = item.name.replace("panel-", "");
+        if(indexRow >= 29){
+          let d = Math.ceil(indexRow / 29);
+          this.grid.grid.scrollY((d * this.grid.div.nativeElement.clientHeight), () => {
+            // this.grid.grid.goToPage({ rowIndx: indexRow, page: 2 } )
+            this.grid.grid.setSelection({rowIndx: indexRow - 1,rowIndxPage:1,colIndx:0, focus: true});
+          });
+        }else{
+          this.grid.grid.setSelection({rowIndx: indexRow - 1,rowIndxPage:1,colIndx:0, focus: true});
+        }
+    });
   }
 
   // 指定行row 以降のデータを読み取る

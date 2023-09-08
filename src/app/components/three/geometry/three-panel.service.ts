@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 
 import * as THREE from 'three';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -194,7 +195,7 @@ export class ThreePanelService {
     }
     this.panelList = new Array();
   }
-
+  private prevSelect:any = {};
   // マウス位置とぶつかったオブジェクトを検出する
   public detectObject(raycaster: THREE.Raycaster, action: string): void {
 
@@ -214,57 +215,64 @@ export class ThreePanelService {
         this.panelList.map((item) => {
           if (intersects.length > 0 && item === intersects[0].object) {
             // 色を赤くする
-            //const material = intersects[0].object['material'];
+            // const material = intersects[0].object['material'];
+            
             const material = item['material'];
-            material['vertexColors'] = true;
-            material['color'].setHex(this.selectcolors[0]);
+            // material['vertexColors'] = true;
+            material['color'].setHex(0xff0000);
+            material["opacity"] = 0.7;
+            this.sendPanelSubject(item);
+          }
+          else{
+            const material = item['material'];
+            material['color'].setHex(this.selectcolors[1]);
             material["opacity"] = 0.7;
           }
         });
         break;
 
-      case "select":
-        if (intersects.length > 0) {
-          this.selectionItem = null;
-          this.panelList.map((item) => {
-            const material = item['material'];
-            material['vertexColors'] = true;
-            if (item === intersects[0].object) {
-              // 色を赤くする
-              material['color'].setHex(this.selectcolors[0]);
-              material["opacity"] = 0.7;
-              this.selectionItem = item;
-            } else {
-              // それ以外は元の色にする
-              material['color'].setHex(this.selectcolors[1]);
-              material["opacity"] = 0.7;
-            }
-          });
-        }
-        break;
+      // case "select":
+      //   if (intersects.length > 0) {
+      //     this.selectionItem = null;
+      //     this.panelList.map((item) => {
+      //       const material = item['material'];
+      //       material['vertexColors'] = true;
+      //       if (item === intersects[0].object) {
+      //         // 色を赤くする
+      //         material['color'].setHex(this.selectcolors[0]);
+      //         material["opacity"] = 0.7;
+      //         this.selectionItem = item;
+      //       } else {
+      //         // それ以外は元の色にする
+      //         material['color'].setHex(this.selectcolors[1]);
+      //         material["opacity"] = 0.7;
+      //       }
+      //     });
+      //   }
+      //   break;
 
-      case "hover":
-        this.panelList.map((item) => {
-          const material = item['material'];
-          material['vertexColors'] = true;
-          if (intersects.length > 0 && item === intersects[0].object) {
-            // 色を赤くする
-            material['color'].setHex(this.selectcolors[0]);
-            material["opacity"] = 0.7;
-          } else {
-            if (item === this.selectionItem) {
-              material['vertexColors'] = true;
-              material['color'].setHex(this.selectcolors[0]);
-              material["opacity"] = 0.7;
-            } else {
-              // それ以外は元の色にする
-              material['vertexColors'] = true;
-              material['color'].setHex(this.selectcolors[1]);
-              material["opacity"] = 0.7;
-            }
-          }
-        });
-        break;
+      // case "hover":
+      //   this.panelList.map((item) => {
+      //     const material = item['material'];
+      //     material['vertexColors'] = true;
+      //     if (intersects.length > 0 && item === intersects[0].object) {
+      //       // 色を赤くする
+      //       material['color'].setHex(this.selectcolors[0]);
+      //       material["opacity"] = 0.7;
+      //     } else {
+      //       if (item === this.selectionItem) {
+      //         material['vertexColors'] = true;
+      //         material['color'].setHex(this.selectcolors[0]);
+      //         material["opacity"] = 0.7;
+      //       } else {
+      //         // それ以外は元の色にする
+      //         material['vertexColors'] = true;
+      //         material['color'].setHex(this.selectcolors[1]);
+      //         material["opacity"] = 0.7;
+      //       }
+      //     }
+      //   });
+      //   break;
 
       default:
         return;
@@ -299,4 +307,10 @@ export class ThreePanelService {
 
   }
 
+  private panelSelectedInThreeSubject = new Subject<any>();
+  panelSelected$ = this.panelSelectedInThreeSubject.asObservable();
+
+  sendPanelSubject(item: any) {
+    this.panelSelectedInThreeSubject.next(item);
+  }
 }

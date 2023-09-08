@@ -61,6 +61,7 @@ export class ThreeService {
     private customThree: PrintCustomThreeService,
     private resultFsec: ResultCombineFsecService,
     private inputLoadData: InputLoadService,
+    private threeNoticePoints: ThreeNoticePointsService,
   ) { }
 
   //////////////////////////////////////////////////////
@@ -605,7 +606,6 @@ export class ThreeService {
   // マウス位置とぶつかったオブジェクトを検出する
   public detectObject(mouse: THREE.Vector2, action: string): void {
     const raycaster = this.scene.getRaycaster(mouse);
-
     switch (this.mode) {
       case "nodes": // 節点データの更新
         this.node.detectObject(raycaster, action);
@@ -629,12 +629,16 @@ export class ThreeService {
         break;
 
       case "fix_member":
-        this.member.detectObject(raycaster, action);
+        this.fixMember.detectObject(raycaster, action);
         break;
 
       case "load_values":
         this.load.detectObject(raycaster, action);
         // this.member.detectObject(raycaster, action);
+        break;
+
+      case "notice_points":
+        this.threeNoticePoints.detectObject(raycaster, action);
         break;
 
       case "load_names":
