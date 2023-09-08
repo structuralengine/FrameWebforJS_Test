@@ -624,4 +624,122 @@ export class ThreeSectionForceService {
     })
     return arr;
   }
+
+  public createPanel(vertexlist, row): void {
+    const points = []
+    const geometrys: THREE.BufferGeometry[] = [];
+    for(const p of vertexlist){
+      points.push(new THREE.Vector3(p[0], p[1], p[2]))
+    }
+
+    var vertexColors = [
+      [1.0, 0.0, 0.0],
+      [0.0, 1.0, 0.0],
+      [0.0, 0.0, 1.0],
+      [1.0, 1.0, 0.0]
+    ];
+
+    var indices = new Uint16Array([
+      0, 1, 4,
+      1, 2, 4,
+      2, 5, 4,
+      5, 8, 4,
+    ]);
+
+
+    // vertexlist = [
+    //   [-1.0, -1.0, 1.0],
+    //   [0.0, -1.0, 1.0],
+    //   [1.0, -1.0, 1.0],
+    //   [-1.0, 0.0, 1.0],
+    //   [0.0, 0.0, 1.0],
+    //   [1.0, 0.0, 1.0],
+    //   [-1.0, 1.0, 1.0],
+    //   [0.0, 1.0, 1.0],
+    //   [1.0, 1.0, 1.0]
+    // ];
+
+    // var vertexColors = [
+    //   [1.0, 0.0, 0.0],
+    //   [0.0, 1.0, 0.0],
+    //   [0.0, 0.0, 1.0],
+    //   [1.0, 1.0, 0.0],
+    //   [0.0, 1.0, 1.0],
+    //   [1.0, 0.0, 1.0],
+    //   [0.5, 0.5, 0.0],
+    //   [0.0, 0.5, 0.5],
+    //   [0.5, 0.0, 0.5]
+    // ];
+
+    // var indices = new Uint16Array([
+    //   0, 1, 4,
+    //   1, 2, 4,
+    //   2, 5, 4,
+    //   5, 8, 4,
+    //   8, 7, 4,
+    //   7, 6, 4,
+    //   6, 3, 4,
+    //   3, 0, 4
+    // ]);
+
+    var vertices = new Float32Array(vertexlist.length * 3);
+    var colors = new Float32Array(vertexlist.length * 3);
+    for (var i = 0; i < vertexlist.length; i++) {
+      vertices[i * 3 + 0] = vertexlist[i][0];
+      vertices[i * 3 + 1] = vertexlist[i][1];
+      vertices[i * 3 + 2] = vertexlist[i][2];
+      colors[i * 3 + 0] = vertexColors[i][0];
+      colors[i * 3 + 1] = vertexColors[i][1];
+      colors[i * 3 + 2] = vertexColors[i][2];
+    }
+
+    var shader = {
+      fragmentShader: [
+        "varying mediump vec3 varingrgb;",
+        "void main() {",
+          "gl_FragColor = vec4(varingrgb, 1.0);",
+        "}"
+      ].join("\n"),
+      vertexShader: [
+        "attribute vec3 verpos;",
+        "attribute vec3 verrgb;",
+        "varying vec3 varingrgb;",
+        "void main() {",
+          "gl_Position = projectionMatrix * modelViewMatrix * vec4(verpos, 1.0);",
+          "varingrgb = verrgb;",
+        "}"
+      ].join("\n")
+    }
+
+
+    var materialShader = new THREE.ShaderMaterial(
+      {
+        vertexShader: shader.vertexShader,
+        fragmentShader: shader.fragmentShader
+      }
+    );
+
+    // 三角形を作る
+    // geometrys.push(new THREE.BufferGeometry().setFromPoints([points[0],points[1],points[2], points[3]]));
+    // // 四角形が作れる場合
+    // if(points.length >2)
+    //   geometrys.push(new THREE.BufferGeometry().setFromPoints([points[3],points[0],points[2]]));
+
+    // const material = new THREE.MeshBasicMaterial({
+    //   transparent: true,
+    //   side: THREE.DoubleSide,
+    //   color: 0x7f8F9F,
+    //   opacity: 0.7,
+    // });
+    // for(const g of geometrys) {
+      var g = new THREE.BufferGeometry();
+      g.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+      g.setIndex(new THREE.BufferAttribute(indices,  1));
+      g.addAttribute('verpos', new THREE.BufferAttribute(vertices, 3));
+      g.addAttribute('verrgb', new THREE.BufferAttribute(colors, 3));
+      const mesh = new THREE.Mesh(g, materialShader);
+      mesh.name = 'panel-' + row.toString();
+      this.scene.add(mesh);
+    // }
+  }
 }

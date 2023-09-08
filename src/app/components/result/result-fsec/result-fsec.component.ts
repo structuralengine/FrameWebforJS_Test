@@ -15,6 +15,8 @@ import { SheetComponent } from '../../input/sheet/sheet.component';
 import pq from "pqgrid";
 import { TranslateService } from '@ngx-translate/core';
 import { InputPanelService } from '../../input/input-panel/input-panel.service';
+import { forEach } from 'jszip';
+import { InputNodesService } from '../../input/input-nodes/input-nodes.service';
 
 @Component({
   selector: 'app-result-fsec',
@@ -69,6 +71,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
 
   constructor(
     private panel: InputPanelService,
+    private nodes: InputNodesService,
     private data: ResultFsecService,
     private app: AppComponent,
     private result: ResultDataService,
@@ -236,14 +239,52 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   }
 
   private drawGradientPanel(){
-    console.log(this.datasetNew)
+    let allFsecs = this.result.fsec.fsec[1];
+    const nodeData = this.nodes.getNodeJson(0);
+    if (Object.keys(nodeData).length <= 0) {
+      return;
+    }
     this.panelData = [];
     let pData = this.panel.getPanelJson(0);
-    for (const pk of Object.keys(pData)) {
-      const p = pData[pk];
-      this.panelData.push(p.nodes)
+    // for (const pk of Object.keys(pData)) {
+    //   const p = pData[pk];
+    //   let nodeData = []; 
+    //   p.nodes.forEach(n => {
+    //     let sn = n.toString();
+    //     let nData = allFsecs.filter(x => x.n === sn && x.m != "")[0];
+    //     nodeData.push(nData);
+    //   });
+    //   this.panelData.push({ 
+    //     nodes: p.nodes,
+    //     datas:nodeData
+    //   });
+    // }
+
+    if (Object.keys(pData).length <= 0) {
+      return;
     }
-    console.log(this.panelData)
+
+    for (const key of Object.keys(pData)) {
+      const target = pData[key];
+      if (target.nodes.length <= 2) {
+        continue
+      }
+
+      //対象のnodeDataを入手
+      const vertexlist = [];
+      for (const check of target.nodes) {
+        if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
+          const n = nodeData[check];
+          const x = n.x;
+          const y = n.y;
+          const z = n.z;
+          vertexlist.push([x, y, z]);
+        } else if (!(check - 1 in Object.keys(nodeData))) {
+          continue;
+        }
+      }
+      this.three.createPanelMemberSectionForce(vertexlist, key);
+    }
   }
 
   private tableHeight(): string {
