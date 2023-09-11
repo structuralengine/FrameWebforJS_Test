@@ -8,6 +8,8 @@ import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
+import { InputRigidZoneService } from "./input-rigid-zone.service";
+import { InputNodesService } from "../input-nodes/input-nodes.service";
 
 @Component({
   selector: 'app-input-rigid-zone',
@@ -17,30 +19,30 @@ import { DocLayoutService } from "src/app/providers/doc-layout.service";
 export class InputRigidZoneComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
   private dataset = [];
-  private columnKeys = ['ni', 'nj','L', 'e', 'cg', 'n',  'ma'];
+  private columnKeys = ['m', 'Ilength','Jlength', 'e', 'L', 'e1', 'n'];
   private columnHeaders3D = [
     {
-      title: this.translate.instant("input.input-members.member"),
+      title: this.translate.instant("input.input-rigid.member"),
       colModel: [
         {
-          title: this.translate.instant("input.input-members.no"),
+          title: this.translate.instant("input.input-rigid.no"),
           align: "center",
           dataType: "string",
           dataIndx: this.columnKeys[0],
           sortable: false,
-          width: 30,
+          width: 70,
         },
       ],
     },
     {
-      title: this.translate.instant("input.input-members.distance"),
+      title: this.translate.instant("input.input-rigid.distance"),
       align: "center",
       colModel: [
         {
           title: "(m)",
           dataType: "float",
           format: "#.000",
-          dataIndx: this.columnKeys[2],
+          dataIndx: this.columnKeys[4],
           sortable: false,
           width: 100,
           editable: false,
@@ -49,96 +51,83 @@ export class InputRigidZoneComponent implements OnInit {
       ],
     },
     {
-      title: this.translate.instant("input.input-members.material"),
+      title: this.translate.instant("input.input-rigid.material"),
       align: "center",
       colModel: [
         {
-          title: this.translate.instant("input.input-members.No"),
+          title: this.translate.instant("input.input-rigid.No"),
           dataType: "integer",
           dataIndx: this.columnKeys[3],
           sortable: false,
-          minwidth: 10,
-          width: 30,
+          minwidth: 100,
+          width: 100,
         },
       ],
-    },
+    }, 
     {
-      title: this.translate.instant("input.input-members.codeAngle"),
-      align: "center",
-      colModel: [
-        {
-          title: "(°)",
-          dataType: "float",
-          dataIndx: this.columnKeys[4],
-          sortable: false,
-          width: 130,
-        },
-      ],
-    },
-    {
-      title: this.translate.instant("input.input-members.material_name"),
+      title: this.translate.instant("input.input-rigid.material_name"),
       align: "center",
       dataType: "string",
-      dataIndx: this.columnKeys[5],
+      dataIndx: this.columnKeys[6],
       sortable: false,
       width: 100,
       editable: false,
       style: { background: "#33363c !important" },
     },
     {
-      title: this.translate.instant("input.input-members.rigid"),
+      title: this.translate.instant("input.input-rigid.rigid"),
       align: "center",
       colModel: [
         {
-          title: this.translate.instant("input.input-members.node_i"),
-          dataType: "integer",
-          dataIndx: this.columnKeys[0],
-          sortable: false,
-          minwidth: 10,
-          width: 15,
-        },
-        {
-          title: this.translate.instant("input.input-members.node_j"),
+          title: this.translate.instant("input.input-rigid.node_i"),
           dataType: "integer",
           dataIndx: this.columnKeys[1],
           sortable: false,
-          minwidth: 10,
-          width: 15,
+          minwidth: 100,
+          width: 100,
+        },
+        {
+          title: this.translate.instant("input.input-rigid.node_j"),
+          dataType: "integer",
+          dataIndx: this.columnKeys[2],
+          sortable: false,
+          minwidth: 100,
+          width: 100,
         },
         {
           title: "Material No",
           dataType: "integer",
-          dataIndx: this.columnKeys[6],
+          dataIndx: this.columnKeys[5],
           sortable: false,
-          minwidth: 10,
-          width: 20,
+          minwidth: 100,
+          width: 100,
         },
       ],
     },
   ];
   private columnHeaders2D = [
     {
-      title: this.translate.instant("input.input-notice-points.member"),
+      title: this.translate.instant("input.input-rigid.member"),
       colModel: [
         {
-          title: this.translate.instant("input.input-notice-points.no"),
+          title: this.translate.instant("input.input-rigid.no"),
           align: "center",
           dataType: "string",
           dataIndx: this.columnKeys[0],
           sortable: false,
-          width: 10,
+          width: 100,
         },
       ],
     },
     {
-      title: this.translate.instant("input.input-members.distance"),
+      title: this.translate.instant("input.input-rigid.distance"),
       align: "center",
       colModel: [
         {
           title: "(m)",
           dataType: "float",
           format: "#.000",
-          dataIndx: this.columnKeys[2],
+          dataIndx: this.columnKeys[4],
           sortable: false,
           width: 100,
           editable: false,
@@ -147,56 +136,56 @@ export class InputRigidZoneComponent implements OnInit {
       ],
     },
     {
-      title: this.translate.instant("input.input-members.material"),
+      title: this.translate.instant("input.input-rigid.material"),
       align: "center",
       colModel: [
         {
-          title: this.translate.instant("input.input-members.no"),
+          title: this.translate.instant("input.input-rigid.no"),
           dataType: "integer",
           dataIndx: this.columnKeys[3],
           sortable: false,
-          minwidth: 10,
-          width: 10,
+          minwidth: 100,
+          width: 100,
         },
       ],
-    },
+    },   
     {
-      title: this.translate.instant("input.input-members.material_name"),
+      title: this.translate.instant("input.input-rigid.material_name"),
       align: "center",
       dataType: "string",
-      dataIndx: this.columnKeys[5],
+      dataIndx: this.columnKeys[6],
       sortable: false,
       width: 100,
       editable: false,
       style: { background: "#33363c !important" },
     },
     {
-      title: this.translate.instant("input.input-members.regid"),
+      title: this.translate.instant("input.input-rigid.rigid"),
       align: "center",
       colModel: [
         {
-          title: this.translate.instant("input.input-members.node_i"),
-          dataType: "integer",
-          dataIndx: this.columnKeys[0],
-          sortable: false,
-          minwidth: 10,
-          width: 10,
-        },
-        {
-          title: this.translate.instant("input.input-members.node_j"),
+          title: this.translate.instant("input.input-rigid.node_i"),
           dataType: "integer",
           dataIndx: this.columnKeys[1],
           sortable: false,
-          minwidth: 10,
-          width: 10,
+          minwidth: 100,
+          width: 100,
         },
         {
-          title: this.translate.instant("input.input-members.material") + this.translate.instant("input.input-members.no"),
-          dataType: "integer", 
-          dataIndx: this.columnKeys[6],
+          title: this.translate.instant("input.input-rigid.node_j"),
+          dataType: "integer",
+          dataIndx: this.columnKeys[2],
           sortable: false,
-          minwidth: 10,
-          width: 15,
+          minwidth: 100,
+          width: 100,
+        },
+        {
+          title: this.translate.instant("input.input-rigid.material"),
+          dataType: "integer", 
+          dataIndx: this.columnKeys[5],
+          sortable: false,
+          minwidth: 100,
+          width: 100,
         },
       ],
     },
@@ -205,6 +194,9 @@ export class InputRigidZoneComponent implements OnInit {
 
   private currentIndex: string;
   constructor(
+    private data: InputRigidZoneService,
+    private member: InputMembersService,
+    private node: InputNodesService,
     private element: InputElementsService,
     private helper: DataHelperModule,
     private app: AppComponent,
@@ -218,6 +210,67 @@ export class InputRigidZoneComponent implements OnInit {
     this.ROWS_COUNT = this.rowsCount();
     // three.js にモードの変更を通知する
     //this.three.ChangeMode("members");
+  }
+  ngAfterViewInit() {
+    this.docLayout.handleMove.subscribe(data => {
+    this.options.height = data - 60;
+    })
+  }
+  private loadData(row: number): void {
+    for (let i = this.dataset.length + 1; i <= row; i++) {
+      const regid = this.data.getRigidColumns(i);
+      const m: string = regid["m"];
+      const e = (regid.e !== null) ? regid.e : undefined;
+      if (m !== "") {
+        const l: any = this.member.getMemberLength(m);
+        regid["L"] = l != null ? l.toFixed(3) : l;
+        const name = this.element.getElementName(e);
+        regid["n"] = name != null ? name : "";
+      }
+      this.dataset.push(regid);
+    }
+  }
+  private getMember(memberNo: string) {
+
+    const member = this.member.member.find((columns) => {
+      return columns.id === memberNo;
+    })
+
+    if (member === undefined) {
+      return { ni: null, nj: null };
+    }
+
+    return member;
+
+  }
+  public getMemberLength(memberNo: string): number {
+
+    const memb = this.getMember(memberNo.toString());
+    if (memb.ni === undefined || memb.nj === undefined) {
+      return null;
+    }
+    const ni: string = memb.ni;
+    const nj: string = memb.nj;
+    if (ni === null || nj === null) {
+      return null;
+    }
+
+    const iPos = this.node.getNodePos(ni)
+    const jPos = this.node.getNodePos(nj)
+    if (iPos == null || jPos == null) {
+      return null;
+    }
+
+    const xi: number = iPos['x'];
+    const yi: number = iPos['y'];
+    const zi: number = iPos['z'];
+    const xj: number = jPos['x'];
+    const yj: number = jPos['y'];
+    const zj: number = jPos['z'];
+
+    const result: number = Math.sqrt((xi - xj) ** 2 + (yi - yj) ** 2 + (zi - zj) ** 2);
+    return result;
+
   }
   private tableHeight(): string {
     const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;
@@ -235,97 +288,25 @@ export class InputRigidZoneComponent implements OnInit {
     locale: "jp",
     height: this.tableHeight(),
     numberCell: {
-      show: true, // 行番号
-      width: 45,
+      show: false, // 行番号
     },
     colModel:
       this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
     dataModel: {
       data: this.dataset,
     },
-    // beforeTableView: (evt, ui) => {
-    //   const finalV = ui.finalV;
-    //   const dataV = this.dataset.length;
-    //   if (ui.initV == null) {
-    //     return;
-    //   }
-    //   if (finalV >= dataV - 1) {
-    //     this.loadData(dataV + this.ROWS_COUNT);
-    //     this.grid.refreshDataAndView();
-    //   }
-    // },
-    // selectEnd: (evt, ui) => {
-    //   const range = ui.selection.iCells.ranges;
-    //   const row = range[0].r1 + 1;
-    //   const column = this.columnKeys[range[0].c1];
-    //   // if (this.currentIndex !== row){
-    //     //選択行の変更があるとき，ハイライトを実行する
-    //     this.three.selectChange("members", row, '');
-    //   // }
-    //   // this.currentIndex = row;
-    // },
-    // change: (evt, ui) => {
-    //   const changes = ui.updateList;
-    //   for (const target of changes) {
-    //     const row: number = target.rowIndx;
-    //     if (
-    //       !(
-    //         "ni" in target.newRow ||
-    //         "nj" in target.newRow ||
-    //         "e" in target.newRow
-    //       )
-    //     ) {
-    //       continue;
-    //     }
-    //     //const new_value = target.rowData;
-    //     const member: {} = this.dataset[row];
-    //     const m: string = member["id"];
-    //     if (m === "") {
-    //       continue;
-    //     }
-    //     const l: number = this.data.getMemberLength(m);
-    //     const column = this.dataset[row];
-    //     if (l != null) {
-    //       column["L"] = l.toFixed(3);
-    //       // this.grid.refreshDataAndView();
-    //     } else {
-    //       column["L"] = null;
-    //     }
-    //     const n: string =
-    //       target.rowData.e === undefined
-    //         ? ""
-    //         : this.element.getElementName(target.rowData.e);
-    //     if (n != null) {
-    //       this.dataset[row]["n"] = n;
-    //       this.grid.refreshDataAndView();
-    //     }
-    //   }
-    //   for (const target of ui.addList) {
-    //     const no: number = target.rowIndx;
-    //     const newRow = target.newRow;
-    //     const member = this.data.getMemberColumns(no + 1);
-    //     member['ni'] = (newRow.ni !== undefined) ? newRow.ni : '';
-    //     member['nj'] = (newRow.nj !== undefined) ? newRow.nj : '';
-    //     member['e']  = (newRow.e  !== undefined) ? newRow.e  : '';
-    //     member['cg'] = (newRow.cg !== undefined) ? newRow.cg : '';
-
-    //     // 入力によって反映される値を設定
-    //     if ( member['ni'] !== '' || member['nj'] !== '' ) {
-    //       const l: number = this.data.getMemberLength(no.toString());
-    //       member["L"] = (l == null) ? null : l.toFixed(3);
-    //     }
-    //     if (member['e'] !== '') {
-    //       const EleName = this.element.getElementName(newRow.e);
-    //       member["n"] = (EleName == '') ? '' : EleName;
-    //     }
-    //     this.dataset.splice(no, 1, member)
-    //   }
-    //   this.three.changeData("members");
-
-    //   // ハイライト処理を再度実行する
-    //   const row = changes[0].rowIndx + 1;
-    //   this.three.selectChange("members", row, '');
-    // },
+    beforeTableView: (evt, ui) => {
+      const finalV = ui.finalV;
+      const dataV = this.dataset.length;
+      console.log("rigid", this.dataset);
+      if (ui.initV == null) {
+        return;
+      }
+      if (finalV >= dataV - 1) {
+        this.loadData(dataV + this.ROWS_COUNT);
+        this.grid.refreshDataAndView();
+      }
+    },
   };
 
   width = this.helper.dimension === 3 ? 580 : 450;

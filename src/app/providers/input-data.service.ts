@@ -18,6 +18,7 @@ import { TranslateService } from "@ngx-translate/core";
 
 import packageJson from '../../../package.json';
 import { forEach } from "@angular-devkit/schematics";
+import { InputRigidZoneService } from "../components/input/input-rigid-zone/input-rigid-zone.service";
 
 @Injectable({
   providedIn: "root",
@@ -38,6 +39,7 @@ export class InputDataService {
     public notice: InputNoticePointsService,
     public pickup: InputPickupService,
     private three: SceneService,
+    private rigid: InputRigidZoneService,
     private translate: TranslateService
   ) {
     this.clear();
@@ -86,6 +88,7 @@ export class InputDataService {
     this.combine.setCombineJson(jsonData);
     this.pickup.setPickUpJson(jsonData);
     this.versionChecker(jsonData);
+    this.rigid.setRigidJson(jsonData);
 
     if ("dimension" in jsonData) {
       this.helper.dimension = jsonData["dimension"] as number;

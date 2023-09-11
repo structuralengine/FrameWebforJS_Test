@@ -79,6 +79,17 @@
             "member": "Member",
             "rigid": "Rigid Zone"
         },
+        "input-rigid": {
+            "node": "Node",
+            "node_i": "Node-I",
+            "node_j": "Node-J",
+            "distance": "Distance",
+            "material": "Material No",     
+            "material_name": "Name of Material",
+            "no": "No",
+            "member": "Member",
+            "rigid": "Rigid Zone"            
+        },
         "input-elements": {
             "elastic": "Elastic",
             "shear_elastic": "Shear Elastic",
