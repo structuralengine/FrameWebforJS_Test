@@ -163,7 +163,7 @@ export class ThreePanelService {
     // 三角形を作る
     geometrys.push(new THREE.BufferGeometry().setFromPoints([points[0],points[1],points[2]]));
     // 四角形が作れる場合
-    if(points.length >2)
+    if(points.length > 3)
       geometrys.push(new THREE.BufferGeometry().setFromPoints([points[3],points[0],points[2]]));
 
     const material = new THREE.MeshBasicMaterial({
