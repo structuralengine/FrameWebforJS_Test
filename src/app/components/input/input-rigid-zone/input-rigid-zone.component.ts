@@ -26,11 +26,12 @@ export class InputRigidZoneComponent implements OnInit {
       colModel: [
         {
           title: this.translate.instant("input.input-rigid.no"),
-          align: "center",
+          align: "left",
           dataType: "string",
           dataIndx: this.columnKeys[0],
           sortable: false,
           width: 70,
+          editable: false
         },
       ],
     },
@@ -60,7 +61,9 @@ export class InputRigidZoneComponent implements OnInit {
           dataIndx: this.columnKeys[3],
           sortable: false,
           minwidth: 100,
+          align: "left",
           width: 100,
+          editable: false
         },
       ],
     }, 
@@ -80,22 +83,24 @@ export class InputRigidZoneComponent implements OnInit {
       colModel: [
         {
           title: this.translate.instant("input.input-rigid.node_i"),
-          dataType: "integer",
+          dataType: "float",
           dataIndx: this.columnKeys[1],
           sortable: false,
           minwidth: 100,
+          format: "#.00",
           width: 100,
         },
         {
           title: this.translate.instant("input.input-rigid.node_j"),
-          dataType: "integer",
+          dataType: "float",
           dataIndx: this.columnKeys[2],
           sortable: false,
           minwidth: 100,
+          format: "#.00",
           width: 100,
         },
         {
-          title: "Material No",
+          title: this.translate.instant("input.input-rigid.materialNo"),
           dataType: "integer",
           dataIndx: this.columnKeys[5],
           sortable: false,
@@ -111,11 +116,12 @@ export class InputRigidZoneComponent implements OnInit {
       colModel: [
         {
           title: this.translate.instant("input.input-rigid.no"),
-          align: "center",
+          align: "left",
           dataType: "string",
           dataIndx: this.columnKeys[0],
           sortable: false,
           width: 100,
+          editable: false
         },
       ],
     },
@@ -144,8 +150,10 @@ export class InputRigidZoneComponent implements OnInit {
           dataType: "integer",
           dataIndx: this.columnKeys[3],
           sortable: false,
+          align: "left",
           minwidth: 100,
           width: 100,
+          editable: false
         },
       ],
     },   
@@ -165,18 +173,20 @@ export class InputRigidZoneComponent implements OnInit {
       colModel: [
         {
           title: this.translate.instant("input.input-rigid.node_i"),
-          dataType: "integer",
+          dataType: "float",
           dataIndx: this.columnKeys[1],
           sortable: false,
+          format: "#.00",
           minwidth: 100,
           width: 100,
         },
         {
           title: this.translate.instant("input.input-rigid.node_j"),
-          dataType: "integer",
+          dataType: "float",
           dataIndx: this.columnKeys[2],
           sortable: false,
           minwidth: 100,
+          format: "#.00",
           width: 100,
         },
         {
@@ -186,6 +196,7 @@ export class InputRigidZoneComponent implements OnInit {
           sortable: false,
           minwidth: 100,
           width: 100,
+          editable: false
         },
       ],
     },
