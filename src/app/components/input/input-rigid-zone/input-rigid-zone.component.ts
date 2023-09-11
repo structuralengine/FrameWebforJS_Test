@@ -55,7 +55,7 @@ export class InputRigidZoneComponent implements OnInit {
       align: "center",
       colModel: [
         {
-          title: this.translate.instant("input.input-rigid.No"),
+          title: this.translate.instant("input.input-rigid.no"),
           dataType: "integer",
           dataIndx: this.columnKeys[3],
           sortable: false,
@@ -180,7 +180,7 @@ export class InputRigidZoneComponent implements OnInit {
           width: 100,
         },
         {
-          title: this.translate.instant("input.input-rigid.material"),
+          title: this.translate.instant("input.input-rigid.materialNo"),
           dataType: "integer", 
           dataIndx: this.columnKeys[5],
           sortable: false,

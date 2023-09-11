@@ -84,11 +84,12 @@
             "node_i": "Node-I",
             "node_j": "Node-J",
             "distance": "Distance",
-            "material": "Material No",     
+            "material": "Material",     
             "material_name": "Name of Material",
             "no": "No",
             "member": "Member",
-            "rigid": "Rigid Zone"            
+            "rigid": "Rigid Zone",
+            "materialNo": "Material No"          
         },
         "input-elements": {
             "elastic": "Elastic",
