@@ -13,6 +13,7 @@ import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import pq from "pqgrid";
 import { SheetComponent } from '../../input/sheet/sheet.component';
 import { AppComponent } from 'src/app/app.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-result-pickup-fsec',
@@ -76,7 +77,8 @@ export class ResultPickupFsecComponent implements OnInit, OnDestroy {
     private helper: DataHelperModule,
     private pagerDirectionService: PagerDirectionService,
     private pagerService: PagerService,
-    public docLayout: DocLayoutService
+    public docLayout: DocLayoutService,
+    private translate: TranslateService,
   ) {
     this.dataset = new Array();
     this.KEYS = this.comb.fsecKeys;
@@ -249,6 +251,18 @@ export class ResultPickupFsecComponent implements OnInit, OnDestroy {
       this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
     dataModel: {
       data: this.datasetNew,
+    },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        }
+      ]
     },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;

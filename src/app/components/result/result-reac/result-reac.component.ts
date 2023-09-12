@@ -250,6 +250,18 @@ export class ResultReacComponent implements OnInit, OnDestroy {
     dataModel: {
       data: this.datasetNew,
     },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        }
+      ]
+    },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;
       const dataV = this.datasetNew.length;
