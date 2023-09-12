@@ -320,6 +320,16 @@ export class InputRigidZoneComponent implements OnInit {
         this.grid.refreshDataAndView();
       }
     },
+    selectEnd: (evt, ui) => {
+      const range = ui.selection.iCells.ranges;
+      const row = range[0].r1 + 1;
+      const column = this.columnKeys[range[0].c1];
+      // if (this.currentIndex !== row){
+        //選択行の変更があるとき，ハイライトを実行する
+        this.three.selectChange("members", row, '');
+      // }
+      // this.currentIndex = row;
+    },
   };
 
   width = this.helper.dimension === 3 ? 580 : 450;
