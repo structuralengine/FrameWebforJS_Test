@@ -232,7 +232,7 @@ export class InputRigidZoneComponent implements OnInit {
   }
   private loadData(row: number): void {
     for (let i = this.dataset.length + 1; i <= row; i++) {
-      const regid = this.data.getRigidColumns(i);
+      const regid = this.data.getRigidZoneColums(i);
       const m: string = regid["m"];
       const e = (regid.e !== null) ? regid.e : undefined;
       if (m !== "") {
@@ -242,7 +242,7 @@ export class InputRigidZoneComponent implements OnInit {
         regid["n"] = name != null ? name : "";
       }
       this.dataset.push(regid);
-    }
+    }    
   }
   private getMember(memberNo: string) {
 
@@ -311,8 +311,7 @@ export class InputRigidZoneComponent implements OnInit {
     },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;
-      const dataV = this.dataset.length;
-      console.log("rigid", this.dataset);
+      const dataV = this.dataset.length;    
       if (ui.initV == null) {
         return;
       }

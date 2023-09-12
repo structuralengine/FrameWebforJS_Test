@@ -232,7 +232,12 @@ export class InputDataService {
     } else if (empty === 0) {
       jsonData["element"] = {};
     }
-
+    const rigid: {} = this.rigid.getRigidJson();
+    if (Object.keys(rigid).length > 0) {
+      jsonData["rigid"] = rigid;
+    } else if (empty === 0) {
+      jsonData["rigid"] = {};
+    }
     const joint: {} = this.joint.getJointJson(empty);
     if (Object.keys(joint).length > 0) {
       jsonData["joint"] = joint;

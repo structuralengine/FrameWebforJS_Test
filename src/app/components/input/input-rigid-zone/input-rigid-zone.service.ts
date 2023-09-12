@@ -24,26 +24,12 @@ export class InputRigidZoneService {
       }
     }
     if (result === null) {
-      result = { m: mem.toString(), Ilength: "", Jlength: "", e: "", L: '', e1: '', n: '' };
-      this.rigid_zone.push(result);
-    }
-  }
-  public getRigidColumns(index: number): any {
-
-    let result: any = null;
-    for ( const tmp of this.rigid_zone) {
-      if (tmp['m'].toString() === index.toString()) {
-        result = tmp;
-        break;
-      }
-    }
-    // 対象データが無かった時に処理
-    if (result == null) {
-      result = { m: index.toString(), Ilength: "", Jlength: "", e: "", L: '', e1:'' , n:''};
+      result = { m: "", Ilength: "", Jlength: "", e: "", L: '', e1: '', n: '' };
       this.rigid_zone.push(result);
     }
     return result;
   }
+
   public setRigidJson(jsonData: {}): void {
     if (!('member' in jsonData)) {
       return;
@@ -63,26 +49,44 @@ export class InputRigidZoneService {
           Ilength: rigid['Ilength'],
           Jlength: rigid['Jlength'],
           e: (e == null) ? '' : e.toFixed(0),
-          L: '',         
+          L: '',
           e1: rigid['e'],
-          n:''
+          n: ''
         };
         console.log("result", result);
         this.rigid_zone.push(result);
-      }else{
+      } else {
         const result = {
           m: index,
           Ilength: '',
           Jlength: '',
           e: (e == null) ? '' : e.toFixed(0),
-          L: '',          
+          L: '',
           e1: '',
-          n:''
+          n: ''
         };
         this.rigid_zone.push(result);
       }
+    } 
+  }
+  public getRigidJson() {
+    const result = new Array();
 
+    for (const row of this.rigid_zone) {
+      const m = this.helper.toNumber(row["m"]);
+      if (m == null) {
+        continue;
+      }
+      if (row['e1'] !== "") {
+        result.push({
+          m: row['m'],
+          Ilength: row['Ilength'],
+          Jlength: row['Jlength'],
+          e: row['e1']
+        });
+      }
     }
+    return result;
   }
 }
 
