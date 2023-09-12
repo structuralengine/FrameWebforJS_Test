@@ -31,13 +31,11 @@ export class InputRigidZoneService {
   }
 
   public setRigidJson(jsonData: {}): void {
-    if (!('member' in jsonData)) {
+    if (!('rigid' in jsonData)) {
       return;
     }
     const json: {} = jsonData['member'];
     const json1: any = jsonData['rigid'];
-    console.log("json", json);
-    console.log("json1", json1);
     for (const index of Object.keys(json)) {
 
       const item = json[index];
