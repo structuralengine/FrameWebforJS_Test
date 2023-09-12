@@ -31,7 +31,8 @@ export class InputRigidZoneComponent implements OnInit {
           dataIndx: this.columnKeys[0],
           sortable: false,
           width: 70,
-          editable: false
+          editable: false,
+          style: { background: "#33363c !important" },
         },
       ],
     },
@@ -63,7 +64,8 @@ export class InputRigidZoneComponent implements OnInit {
           minwidth: 100,
           align: "left",
           width: 100,
-          editable: false
+          editable: false,
+          style: { background: "#33363c !important" },
         },
       ],
     }, 
@@ -121,7 +123,8 @@ export class InputRigidZoneComponent implements OnInit {
           dataIndx: this.columnKeys[0],
           sortable: false,
           width: 100,
-          editable: false
+          editable: false,
+          style: { background: "#33363c !important" },
         },
       ],
     },
@@ -153,7 +156,8 @@ export class InputRigidZoneComponent implements OnInit {
           align: "left",
           minwidth: 100,
           width: 100,
-          editable: false
+          editable: false,
+          style: { background: "#33363c !important" }
         },
       ],
     },   
@@ -195,8 +199,7 @@ export class InputRigidZoneComponent implements OnInit {
           dataIndx: this.columnKeys[5],
           sortable: false,
           minwidth: 100,
-          width: 100,
-          editable: false
+          width: 100        
         },
       ],
     },
