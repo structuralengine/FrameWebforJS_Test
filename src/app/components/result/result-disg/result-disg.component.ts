@@ -14,6 +14,7 @@ import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import { SheetComponent } from '../../input/sheet/sheet.component';
 import { AppComponent } from 'src/app/app.component';
 import pq from "pqgrid";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: "app-result-disg",
@@ -73,6 +74,7 @@ export class ResultDisgComponent implements OnInit, OnDestroy {
     private helper: DataHelperModule,
     private pagerService: PagerService,
     public docLayout: DocLayoutService,
+    private translate: TranslateService,
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -244,6 +246,18 @@ export class ResultDisgComponent implements OnInit, OnDestroy {
       this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
     dataModel: {
       data: this.datasetNew,
+    },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        }
+      ]
     },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;

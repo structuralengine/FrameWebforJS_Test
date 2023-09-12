@@ -161,6 +161,39 @@ export class InputNoticePointsComponent implements OnInit {
     dataModel: {
       data: this.dataset,
     },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.paste"),
+          shortcut: 'Ctrl + V',
+          action: function (evt, ui, item) {
+            this.paste();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.cut"),
+          shortcut: 'Ctrl + X',
+          action: function (evt, ui, item) {
+            this.cut();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.undo"),
+          shortcut: 'Ctrl + Z',
+          action: function (evt, ui, item) {
+            this.History().undo();
+          }
+        }
+      ]
+    },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;
       const dataV = this.dataset.length;
@@ -197,7 +230,7 @@ export class InputNoticePointsComponent implements OnInit {
           const l: number = this.member.getMemberLength(m);
           this.dataset[row]["len"] = l != null ? l : null;
         }
-        this.grid.refreshDataAndView();
+        //this.grid.refreshDataAndView(); // prevent event after refresh
       }
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
       for (const target of ui.addList) {

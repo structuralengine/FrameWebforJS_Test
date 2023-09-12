@@ -9,6 +9,7 @@ import { AppComponent } from 'src/app/app.component';
 import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import { Subscription } from 'rxjs';
 import { ThreeNodesService } from '../../three/geometry/three-nodes.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-input-nodes',
@@ -76,6 +77,7 @@ export class InputNodesComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private threeNodesService : ThreeNodesService,
+    private translate: TranslateService,
     public docLayout: DocLayoutService
   ) {
     this.currentRow = null;
@@ -153,6 +155,39 @@ export class InputNodesComponent implements OnInit {
       this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
     dataModel: {
       data: this.dataset,
+    },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.paste"),
+          shortcut: 'Ctrl + V',
+          action: function (evt, ui, item) {
+            this.paste();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.cut"),
+          shortcut: 'Ctrl + X',
+          action: function (evt, ui, item) {
+            this.cut();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.undo"),
+          shortcut: 'Ctrl + Z',
+          action: function (evt, ui, item) {
+            this.History().undo();
+          }
+        }
+      ]
     },
     beforeTableView: (evt, ui) => {
       console.log('ui', ui);
