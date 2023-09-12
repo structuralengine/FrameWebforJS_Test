@@ -51,7 +51,6 @@ export class InputElementsService {
       target.push(result);
       this.element[typNo] = target;
     }
-    console.log(result);
     return result;
   }
 

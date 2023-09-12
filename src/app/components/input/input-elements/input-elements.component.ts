@@ -278,28 +278,28 @@ export class InputElementsComponent implements OnInit, OnDestroy {
       on: true,
       items: [
         {
-          name: 'Copy',
+          name: this.translate.instant("action_key.copy"),
           shortcut: 'Ctrl + C',
           action: function (evt, ui, item) {
             this.copy();
           }
         },
         {
-          name: 'Paste',
+          name: this.translate.instant("action_key.paste"),
           shortcut: 'Ctrl + V',
           action: function (evt, ui, item) {
             this.paste();
           }
         },
         {
-          name: 'Clipping',
+          name: this.translate.instant("action_key.cut"),
           shortcut: 'Ctrl + X',
           action: function (evt, ui, item) {
-            this.paste();
+            this.cut();
           }
         },
         {
-          name: 'Undo',
+          name: this.translate.instant("action_key.undo"),
           shortcut: 'Ctrl + Z',
           action: function (evt, ui, item) {
             this.History().undo();
@@ -329,7 +329,6 @@ export class InputElementsComponent implements OnInit, OnDestroy {
       this.currentRow = row;
     },
     change: (evt, ui) => {
-      debugger
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
       for (const target of ui.addList) {
         const no: number = target.rowIndx;

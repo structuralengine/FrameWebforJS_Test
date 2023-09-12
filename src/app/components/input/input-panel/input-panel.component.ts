@@ -9,6 +9,7 @@ import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import { ThreePanelService } from '../../three/geometry/three-panel.service';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-input-panel',
@@ -133,28 +134,28 @@ export class InputPanelComponent {
       on: true,
       items: [
         {
-          name: 'Copy',
+          name: this.translate.instant("action_key.copy"),
           shortcut: 'Ctrl + C',
           action: function (evt, ui, item) {
             this.copy();
           }
         },
         {
-          name: 'Paste',
+          name: this.translate.instant("action_key.paste"),
           shortcut: 'Ctrl + V',
           action: function (evt, ui, item) {
             this.paste();
           }
         },
         {
-          name: 'Clipping',
+          name: this.translate.instant("action_key.cut"),
           shortcut: 'Ctrl + X',
           action: function (evt, ui, item) {
-            this.paste();
+            this.cut();
           }
         },
         {
-          name: 'Undo',
+          name: this.translate.instant("action_key.undo"),
           shortcut: 'Ctrl + Z',
           action: function (evt, ui, item) {
             this.History().undo();
@@ -185,7 +186,6 @@ export class InputPanelComponent {
       this.currentColumn = column;
     },
     change: (evt, ui) => {
-      debugger
       const changes = ui.updateList;
       for (const target of changes) {
         const row: number = target.rowIndx;
@@ -194,7 +194,7 @@ export class InputPanelComponent {
         if (m === null) {
           this.dataset[row]['len'] = null;
         }
-        this.grid.refreshDataAndView();
+        //this.grid.refreshDataAndView(); //This event prevents undo event
       }
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
       for (const target of ui.addList) {

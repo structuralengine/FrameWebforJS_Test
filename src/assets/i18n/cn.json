@@ -387,5 +387,11 @@
     "window": {
         "closeTitle": "查看",
         "closeMessage": "不会保存更改。 您确定要完成它吗?"
+    },
+    "action_key":{
+        "copy": "複製",
+        "paste": "貼上",
+        "undo": "復原動作",
+        "cut": "剪下"
     }
 }

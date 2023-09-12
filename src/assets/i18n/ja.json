@@ -389,5 +389,11 @@
     "window": {
         "closeTitle": "確認",
         "closeMessage": "変更内容が保存されません。本当に終了しますか？"
+    },
+    "action_key":{
+        "copy": "コピー",
+        "paste": "貼り付け",
+        "undo": "元に戻す",
+        "cut": "切り取り"
     }
 }
