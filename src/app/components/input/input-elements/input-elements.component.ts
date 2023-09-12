@@ -274,6 +274,39 @@ export class InputElementsComponent implements OnInit, OnDestroy {
     dataModel: {
       data: this.dataset,
     },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: 'Copy',
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        },
+        {
+          name: 'Paste',
+          shortcut: 'Ctrl + V',
+          action: function (evt, ui, item) {
+            this.paste();
+          }
+        },
+        {
+          name: 'Clipping',
+          shortcut: 'Ctrl + X',
+          action: function (evt, ui, item) {
+            this.paste();
+          }
+        },
+        {
+          name: 'Undo',
+          shortcut: 'Ctrl + Z',
+          action: function (evt, ui, item) {
+            this.History().undo();
+          }
+        }
+      ]
+    },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;
       const dataV = this.dataset.length;
@@ -296,6 +329,7 @@ export class InputElementsComponent implements OnInit, OnDestroy {
       this.currentRow = row;
     },
     change: (evt, ui) => {
+      debugger
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
       for (const target of ui.addList) {
         const no: number = target.rowIndx;

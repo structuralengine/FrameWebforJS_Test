@@ -125,6 +125,7 @@ export class InputCombineComponent implements OnInit {
       }
     },
     change: (evt, ui) => {
+      debugger
       for (const target of ui.addList) {
         const no: number = target.rowIndx;
         const newRow = target.newRow;
