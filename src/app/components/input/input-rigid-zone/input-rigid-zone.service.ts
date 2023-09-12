@@ -31,29 +31,12 @@ export class InputRigidZoneService {
   }
 
   public setRigidJson(jsonData: {}): void {
-    if (!('rigid' in jsonData)) {
-      return;
-    }
+    this.clear()
     const json: {} = jsonData['member'];
-    const json1: any = jsonData['rigid'];
-    for (const index of Object.keys(json)) {
-
-      const item = json[index];
-      const e = this.helper.toNumber(item['e']);
-      const rigid = json1.find(x => x['m'] === index);
-      if (rigid !== undefined) {
-        const result = {
-          m: index,
-          Ilength: rigid['Ilength'],
-          Jlength: rigid['Jlength'],
-          e: (e == null) ? '' : e.toFixed(0),
-          L: '',
-          e1: rigid['e'],
-          n: ''
-        };
-        console.log("result", result);
-        this.rigid_zone.push(result);
-      } else {
+    if (!('rigid' in jsonData)) {
+      for (const index of Object.keys(json)) {
+        const item = json[index];
+        const e = this.helper.toNumber(item['e']);
         const result = {
           m: index,
           Ilength: '',
@@ -65,7 +48,40 @@ export class InputRigidZoneService {
         };
         this.rigid_zone.push(result);
       }
-    } 
+    } else {
+      const json1: any = jsonData['rigid'];
+      for (const index of Object.keys(json)) {
+
+        const item = json[index];
+        const e = this.helper.toNumber(item['e']);
+        const rigid = json1.find(x => x['m'] === index);
+        if (rigid !== undefined) {
+          const result = {
+            m: index,
+            Ilength: rigid['Ilength'],
+            Jlength: rigid['Jlength'],
+            e: (e == null) ? '' : e.toFixed(0),
+            L: '',
+            e1: rigid['e'],
+            n: ''
+          };
+          console.log("result", result);
+          this.rigid_zone.push(result);
+        } else {
+          const result = {
+            m: index,
+            Ilength: '',
+            Jlength: '',
+            e: (e == null) ? '' : e.toFixed(0),
+            L: '',
+            e1: '',
+            n: ''
+          };
+          this.rigid_zone.push(result);
+        }
+      }
+    }
+
   }
   public getRigidJson() {
     const result = new Array();
