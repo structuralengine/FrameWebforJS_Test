@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { InputNodesService } from '../input-nodes/input-nodes.service';
 import { DataHelperModule } from 'src/app/providers/data-helper.module';
+import { InputMembersService } from '../input-members/input-members.service';
+import { ThreeService } from '../../three/three.service';
+import { ThreeMembersService } from '../../three/geometry/three-members.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +12,8 @@ export class InputRigidZoneService {
   public rigid_zone: any[];
 
   constructor(private node: InputNodesService,
-    private helper: DataHelperModule) {
+    private helper: DataHelperModule,
+    private member: ThreeMembersService) {
     this.clear();
   }
   public clear(): void {
@@ -17,8 +21,10 @@ export class InputRigidZoneService {
   }
   public getRigidZoneColums(mem: number): any {
     let result: any = null;
+    let json = this.member.changeData()  
     for (const tmp of this.rigid_zone) {
-      if (tmp["m"].toString() === mem.toString()) {
+      if (tmp["m"].toString() === mem.toString() && json[mem] != null) {
+        tmp['e'] = json[mem]['e'];
         result = tmp;
         break;
       }
@@ -31,8 +37,7 @@ export class InputRigidZoneService {
   }
 
   public setRigidJson(jsonData: {}): void {
-    this.clear()
-    const json: {} = jsonData['member'];
+    let json = this.member.changeData()   
     if (!('rigid' in jsonData)) {
       for (const index of Object.keys(json)) {
         const item = json[index];

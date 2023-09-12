@@ -69,6 +69,7 @@ export class InputDataService {
     this.define.clear();
     this.combine.clear();
     this.pickup.clear();
+    this.rigid.clear();
     this.result = null
   }
 
