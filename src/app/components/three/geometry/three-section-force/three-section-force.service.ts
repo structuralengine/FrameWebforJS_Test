@@ -191,10 +191,15 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
-          const key1: string = (key === 'axialForce' || key === 'torsionalMoment') ? 'x' : (key === 'shearForceY' || key === 'momentY') ? 'y' : 'z';
+          const key1: string =
+            key === "axialForce" || key === "torsionalMoment"
+              ? "x"
+              : key === "shearForceY" || key === "momentY"
+              ? "y"
+              : "z";
           this.max_min._getMaxMinValue(
             this.value_ranges[this.currentMode][this.currentIndex][key1],
-            'fsec',
+            "fsec",
             this.currentRadio
           );
           this.onResize();
@@ -235,7 +240,11 @@ export class ThreeSectionForceService {
   }
 
   // 解析結果をセットする
-  public setResultData(fsecJson: any, max_values: any, value_ranges: any): void {
+  public setResultData(
+    fsecJson: any,
+    max_values: any,
+    value_ranges: any
+  ): void {
     const keys = Object.keys(fsecJson);
     if (keys.length === 0) {
       this.ClearData();
@@ -255,13 +264,21 @@ export class ThreeSectionForceService {
     this.currentMode = "";
   }
   // combine
-  public setCombResultData(fsecJson: any, max_values: any, value_range: any): void {
+  public setCombResultData(
+    fsecJson: any,
+    max_values: any,
+    value_range: any
+  ): void {
     this.fsecData.comb_fsec = fsecJson;
     this.max_values.comb_fsec = max_values;
     this.value_ranges.comb_fsec = value_range;
   }
   // pick up
-  public setPickupResultData(fsecJson: any, max_values: any, value_range: any): void {
+  public setPickupResultData(
+    fsecJson: any,
+    max_values: any,
+    value_range: any
+  ): void {
     this.fsecData.pick_fsec = fsecJson;
     this.max_values.pick_fsec = max_values;
     this.value_ranges.pick_fsec = value_range;
@@ -460,8 +477,8 @@ export class ThreeSectionForceService {
     let Upper = targetValues;
     let target = [];
     textValMemNo.forEach((data) => {
-      target.push(data.val)
-    })
+      target.push(data.val);
+    });
     target.sort((a, b) => {
       return Math.abs(a) < Math.abs(b) ? 1 : -1;
     });
@@ -479,7 +496,7 @@ export class ThreeSectionForceService {
       for (const mesh of ThreeObject.children) {
         let f1 = false;
         if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
-          f1 = true
+          f1 = true;
           c.push(mesh);
         }
         let f2 = false;
@@ -490,23 +507,23 @@ export class ThreeSectionForceService {
         this.mesh.setText(mesh, f1, f2);
       }
     }
-    var meshView = Array.from(new Set(c))
+    var meshView = Array.from(new Set(c));
     var memberNo = this.getMemberNoLocation();
-    memberNo.forEach(mem => {
+    memberNo.forEach((mem) => {
       let er = [];
-      meshView.forEach(th => {
+      meshView.forEach((th) => {
         let ni = new THREE.Vector3(mem.nodei.x, mem.nodei.y, mem.nodei.z);
         let nj = new THREE.Vector3(mem.nodej.x, mem.nodej.y, mem.nodej.z);
         if (th.position.equals(ni) || th.position.equals(nj)) {
           er.push(th);
         }
-      })
+      });
       if (er.length > 0) {
         let p = [];
-        er.forEach(mesh => {
-          p.push(mesh["P1"])
-          p.push(mesh["P2"])
-        })
+        er.forEach((mesh) => {
+          p.push(mesh["P1"]);
+          p.push(mesh["P2"]);
+        });
         let max = p[0];
         for (let i = 0; i < p.length; i++) {
           if (p[i] > max) {
@@ -514,16 +531,16 @@ export class ThreeSectionForceService {
           }
         }
         for (let i = 0; i < er.length; i++) {
-          if (Number(er[i]['L'].toFixed(2)) <= this.findSmallestPositiveValue(er)) {
-            if (er[i]['P1'] < er[i]['P2']) {
-              this.mesh.setText(er[i], false, false)
-            } else
-              this.mesh.setText(er[i], false, false)
+          if (
+            Number(er[i]["L"].toFixed(2)) <= this.findSmallestPositiveValue(er)
+          ) {
+            if (er[i]["P1"] < er[i]["P2"]) {
+              this.mesh.setText(er[i], false, false);
+            } else this.mesh.setText(er[i], false, false);
           }
         }
-      }     
-    })
-
+      }
+    });
   }
 
   // データが変更された時に呼び出される
@@ -595,15 +612,15 @@ export class ThreeSectionForceService {
     }
   }
   private findSmallestPositiveValue(arr: any) {
-    let smallestPositive = arr[0]['L'];
-    arr.forEach(d => {
+    let smallestPositive = arr[0]["L"];
+    arr.forEach((d) => {
       for (let i = 0; i < 2; i++) {
-        let key = 'L' + (i + 1);
+        let key = "L" + (i + 1);
         if (smallestPositive > d[key] && d[key] > 0) {
-          smallestPositive = d[key]
+          smallestPositive = d[key];
         }
       }
-    })
+    });
 
     return Number(smallestPositive.toFixed(2));
   }
@@ -611,76 +628,35 @@ export class ThreeSectionForceService {
     const num = new Array();
     const arr = [];
     var member = this.data.getNoticePointsJson();
-    member.forEach(item => {
-      num.push(item["m"])
+    member.forEach((item) => {
+      num.push(item["m"]);
     });
-    num.forEach(obj => {
+    num.forEach((obj) => {
       let mem = this.member.getMemberNo(obj.toString());
       let nodei = this.node.getNodePos(mem.ni);
       let nodej = this.node.getNodePos(mem.nj);
-      mem.nodei = nodei
-      mem.nodej = nodej
+      mem.nodei = nodei;
+      mem.nodej = nodej;
       arr.push(mem);
-    })
+    });
     return arr;
   }
 
   public createPanel(vertexlist, row): void {
-    const points = []
+    const points = [];
     const geometrys: THREE.BufferGeometry[] = [];
-    for(const p of vertexlist){
-      points.push(new THREE.Vector3(p[0], p[1], p[2]))
+    for (const p of vertexlist) {
+      points.push(new THREE.Vector3(p[0], p[1], p[2]));
     }
 
     var vertexColors = [
       [1.0, 0.0, 0.0],
       [0.0, 1.0, 0.0],
       [0.0, 0.0, 1.0],
-      [1.0, 1.0, 0.0]
+      [1.0, 1.0, 0.0],
     ];
 
-    var indices = new Uint16Array([
-      0, 1, 4,
-      1, 2, 4,
-      2, 5, 4,
-      5, 8, 4,
-    ]);
-
-
-    // vertexlist = [
-    //   [-1.0, -1.0, 1.0],
-    //   [0.0, -1.0, 1.0],
-    //   [1.0, -1.0, 1.0],
-    //   [-1.0, 0.0, 1.0],
-    //   [0.0, 0.0, 1.0],
-    //   [1.0, 0.0, 1.0],
-    //   [-1.0, 1.0, 1.0],
-    //   [0.0, 1.0, 1.0],
-    //   [1.0, 1.0, 1.0]
-    // ];
-
-    // var vertexColors = [
-    //   [1.0, 0.0, 0.0],
-    //   [0.0, 1.0, 0.0],
-    //   [0.0, 0.0, 1.0],
-    //   [1.0, 1.0, 0.0],
-    //   [0.0, 1.0, 1.0],
-    //   [1.0, 0.0, 1.0],
-    //   [0.5, 0.5, 0.0],
-    //   [0.0, 0.5, 0.5],
-    //   [0.5, 0.0, 0.5]
-    // ];
-
-    // var indices = new Uint16Array([
-    //   0, 1, 4,
-    //   1, 2, 4,
-    //   2, 5, 4,
-    //   5, 8, 4,
-    //   8, 7, 4,
-    //   7, 6, 4,
-    //   6, 3, 4,
-    //   3, 0, 4
-    // ]);
+    var indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 5, 4, 8, 7, 3]);
 
     var vertices = new Float32Array(vertexlist.length * 3);
     var colors = new Float32Array(vertexlist.length * 3);
@@ -697,27 +673,24 @@ export class ThreeSectionForceService {
       fragmentShader: [
         "varying mediump vec3 varingrgb;",
         "void main() {",
-          "gl_FragColor = vec4(varingrgb, 1.0);",
-        "}"
+        "gl_FragColor = vec4(varingrgb, 1.0);",
+        "}",
       ].join("\n"),
       vertexShader: [
         "attribute vec3 verpos;",
         "attribute vec3 verrgb;",
         "varying vec3 varingrgb;",
         "void main() {",
-          "gl_Position = projectionMatrix * modelViewMatrix * vec4(verpos, 1.0);",
-          "varingrgb = verrgb;",
-        "}"
-      ].join("\n")
-    }
+        "gl_Position = projectionMatrix * modelViewMatrix * vec4(verpos, 1.0);",
+        "varingrgb = verrgb;",
+        "}",
+      ].join("\n"),
+    };
 
-
-    var materialShader = new THREE.ShaderMaterial(
-      {
-        vertexShader: shader.vertexShader,
-        fragmentShader: shader.fragmentShader
-      }
-    );
+    var materialShader = new THREE.ShaderMaterial({
+      vertexShader: shader.vertexShader,
+      fragmentShader: shader.fragmentShader,
+    });
 
     // 三角形を作る
     // geometrys.push(new THREE.BufferGeometry().setFromPoints([points[0],points[1],points[2], points[3]]));
@@ -732,14 +705,134 @@ export class ThreeSectionForceService {
     //   opacity: 0.7,
     // });
     // for(const g of geometrys) {
-      var g = new THREE.BufferGeometry();
-      g.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
-      g.setIndex(new THREE.BufferAttribute(indices,  1));
-      g.addAttribute('verpos', new THREE.BufferAttribute(vertices, 3));
-      g.addAttribute('verrgb', new THREE.BufferAttribute(colors, 3));
-      const mesh = new THREE.Mesh(g, materialShader);
-      mesh.name = 'panel-' + row.toString();
-      this.scene.add(mesh);
+
+    var g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+    // g.setIndex(new THREE.BufferAttribute(indices,  1));
+    // g.setAttribute('verpos', new THREE.BufferAttribute(vertices, 3));
+    // g.setAttribute('verrgb', new THREE.BufferAttribute(colors, 3));
+    var g1 = new THREE.CylinderBufferGeometry(2, 5, 20, 32, 1, true);
+    g1.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+    var material = new THREE.ShaderMaterial({
+      uniforms: {
+        color1: {
+          value: new THREE.Color("red"),
+        },
+        color2: {
+          value: new THREE.Color("purple"),
+        },
+      },
+      vertexShader: `
+          varying vec2 vUv;
+      
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+          }
+        `,
+      fragmentShader: `
+          uniform vec3 color1;
+          uniform vec3 color2;
+        
+          varying vec2 vUv;
+          
+          void main() {
+            
+            gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
+          }
+        `,
+      wireframe: true,
+    });
+    const mesh = new THREE.Mesh(g1, material);
+    mesh.name = "panel-" + row.toString();
+    this.scene.add(mesh);
+    // }
+  }
+
+  public createPanel1(vertexlist, row): void {
+    const points = [];
+    const geometrys: THREE.BufferGeometry[] = [];
+    for (const p of vertexlist) {
+      points.push(new THREE.Vector3(p[0], p[1], p[2]));
+    }
+    const geometry = new THREE.BufferGeometry();
+    const indices = [];
+
+    const vertices = [];
+    const normals = [];
+    const colors = [];
+
+    const size = 4;
+    const _color = new THREE.Color();
+    // // generate vertices, normals and color data for a simple grid geometry
+    // for (let i = 0; i <= segments; i++) {
+    //   const y = i * segmentSize - halfSize;
+    //   for (let j = 0; j <= segments; j++) {
+    //     const x = j * segmentSize - halfSize;
+    //     vertices.push(x, -y, 0);
+    //     normals.push(0, 0, 1);
+    //     const r = x / size + 0.5;
+    //     const g = y / size + 0.5;
+    //     _color.setRGB(r, g, 1);
+    //     colors.push(_color.r, _color.g, _color.b);
+    //   }
+    // }
+   
+    for (const p of vertexlist) {
+        vertices.push(p[0], p[1], p[2]);
+        normals.push(0, 0, 1);
+        const r = p[0] / size + 0.5;
+        const g = p[1] / size + 0.5;
+        _color.setRGB(r, g, 1);
+        colors.push(_color.r, _color.g, _color.b);
+    }
+
+    console.log(vertices);
+    console.log(colors);
+
+    // //generate indices (data for element array buffer)
+    // for (let i = 0; i < segments; i++) {
+    //   for (let j = 0; j < segments; j++) {
+    //     const a = i * (segments + 1) + (j + 1);
+    //     const b = i * (segments + 1) + j;
+    //     const c = (i + 1) * (segments + 1) + j;
+    //     const d = (i + 1) * (segments + 1) + (j + 1);
+    //     // generate two faces (triangles) per iteration
+    //     indices.push(a, b, d); // face one
+    //     indices.push(b, c, d); // face two
+    //   }
+    // }
+    
+    let lgn = vertexlist.length;
+    for (let i = 0; i < lgn; i++) {
+      for (let j = 0; j < lgn; j++) {
+      const a = i * (lgn + 1) + (j + 1);
+      const b = i * (lgn + 1) + j;
+      const c = (i + 1) * (lgn + 1) + j;
+      const d = (i + 1) * (lgn + 1) + (j + 1);
+      // generate two faces (triangles) per iteration
+      indices.push(a, b, d); // face one
+      indices.push(b, c, d); // face two
+      }
+    }
+    console.log(indices);
+
+    geometry.setIndex(indices);
+    geometry.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(vertices, 3)
+    );
+    geometry.setAttribute(
+      "normal",
+      new THREE.Float32BufferAttribute(normals, 3)
+    );
+    geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+    const material = new THREE.MeshPhongMaterial({
+      side: THREE.DoubleSide,
+      vertexColors: true,
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    this.scene.add(mesh);
     // }
   }
 }

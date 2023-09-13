@@ -1098,6 +1098,7 @@ export class ThreeService {
   }
 
   public createPanelMemberSectionForce(vertexlist, row){
-    this.fsec.createPanel(vertexlist, row);
+    // this.fsec.createPanel(vertexlist, row);
+    this.fsec.createPanel1(vertexlist, row);
   }
 }
