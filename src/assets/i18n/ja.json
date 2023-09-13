@@ -76,7 +76,22 @@
             "material": "材料",
             "codeAngle": "コードアングル",
             "material_name": "材料名称",
-            "No": "No"
+            "No": "No",
+            "member": "部材",
+            "rigid": "剛域",
+            "MemberData": "部材データ"
+        },
+        "input-rigid":{
+            "node": "節点",
+            "node_i": "I端からの距離",
+            "node_j": "J端からの距離",
+            "distance": "部材長",
+            "material": "材料",
+            "material_name": "材料名称",
+            "no": "No",
+            "member": "部材",
+            "rigid": "剛域",
+            "materialNo": "材料No"
         },
         "input-elements": {
             "elastic": "弾性係数",
