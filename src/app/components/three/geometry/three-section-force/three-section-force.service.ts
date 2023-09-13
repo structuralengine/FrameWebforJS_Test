@@ -762,7 +762,12 @@ export class ThreeSectionForceService {
     const normals = [];
     const colors = [];
 
-    const size = 4;
+    const size = 20;
+    const segments = 10;
+
+    const halfSize = size / 2;
+    const segmentSize = size / segments;
+
     const _color = new THREE.Color();
     // // generate vertices, normals and color data for a simple grid geometry
     // for (let i = 0; i <= segments; i++) {
@@ -816,7 +821,7 @@ export class ThreeSectionForceService {
       }
     }
     console.log(indices);
-
+    
     geometry.setIndex(indices);
     geometry.setAttribute(
       "position",
