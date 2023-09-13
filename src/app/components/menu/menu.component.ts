@@ -357,7 +357,7 @@ export class MenuComponent implements OnInit {
 
   public goToLink() {
     window.open(
-      "https://liberating-rodent-f3f.notion.site/4e2148bfe8704aa6b6dbc619d539c8c3?v=76a73b4693404e64a56ab8f8ff538e4d",
+      "https://fresh-tachometer-148.notion.site/FrameWeb-3b1432e6a03647bc85e20c55ade84e96?pvs=4",
       "_blank"
     );
   }

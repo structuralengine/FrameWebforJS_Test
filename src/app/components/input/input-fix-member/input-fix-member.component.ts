@@ -9,6 +9,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { PagerService } from "../pager/pager.service";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
+import { ThreeFixMemberService } from "../../three/geometry/three-fix-member.service";
 
 @Component({
   selector: 'app-input-fix-member',
@@ -85,6 +86,7 @@ export class InputFixMemberComponent implements OnInit, OnDestroy {
     private three: ThreeService,
     private translate: TranslateService,
     private pagerService: PagerService,
+    private threeFixMemberService: ThreeFixMemberService,
     public docLayout:DocLayoutService
   ) {
 
@@ -106,7 +108,49 @@ export class InputFixMemberComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     this.docLayout.handleMove.subscribe(data => {
     this.options.height = data - 60;
-    })
+    });
+
+    this.threeFixMemberService.fixMemberSelected$.subscribe((item: any) => {
+      var name = item.name.replace("fixmember", "");
+      var indexRow = name.substring(0, name.length - 1);
+      var nameCol = name.substring(name.length - 1);
+      var indexCol = 0;
+      switch(nameCol){
+        case 'x':
+          indexCol = 1;
+          break;
+        case 'y':
+          indexCol = 2;
+          break;
+         case 'z':
+          indexCol = 3;
+          break;
+         case 'r':
+          indexCol = 4;
+          break;
+      }
+      if (indexRow >= 29) {
+        let d = Math.ceil(indexRow / 29);
+        this.grid.grid.scrollY(
+          d * this.grid.div.nativeElement.clientHeight,
+          () => {
+            this.grid.grid.setSelection({
+              rowIndx: indexRow - 1,
+              rowIndxPage: 1,
+              colIndx: indexCol,
+              focus: true,
+            });
+          }
+        );
+      } else {
+        this.grid.grid.setSelection({
+          rowIndx: indexRow - 1,
+          rowIndxPage: 1,
+          colIndx: indexCol,
+          focus: true,
+        });
+      }
+    });
   }
     ngOnDestroy() {
       this.subscription.unsubscribe();
@@ -157,6 +201,39 @@ export class InputFixMemberComponent implements OnInit, OnDestroy {
     colModel: (this.helper.dimension === 3) ? this.columnHeaders3D : this.columnHeaders2D,
     dataModel: {
       data: this.dataset
+    },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.paste"),
+          shortcut: 'Ctrl + V',
+          action: function (evt, ui, item) {
+            this.paste();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.cut"),
+          shortcut: 'Ctrl + X',
+          action: function (evt, ui, item) {
+            this.cut();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.undo"),
+          shortcut: 'Ctrl + Z',
+          action: function (evt, ui, item) {
+            this.History().undo();
+          }
+        }
+      ]
     },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;

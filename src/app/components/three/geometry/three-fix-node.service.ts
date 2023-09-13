@@ -9,6 +9,7 @@ import * as THREE from 'three';
 import { ThreeMembersService } from './three-members.service';
 import { CubeCamera } from 'three';
 import { DataHelperModule } from 'src/app/providers/data-helper.module';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -554,6 +555,7 @@ export class ThreeFixNodeService {
         this.fixnodeList.map(item => {
           if (intersects.length > 0 && item === intersects[0].object) {
             // 色を指定する
+            this.sendFixNodeSubject(item);
             this.getColor(item);
             item.material['opacity'] = 1.00;  // 彩度 強
           }
@@ -617,4 +619,10 @@ export class ThreeFixNodeService {
 
   }
 
+  private fixNodeSelectedInThreeSubject = new Subject<any>();
+  fixNodeSelected$ = this.fixNodeSelectedInThreeSubject.asObservable();
+
+  sendFixNodeSubject(item: any) {
+    this.fixNodeSelectedInThreeSubject.next(item);
+  }
 }

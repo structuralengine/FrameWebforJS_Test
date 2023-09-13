@@ -16,7 +16,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
   @ViewChild('pqgrid') div: ElementRef;
   @Input() options: any;
 
-  grid: pq.gridT.instance = null;
+  public grid: pq.gridT.instance = null;
 
   constructor(
     public helper: DataHelperModule,

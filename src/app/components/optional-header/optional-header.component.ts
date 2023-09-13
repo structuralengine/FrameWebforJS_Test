@@ -9,7 +9,7 @@ const URL_INPUTS = [
   "/input-elements",
   "/input-joints",
   "/input-loads",
-  "/input-fix_members",
+  "/input-fix_members"  
 ];
 const URL_RESULTS = [
   "/result-disg",
@@ -37,7 +37,7 @@ const URL_RESULT_PIC = [
   "/result-pic_fsec",
   "/result-pic_disg",
 ];
-
+const URL_MEM = ["/input-members", "/input-rigid_zone"];
 @Component({
   selector: "app-optional-header",
   templateUrl: "./optional-header.component.html",
@@ -53,8 +53,10 @@ export class OptionalHeaderComponent implements OnInit {
   showDisgComponent: boolean;
   showReacComponent: boolean;
   showFsecComponent: boolean;
+  showMemberComponent: boolean;
 
   selectedLink: string = "/input-load-name";
+  selectedMemberLink: string ='/input-members'
   selectedDefineLink: string = "/input-define";
   selectedDisgLink: string = "/result-disg";
   selectedReacLink: string = "/result-reac";
@@ -63,10 +65,11 @@ export class OptionalHeaderComponent implements OnInit {
   selectedLoadPage: number = 1;
   selectedDefinePage: number = 1;
   selectedResultPage: number = 1;
+  selectedMemberPage: number = 1;
   loadPages: number[] = [1, 2];
   definePages: number[] = [1, 2, 3];
   resultPages: number[] = [1, 2, 3];
-
+  memberPages: number[] = [1, 2];
   resultDisgURL: string[] = [
     "/result-disg",
     "/result-comb_disg",
@@ -91,9 +94,11 @@ export class OptionalHeaderComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
+        console.log("event", event.url)
         this.showPagerComponent = URL_INPUTS.concat(URL_RESULTS).includes(
           event.url
         );
+        this.showMemberComponent = URL_MEM.includes(event.url);
         this.showLoadComponent = URL_LOAD.includes(event.url);
         this.showDefineComponent = URL_DEFINE.includes(event.url);
         this.showResultComponent = URL_RESULTS.includes(event.url);
@@ -117,7 +122,11 @@ export class OptionalHeaderComponent implements OnInit {
       this.selectedDefineLink = url;
       this.selectedDefinePage = 1;
       this.onLinkChange(this.selectedDefineLink);
-    } else {
+    } else if(url === "/input-members"){
+      this.selectedMemberLink = url;
+      this.selectedMemberPage = 1;
+      this.onLinkChange(this.selectedMemberLink);
+    }else {
       this.onLinkChange(url);
     }
   }
@@ -126,7 +135,16 @@ export class OptionalHeaderComponent implements OnInit {
     this.isControlOpen ? this.scene.close() : this.scene.open();
     this.isControlOpen = !this.isControlOpen;
   }
-
+  previousMemberPage(){
+    this.selectedMemberPage--;
+    this.selectedMemberLink = "/input-members";
+    this.onLinkChange(this.selectedMemberLink);
+  }
+  nextMemberPage(){
+    this.selectedMemberPage++;
+    this.selectedMemberLink = "/input-rigid_zone";
+    this.onLinkChange(this.selectedMemberLink);
+  }
   previousLoadPage() {
     this.selectedLoadPage--;
     this.selectedLink = "/input-load-name";
