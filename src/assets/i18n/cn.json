@@ -75,7 +75,22 @@
             "material": "材料",
             "codeAngle": "转动角度",
             "material_name": "材料名称",
-            "No": "编码"
+            "No": "编码",
+            "member": "构件",
+            "rigid": "避难",
+            "MemberData": "构件数据"
+        },
+        "input-rigid": {
+            "node": "节点",
+            "node_i": "与末端I的距离",
+            "node_j": "与末端J的距离",
+            "distance": "构件长",
+            "material": "材料",
+            "material_name": "材料名称",
+            "no": "编码",
+            "member": "构件",
+            "rigid": "避难",
+            "materialNo": "材料编码"
         },
         "input-elements": {
             "elastic": "弹性系数",
