@@ -1,6 +1,8 @@
 {
   "name": "frame-web-for-js",
+
   "version": "2.1.5",
+
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host=127.0.0.1",
