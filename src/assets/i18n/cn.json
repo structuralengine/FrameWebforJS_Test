@@ -401,7 +401,8 @@
     },
     "window": {
         "closeTitle": "查看",
-        "closeMessage": "不会保存更改。 您确定要完成它吗?"
+        "closeMessage": "不会保存更改。 您确定要完成它吗?",
+        "confirm": "您确定输入的数据将被销毁吗？"
     },
     "action_key":{
         "copy": "複製",
