@@ -79,19 +79,23 @@ export class MenuComponent implements OnInit {
   }
 
   // 新規作成
-  renew(): void {
-    this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.InputData.clear();
-    this.ResultData.clear();
-    this.PrintData.clear();
-    this.CustomFsecData.clear();
-    this.three.ClearData();
-    this.fileName = "";
-    this.three.fileName = "";
-    this.three.mode = "";
-
-    // "新規作成"のとき、印刷パネルのフラグをリセットする
-    this.printCustomFsecService.flg = undefined;
+  async renew(): Promise<void> {
+    const isConfirm = await this.helper.confirm(this.translate.instant("window.confirm"));
+    if(isConfirm)
+    {
+      this.app.dialogClose(); // 現在表示中の画面を閉じる
+      this.InputData.clear();
+      this.ResultData.clear();
+      this.PrintData.clear();
+      this.CustomFsecData.clear();
+      this.three.ClearData();
+      this.fileName = "";
+      this.three.fileName = "";
+      this.three.mode = "";
+  
+      // "新規作成"のとき、印刷パネルのフラグをリセットする
+      this.printCustomFsecService.flg = undefined;
+    }
   }
 
   // Electron でファイルを開く
