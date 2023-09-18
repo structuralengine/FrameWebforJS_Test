@@ -239,26 +239,12 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   }
 
   private drawGradientPanel(){
-    let allFsecs = this.result.fsec.fsec[1];
     const nodeData = this.nodes.getNodeJson(0);
     if (Object.keys(nodeData).length <= 0) {
       return;
     }
     this.panelData = [];
     let pData = this.panel.getPanelJson(0);
-    // for (const pk of Object.keys(pData)) {
-    //   const p = pData[pk];
-    //   let nodeData = []; 
-    //   p.nodes.forEach(n => {
-    //     let sn = n.toString();
-    //     let nData = allFsecs.filter(x => x.n === sn && x.m != "")[0];
-    //     nodeData.push(nData);
-    //   });
-    //   this.panelData.push({ 
-    //     nodes: p.nodes,
-    //     datas:nodeData
-    //   });
-    // }
 
     if (Object.keys(pData).length <= 0) {
       return;

@@ -749,26 +749,26 @@ export class ThreeSectionForceService {
     // }
   }
 
-  public createPanel1(vertexlist, row): void {
-    const points = [];
+  public createPanel1(vertexlist, key): void {
+    var points = [];
     const geometrys: THREE.BufferGeometry[] = [];
     for (const p of vertexlist) {
       points.push(new THREE.Vector3(p[0], p[1], p[2]));
     }
-    const geometry = new THREE.BufferGeometry();
-    const indices = [];
+    var geometry = new THREE.BufferGeometry();
+    var indices = [];
 
-    const vertices = [];
-    const normals = [];
-    const colors = [];
+    var vertices = [];
+    var normals = [];
+    var colors = [];
 
-    const size = 20;
-    const segments = 10;
+    var size = 4;
+    var segments = 4;
 
-    const halfSize = size / 2;
-    const segmentSize = size / segments;
+    // var halfSize = size / 2;
+    // var segmentSize = size / segments;
 
-    const _color = new THREE.Color();
+    var _color = new THREE.Color();
     // // generate vertices, normals and color data for a simple grid geometry
     // for (let i = 0; i <= segments; i++) {
     //   const y = i * segmentSize - halfSize;
@@ -783,9 +783,9 @@ export class ThreeSectionForceService {
     //   }
     // }
    
-    for (const p of vertexlist) {
+    for (let p of vertexlist) {
         vertices.push(p[0], p[1], p[2]);
-        normals.push(0, 0, 1);
+        normals.push(p[0], p[1], p[2]);
         const r = p[0] / size + 0.5;
         const g = p[1] / size + 0.5;
         _color.setRGB(r, g, 1);
@@ -798,17 +798,17 @@ export class ThreeSectionForceService {
     // //generate indices (data for element array buffer)
     // for (let i = 0; i < segments; i++) {
     //   for (let j = 0; j < segments; j++) {
-    //     const a = i * (segments + 1) + (j + 1);
-    //     const b = i * (segments + 1) + j;
-    //     const c = (i + 1) * (segments + 1) + j;
-    //     const d = (i + 1) * (segments + 1) + (j + 1);
+    //     const a = i * (segments + key) + (j + 1);
+    //     const b = i * (segments + key) + j;
+    //     const c = (i + 1) * (segments + key) + j ;
+    //     const d = (i + 1) * (segments + key) + (j + 1);
     //     // generate two faces (triangles) per iteration
     //     indices.push(a, b, d); // face one
     //     indices.push(b, c, d); // face two
     //   }
     // }
     
-    let lgn = vertexlist.length;
+    let lgn = vertices.length;
     for (let i = 0; i < lgn; i++) {
       for (let j = 0; j < lgn; j++) {
       const a = i * (lgn + 1) + (j + 1);
@@ -820,20 +820,21 @@ export class ThreeSectionForceService {
       indices.push(b, c, d); // face two
       }
     }
-    console.log(indices);
+    // console.log(indices);
     
     geometry.setIndex(indices);
     geometry.setAttribute(
       "position",
-      new THREE.Float32BufferAttribute(vertices, 3)
+      new THREE.BufferAttribute(vertices, 3)
     );
     geometry.setAttribute(
       "normal",
-      new THREE.Float32BufferAttribute(normals, 3)
+      new THREE.BufferAttribute(normals, 3)
     );
-    geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     const material = new THREE.MeshPhongMaterial({
       side: THREE.DoubleSide,
+      flatShading: true,
       vertexColors: true,
     });
     var mesh = new THREE.Mesh(geometry, material);
