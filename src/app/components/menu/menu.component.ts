@@ -81,11 +81,10 @@ export class MenuComponent implements OnInit {
   @HostListener('document:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
     //Check if Ctrl and S key are both pressed
-    if (event.ctrlKey && event.key === 's') {
+    if (event.ctrlKey && (event.key === 'S' || event.key === 's')) {
       event.preventDefault(); // Prevent default behavior of Ctrl + S
       // Perform your action here
       this.overWrite();
-      console.log("a")
     }
   }
 
