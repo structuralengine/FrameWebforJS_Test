@@ -782,15 +782,28 @@ export class ThreeSectionForceService {
     //     colors.push(_color.r, _color.g, _color.b);
     //   }
     // }
-   
-    for (let p of vertexlist) {
+
+    // 0,255,255 cygan
+    // 255,0,0 red
+    // 158, 97, 97
+    // 107, 148, 148
+
+    var arrColors = [
+      [0,255,255],
+      [255,0,0],
+      [158, 97, 97],
+      [107, 148, 148],
+    ];
+    vertexlist.forEach((p, index) => {
+    // for (let p of vertexlist) {
         vertices.push(p[0], p[1], p[2]);
-        normals.push(p[0], p[1], p[2]);
+        normals.push(0, 0, 1);
         const r = p[0] / size + 0.5;
         const g = p[1] / size + 0.5;
         _color.setRGB(r, g, 1);
         colors.push(_color.r, _color.g, _color.b);
-    }
+        // colors.push(arrColors[index][0], arrColors[index][1], arrColors[index][2]);
+    });
 
     console.log(vertices);
     console.log(colors);
@@ -808,8 +821,8 @@ export class ThreeSectionForceService {
     //   }
     // }
     
-    let lgn = vertices.length;
-    for (let i = 0; i < lgn; i++) {
+    let lgn = vertexlist.length;
+    for (let i = 0;  i < lgn; i++) {
       for (let j = 0; j < lgn; j++) {
       const a = i * (lgn + 1) + (j + 1);
       const b = i * (lgn + 1) + j;
@@ -822,18 +835,30 @@ export class ThreeSectionForceService {
     }
     // console.log(indices);
     
-    geometry.setIndex(indices);
+    geometry.setIndex([0, 1, 2, 
+      0, 2, 1, 
+      1, 2, 0, 
+      1, 0, 2, 
+      2, 1, 0, 
+      2, 0, 1,
+      0, 2, 3,
+      0, 3, 2,
+      2, 0, 3,
+      2, 3, 0,
+      3, 0, 2,
+      3, 2, 0]);
     geometry.setAttribute(
       "position",
-      new THREE.BufferAttribute(vertices, 3)
+      new THREE.Float32BufferAttribute(vertices, 3)
     );
+    const faceIndices = geometry.getIndex().array;
     geometry.setAttribute(
       "normal",
-      new THREE.BufferAttribute(normals, 3)
+      new THREE.Float32BufferAttribute(normals, 3)
     );
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute("color", new THREE.Float32BufferAttribute (colors, 3));
     const material = new THREE.MeshPhongMaterial({
-      side: THREE.DoubleSide,
+      // side: THREE.DoubleSide,
       flatShading: true,
       vertexColors: true,
     });
