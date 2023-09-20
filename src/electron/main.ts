@@ -46,7 +46,7 @@ app.whenReady().then(async () => {
 });
 
 autoUpdater.checkForUpdatesAndNotify();
-
+ipcMain.on("newWindow", async() => await createWindow());
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
 ipcMain.on('open', (event: Electron.IpcMainEvent) => {

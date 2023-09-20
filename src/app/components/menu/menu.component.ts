@@ -87,7 +87,9 @@ export class MenuComponent implements OnInit {
       this.overWrite();
     }
   }
-
+  public  newWindow(){
+    this.electronService.ipcRenderer.send("newWindow");
+  }
   // 新規作成
   async renew(): Promise<void> {
     const isConfirm = await this.helper.confirm(this.translate.instant("window.confirm"));
