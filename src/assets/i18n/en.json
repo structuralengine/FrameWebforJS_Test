@@ -39,7 +39,7 @@
         "newEntry": "Create a new file",
         "openFile": "Open file",
         "saveFile": "Save a file",
-        "overwrite": "overwrite save",
+        "overwrite": "Overwrite save",
         "print": "Print",
         "outputFile": "Pickup file output",
         "language": "Language",
@@ -52,7 +52,8 @@
         "deduct_points": "points consumed. Today's usage is",
         "new_points": "points.",
         "control": "Control",
-        "today_used_point": "Points Used Today"
+        "today_used_point": "Points Used Today",
+        "NewWindow":"New window"
     },
     "input": {
         "input-fix-node": {

@@ -53,7 +53,8 @@
         "deduct_points": "ポイント消費しました。本日の使用量は、",
         "new_points": "です。",
         "control": "コントロール",
-        "today_used_point": "本日の使用ポイント"
+        "today_used_point": "本日の使用ポイント",
+        "NewWindow":"新しいウィンドウ"
     },
     "input": {
         "input-fix-node": {
