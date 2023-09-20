@@ -126,7 +126,7 @@ export class ThreePanelService {
           continue;
         }
       }
-
+      console.log("vertexlist",vertexlist)
       this.createPanel(vertexlist, key);
     }
   }

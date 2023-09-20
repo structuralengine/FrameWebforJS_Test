@@ -11,6 +11,7 @@ import { ThreeMembersService } from "../three-members.service";
 import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
 import { MaxMinService } from "../../max-min/max-min.service";
+import { forEach } from "jszip";
 
 @Injectable({
   providedIn: "root",
@@ -21,7 +22,7 @@ export class ThreeSectionForceService {
   private currentIndex: string;
   private currentMode: string;
   public currentRadio: string;
-
+  public memSeForce: any[];
   private scale: number;
   private textCount: number; // 文字を出力する数
   private params: any; // GUIの表示制御
@@ -33,6 +34,7 @@ export class ThreeSectionForceService {
     "momentY",
     "momentZ",
   ];
+  public verticalList: any[];
   private radioButtons2D = ["axialForce", "shearForceY", "momentZ"];
   private radioButtons = this.radioButtons3D || this.radioButtons2D;
   private gui: any;
@@ -59,6 +61,7 @@ export class ThreeSectionForceService {
     private three_member: ThreeMembersService,
     private data: InputNoticePointsService
   ) {
+    this.memSeForce = new Array();
     this.ThreeObject1 = new THREE.Object3D();
     this.ThreeObject1.visible = false; // 呼び出されるまで非表示
     this.ThreeObject2 = new THREE.Object3D();
@@ -191,12 +194,18 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
+          // if(this.verticalList.length > 0){
+          //   this.verticalList.forEach((mem) =>{
+          //     this.createPanel1(mem['vertexlist'], mem['key']);
+          //   })
+          // }
+          
           const key1: string =
             key === "axialForce" || key === "torsionalMoment"
               ? "x"
               : key === "shearForceY" || key === "momentY"
-              ? "y"
-              : "z";
+                ? "y"
+                : "z";
           this.max_min._getMaxMinValue(
             this.value_ranges[this.currentMode][this.currentIndex][key1],
             "fsec",
@@ -382,7 +391,6 @@ export class ThreeSectionForceService {
       for (let i = fsecData.length + 1; i < ThreeObject.children.length; i++) {
         ThreeObject.children.splice(0, 1);
       }
-
       let nodei: THREE.Vector3;
       let nodej: THREE.Vector3;
       let localAxis: any;
@@ -392,7 +400,12 @@ export class ThreeSectionForceService {
       let P1: number = 0;
       let P2: number = 0;
       let counter = 0;
+      this.memSeForce = new Array();
       for (const fsec of fsecData) {
+        if (fsec["m"] !== "" || fsec["n"] !== "") {
+          if (!this.memSeForce.includes(fsec))
+            this.memSeForce.push(fsec);
+        }
         const id = fsec["m"].trim();
         if (id.length > 0) {
           // 節点データを集計する
@@ -465,7 +478,6 @@ export class ThreeSectionForceService {
     // 主な点に文字を追加する
     // if(this.helper.dimension === 3) return;
     // 断面力の大きい順に並び変える
-
     textValues.sort((a, b) => {
       return Math.abs(a) < Math.abs(b) ? 1 : -1;
     });
@@ -724,7 +736,7 @@ export class ThreeSectionForceService {
       },
       vertexShader: `
           varying vec2 vUv;
-      
+
           void main() {
             vUv = uv;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
@@ -733,11 +745,11 @@ export class ThreeSectionForceService {
       fragmentShader: `
           uniform vec3 color1;
           uniform vec3 color2;
-        
+
           varying vec2 vUv;
-          
+
           void main() {
-            
+
             gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
           }
         `,
@@ -750,6 +762,36 @@ export class ThreeSectionForceService {
   }
 
   public createPanel1(vertexlist, key): void {
+    //this.verticalList.push({vertexlist, key});
+    let re = [];
+    for (const item of vertexlist) {
+      let arr = [];
+      this.memSeForce.forEach((mem: any) => {
+        var test = this.node.getNodePos(mem['n']);
+        if (test.x === item[0] && test.y === item[1] && test.z === item[2]) {
+          if (!arr.includes(mem))
+            arr.push(mem);
+        }
+      })
+
+      if (arr.length > 1) {
+        let max = arr[0][this.checkRadioButton()];
+        let p = 0;
+        arr.forEach((a, index) => {
+          if (max < a.val) {
+            max = a.val;
+            p = index
+          }
+        })
+        re.push(arr[p]);
+      } else {
+        re.push(arr[0])
+      }
+    }
+    re.sort((a, b) => {
+      return a[this.checkRadioButton()] < b[this.checkRadioButton()] ? 1 : -1;
+    })
+    console.log("re", re)
     var points = [];
     const geometrys: THREE.BufferGeometry[] = [];
     for (const p of vertexlist) {
@@ -788,25 +830,37 @@ export class ThreeSectionForceService {
     // 158, 97, 97
     // 107, 148, 148
 
+    // var arrColors = [
+    //   [0,255,255],
+    //   [255,0,0],
+    //   [158,97,97],
+    //   [107,148,148],
+    // ];
     var arrColors = [
-      [0,255,255],
-      [255,0,0],
-      [158, 97, 97],
-      [107, 148, 148],
+      [0, 1, 0],
+      [1, 1, 0],
+      [1, 1, 0],
+      [1, 0, 0]
     ];
-    vertexlist.forEach((p, index) => {
-    // for (let p of vertexlist) {
-        vertices.push(p[0], p[1], p[2]);
-        normals.push(0, 0, 1);
-        const r = p[0] / size + 0.5;
-        const g = p[1] / size + 0.5;
-        _color.setRGB(r, g, 1);
-        colors.push(_color.r, _color.g, _color.b);
-        // colors.push(arrColors[index][0], arrColors[index][1], arrColors[index][2]);
+    vertexlist.forEach((p) => {
+      //for (let p of vertexlist) {
+      vertices.push(p[0], p[1], p[2]);
+      normals.push(0, 0, 1);
+      const r = p[0] / size + 0.5;
+      const g = p[1] / size + 0.5;
+      _color.setRGB(r, g, 1);
+      //colors.push(_color.r, _color.g, _color.b);
+      re.forEach((t, index) => {
+        var test = this.node.getNodePos(t['n']);
+        if (test.x === p[0] && test.y === p[1] && test.z === p[2]) {
+          colors.push(arrColors[index][0], arrColors[index][1], arrColors[index][2]);
+        }
+      })
+      //}
     });
 
-    console.log(vertices);
-    console.log(colors);
+    console.log("vertices", vertices);
+    console.log("colors", colors);
 
     // //generate indices (data for element array buffer)
     // for (let i = 0; i < segments; i++) {
@@ -815,31 +869,31 @@ export class ThreeSectionForceService {
     //     const b = i * (segments + key) + j;
     //     const c = (i + 1) * (segments + key) + j ;
     //     const d = (i + 1) * (segments + key) + (j + 1);
-    //     // generate two faces (triangles) per iteration
+    //     generate two faces (triangles) per iteration
     //     indices.push(a, b, d); // face one
     //     indices.push(b, c, d); // face two
     //   }
     // }
-    
+
     let lgn = vertexlist.length;
-    for (let i = 0;  i < lgn; i++) {
+    for (let i = 0; i < lgn; i++) {
       for (let j = 0; j < lgn; j++) {
-      const a = i * (lgn + 1) + (j + 1);
-      const b = i * (lgn + 1) + j;
-      const c = (i + 1) * (lgn + 1) + j;
-      const d = (i + 1) * (lgn + 1) + (j + 1);
-      // generate two faces (triangles) per iteration
-      indices.push(a, b, d); // face one
-      indices.push(b, c, d); // face two
+        const a = i * (lgn + 1) + (j + 1);
+        const b = i * (lgn + 1) + j;
+        const c = (i + 1) * (lgn + 1) + j;
+        const d = (i + 1) * (lgn + 1) + (j + 1);
+        // generate two faces (triangles) per iteration
+        indices.push(a, b, d); // face one
+        indices.push(b, c, d); // face two
       }
     }
     // console.log(indices);
-    
-    geometry.setIndex([0, 1, 2, 
-      0, 2, 1, 
-      1, 2, 0, 
-      1, 0, 2, 
-      2, 1, 0, 
+
+    geometry.setIndex([0, 1, 2,
+      0, 2, 1,
+      1, 2, 0,
+      1, 0, 2,
+      2, 1, 0,
       2, 0, 1,
       0, 2, 3,
       0, 3, 2,
@@ -856,7 +910,7 @@ export class ThreeSectionForceService {
       "normal",
       new THREE.Float32BufferAttribute(normals, 3)
     );
-    geometry.setAttribute("color", new THREE.Float32BufferAttribute (colors, 3));
+    geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
     const material = new THREE.MeshPhongMaterial({
       // side: THREE.DoubleSide,
       flatShading: true,
@@ -865,5 +919,38 @@ export class ThreeSectionForceService {
     var mesh = new THREE.Mesh(geometry, material);
     this.scene.add(mesh);
     // }
+  }
+  public checkRadioButton() {
+    let key1: string;
+    let key2: string;
+    if (this.params.axialForce === true) {
+      this.currentRadio = "axialForce";
+      key1 = "fx";
+    } else if (this.params.torsionalMoment === true) {
+      // ねじり曲げモーメント
+      this.currentRadio = "torsionalMoment";
+      key1 = "mx";
+
+    } else if (this.params.shearForceY === true) {
+      // Y方向のせん断力
+      this.currentRadio = "shearForceY";
+      key1 = "fy";
+
+    } else if (this.params.momentY === true) {
+      // Y軸周りの曲げモーメント
+      this.currentRadio = "momentY";
+      key1 = "my";
+
+    } else if (this.params.shearForceZ === true) {
+      // Z方向のせん断力
+      this.currentRadio = "shearForceZ";
+      key1 = "fz";
+
+    } else if (this.params.momentZ === true) {
+      // Z軸周りの曲げモーメント
+      this.currentRadio = "momentZ";
+      key1 = "mz";
+    }
+    return key1;
   }
 }
