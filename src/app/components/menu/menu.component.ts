@@ -78,6 +78,18 @@ export class MenuComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    //Check if Ctrl and S key are both pressed
+    if (event.ctrlKey && (event.key === 'S' || event.key === 's')) {
+      event.preventDefault(); // Prevent default behavior of Ctrl + S
+      // Perform your action here
+      this.overWrite();
+    }
+  }
+  public  newWindow(){
+    this.electronService.ipcRenderer.send("newWindow");
+  }
   // 新規作成
   async renew(): Promise<void> {
     const isConfirm = await this.helper.confirm(this.translate.instant("window.confirm"));
