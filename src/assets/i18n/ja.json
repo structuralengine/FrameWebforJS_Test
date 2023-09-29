@@ -51,6 +51,7 @@
         "calc_start": "計算を開始します",
         "success": "通信成功!!",
         "deduct_points": "ポイント消費しました。本日の使用量は、",
+        "calc_complete":"計算が完了しました",
         "new_points": "です。",
         "control": "コントロール",
         "today_used_point": "本日の使用ポイント",

@@ -302,10 +302,11 @@ export class AppComponent implements OnInit {
           } finally {
             modalRef.close(); // モーダルダイアログを消す
             this.helper.alert(
-              this.user.deduct_points
+              this.translate.instant("menu.calc_complete") // 一時的にポイント消費量の通知を削除
+              /*this.user.deduct_points
               + this.translate.instant("menu.deduct_points")
               + this.user.new_points
-              + this.translate.instant("menu.new_points")
+              + this.translate.instant("menu.new_points")*/
             );
           }
         },
