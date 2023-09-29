@@ -12,6 +12,10 @@ import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
 import { MaxMinService } from "../../max-min/max-min.service";
 import { forEach } from "jszip";
+import { ResultFsecComponent } from "src/app/components/result/result-fsec/result-fsec.component";
+import { ResultFsecService } from "src/app/components/result/result-fsec/result-fsec.service";
+import { InputPanelService } from "src/app/components/input/input-panel/input-panel.service";
+import { ThreeService } from "../../three.service";
 
 @Injectable({
   providedIn: "root",
@@ -44,7 +48,7 @@ export class ThreeSectionForceService {
 
   public max: number;
   public min: number;
-
+  public panelData: any[];
   private nodeData: any;
   private memberData: any;
   private fsecData = { fsec: null, comb_fsec: null, pick_fsec: null };
@@ -56,6 +60,7 @@ export class ThreeSectionForceService {
     private max_min: MaxMinService,
     private helper: DataHelperModule,
     private node: InputNodesService,
+    private panel: InputPanelService,
     private member: InputMembersService,
     private three_node: ThreeNodesService,
     private three_member: ThreeMembersService,
@@ -97,6 +102,7 @@ export class ThreeSectionForceService {
     this.guiEnable();
     this.changeMesh();
     this.onResize();
+    //this.drawGradientPanel();
   }
 
   // データをクリアする
@@ -194,12 +200,13 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
+          this.drawGradientPanel();
           // if(this.verticalList.length > 0){
           //   this.verticalList.forEach((mem) =>{
           //     this.createPanel1(mem['vertexlist'], mem['key']);
           //   })
           // }
-          
+          //this.result_fsec.drawGradientPanel();
           const key1: string =
             key === "axialForce" || key === "torsionalMoment"
               ? "x"
@@ -238,6 +245,7 @@ export class ThreeSectionForceService {
     this.changeMesh();
     this.onResize();
     this.scene.render();
+    this.drawGradientPanel();
   }
 
   // gui 選択されたチェックボックス以外をOFFにする
@@ -268,6 +276,7 @@ export class ThreeSectionForceService {
     this.currentMode = "fsec";
     this.currentIndex = keys[0];
     this.changeMesh();
+    //this.drawGradientPanel();
     this.ThreeObject1.visible = false; // 呼び出されるまで非表示
     this.ThreeObject2.visible = false; // 呼び出されるまで非表示
     this.currentMode = "";
@@ -334,6 +343,7 @@ export class ThreeSectionForceService {
     } else {
       this.params[this.currentRadio] = true;
       this.changeMesh();
+      //this.drawGradientPanel();
       return;
     }
 
@@ -564,6 +574,7 @@ export class ThreeSectionForceService {
       this.guiEnable();
     }
     this.changeMesh();
+    //this.drawGradientPanel();
     this.onResize();
   }
 
@@ -763,35 +774,13 @@ export class ThreeSectionForceService {
 
   public createPanel1(vertexlist, key): void {
     //this.verticalList.push({vertexlist, key});
-    let re = [];
-    for (const item of vertexlist) {
-      let arr = [];
-      this.memSeForce.forEach((mem: any) => {
-        var test = this.node.getNodePos(mem['n']);
-        if (test.x === item[0] && test.y === item[1] && test.z === item[2]) {
-          if (!arr.includes(mem))
-            arr.push(mem);
-        }
-      })
-
-      if (arr.length > 1) {
-        let max = arr[0][this.checkRadioButton()];
-        let p = 0;
-        arr.forEach((a, index) => {
-          if (max < a.val) {
-            max = a.val;
-            p = index
-          }
-        })
-        re.push(arr[p]);
-      } else {
-        re.push(arr[0])
-      }
-    }
-    re.sort((a, b) => {
+    var val = this.GetValueTable(vertexlist);
+    var panel1 = this.GetAllPanel();
+    var values = this.GetValueTable(panel1);
+    values.sort((a, b) => {
       return a[this.checkRadioButton()] < b[this.checkRadioButton()] ? 1 : -1;
     })
-    console.log("re", re)
+    console.log("values", values)
     var points = [];
     const geometrys: THREE.BufferGeometry[] = [];
     for (const p of vertexlist) {
@@ -830,33 +819,51 @@ export class ThreeSectionForceService {
     // 158, 97, 97
     // 107, 148, 148
 
-    // var arrColors = [
-    //   [0,255,255],
-    //   [255,0,0],
-    //   [158,97,97],
-    //   [107,148,148],
-    // ];
     var arrColors = [
-      [0, 1, 0],
-      [1, 1, 0],
-      [1, 1, 0],
-      [1, 0, 0]
+      [74, 160, 183],
+      [255, 0, 0],
+      [228, 100, 97],
+      [229, 226, 171],
     ];
-    vertexlist.forEach((p) => {
-      //for (let p of vertexlist) {
-      vertices.push(p[0], p[1], p[2]);
-      normals.push(0, 0, 1);
-      const r = p[0] / size + 0.5;
-      const g = p[1] / size + 0.5;
-      _color.setRGB(r, g, 1);
-      //colors.push(_color.r, _color.g, _color.b);
-      re.forEach((t, index) => {
-        var test = this.node.getNodePos(t['n']);
-        if (test.x === p[0] && test.y === p[1] && test.z === p[2]) {
-          colors.push(arrColors[index][0], arrColors[index][1], arrColors[index][2]);
+    // var arrColors = [
+    //   [0, 1, 0],
+    //   [1, 1, 0],
+    //   [1, 0, 0]
+    // ];
+
+    // const r = p[0] / size + 0.5;
+    // const g = p[1] / size + 0.5;
+    // _color.setRGB(r, g, 1);
+    // colors.push(_color.r, _color.g, _color.b);
+    val.forEach((t) => {
+      var test = this.node.getNodePos(t['n']);
+      vertices.push(test.x, test.y, test.z);
+      normals.push(0, 1, 0);
+      var mid = (values[values.length - 1][this.checkRadioButton()] + values[0][this.checkRadioButton()]) / 2;
+
+      if (t[this.checkRadioButton()] === values[0][this.checkRadioButton()]) {
+        _color.setRGB(arrColors[1][0], arrColors[1][1], arrColors[1][2]);
+        colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
+      }
+      //colors.push(arrColors[2][0], arrColors[2][1], arrColors[2][2]);
+      else if (t[this.checkRadioButton()] === values[values.length - 1][this.checkRadioButton()]) {
+        //colors.push(arrColors[0][0], arrColors[0][1], arrColors[0][2]);
+        _color.setRGB(arrColors[0][0], arrColors[0][1], arrColors[0][2]);
+        colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
+      }
+      else {
+        if ((mid < t[this.checkRadioButton()])) {
+          _color.setRGB(arrColors[2][0], arrColors[2][1], arrColors[2][2]);
+          colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
         }
-      })
-      //}
+        else {
+
+          _color.setRGB(arrColors[3][0], arrColors[3][1], arrColors[3][2]);
+          colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
+
+        }
+      }
+
     });
 
     console.log("vertices", vertices);
@@ -918,7 +925,7 @@ export class ThreeSectionForceService {
     });
     var mesh = new THREE.Mesh(geometry, material);
     this.scene.add(mesh);
-    // }
+    // } 
   }
   public checkRadioButton() {
     let key1: string;
@@ -952,5 +959,106 @@ export class ThreeSectionForceService {
       key1 = "mz";
     }
     return key1;
+  }
+  public GetValueTable(vertexlist: any) {
+    let re = [];
+    let result = [];
+    for (const item of vertexlist) {
+      let arr = [];
+      this.memSeForce.forEach((mem: any) => {
+        var test = this.node.getNodePos(mem['n']);
+        if (test.x === item[0] && test.y === item[1] && test.z === item[2]) {
+          if (!arr.includes(mem))
+            arr.push(mem);
+        }
+      })
+
+      if (arr.length > 1) {
+        let max = arr[0][this.checkRadioButton()];
+        let p = 0;
+        arr.forEach((a, index) => {
+          if (max < a.val) {
+            max = a.val;
+            p = index
+          }
+        })
+        re.push(arr[p]);
+      } else {
+        re.push(arr[0])
+      }
+    }
+    // re.sort((a, b) => {
+    //   return a[this.checkRadioButton()] < b[this.checkRadioButton()] ? 1 : -1;
+    // })
+    return re;
+  }
+  public GetAllPanel() {
+    const nodeData = this.node.getNodeJson(0);
+    if (Object.keys(nodeData).length <= 0) {
+      return;
+    }
+    this.panelData = [];
+    let pData = this.panel.getPanelJson(0);
+
+    if (Object.keys(pData).length <= 0) {
+      return;
+    }
+    let arrData = [];
+    for (const key of Object.keys(pData)) {
+      const target = pData[key];
+      if (target.nodes.length <= 2) {
+        continue
+      }
+      //対象のnodeDataを入手
+
+      for (const check of target.nodes) {
+        if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
+          const n = nodeData[check];
+          const x = n.x;
+          const y = n.y;
+          const z = n.z;
+          arrData.push([x, y, z]);
+        } else if (!(check - 1 in Object.keys(nodeData))) {
+          continue;
+        }
+      }
+    }
+    return arrData;
+  }
+  public drawGradientPanel() {
+    const nodeData = this.node.getNodeJson(0);
+    if (Object.keys(nodeData).length <= 0) {
+      return;
+    }
+    this.panelData = [];
+    let pData = this.panel.getPanelJson(0);
+
+    if (Object.keys(pData).length <= 0) {
+      return;
+    }
+
+    for (const key of Object.keys(pData)) {
+      const target = pData[key];
+      if (target.nodes.length <= 2) {
+        continue
+      }
+
+      //対象のnodeDataを入手
+      const vertexlist = [];
+      for (const check of target.nodes) {
+        if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
+          const n = nodeData[check];
+          const x = n.x;
+          const y = n.y;
+          const z = n.z;
+          vertexlist.push([x, y, z]);
+
+        } else if (!(check - 1 in Object.keys(nodeData))) {
+          continue;
+        }
+      }
+      this.createPanel1(vertexlist, key);
+    }
+
   }
 }

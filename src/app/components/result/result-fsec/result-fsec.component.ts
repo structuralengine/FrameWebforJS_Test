@@ -17,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { InputPanelService } from '../../input/input-panel/input-panel.service';
 import { forEach } from 'jszip';
 import { InputNodesService } from '../../input/input-nodes/input-nodes.service';
+import { ThreeSectionForceService } from '../../three/geometry/three-section-force/three-section-force.service';
 
 @Component({
   selector: 'app-result-fsec',
@@ -82,7 +83,8 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     private helper: DataHelperModule,
     private pagerService: PagerService,
     public docLayout: DocLayoutService,
-    private translate: TranslateService,
+    private translate: TranslateService  ,
+    private three_fesc: ThreeSectionForceService
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -235,43 +237,66 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     this.three.ChangeMode('fsec');
     this.three.ChangePage(currentPage);
 
-    this.drawGradientPanel();
+    this.three_fesc.drawGradientPanel();
   }
 
-  private drawGradientPanel(){
-    const nodeData = this.nodes.getNodeJson(0);
-    if (Object.keys(nodeData).length <= 0) {
-      return;
-    }
-    this.panelData = [];
-    let pData = this.panel.getPanelJson(0);
+  // public drawGradientPanel(){
+  //   const nodeData = this.nodes.getNodeJson(0);
+  //   if (Object.keys(nodeData).length <= 0) {
+  //     return;
+  //   }
+  //   this.panelData = [];
+  //   let pData = this.panel.getPanelJson(0);
 
-    if (Object.keys(pData).length <= 0) {
-      return;
-    }
+  //   if (Object.keys(pData).length <= 0) {
+  //     return;
+  //   }
+  //   let arrData = [];
+  //   for (const key of Object.keys(pData)) {
+  //     const target = pData[key];
+  //     if (target.nodes.length <= 2) {
+  //       continue
+  //     }
+  //     //対象のnodeDataを入手
 
-    for (const key of Object.keys(pData)) {
-      const target = pData[key];
-      if (target.nodes.length <= 2) {
-        continue
-      }
+  //     for (const check of target.nodes) {
+  //       if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
+  //         const n = nodeData[check];
+  //         const x = n.x;
+  //         const y = n.y;
+  //         const z = n.z;
+          
+  //         arrData.push([x, y, z]);
+  //       } else if (!(check - 1 in Object.keys(nodeData))) {
+  //         continue;
+  //       }
+  //     }
+      
+  //   }
+  //   for (const key of Object.keys(pData)) {
+  //     const target = pData[key];
+  //     if (target.nodes.length <= 2) {
+  //       continue
+  //     }
 
-      //対象のnodeDataを入手
-      const vertexlist = [];
-      for (const check of target.nodes) {
-        if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
-          const n = nodeData[check];
-          const x = n.x;
-          const y = n.y;
-          const z = n.z;
-          vertexlist.push([x, y, z]);
-        } else if (!(check - 1 in Object.keys(nodeData))) {
-          continue;
-        }
-      }
-      this.three.createPanelMemberSectionForce(vertexlist, key);
-    }
-  }
+  //     //対象のnodeDataを入手
+  //     const vertexlist = [];
+  //     for (const check of target.nodes) {
+  //       if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
+  //         const n = nodeData[check];
+  //         const x = n.x;
+  //         const y = n.y;
+  //         const z = n.z;
+  //         vertexlist.push([x, y, z]);
+  //         arrData.push([x, y, z]);
+  //       } else if (!(check - 1 in Object.keys(nodeData))) {
+  //         continue;
+  //       }
+  //     }
+  //     this.three.createPanelMemberSectionForce(arrData, vertexlist, key);      
+  //   }
+    
+  // }
 
   private tableHeight(): string {
     const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;

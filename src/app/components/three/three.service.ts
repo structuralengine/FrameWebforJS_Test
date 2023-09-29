@@ -1097,8 +1097,8 @@ export class ThreeService {
     return title3;
   }
 
-  public createPanelMemberSectionForce(vertexlist, key){
-    //this.fsec.createPanel(vertexlist, key);
-    this.fsec.createPanel1(vertexlist, key);
-  }
+  // public createPanelMemberSectionForce(arr, vertexlist, key){
+  //   //this.fsec.createPanel(vertexlist, key);
+  //   this.fsec.createPanel1(arr, vertexlist, key);
+  // }
 }
