@@ -50,6 +50,7 @@
         "calc_start": "start the calculation",
         "success": "Communication success!!",
         "deduct_points": "points consumed. Today's usage is",
+        "calc_complete":"Calculations are complete.",
         "new_points": "points.",
         "control": "Control",
         "today_used_point": "Points Used Today",
