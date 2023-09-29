@@ -85,7 +85,7 @@ export class ThreeService {
     this.disg.ClearData();
     this.reac.ClearData();
     this.fsec.ClearData();
-
+    this.fsec.ClearDataGradient();
     this.scene.render();
   }
 
@@ -229,6 +229,7 @@ export class ThreeService {
     this.max_min.maxMinClear(); //max,min表示消す
     this.scene.setNewHelper(100);
     this.scene.render();
+    this.fsec.ClearDataGradient();
   }
 
   //////////////////////////////////////////////////////

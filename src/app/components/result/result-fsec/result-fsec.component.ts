@@ -18,6 +18,7 @@ import { InputPanelService } from '../../input/input-panel/input-panel.service';
 import { forEach } from 'jszip';
 import { InputNodesService } from '../../input/input-nodes/input-nodes.service';
 import { ThreeSectionForceService } from '../../three/geometry/three-section-force/three-section-force.service';
+import { ThreePanelService } from '../../three/geometry/three-panel.service';
 
 @Component({
   selector: 'app-result-fsec',
@@ -84,7 +85,8 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     private pagerService: PagerService,
     public docLayout: DocLayoutService,
     private translate: TranslateService  ,
-    private three_fesc: ThreeSectionForceService
+    private three_fesc: ThreeSectionForceService,
+    private three_panel: ThreePanelService
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -229,6 +231,8 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   private COLUMNS_COUNT = 5;
 
   private loadData(currentPage: number, row: number): void {
+    this.three_panel.ClearData();
+    this.three_fesc.ClearDataGradient();
     for (let i = this.datasetNew.length; i <= row; i++) {
       const define = this.data.getDataColumns(currentPage, i);
       this.datasetNew.push(define);  

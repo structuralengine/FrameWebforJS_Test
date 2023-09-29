@@ -54,7 +54,7 @@ export class ThreeSectionForceService {
   private fsecData = { fsec: null, comb_fsec: null, pick_fsec: null };
   private max_values = { fsec: null, comb_fsec: null, pick_fsec: null };
   public value_ranges = { fsec: null, comb_fsec: null, pick_fsec: null };
-
+  private panelGradientList: any[];
   constructor(
     private scene: SceneService,
     private max_min: MaxMinService,
@@ -66,6 +66,7 @@ export class ThreeSectionForceService {
     private three_member: ThreeMembersService,
     private data: InputNoticePointsService
   ) {
+    this.panelGradientList = new Array();
     this.memSeForce = new Array();
     this.ThreeObject1 = new THREE.Object3D();
     this.ThreeObject1.visible = false; // 呼び出されるまで非表示
@@ -77,6 +78,7 @@ export class ThreeSectionForceService {
     loader.load("./assets/fonts/helvetiker_regular.typeface.json", (font) => {
       this.mesh = new ThreeSectionForceMeshService(font);
       this.ClearData();
+      this.ClearDataGradient();
       this.scene.add(this.ThreeObject1);
       this.scene.add(this.ThreeObject2);
     });
@@ -665,122 +667,16 @@ export class ThreeSectionForceService {
     return arr;
   }
 
-  public createPanel(vertexlist, row): void {
-    const points = [];
-    const geometrys: THREE.BufferGeometry[] = [];
-    for (const p of vertexlist) {
-      points.push(new THREE.Vector3(p[0], p[1], p[2]));
-    }
-
-    var vertexColors = [
-      [1.0, 0.0, 0.0],
-      [0.0, 1.0, 0.0],
-      [0.0, 0.0, 1.0],
-      [1.0, 1.0, 0.0],
-    ];
-
-    var indices = new Uint16Array([0, 1, 2, 3, 4, 5, 6, 5, 4, 8, 7, 3]);
-
-    var vertices = new Float32Array(vertexlist.length * 3);
-    var colors = new Float32Array(vertexlist.length * 3);
-    for (var i = 0; i < vertexlist.length; i++) {
-      vertices[i * 3 + 0] = vertexlist[i][0];
-      vertices[i * 3 + 1] = vertexlist[i][1];
-      vertices[i * 3 + 2] = vertexlist[i][2];
-      colors[i * 3 + 0] = vertexColors[i][0];
-      colors[i * 3 + 1] = vertexColors[i][1];
-      colors[i * 3 + 2] = vertexColors[i][2];
-    }
-
-    var shader = {
-      fragmentShader: [
-        "varying mediump vec3 varingrgb;",
-        "void main() {",
-        "gl_FragColor = vec4(varingrgb, 1.0);",
-        "}",
-      ].join("\n"),
-      vertexShader: [
-        "attribute vec3 verpos;",
-        "attribute vec3 verrgb;",
-        "varying vec3 varingrgb;",
-        "void main() {",
-        "gl_Position = projectionMatrix * modelViewMatrix * vec4(verpos, 1.0);",
-        "varingrgb = verrgb;",
-        "}",
-      ].join("\n"),
-    };
-
-    var materialShader = new THREE.ShaderMaterial({
-      vertexShader: shader.vertexShader,
-      fragmentShader: shader.fragmentShader,
-    });
-
-    // 三角形を作る
-    // geometrys.push(new THREE.BufferGeometry().setFromPoints([points[0],points[1],points[2], points[3]]));
-    // // 四角形が作れる場合
-    // if(points.length >2)
-    //   geometrys.push(new THREE.BufferGeometry().setFromPoints([points[3],points[0],points[2]]));
-
-    // const material = new THREE.MeshBasicMaterial({
-    //   transparent: true,
-    //   side: THREE.DoubleSide,
-    //   color: 0x7f8F9F,
-    //   opacity: 0.7,
-    // });
-    // for(const g of geometrys) {
-
-    var g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
-    // g.setIndex(new THREE.BufferAttribute(indices,  1));
-    // g.setAttribute('verpos', new THREE.BufferAttribute(vertices, 3));
-    // g.setAttribute('verrgb', new THREE.BufferAttribute(colors, 3));
-    var g1 = new THREE.CylinderBufferGeometry(2, 5, 20, 32, 1, true);
-    g1.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
-    var material = new THREE.ShaderMaterial({
-      uniforms: {
-        color1: {
-          value: new THREE.Color("red"),
-        },
-        color2: {
-          value: new THREE.Color("purple"),
-        },
-      },
-      vertexShader: `
-          varying vec2 vUv;
-
-          void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-          }
-        `,
-      fragmentShader: `
-          uniform vec3 color1;
-          uniform vec3 color2;
-
-          varying vec2 vUv;
-
-          void main() {
-
-            gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
-          }
-        `,
-      wireframe: true,
-    });
-    const mesh = new THREE.Mesh(g1, material);
-    mesh.name = "panel-" + row.toString();
-    this.scene.add(mesh);
-    // }
-  }
-
-  public createPanel1(vertexlist, key): void {
+  public createPanel(vertexlist, key): void {
     //this.verticalList.push({vertexlist, key});
     var val = this.GetValueTable(vertexlist);
     var panel1 = this.GetAllPanel();
     var values = this.GetValueTable(panel1);
+
     values.sort((a, b) => {
       return a[this.checkRadioButton()] < b[this.checkRadioButton()] ? 1 : -1;
     })
-    console.log("values", values)
+
     var points = [];
     const geometrys: THREE.BufferGeometry[] = [];
     for (const p of vertexlist) {
@@ -792,49 +688,14 @@ export class ThreeSectionForceService {
     var vertices = [];
     var normals = [];
     var colors = [];
-
-    var size = 4;
-    var segments = 4;
-
-    // var halfSize = size / 2;
-    // var segmentSize = size / segments;
-
     var _color = new THREE.Color();
-    // // generate vertices, normals and color data for a simple grid geometry
-    // for (let i = 0; i <= segments; i++) {
-    //   const y = i * segmentSize - halfSize;
-    //   for (let j = 0; j <= segments; j++) {
-    //     const x = j * segmentSize - halfSize;
-    //     vertices.push(x, -y, 0);
-    //     normals.push(0, 0, 1);
-    //     const r = x / size + 0.5;
-    //     const g = y / size + 0.5;
-    //     _color.setRGB(r, g, 1);
-    //     colors.push(_color.r, _color.g, _color.b);
-    //   }
-    // }
-
-    // 0,255,255 cygan
-    // 255,0,0 red
-    // 158, 97, 97
-    // 107, 148, 148
-
     var arrColors = [
       [74, 160, 183],
       [255, 0, 0],
       [228, 100, 97],
       [229, 226, 171],
     ];
-    // var arrColors = [
-    //   [0, 1, 0],
-    //   [1, 1, 0],
-    //   [1, 0, 0]
-    // ];
 
-    // const r = p[0] / size + 0.5;
-    // const g = p[1] / size + 0.5;
-    // _color.setRGB(r, g, 1);
-    // colors.push(_color.r, _color.g, _color.b);
     val.forEach((t) => {
       var test = this.node.getNodePos(t['n']);
       vertices.push(test.x, test.y, test.z);
@@ -866,22 +727,6 @@ export class ThreeSectionForceService {
 
     });
 
-    console.log("vertices", vertices);
-    console.log("colors", colors);
-
-    // //generate indices (data for element array buffer)
-    // for (let i = 0; i < segments; i++) {
-    //   for (let j = 0; j < segments; j++) {
-    //     const a = i * (segments + key) + (j + 1);
-    //     const b = i * (segments + key) + j;
-    //     const c = (i + 1) * (segments + key) + j ;
-    //     const d = (i + 1) * (segments + key) + (j + 1);
-    //     generate two faces (triangles) per iteration
-    //     indices.push(a, b, d); // face one
-    //     indices.push(b, c, d); // face two
-    //   }
-    // }
-
     let lgn = vertexlist.length;
     for (let i = 0; i < lgn; i++) {
       for (let j = 0; j < lgn; j++) {
@@ -894,7 +739,6 @@ export class ThreeSectionForceService {
         indices.push(b, c, d); // face two
       }
     }
-    // console.log(indices);
 
     geometry.setIndex([0, 1, 2,
       0, 2, 1,
@@ -924,8 +768,24 @@ export class ThreeSectionForceService {
       vertexColors: true,
     });
     var mesh = new THREE.Mesh(geometry, material);
+    mesh.name = 'panelGradient-' + key.toString();
     this.scene.add(mesh);
+    this.panelGradientList.push(mesh);
     // } 
+  }
+
+  public ClearDataGradient(): void {
+
+    for (const mesh of this.panelGradientList) {
+      // 文字を削除する
+      while (mesh.children.length > 0) {
+        const object = mesh.children[0];
+        object.parent.remove(object);
+      }
+      // オブジェクトを削除する
+      this.scene.remove(mesh);
+    }
+    this.panelGradientList = new Array();
   }
   public checkRadioButton() {
     let key1: string;
@@ -1057,7 +917,7 @@ export class ThreeSectionForceService {
           continue;
         }
       }
-      this.createPanel1(vertexlist, key);
+      this.createPanel(vertexlist, key);
     }
 
   }
