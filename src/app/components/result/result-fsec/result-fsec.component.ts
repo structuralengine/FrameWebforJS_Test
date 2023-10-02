@@ -240,67 +240,8 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     this.page = currentPage;
     this.three.ChangeMode('fsec');
     this.three.ChangePage(currentPage);
-
     this.three_fesc.drawGradientPanel();
   }
-
-  // public drawGradientPanel(){
-  //   const nodeData = this.nodes.getNodeJson(0);
-  //   if (Object.keys(nodeData).length <= 0) {
-  //     return;
-  //   }
-  //   this.panelData = [];
-  //   let pData = this.panel.getPanelJson(0);
-
-  //   if (Object.keys(pData).length <= 0) {
-  //     return;
-  //   }
-  //   let arrData = [];
-  //   for (const key of Object.keys(pData)) {
-  //     const target = pData[key];
-  //     if (target.nodes.length <= 2) {
-  //       continue
-  //     }
-  //     //対象のnodeDataを入手
-
-  //     for (const check of target.nodes) {
-  //       if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
-  //         const n = nodeData[check];
-  //         const x = n.x;
-  //         const y = n.y;
-  //         const z = n.z;
-          
-  //         arrData.push([x, y, z]);
-  //       } else if (!(check - 1 in Object.keys(nodeData))) {
-  //         continue;
-  //       }
-  //     }
-      
-  //   }
-  //   for (const key of Object.keys(pData)) {
-  //     const target = pData[key];
-  //     if (target.nodes.length <= 2) {
-  //       continue
-  //     }
-
-  //     //対象のnodeDataを入手
-  //     const vertexlist = [];
-  //     for (const check of target.nodes) {
-  //       if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
-  //         const n = nodeData[check];
-  //         const x = n.x;
-  //         const y = n.y;
-  //         const z = n.z;
-  //         vertexlist.push([x, y, z]);
-  //         arrData.push([x, y, z]);
-  //       } else if (!(check - 1 in Object.keys(nodeData))) {
-  //         continue;
-  //       }
-  //     }
-  //     this.three.createPanelMemberSectionForce(arrData, vertexlist, key);      
-  //   }
-    
-  // }
 
   private tableHeight(): string {
     const containerHeight = this.app.getPanelElementContentContainerHeight() - 10;
