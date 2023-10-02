@@ -55,6 +55,12 @@ export class ThreeSectionForceService {
   private max_values = { fsec: null, comb_fsec: null, pick_fsec: null };
   public value_ranges = { fsec: null, comb_fsec: null, pick_fsec: null };
   private panelGradientList: any[];
+  private arrColors = [
+    [74, 160, 183],
+    [255, 0, 0],
+    [228, 100, 97],
+    [229, 226, 171],
+  ];
   constructor(
     private scene: SceneService,
     private max_min: MaxMinService,
@@ -677,11 +683,11 @@ export class ThreeSectionForceService {
       return a[this.checkRadioButton()] < b[this.checkRadioButton()] ? 1 : -1;
     })
 
-    var points = [];
-    const geometrys: THREE.BufferGeometry[] = [];
-    for (const p of vertexlist) {
-      points.push(new THREE.Vector3(p[0], p[1], p[2]));
-    }
+    // var points = [];
+    // const geometrys: THREE.BufferGeometry[] = [];
+    // for (const p of vertexlist) {
+    //   points.push(new THREE.Vector3(p[0], p[1], p[2]));
+    // }
     var geometry = new THREE.BufferGeometry();
     var indices = [];
 
@@ -689,12 +695,7 @@ export class ThreeSectionForceService {
     var normals = [];
     var colors = [];
     var _color = new THREE.Color();
-    var arrColors = [
-      [74, 160, 183],
-      [255, 0, 0],
-      [228, 100, 97],
-      [229, 226, 171],
-    ];
+    
 
     val.forEach((t) => {
       var test = this.node.getNodePos(t['n']);
@@ -703,23 +704,23 @@ export class ThreeSectionForceService {
       var mid = (values[values.length - 1][this.checkRadioButton()] + values[0][this.checkRadioButton()]) / 2;
 
       if (t[this.checkRadioButton()] === values[0][this.checkRadioButton()]) {
-        _color.setRGB(arrColors[1][0], arrColors[1][1], arrColors[1][2]);
+        _color.setRGB(this.arrColors[1][0], this.arrColors[1][1], this.arrColors[1][2]);
         colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
       }
       //colors.push(arrColors[2][0], arrColors[2][1], arrColors[2][2]);
       else if (t[this.checkRadioButton()] === values[values.length - 1][this.checkRadioButton()]) {
         //colors.push(arrColors[0][0], arrColors[0][1], arrColors[0][2]);
-        _color.setRGB(arrColors[0][0], arrColors[0][1], arrColors[0][2]);
+        _color.setRGB(this.arrColors[0][0], this.arrColors[0][1], this.arrColors[0][2]);
         colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
       }
       else {
         if ((mid < t[this.checkRadioButton()])) {
-          _color.setRGB(arrColors[2][0], arrColors[2][1], arrColors[2][2]);
+          _color.setRGB(this.arrColors[2][0], this.arrColors[2][1], this.arrColors[2][2]);
           colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
         }
         else {
 
-          _color.setRGB(arrColors[3][0], arrColors[3][1], arrColors[3][2]);
+          _color.setRGB(this.arrColors[3][0], this.arrColors[3][1], this.arrColors[3][2]);
           colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
 
         }
