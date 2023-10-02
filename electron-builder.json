@@ -1,5 +1,5 @@
 {
-  "productName": "立体骨組構造解析ソフト",
+  "productName": "frame-web-for-js",
   "directories": {
     "output": "release/"
   },
