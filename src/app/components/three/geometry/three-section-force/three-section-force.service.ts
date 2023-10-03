@@ -38,7 +38,7 @@ export class ThreeSectionForceService {
     "momentY",
     "momentZ",
   ];
-  public verticalList: any[];
+  public colorList: any[];
   private radioButtons2D = ["axialForce", "shearForceY", "momentZ"];
   private radioButtons = this.radioButtons3D || this.radioButtons2D;
   private gui: any;
@@ -685,9 +685,10 @@ export class ThreeSectionForceService {
     var vertices = [];
     var normals = [];
     var colors = [];
-    var _color = new THREE.Color();   
-    
+   
+
     val.forEach((t) => {
+      var _color = new THREE.Color();
       var test = this.node.getNodePos(t['n']);
       vertices.push(test.x, test.y, test.z);
       normals.push(0, 1, 0);
@@ -697,39 +698,25 @@ export class ThreeSectionForceService {
         _color.setRGB(this.arrColors[1][0], this.arrColors[1][1], this.arrColors[1][2]);
         colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
       }
-
-      else if (t[btnRadio] === values[values.length - 1][btnRadio]) {      
+      else if (t[btnRadio] === values[values.length - 1][btnRadio]) {
         _color.setRGB(this.arrColors[0][0], this.arrColors[0][1], this.arrColors[0][2]);
         colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
-      }
-      else {
-        if ((mid < t[btnRadio])) {
-          _color.setRGB(this.arrColors[2][0], this.arrColors[2][1], this.arrColors[2][2]);
+      } else {
+        if (mid < t[btnRadio]) {
+          var set = Math.round(Math.abs((values[0][btnRadio] - t[btnRadio]) / values[0][btnRadio]) * 50);
+          _color.setRGB(Math.max(0, Math.min(255, this.arrColors[2][0])), Math.max(0, Math.min(255, this.arrColors[2][1] + set)), Math.max(0, Math.min(255, this.arrColors[2][2])));
           colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
         }
         else {
-
-          _color.setRGB(this.arrColors[3][0], this.arrColors[3][1], this.arrColors[3][2]);
+          var set = Math.round((( Math.abs(t[btnRadio]) - Math.abs(values[values.length - 1][btnRadio]) ) / Math.abs(values[values.length - 1][btnRadio])) * 50);
+          _color.setRGB(Math.max(0, Math.min(255, this.arrColors[3][0])), Math.max(0, Math.min(255, this.arrColors[3][1] + set)), Math.max(0, Math.min(255, this.arrColors[3][2])));
           colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
-
         }
       }
+      if(!this.colorList.some((x) => x['n'] === t['n'] || x['t'] === t[btnRadio]))
+        this.colorList.push({ _color, t: t[btnRadio], n: t['n']});
 
     });
-
-    // let lgn = vertexlist.length;
-    // for (let i = 0; i < lgn; i++) {
-    //   for (let j = 0; j < lgn; j++) {
-    //     const a = i * (lgn + 1) + (j + 1);
-    //     const b = i * (lgn + 1) + j;
-    //     const c = (i + 1) * (lgn + 1) + j;
-    //     const d = (i + 1) * (lgn + 1) + (j + 1);
-    //     // generate two faces (triangles) per iteration
-    //     indices.push(a, b, d); // face one
-    //     indices.push(b, c, d); // face two
-    //   }
-    // }
-
     geometry.setIndex([0, 1, 2,
       0, 2, 1,
       1, 2, 0,
@@ -827,8 +814,8 @@ export class ThreeSectionForceService {
         let max = arr[0][this.checkRadioButton()];
         let p = 0;
         arr.forEach((a, index) => {
-          if (max < a.val) {
-            max = a.val;
+          if (max < a[this.checkRadioButton()]) {
+            max = a[this.checkRadioButton()];
             p = index
           }
         })
@@ -875,7 +862,8 @@ export class ThreeSectionForceService {
     }
     return arrData;
   }
-  public drawGradientPanel() {   
+  public drawGradientPanel() {
+    this.colorList = new Array();
     var panel1 = this.GetAllPanel();
     var values = this.GetValueTable(panel1);
     var btnRadio = this.checkRadioButton();
@@ -912,6 +900,10 @@ export class ThreeSectionForceService {
       }
       this.createPanel(vertexlist, key, btnRadio, values);
     }
+    console.log(this.colorList.sort((a, b) => {
+      return a["t"] > b["t"] ? 1 : -1;
+    }))
+    console.log("value", values)
     this.scene.render();
 
   }
