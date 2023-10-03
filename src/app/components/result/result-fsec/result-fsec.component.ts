@@ -19,6 +19,7 @@ import { forEach } from 'jszip';
 import { InputNodesService } from '../../input/input-nodes/input-nodes.service';
 import { ThreeSectionForceService } from '../../three/geometry/three-section-force/three-section-force.service';
 import { ThreePanelService } from '../../three/geometry/three-panel.service';
+import { ColorPaletteService } from '../../three/color-palette/color-palette.service';
 
 @Component({
   selector: 'app-result-fsec',
@@ -86,7 +87,8 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     public docLayout: DocLayoutService,
     private translate: TranslateService  ,
     private three_fesc: ThreeSectionForceService,
-    private three_panel: ThreePanelService
+    private three_panel: ThreePanelService,
+    public colorPaletteService: ColorPaletteService
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -114,6 +116,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.colorPaletteService.setControlShowHide(true);
     // this.loadPage(this.result.page);
     this.ROWS_COUNT = this.rowsCount();
     this.loadData(1, this.ROWS_COUNT);
@@ -147,6 +150,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.colorPaletteService.setControlShowHide(false);
   }
 
   //　pager.component からの通知を受け取る

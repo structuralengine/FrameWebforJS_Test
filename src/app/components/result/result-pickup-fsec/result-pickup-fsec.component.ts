@@ -13,6 +13,7 @@ import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import pq from "pqgrid";
 import { SheetComponent } from '../../input/sheet/sheet.component';
 import { AppComponent } from 'src/app/app.component';
+import { ColorPaletteService } from '../../three/color-palette/color-palette.service';
 
 @Component({
   selector: 'app-result-pickup-fsec',
@@ -76,7 +77,8 @@ export class ResultPickupFsecComponent implements OnInit, OnDestroy {
     private helper: DataHelperModule,
     private pagerDirectionService: PagerDirectionService,
     private pagerService: PagerService,
-    public docLayout: DocLayoutService
+    public docLayout: DocLayoutService,
+    public colorPaletteService: ColorPaletteService
   ) {
     this.dataset = new Array();
     this.KEYS = this.comb.fsecKeys;
@@ -101,6 +103,7 @@ export class ResultPickupFsecComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.colorPaletteService.setControlShowHide(true);
     // this.loadPage(this.result.page);
     this.calPage(0);
 
@@ -126,6 +129,7 @@ export class ResultPickupFsecComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.directionSubscription.unsubscribe();
     this.subscription.unsubscribe();
+    this.colorPaletteService.setControlShowHide(false);
   }
 
   //　pager.component からの通知を受け取る

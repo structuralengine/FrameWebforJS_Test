@@ -14,6 +14,7 @@ import { PagerService } from '../../input/pager/pager.service';
 import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import pq from "pqgrid";
 import { SheetComponent } from '../../input/sheet/sheet.component';
+import { ColorPaletteService } from '../../three/color-palette/color-palette.service';
 
 
 @Component({
@@ -80,7 +81,8 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
     private helper: DataHelperModule,
     private pagerDirectionService: PagerDirectionService,
     private pagerService: PagerService,
-    public docLayout: DocLayoutService
+    public docLayout: DocLayoutService,
+    public colorPaletteService: ColorPaletteService
   ) {
     this.dataset = new Array();
     this.KEYS = this.data.fsecKeys;
@@ -105,6 +107,7 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.colorPaletteService.setControlShowHide(true);
     const n: number = this.comb.getCombineCaseCount();
     // this.loadPage(this.result.page);
     this.calPage(0);
@@ -131,6 +134,7 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.directionSubscription.unsubscribe();
     this.subscription.unsubscribe();
+    this.colorPaletteService.setControlShowHide(false);
   }
 
   //　pager.component からの通知を受け取る

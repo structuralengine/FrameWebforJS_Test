@@ -16,6 +16,7 @@ import { ResultFsecComponent } from "src/app/components/result/result-fsec/resul
 import { ResultFsecService } from "src/app/components/result/result-fsec/result-fsec.service";
 import { InputPanelService } from "src/app/components/input/input-panel/input-panel.service";
 import { ThreeService } from "../../three.service";
+import { ResultFsecBehaviorSubject } from "../../color-palette/color-palette-behaviorsubject.service";
 
 @Injectable({
   providedIn: "root",
@@ -70,7 +71,8 @@ export class ThreeSectionForceService {
     private member: InputMembersService,
     private three_node: ThreeNodesService,
     private three_member: ThreeMembersService,
-    private data: InputNoticePointsService
+    private data: InputNoticePointsService,
+    private resultFsecBehaviorSubject: ResultFsecBehaviorSubject
   ) {
     this.panelGradientList = new Array();
     this.memSeForce = new Array();
@@ -900,10 +902,14 @@ export class ThreeSectionForceService {
       }
       this.createPanel(vertexlist, key, btnRadio, values);
     }
-    console.log(this.colorList.sort((a, b) => {
-      return a["t"] > b["t"] ? 1 : -1;
-    }))
-    console.log("value", values)
+    this.colorList.sort((a, b) => {
+      return a["t"] < b["t"] ? 1 : -1;
+    });
+    this.resultFsecBehaviorSubject.drawColor(this.colorList);
+    // console.log(this.colorList.sort((a, b) => {
+    //   return a["t"] > b["t"] ? 1 : -1;
+    // }))
+    // console.log("value", values)
     this.scene.render();
 
   }
