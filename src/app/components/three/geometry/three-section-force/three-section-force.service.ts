@@ -710,13 +710,13 @@ export class ThreeSectionForceService {
           colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
         }
         else {
-          var set = Math.round((( Math.abs(t[btnRadio]) - Math.abs(values[values.length - 1][btnRadio]) ) / Math.abs(values[values.length - 1][btnRadio])) * 50);
+          var set = Math.round(((Math.abs(t[btnRadio]) - Math.abs(values[values.length - 1][btnRadio]) ) / Math.abs(values[values.length - 1][btnRadio])) * 50);
           _color.setRGB(Math.max(0, Math.min(255, this.arrColors[3][0])), Math.max(0, Math.min(255, this.arrColors[3][1] + set)), Math.max(0, Math.min(255, this.arrColors[3][2])));
           colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
         }
       }
-      if(!this.colorList.some((x) => x['n'] === t['n'] || x['t'] === t[btnRadio]))
-        this.colorList.push({ _color, t: t[btnRadio], n: t['n']});
+      if(!this.colorList.some((x) => x['n'] === t['n'] || x['t'] === t[btnRadio].toFixed(2)))
+        this.colorList.push({ _color, t: t[btnRadio].toFixed(2), n: t['n']});
 
     });
     geometry.setIndex([0, 1, 2,
@@ -903,7 +903,7 @@ export class ThreeSectionForceService {
       this.createPanel(vertexlist, key, btnRadio, values);
     }
     this.colorList.sort((a, b) => {
-      return a["t"] < b["t"] ? 1 : -1;
+      return +a["t"] < +b["t"] ? 1 : -1;
     });
     this.resultFsecBehaviorSubject.drawColor(this.colorList);
     // console.log(this.colorList.sort((a, b) => {

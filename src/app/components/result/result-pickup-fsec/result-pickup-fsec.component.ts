@@ -14,6 +14,7 @@ import pq from "pqgrid";
 import { SheetComponent } from '../../input/sheet/sheet.component';
 import { AppComponent } from 'src/app/app.component';
 import { ColorPaletteService } from '../../three/color-palette/color-palette.service';
+import { ThreeSectionForceService } from '../../three/geometry/three-section-force/three-section-force.service';
 
 @Component({
   selector: 'app-result-pickup-fsec',
@@ -78,7 +79,8 @@ export class ResultPickupFsecComponent implements OnInit, OnDestroy {
     private pagerDirectionService: PagerDirectionService,
     private pagerService: PagerService,
     public docLayout: DocLayoutService,
-    public colorPaletteService: ColorPaletteService
+    public colorPaletteService: ColorPaletteService,
+    private three_fesc: ThreeSectionForceService,
   ) {
     this.dataset = new Array();
     this.KEYS = this.comb.fsecKeys;
@@ -223,6 +225,7 @@ export class ResultPickupFsecComponent implements OnInit, OnDestroy {
     this.page = currentPage;
     this.three.ChangeMode("pick_fsec");
     this.three.ChangePage(currentPage);
+    this.three_fesc.drawGradientPanel();
   }
 
   private tableHeightf(): string {

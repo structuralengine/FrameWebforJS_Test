@@ -6,6 +6,8 @@
     top: 115px;
     border-radius: 4px;
     padding: 4px;
+    max-height: calc(100vh - 270px);
+    overflow-y: auto;
     .rulerItem{
         display: flex;
         border-bottom: 1px solid #2c2c2c;

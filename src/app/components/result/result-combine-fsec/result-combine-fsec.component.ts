@@ -15,6 +15,7 @@ import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import pq from "pqgrid";
 import { SheetComponent } from '../../input/sheet/sheet.component';
 import { ColorPaletteService } from '../../three/color-palette/color-palette.service';
+import { ThreeSectionForceService } from '../../three/geometry/three-section-force/three-section-force.service';
 
 
 @Component({
@@ -82,7 +83,8 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
     private pagerDirectionService: PagerDirectionService,
     private pagerService: PagerService,
     public docLayout: DocLayoutService,
-    public colorPaletteService: ColorPaletteService
+    public colorPaletteService: ColorPaletteService,
+    private three_fesc: ThreeSectionForceService,
   ) {
     this.dataset = new Array();
     this.KEYS = this.data.fsecKeys;
@@ -228,6 +230,7 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
     this.page = currentPage;
     this.three.ChangeMode("comb_fsec");
     this.three.ChangePage(currentPage);
+    this.three_fesc.drawGradientPanel();
   }
 
   private tableHeightf(): string {
