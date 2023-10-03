@@ -373,7 +373,7 @@ export class MenuComponent implements OnInit {
 
   public goToLink() {
     window.open(
-      "https://fresh-tachometer-148.notion.site/FrameWeb-3b1432e6a03647bc85e20c55ade84e96?pvs=4",
+      "https://help-frameweb.malme.app/",
       "_blank"
     );
   }
