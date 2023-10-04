@@ -34,6 +34,10 @@ import { InputNodesComponent } from "./components/input/input-nodes/input-nodes.
 import { InputNodesService } from "./components/input/input-nodes/input-nodes.service";
 import { InputMembersComponent } from "./components/input/input-members/input-members.component";
 import { InputMembersService } from "./components/input/input-members/input-members.service";
+
+import { InputMemberDetailComponent } from "./components/input/input-members/input-member-detail/input-member-detail.component";
+import { InputMemberDetailService }from "./components/input/input-members/input-member-detail/input-member-detail.service";
+
 import { InputFixNodeComponent } from "./components/input/input-fix-node/input-fix-node.component";
 import { InputFixNodeService } from "./components/input/input-fix-node/input-fix-node.service";
 import { InputElementsComponent } from "./components/input/input-elements/input-elements.component";
@@ -154,6 +158,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         AlertDialogComponent,
         InputNodesComponent,
         InputMembersComponent,
+        InputMemberDetailComponent,
         InputFixNodeComponent,
         InputElementsComponent,
         InputJointComponent,
@@ -198,6 +203,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         InputDataService,
         InputNodesService,
         InputMembersService,
+        InputMemberDetailService,
         InputFixNodeService,
         InputElementsService,
         InputJointService,

@@ -1,0 +1,40 @@
+$table-border-color: #63676c;
+
+.member-detail{
+  border-right: 1px solid $table-border-color;
+  border-bottom: 1px solid $table-border-color;
+  background-color: #56585c;
+  color: #fff;
+  td{
+    border-top: 1px solid $table-border-color;
+    border-left: 1px solid $table-border-color;
+  }
+  .member-value{
+    width: 120px;
+    text-align: right;
+  }
+  .member-unit{
+    width: 80px;
+  }
+  .member-title{
+    width: 200px;
+    padding-left: 10px;
+  }
+}
+
+.control{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 1px;
+  padding: 0 8px;
+  border-radius: 4px;
+  background-color: #222222;
+  color: #fff;
+  height: 27px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}

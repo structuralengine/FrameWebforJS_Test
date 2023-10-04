@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { CSS2DObject } from "../libs/CSS2DRenderer.js";
 import { Vector3 } from "three";
 import { Subject } from "rxjs";
+import { InputMemberDetailService } from "../../input/input-members/input-member-detail/input-member-detail.service";
 
 @Injectable({
   providedIn: "root",
@@ -34,7 +35,8 @@ export class ThreeMembersService {
   constructor( private scene: SceneService,
               private nodeThree: ThreeNodesService,
               private node: InputNodesService,
-              private member: InputMembersService) {
+              private member: InputMembersService,
+              private inputMemberDetailService :InputMemberDetailService) {
 
     this.geometry = new THREE.CylinderBufferGeometry();
     this.memberList = new THREE.Object3D();
@@ -501,6 +503,7 @@ export class ThreeMembersService {
             const material = item['material'];
             material["color"].setHex(0xff0000);
             material["opacity"] = 1.0;
+            this.inputMemberDetailService.setShowHideDetail(true);
           }
           else{
             const material = item['material'];
