@@ -116,7 +116,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         initOptions: {
             onLoad: 'check-sso',
         }
-    }).catch(error => window.alert("ログインサーバーに問題が発生しました。開発元にお問い合わせください。"));
+    }).catch(error => window.alert("自動ログインに失敗しました。"));
 }
 
 @NgModule({
