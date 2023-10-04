@@ -1,14 +1,27 @@
 <div style="padding: 8px;">
-  <div class="control"  (click)="inputMemberDetailService.setShowHideDetail(false)">Back</div>
+  <div class="control"  (click)="inputMemberDetailService.setShowHideDetail(false)">
+    <svg fill="#ffffff" version="1.1" baseProfile="tiny" id="Layer_1" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;"
+      xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" width="12px" height="12px" viewBox="0 0 42 42"
+      xml:space="preserve" stroke="#ffffff">
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <polygon fill-rule="evenodd" points="27.066,1 7,21.068 26.568,40.637 31.502,35.704 16.865,21.068 32,5.933 ">
+        </polygon>
+      </g>
+    </svg>
+    <span translate>menu.back</span>
+  </div>
   <table class="member-detail">
     <tbody>
       <tr>
-        <td class="member-title">Member No</td>
+        <td class="member-title" translate>input.input-members.node</td>
         <td class="member-unit"></td>
         <td class="member-value">{{inputMemberDetailService.entity.id}}</td>
       </tr>
       <tr>
-        <td class="member-title" rowspan="4">Node-I</td>
+        <td class="member-title" rowspan="4" translate>input.input-members.node_i</td>
         <td class="member-unit">No</td>
         <td class="member-value">{{inputMemberDetailService.entity.ni}}</td>
       </tr>
@@ -25,7 +38,7 @@
         <td class="member-value">{{inputMemberDetailService.entity.niz}}</td>
       </tr>
       <tr>
-        <td class="member-title" rowspan="4">Node-J</td>
+        <td class="member-title" rowspan="4" translate>input.input-members.node_j</td>
         <td class="member-unit">No</td>
         <td class="member-value">{{inputMemberDetailService.entity.nj}}</td>
       </tr>
@@ -42,56 +55,56 @@
         <td class="member-value">{{inputMemberDetailService.entity.njz}}</td>
       </tr>
       <tr>
-        <td class="member-title">Distance</td>
+        <td class="member-title" translate>input.input-members.distance</td>
         <td class="member-unit">m</td>
         <td class="member-value">{{inputMemberDetailService.entity.L}}</td>
       </tr>
       <tr>
-        <td class="member-title">Angle of Rotate</td>
+        <td class="member-title" translate>input.input-members.codeAngle</td>
         <td class="member-unit">°</td>
         <td class="member-value">{{inputMemberDetailService.entity.cg}}</td>
       </tr>
       <tr>
-        <td class="member-title">Material No</td>
+        <td class="member-title" translate>input.input-members.material</td>
         <td class="member-unit"></td>
         <td class="member-value">{{inputMemberDetailService.entity.e}}</td>
       </tr>
       <tr>
-        <td class="member-title">Elastic</td>
+        <td class="member-title" translate>input.input-elements.elastic</td>
         <td class="member-unit">kN/m2</td>
         <td class="member-value">{{ inputMemberDetailService.entity.eastic}}</td>
       </tr>
       <tr>
-        <td class="member-title">Steel Elastic</td>
+        <td class="member-title" translate>input.input-elements.shear_elastic</td>
         <td class="member-unit">kN/m2</td>
         <td class="member-value">{{inputMemberDetailService.entity.steelElastic }}</td>
       </tr>
       <tr>
-        <td class="member-title">CTE</td>
+        <td class="member-title" translate>input.input-elements.cte</td>
         <td class="member-unit"></td>
         <td class="member-value">{{inputMemberDetailService.entity.cte }}</td>
       </tr>
       <tr>
-        <td class="member-title">Area</td>
+        <td class="member-title" translate>input.input-elements.area</td>
         <td class="member-unit">m2</td>
         <td class="member-value">{{inputMemberDetailService.entity.area }}</td>
       </tr>
       <tr>
-        <td class="member-title">Torsion Constant</td>
+        <td class="member-title" translate>input.input-elements.torsionConstant</td>
         <td class="member-unit">m4</td>
         <td class="member-value">{{inputMemberDetailService.entity.torsionConstant }}</td>
       </tr>
       <tr>
-        <td class="member-title" rowspan="2">Inertia</td>
-        <td class="member-unit">ly</td>
+        <td class="member-title" rowspan="2" translate>input.input-elements.inertia</td>
+        <td class="member-unit">Iy</td>
         <td class="member-value">{{ inputMemberDetailService.entity.inertiaIy }}</td>
       </tr>
       <tr>
-        <td class="member-unit">lz</td>
+        <td class="member-unit">Iz</td>
         <td class="member-value">{{inputMemberDetailService.entity.inertiaIz}}</td>
       </tr>
       <tr>
-        <td class="member-title">Name of Material</td>
+        <td class="member-title" translate>input.input-members.material_name</td>
         <td class="member-unit">{{inputMemberDetailService.entity.nameOfMaterial }}</td>
         <td></td>
       </tr>
