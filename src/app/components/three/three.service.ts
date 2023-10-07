@@ -86,7 +86,7 @@ export class ThreeService {
     this.disg.ClearData();
     this.reac.ClearData();
     this.fsec.ClearData();
-
+    this.fsec.ClearDataGradient();
     this.scene.render();
   }
 
@@ -230,6 +230,7 @@ export class ThreeService {
     this.max_min.maxMinClear(); //max,min表示消す
     this.scene.setNewHelper(100);
     this.scene.render();
+    this.fsec.ClearDataGradient();
   }
 
   //////////////////////////////////////////////////////
@@ -1100,4 +1101,9 @@ export class ThreeService {
     }
     return title3;
   }
+
+  // public createPanelMemberSectionForce(arr, vertexlist, key){
+  //   //this.fsec.createPanel(vertexlist, key);
+  //   this.fsec.createPanel1(arr, vertexlist, key);
+  // }
 }

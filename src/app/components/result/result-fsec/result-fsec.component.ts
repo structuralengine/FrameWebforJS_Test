@@ -14,6 +14,12 @@ import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import { SheetComponent } from '../../input/sheet/sheet.component';
 import pq from "pqgrid";
 import { TranslateService } from '@ngx-translate/core';
+import { InputPanelService } from '../../input/input-panel/input-panel.service';
+import { forEach } from 'jszip';
+import { InputNodesService } from '../../input/input-nodes/input-nodes.service';
+import { ThreeSectionForceService } from '../../three/geometry/three-section-force/three-section-force.service';
+import { ThreePanelService } from '../../three/geometry/three-panel.service';
+import { ColorPaletteService } from '../../three/color-palette/color-palette.service';
 
 @Component({
   selector: 'app-result-fsec',
@@ -29,6 +35,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   public KEYS: string[];
   public TITLES: string[];
   public height: any;
+  public panelData : any[] = [];
   dataset: any[];
   page: number = 1;
   load_name: string;
@@ -66,6 +73,8 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
 
 
   constructor(
+    private panel: InputPanelService,
+    private nodes: InputNodesService,
     private data: ResultFsecService,
     private app: AppComponent,
     private result: ResultDataService,
@@ -76,7 +85,10 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     private helper: DataHelperModule,
     private pagerService: PagerService,
     public docLayout: DocLayoutService,
-    private translate: TranslateService,
+    private translate: TranslateService  ,
+    private three_fesc: ThreeSectionForceService,
+    private three_panel: ThreePanelService,
+    public colorPaletteService: ColorPaletteService
   ) {
     this.dataset = new Array();
     this.dimension = this.helper.dimension;
@@ -104,6 +116,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.colorPaletteService.setControlShowHide(true);
     // this.loadPage(this.result.page);
     this.ROWS_COUNT = this.rowsCount();
     this.loadData(1, this.ROWS_COUNT);
@@ -137,6 +150,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.colorPaletteService.setControlShowHide(false);
   }
 
   //　pager.component からの通知を受け取る
@@ -221,6 +235,8 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
   private COLUMNS_COUNT = 5;
 
   private loadData(currentPage: number, row: number): void {
+    this.three_panel.ClearData();
+    this.three_fesc.ClearDataGradient();
     for (let i = this.datasetNew.length; i <= row; i++) {
       const define = this.data.getDataColumns(currentPage, i);
       this.datasetNew.push(define);  
@@ -228,6 +244,7 @@ export class ResultFsecComponent implements OnInit, OnDestroy {
     this.page = currentPage;
     this.three.ChangeMode('fsec');
     this.three.ChangePage(currentPage);
+    this.three_fesc.drawGradientPanel();
   }
 
   private tableHeight(): string {

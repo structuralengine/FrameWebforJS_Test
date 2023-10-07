@@ -60,6 +60,10 @@ export class ResultFsecService {
     this.fsec =  new Array();
   }
 
+public clearGradient(){
+  this.three.ClearDataGradient();
+}
+
   public getFsecColumns(typNo: number, mode: string = null): any {
     const key: string = typNo.toString();
     if (!(key in this.columns)) {

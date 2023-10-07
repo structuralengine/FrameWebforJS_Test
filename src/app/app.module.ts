@@ -95,6 +95,7 @@ import { PrintCustomDisgComponent } from "./components/print/custom/print-custom
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { MaxMinComponent } from './components/three/max-min/max-min.component';
+import { ColorPaletteComponent } from './components/three/color-palette/color-palette.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ElectronService } from "./providers/electron.service";
 import { DocLayoutComponent } from "./components/doc-layout/doc-layout.component";
@@ -188,6 +189,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         PrintCustomReacComponent,
         PrintCustomDisgComponent,
         MaxMinComponent,
+        ColorPaletteComponent,
         ChatComponent,
         DocLayoutComponent,
         OptionalHeaderComponent,

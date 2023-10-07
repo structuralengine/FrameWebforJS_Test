@@ -14,6 +14,8 @@ import { PagerService } from '../../input/pager/pager.service';
 import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import pq from "pqgrid";
 import { SheetComponent } from '../../input/sheet/sheet.component';
+import { ColorPaletteService } from '../../three/color-palette/color-palette.service';
+import { ThreeSectionForceService } from '../../three/geometry/three-section-force/three-section-force.service';
 import { TranslateService } from '@ngx-translate/core';
 
 
@@ -82,6 +84,8 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
     private pagerDirectionService: PagerDirectionService,
     private pagerService: PagerService,
     public docLayout: DocLayoutService,
+    public colorPaletteService: ColorPaletteService,
+    private three_fesc: ThreeSectionForceService,
     private translate: TranslateService,
   ) {
     this.dataset = new Array();
@@ -107,6 +111,7 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.colorPaletteService.setControlShowHide(true);
     const n: number = this.comb.getCombineCaseCount();
     // this.loadPage(this.result.page);
     this.calPage(0);
@@ -133,6 +138,7 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.directionSubscription.unsubscribe();
     this.subscription.unsubscribe();
+    this.colorPaletteService.setControlShowHide(false);
   }
 
   //　pager.component からの通知を受け取る
@@ -226,6 +232,7 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
     this.page = currentPage;
     this.three.ChangeMode("comb_fsec");
     this.three.ChangePage(currentPage);
+    this.three_fesc.drawGradientPanel();
   }
 
   private tableHeightf(): string {

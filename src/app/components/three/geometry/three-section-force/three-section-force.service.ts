@@ -11,6 +11,12 @@ import { ThreeMembersService } from "../three-members.service";
 import { ThreeNodesService } from "../three-nodes.service";
 import { ThreeSectionForceMeshService } from "./three-force-mesh";
 import { MaxMinService } from "../../max-min/max-min.service";
+import { forEach } from "jszip";
+import { ResultFsecComponent } from "src/app/components/result/result-fsec/result-fsec.component";
+import { ResultFsecService } from "src/app/components/result/result-fsec/result-fsec.service";
+import { InputPanelService } from "src/app/components/input/input-panel/input-panel.service";
+import { ThreeService } from "../../three.service";
+import { ResultFsecBehaviorSubject } from "../../color-palette/color-palette-behaviorsubject.service";
 
 @Injectable({
   providedIn: "root",
@@ -21,7 +27,7 @@ export class ThreeSectionForceService {
   private currentIndex: string;
   private currentMode: string;
   public currentRadio: string;
-
+  public memSeForce: any[];
   private scale: number;
   private textCount: number; // 文字を出力する数
   private params: any; // GUIの表示制御
@@ -33,6 +39,7 @@ export class ThreeSectionForceService {
     "momentY",
     "momentZ",
   ];
+  public colorList: any[];
   private radioButtons2D = ["axialForce", "shearForceY", "momentZ"];
   private radioButtons = this.radioButtons3D || this.radioButtons2D;
   private gui: any;
@@ -42,23 +49,33 @@ export class ThreeSectionForceService {
 
   public max: number;
   public min: number;
-
+  public panelData: any[];
   private nodeData: any;
   private memberData: any;
   private fsecData = { fsec: null, comb_fsec: null, pick_fsec: null };
   private max_values = { fsec: null, comb_fsec: null, pick_fsec: null };
   public value_ranges = { fsec: null, comb_fsec: null, pick_fsec: null };
-
+  private panelGradientList: any[];
+  private arrColors = [
+    [74, 160, 183],
+    [255, 0, 0],
+    [228, 100, 97],
+    [229, 226, 171],
+  ];
   constructor(
     private scene: SceneService,
     private max_min: MaxMinService,
     private helper: DataHelperModule,
     private node: InputNodesService,
+    private panel: InputPanelService,
     private member: InputMembersService,
     private three_node: ThreeNodesService,
     private three_member: ThreeMembersService,
-    private data: InputNoticePointsService
+    private data: InputNoticePointsService,
+    private resultFsecBehaviorSubject: ResultFsecBehaviorSubject
   ) {
+    this.panelGradientList = new Array();
+    this.memSeForce = new Array();
     this.ThreeObject1 = new THREE.Object3D();
     this.ThreeObject1.visible = false; // 呼び出されるまで非表示
     this.ThreeObject2 = new THREE.Object3D();
@@ -69,6 +86,7 @@ export class ThreeSectionForceService {
     loader.load("./assets/fonts/helvetiker_regular.typeface.json", (font) => {
       this.mesh = new ThreeSectionForceMeshService(font);
       this.ClearData();
+      this.ClearDataGradient();
       this.scene.add(this.ThreeObject1);
       this.scene.add(this.ThreeObject2);
     });
@@ -94,6 +112,7 @@ export class ThreeSectionForceService {
     this.guiEnable();
     this.changeMesh();
     this.onResize();
+    //this.drawGradientPanel();
   }
 
   // データをクリアする
@@ -191,10 +210,22 @@ export class ThreeSectionForceService {
             this.setGuiRadio("");
           }
           this.changeMesh();
-          const key1: string = (key === 'axialForce' || key === 'torsionalMoment') ? 'x' : (key === 'shearForceY' || key === 'momentY') ? 'y' : 'z';
+          this.drawGradientPanel();
+          // if(this.verticalList.length > 0){
+          //   this.verticalList.forEach((mem) =>{
+          //     this.createPanel1(mem['vertexlist'], mem['key']);
+          //   })
+          // }
+          //this.result_fsec.drawGradientPanel();
+          const key1: string =
+            key === "axialForce" || key === "torsionalMoment"
+              ? "x"
+              : key === "shearForceY" || key === "momentY"
+                ? "y"
+                : "z";
           this.max_min._getMaxMinValue(
             this.value_ranges[this.currentMode][this.currentIndex][key1],
-            'fsec',
+            "fsec",
             this.currentRadio
           );
           this.onResize();
@@ -224,6 +255,7 @@ export class ThreeSectionForceService {
     this.changeMesh();
     this.onResize();
     this.scene.render();
+    this.drawGradientPanel();
   }
 
   // gui 選択されたチェックボックス以外をOFFにする
@@ -235,7 +267,11 @@ export class ThreeSectionForceService {
   }
 
   // 解析結果をセットする
-  public setResultData(fsecJson: any, max_values: any, value_ranges: any): void {
+  public setResultData(
+    fsecJson: any,
+    max_values: any,
+    value_ranges: any
+  ): void {
     const keys = Object.keys(fsecJson);
     if (keys.length === 0) {
       this.ClearData();
@@ -250,18 +286,27 @@ export class ThreeSectionForceService {
     this.currentMode = "fsec";
     this.currentIndex = keys[0];
     this.changeMesh();
+    //this.drawGradientPanel();
     this.ThreeObject1.visible = false; // 呼び出されるまで非表示
     this.ThreeObject2.visible = false; // 呼び出されるまで非表示
     this.currentMode = "";
   }
   // combine
-  public setCombResultData(fsecJson: any, max_values: any, value_range: any): void {
+  public setCombResultData(
+    fsecJson: any,
+    max_values: any,
+    value_range: any
+  ): void {
     this.fsecData.comb_fsec = fsecJson;
     this.max_values.comb_fsec = max_values;
     this.value_ranges.comb_fsec = value_range;
   }
   // pick up
-  public setPickupResultData(fsecJson: any, max_values: any, value_range: any): void {
+  public setPickupResultData(
+    fsecJson: any,
+    max_values: any,
+    value_range: any
+  ): void {
     this.fsecData.pick_fsec = fsecJson;
     this.max_values.pick_fsec = max_values;
     this.value_ranges.pick_fsec = value_range;
@@ -308,6 +353,7 @@ export class ThreeSectionForceService {
     } else {
       this.params[this.currentRadio] = true;
       this.changeMesh();
+      //this.drawGradientPanel();
       return;
     }
 
@@ -365,7 +411,6 @@ export class ThreeSectionForceService {
       for (let i = fsecData.length + 1; i < ThreeObject.children.length; i++) {
         ThreeObject.children.splice(0, 1);
       }
-
       let nodei: THREE.Vector3;
       let nodej: THREE.Vector3;
       let localAxis: any;
@@ -375,7 +420,12 @@ export class ThreeSectionForceService {
       let P1: number = 0;
       let P2: number = 0;
       let counter = 0;
+      this.memSeForce = new Array();
       for (const fsec of fsecData) {
+        if (fsec["m"] !== "" || fsec["n"] !== "") {
+          if (!this.memSeForce.includes(fsec))
+            this.memSeForce.push(fsec);
+        }
         const id = fsec["m"].trim();
         if (id.length > 0) {
           // 節点データを集計する
@@ -448,7 +498,6 @@ export class ThreeSectionForceService {
     // 主な点に文字を追加する
     // if(this.helper.dimension === 3) return;
     // 断面力の大きい順に並び変える
-
     textValues.sort((a, b) => {
       return Math.abs(a) < Math.abs(b) ? 1 : -1;
     });
@@ -460,8 +509,8 @@ export class ThreeSectionForceService {
     let Upper = targetValues;
     let target = [];
     textValMemNo.forEach((data) => {
-      target.push(data.val)
-    })
+      target.push(data.val);
+    });
     target.sort((a, b) => {
       return Math.abs(a) < Math.abs(b) ? 1 : -1;
     });
@@ -479,7 +528,7 @@ export class ThreeSectionForceService {
       for (const mesh of ThreeObject.children) {
         let f1 = false;
         if (targetList.find((v) => v === mesh["P1"]) !== undefined) {
-          f1 = true
+          f1 = true;
           c.push(mesh);
         }
         let f2 = false;
@@ -490,24 +539,23 @@ export class ThreeSectionForceService {
         this.mesh.setText(mesh, f1, f2);
       }
     }
-    var meshView = Array.from(new Set(c))
+    var meshView = Array.from(new Set(c));
     var memberNo = this.getMemberNoLocation();
-    memberNo.forEach(mem => {
+    memberNo.forEach((mem) => {
       let er = [];
-      meshView.forEach(th => {
+      meshView.forEach((th) => {
         let ni = new THREE.Vector3(mem.nodei.x, mem.nodei.y, mem.nodei.z);
         let nj = new THREE.Vector3(mem.nodej.x, mem.nodej.y, mem.nodej.z);
         if (th.position.equals(ni) || th.position.equals(nj)) {
           er.push(th);
         }
-      })
-      console.log(er)
+      });
       if (er.length > 0) {
         let p = [];
-        er.forEach(mesh => {
-          p.push(mesh["P1"])
-          p.push(mesh["P2"])
-        })
+        er.forEach((mesh) => {
+          p.push(mesh["P1"]);
+          p.push(mesh["P2"]);
+        });
         let max = p[0];
         for (let i = 0; i < p.length; i++) {
           if (p[i] > max) {
@@ -515,16 +563,16 @@ export class ThreeSectionForceService {
           }
         }
         for (let i = 0; i < er.length; i++) {
-          if (Number(er[i]['L'].toFixed(2)) <= this.findSmallestPositiveValue(er)) {
-            if (er[i]['P1'] < er[i]['P2']) {
-              this.mesh.setText(er[i], false, false)
-            } else
-              this.mesh.setText(er[i], false, false)
+          if (
+            Number(er[i]["L"].toFixed(2)) <= this.findSmallestPositiveValue(er)
+          ) {
+            if (er[i]["P1"] < er[i]["P2"]) {
+              this.mesh.setText(er[i], false, false);
+            } else this.mesh.setText(er[i], false, false);
           }
         }
-      }     
-    })
-
+      }
+    });
   }
 
   // データが変更された時に呼び出される
@@ -536,6 +584,7 @@ export class ThreeSectionForceService {
       this.guiEnable();
     }
     this.changeMesh();
+    //this.drawGradientPanel();
     this.onResize();
   }
 
@@ -596,15 +645,15 @@ export class ThreeSectionForceService {
     }
   }
   private findSmallestPositiveValue(arr: any) {
-    let smallestPositive = arr[0]['L'];
-    arr.forEach(d => {
+    let smallestPositive = arr[0]["L"];
+    arr.forEach((d) => {
       for (let i = 0; i < 2; i++) {
-        let key = 'L' + (i + 1);
+        let key = "L" + (i + 1);
         if (smallestPositive > d[key] && d[key] > 0) {
-          smallestPositive = d[key]
+          smallestPositive = d[key];
         }
       }
-    })
+    });
 
     return Number(smallestPositive.toFixed(2));
   }
@@ -612,17 +661,256 @@ export class ThreeSectionForceService {
     const num = new Array();
     const arr = [];
     var member = this.data.getNoticePointsJson();
-    member.forEach(item => {
-      num.push(item["m"])
+    member.forEach((item) => {
+      num.push(item["m"]);
     });
-    num.forEach(obj => {
+    num.forEach((obj) => {
       let mem = this.member.getMemberNo(obj.toString());
       let nodei = this.node.getNodePos(mem.ni);
       let nodej = this.node.getNodePos(mem.nj);
-      mem.nodei = nodei
-      mem.nodej = nodej
+      mem.nodei = nodei;
+      mem.nodej = nodej;
       arr.push(mem);
-    })
+    });
     return arr;
+  }
+
+  public createPanel(vertexlist, key, btnRadio, values): void {
+    var val = this.GetValueTable(vertexlist);
+    values.sort((a, b) => {
+      return a[btnRadio] < b[btnRadio] ? 1 : -1;
+    })
+
+    var geometry = new THREE.BufferGeometry();
+    var indices = [];
+
+    var vertices = [];
+    var normals = [];
+    var colors = [];
+   
+
+    val.forEach((t) => {
+      var _color = new THREE.Color();
+      var test = this.node.getNodePos(t['n']);
+      vertices.push(test.x, test.y, test.z);
+      normals.push(0, 1, 0);
+      var mid = (values[values.length - 1][btnRadio] + values[0][btnRadio]) / 2;
+
+      if (t[btnRadio] === values[0][btnRadio]) {
+        _color.setRGB(this.arrColors[1][0], this.arrColors[1][1], this.arrColors[1][2]);
+        colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
+      }
+      else if (t[btnRadio] === values[values.length - 1][btnRadio]) {
+        _color.setRGB(this.arrColors[0][0], this.arrColors[0][1], this.arrColors[0][2]);
+        colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
+      } else {
+        if (mid < t[btnRadio]) {
+          var set = Math.round(Math.abs((values[0][btnRadio] - t[btnRadio]) / values[0][btnRadio]) * 50);
+          _color.setRGB(Math.max(0, Math.min(255, this.arrColors[2][0])), Math.max(0, Math.min(255, this.arrColors[2][1] + set)), Math.max(0, Math.min(255, this.arrColors[2][2])));
+          colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
+        }
+        else {
+          var set = Math.round(((Math.abs(t[btnRadio]) - Math.abs(values[values.length - 1][btnRadio]) ) / Math.abs(values[values.length - 1][btnRadio])) * 50);
+          _color.setRGB(Math.max(0, Math.min(255, this.arrColors[3][0])), Math.max(0, Math.min(255, this.arrColors[3][1] + set)), Math.max(0, Math.min(255, this.arrColors[3][2])));
+          colors.push(_color.r / 255, _color.g / 255, _color.b / 255);
+        }
+      }
+      if(!this.colorList.some((x) => x['n'] === t['n'] || x['t'] === t[btnRadio].toFixed(2)))
+        this.colorList.push({ _color, t: t[btnRadio].toFixed(2), n: t['n']});
+
+    });
+    geometry.setIndex([0, 1, 2,
+      0, 2, 1,
+      1, 2, 0,
+      1, 0, 2,
+      2, 1, 0,
+      2, 0, 1,
+      0, 2, 3,
+      0, 3, 2,
+      2, 0, 3,
+      2, 3, 0,
+      3, 0, 2,
+      3, 2, 0]);
+    geometry.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(vertices, 3)
+    );
+    const faceIndices = geometry.getIndex().array;
+    geometry.setAttribute(
+      "normal",
+      new THREE.Float32BufferAttribute(normals, 3)
+    );
+    geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+    const material = new THREE.MeshPhongMaterial({
+      // side: THREE.DoubleSide,
+      flatShading: true,
+      vertexColors: true,
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.name = 'panelGradient-' + key.toString();
+    this.scene.add(mesh);
+    this.panelGradientList.push(mesh);
+    // } 
+  }
+
+  public ClearDataGradient(): void {
+
+    for (const mesh of this.panelGradientList) {
+      // 文字を削除する
+      while (mesh.children.length > 0) {
+        const object = mesh.children[0];
+        object.parent.remove(object);
+      }
+      // オブジェクトを削除する
+      this.scene.remove(mesh);
+    }
+    this.panelGradientList = new Array();
+  }
+  public checkRadioButton() {
+    let key1: string;
+    let key2: string;
+    if (this.params.axialForce === true) {
+      this.currentRadio = "axialForce";
+      key1 = "fx";
+    } else if (this.params.torsionalMoment === true) {
+      // ねじり曲げモーメント
+      this.currentRadio = "torsionalMoment";
+      key1 = "mx";
+
+    } else if (this.params.shearForceY === true) {
+      // Y方向のせん断力
+      this.currentRadio = "shearForceY";
+      key1 = "fy";
+
+    } else if (this.params.momentY === true) {
+      // Y軸周りの曲げモーメント
+      this.currentRadio = "momentY";
+      key1 = "my";
+
+    } else if (this.params.shearForceZ === true) {
+      // Z方向のせん断力
+      this.currentRadio = "shearForceZ";
+      key1 = "fz";
+
+    } else if (this.params.momentZ === true) {
+      // Z軸周りの曲げモーメント
+      this.currentRadio = "momentZ";
+      key1 = "mz";
+    }
+    return key1;
+  }
+  public GetValueTable(vertexlist: any) {
+    let re = [];
+    let result = [];
+    for (const item of vertexlist) {
+      let arr = [];
+      this.memSeForce.forEach((mem: any) => {
+        var test = this.node.getNodePos(mem['n']);
+        if (test.x === item[0] && test.y === item[1] && test.z === item[2]) {
+          if (!arr.includes(mem))
+            arr.push(mem);
+        }
+      })
+
+      if (arr.length > 1) {
+        let max = arr[0][this.checkRadioButton()];
+        let p = 0;
+        arr.forEach((a, index) => {
+          if (max < a[this.checkRadioButton()]) {
+            max = a[this.checkRadioButton()];
+            p = index
+          }
+        })
+        re.push(arr[p]);
+      } else {
+        re.push(arr[0])
+      }
+    }
+    // re.sort((a, b) => {
+    //   return a[this.checkRadioButton()] < b[this.checkRadioButton()] ? 1 : -1;
+    // })
+    return re;
+  }
+  public GetAllPanel() {
+    const nodeData = this.node.getNodeJson(0);
+    if (Object.keys(nodeData).length <= 0) {
+      return;
+    }
+    this.panelData = [];
+    let pData = this.panel.getPanelJson(0);
+
+    if (Object.keys(pData).length <= 0) {
+      return;
+    }
+    let arrData = [];
+    for (const key of Object.keys(pData)) {
+      const target = pData[key];
+      if (target.nodes.length <= 2) {
+        continue
+      }
+      //対象のnodeDataを入手
+
+      for (const check of target.nodes) {
+        if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
+          const n = nodeData[check];
+          const x = n.x;
+          const y = n.y;
+          const z = n.z;
+          arrData.push([x, y, z]);
+        } else if (!(check - 1 in Object.keys(nodeData))) {
+          continue;
+        }
+      }
+    }
+    return arrData;
+  }
+  public drawGradientPanel() {
+    this.colorList = new Array();
+    var panel1 = this.GetAllPanel();
+    var values = this.GetValueTable(panel1);
+    var btnRadio = this.checkRadioButton();
+    const nodeData = this.node.getNodeJson(0);
+    if (Object.keys(nodeData).length <= 0) {
+      return;
+    }
+    this.panelData = [];
+    let pData = this.panel.getPanelJson(0);
+
+    if (Object.keys(pData).length <= 0) {
+      return;
+    }
+
+    for (const key of Object.keys(pData)) {
+      const target = pData[key];
+      if (target.nodes.length <= 2) {
+        continue
+      }
+
+      //対象のnodeDataを入手
+      const vertexlist = [];
+      for (const check of target.nodes) {
+        if (check - 1 in Object.keys(nodeData)) {   //nodeData.key=>0~7, nodeData=>1~8のため（-1）で調整
+          const n = nodeData[check];
+          const x = n.x;
+          const y = n.y;
+          const z = n.z;
+          vertexlist.push([x, y, z]);
+
+        } else if (!(check - 1 in Object.keys(nodeData))) {
+          continue;
+        }
+      }
+      this.createPanel(vertexlist, key, btnRadio, values);
+    }
+    this.colorList.sort((a, b) => {
+      return +a["t"] < +b["t"] ? 1 : -1;
+    });
+    this.resultFsecBehaviorSubject.drawColor(this.colorList);
+    // console.log(this.colorList.sort((a, b) => {
+    //   return a["t"] > b["t"] ? 1 : -1;
+    // }))
+    // console.log("value", values)
+    this.scene.render();
+
   }
 }
