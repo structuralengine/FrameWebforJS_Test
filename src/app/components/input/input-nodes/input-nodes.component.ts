@@ -7,6 +7,9 @@ import { SheetComponent } from '../sheet/sheet.component';
 import pq from 'pqgrid';
 import { AppComponent } from 'src/app/app.component';
 import { DocLayoutService } from 'src/app/providers/doc-layout.service';
+import { Subscription } from 'rxjs';
+import { ThreeNodesService } from '../../three/geometry/three-nodes.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-input-nodes',
@@ -73,6 +76,8 @@ export class InputNodesComponent implements OnInit {
     public helper: DataHelperModule,
     private app: AppComponent,
     private three: ThreeService,
+    private threeNodesService : ThreeNodesService,
+    private translate: TranslateService,
     public docLayout: DocLayoutService
   ) {
     this.currentRow = null;
@@ -83,10 +88,38 @@ export class InputNodesComponent implements OnInit {
     // three.js にモードの変更を通知する
     this.three.ChangeMode('nodes');
   }
+  private subscription: Subscription;
   ngAfterViewInit() {
     this.docLayout.handleMove.subscribe((data) => {
       this.options.height = data - 80;
     });
+
+    this.subscription = this.threeNodesService.nodeSelected$.subscribe((position : any) => {
+      var pX = position.x.toFixed(3);
+      var pY = position.y.toFixed(3);
+      var pZ = position.z.toFixed(3);
+      var dataNode = this.data.node.filter(n => n.x === pX && n.y === pY && n.z === pZ)[0];
+      if(dataNode.pq_ri === undefined){
+        let indexRow = dataNode.id;
+        if(indexRow >= 29){
+          let d = Math.ceil(indexRow / 29);
+          this.grid.grid.scrollY((d * this.grid.div.nativeElement.clientHeight), () => {
+            // this.grid.grid.goToPage({ rowIndx: indexRow, page: 2 } )
+            this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
+          });
+        }else{
+          this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
+        }
+      }else{
+        let indexRow = dataNode.pq_ri;
+        this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
+      }
+    });
+  }
+
+  test(){
+    // this.grid.grid.setSelection({rowIndx: 2,rowIndxPage:3,colIndx:1, focus: true});
+    this.grid.grid.scrollY(this.grid.div.nativeElement.clientHeight);
   }
   // 指定行row 以降のデータを読み取る
   private loadData(row: number): void {
@@ -122,6 +155,39 @@ export class InputNodesComponent implements OnInit {
       this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
     dataModel: {
       data: this.dataset,
+    },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.paste"),
+          shortcut: 'Ctrl + V',
+          action: function (evt, ui, item) {
+            this.paste();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.cut"),
+          shortcut: 'Ctrl + X',
+          action: function (evt, ui, item) {
+            this.cut();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.undo"),
+          shortcut: 'Ctrl + Z',
+          action: function (evt, ui, item) {
+            this.History().undo();
+          }
+        }
+      ]
     },
     beforeTableView: (evt, ui) => {
       console.log('ui', ui);

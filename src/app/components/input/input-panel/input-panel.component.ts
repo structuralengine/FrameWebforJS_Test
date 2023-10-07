@@ -8,6 +8,8 @@ import pq from "pqgrid";
 import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from 'src/app/providers/doc-layout.service';
+import { ThreePanelService } from '../../three/geometry/three-panel.service';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-input-panel',
@@ -19,18 +21,18 @@ export class InputPanelComponent {
 
   private dataset = [];
   private columnKeys = ['e'];
-  private columnHeaders: any =[
+  private columnHeaders: any = [
     //{ title: "パネルID", dataType: "integer", dataIndx: "panelID",  sortable: false, width: 40 },
     {
       title: this.translate.instant("input.input-panel.materialNo"),
-      dataType: "integer", 
-      dataIndx: this.columnKeys[0],  
-      sortable: false, 
-      width: 40 
+      dataType: "integer",
+      dataIndx: this.columnKeys[0],
+      sortable: false,
+      width: 40
     },
     {
       title: this.translate.instant("input.input-panel.nodeNo"),
-      colModel: [] 
+      colModel: []
     }
   ];
 
@@ -40,13 +42,14 @@ export class InputPanelComponent {
   private currentColumn: string;
 
   constructor(private data: InputPanelService,
-              private node: InputNodesService,
-              private helper: DataHelperModule,
-              private app: AppComponent,
-              private three: ThreeService,        
-              private translate: TranslateService, 
-              public docLayout:DocLayoutService
-            ) {
+    private node: InputNodesService,
+    private helper: DataHelperModule,
+    private app: AppComponent,
+    private three: ThreeService,
+    private translate: TranslateService,
+    public docLayout: DocLayoutService,
+    public threePanelService: ThreePanelService,
+  ) {
 
     for (let i = 1; i <= this.data.PANEL_VERTEXS_COUNT; i++) {
       // this.columnKeysの情報追加
@@ -57,7 +60,7 @@ export class InputPanelComponent {
         dataType: "integer",
         dataIndx: "point-" + i,
         sortable: false,
-        minwidth: 30, 
+        minwidth: 30,
         width: 35
       });
     }
@@ -73,8 +76,21 @@ export class InputPanelComponent {
 
   ngAfterViewInit() {
     this.docLayout.handleMove.subscribe(data => {
-    this.options.height = data - 60;
-    })
+      this.options.height = data - 60;
+    });
+
+    this.threePanelService.panelSelected$.subscribe((item: any) => {
+      var indexRow = item.name.replace("panel-", "");
+      if (indexRow >= 29) {
+        let d = Math.ceil(indexRow / 29);
+        this.grid.grid.scrollY((d * this.grid.div.nativeElement.clientHeight), () => {
+          // this.grid.grid.goToPage({ rowIndx: indexRow, page: 2 } )
+          this.grid.grid.setSelection({ rowIndx: indexRow - 1, rowIndxPage: 1, colIndx: 0, focus: true });
+        });
+      } else {
+        this.grid.grid.setSelection({ rowIndx: indexRow - 1, rowIndxPage: 1, colIndx: 0, focus: true });
+      }
+    });
   }
 
   // 指定行row 以降のデータを読み取る
@@ -114,11 +130,44 @@ export class InputPanelComponent {
     dataModel: {
       data: this.dataset
     },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.paste"),
+          shortcut: 'Ctrl + V',
+          action: function (evt, ui, item) {
+            this.paste();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.cut"),
+          shortcut: 'Ctrl + X',
+          action: function (evt, ui, item) {
+            this.cut();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.undo"),
+          shortcut: 'Ctrl + Z',
+          action: function (evt, ui, item) {
+            this.History().undo();
+          }
+        }
+      ]
+    },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;
       const dataV = this.dataset.length;
       if (ui.initV == null) {
-          return;
+        return;
       }
       if (finalV >= dataV - 1) {
         this.loadData(dataV + this.ROWS_COUNT);
@@ -129,7 +178,7 @@ export class InputPanelComponent {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = this.columnKeys[range[0].c1];
-      if (this.currentRow !== row){
+      if (this.currentRow !== row) {
         //選択行の変更があるとき，ハイライトを実行する
         this.three.selectChange('panel', row, column);
       }
@@ -142,10 +191,10 @@ export class InputPanelComponent {
         const row: number = target.rowIndx;
         const key = Object.keys(target.newRow);
         const m: string = target.newRow[key.toString()];
-        if ( m === null){
+        if (m === null) {
           this.dataset[row]['len'] = null;
         }
-        this.grid.refreshDataAndView();
+        //this.grid.refreshDataAndView(); //This event prevents undo event
       }
       // copy&pasteで入力した際、超過行が消えてしまうため、addListのループを追加.
       for (const target of ui.addList) {

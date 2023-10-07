@@ -39,20 +39,22 @@
         "newEntry": "Create a new file",
         "openFile": "Open file",
         "saveFile": "Save a file",
-        "overwrite": "overwrite save",
+        "overwrite": "Overwrite save",
         "print": "Print",
         "outputFile": "Pickup file output",
         "language": "Language",
-        "help": "Help",
+        "help": "Manual",
         "logout": "Logout",
         "login": "Login",
         "P_login": "Please login",
         "calc_start": "start the calculation",
         "success": "Communication success!!",
         "deduct_points": "points consumed. Today's usage is",
+        "calc_complete":"Calculations are complete.",
         "new_points": "points.",
         "control": "Control",
-        "today_used_point": "Points Used Today"
+        "today_used_point": "Points Used Today",
+        "NewWindow":"New window"
     },
     "input": {
         "input-fix-node": {
@@ -75,7 +77,22 @@
             "material": "Material",
             "codeAngle": "Angle of Rocation",
             "material_name": "Name of Material",
-            "No": "No"
+            "no": "No",
+            "member": "Member",
+            "rigid": "Rigid Zone",
+            "MemberData": "Member Data"
+        },
+        "input-rigid": {
+            "node": "Node",
+            "node_i": "Node-I",
+            "node_j": "Node-J",
+            "distance": "Distance",
+            "material": "Material",
+            "material_name": "Name of Material",
+            "no": "No",
+            "member": "Member",
+            "rigid": "Rigid Zone",
+            "materialNo": "Material No"
         },
         "input-elements": {
             "elastic": "Elastic",
@@ -387,6 +404,13 @@
     },
     "window": {
         "closeTitle": "Confirm",
-        "closeMessage": "Changes may not to be saved. Are you sure you want to quit?"
+        "closeMessage": "Changes may not to be saved. Are you sure you want to quit?",
+        "confirm": "Information being entered is discarded."
+    },
+    "action_key":{
+        "copy": "Copy",
+        "paste": "Paste",
+        "undo": "Undo",
+        "cut": "Cut"
     }
 }

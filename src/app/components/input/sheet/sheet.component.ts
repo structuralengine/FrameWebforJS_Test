@@ -16,7 +16,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
   @ViewChild('pqgrid') div: ElementRef;
   @Input() options: any;
 
-  grid: pq.gridT.instance = null;
+  public grid: pq.gridT.instance = null;
 
   constructor(
     public helper: DataHelperModule,
@@ -33,6 +33,18 @@ export class SheetComponent implements AfterViewInit, OnChanges {
       }
       */
       if (evt.key === 'Enter') {
+        const $cell = this.grid.getCell({
+          rowIndx: ui.rowIndx + mov,
+          colIndx: ui.colIndx,
+        });
+        this.grid.setSelection({
+          rowIndx: ui.rowIndx + mov,
+          colIndx: ui.colIndx,
+          focus: true,
+        });
+        return false;
+      }
+      if (evt.key === 'Tab') {
         const $cell = this.grid.getCell({
           rowIndx: ui.rowIndx,
           colIndx: ui.colIndx + mov,

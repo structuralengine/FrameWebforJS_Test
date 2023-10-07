@@ -27,10 +27,12 @@ import { ResultPickupFsecComponent } from './components/result/result-pickup-fse
 import { PrintComponent } from './components/print/print.component'
 import { PrintLayoutComponent } from './components/print/print-layout/print-layout.component';
 import { InvoiceComponent } from './components/print/invoice/invoice.component';
+import { InputRigidZoneComponent } from './components/input/input-rigid-zone/input-rigid-zone.component';
 
 const routes: Routes = [
   { path: 'input-nodes', component: InputNodesComponent },
   { path: 'input-members', component: InputMembersComponent },
+  { path: 'input-rigid_zone', component: InputRigidZoneComponent },
   { path: 'input-fix_nodes', component: InputFixNodeComponent },
   { path: 'input-elements', component: InputElementsComponent },
   { path: 'input-panel', component: InputPanelComponent },

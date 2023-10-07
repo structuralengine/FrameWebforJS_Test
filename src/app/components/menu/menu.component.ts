@@ -78,20 +78,36 @@ export class MenuComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    //Check if Ctrl and S key are both pressed
+    if (event.ctrlKey && (event.key === 'S' || event.key === 's')) {
+      event.preventDefault(); // Prevent default behavior of Ctrl + S
+      // Perform your action here
+      this.overWrite();
+    }
+  }
+  public  newWindow(){
+    this.electronService.ipcRenderer.send("newWindow");
+  }
   // 新規作成
-  renew(): void {
-    this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.InputData.clear();
-    this.ResultData.clear();
-    this.PrintData.clear();
-    this.CustomFsecData.clear();
-    this.three.ClearData();
-    this.fileName = "";
-    this.three.fileName = "";
-    this.three.mode = "";
-
-    // "新規作成"のとき、印刷パネルのフラグをリセットする
-    this.printCustomFsecService.flg = undefined;
+  async renew(): Promise<void> {
+    const isConfirm = await this.helper.confirm(this.translate.instant("window.confirm"));
+    if(isConfirm)
+    {
+      this.app.dialogClose(); // 現在表示中の画面を閉じる
+      this.InputData.clear();
+      this.ResultData.clear();
+      this.PrintData.clear();
+      this.CustomFsecData.clear();
+      this.three.ClearData();
+      this.fileName = "";
+      this.three.fileName = "";
+      this.three.mode = "";
+  
+      // "新規作成"のとき、印刷パネルのフラグをリセットする
+      this.printCustomFsecService.flg = undefined;
+    }
   }
 
   // Electron でファイルを開く
@@ -357,7 +373,7 @@ export class MenuComponent implements OnInit {
 
   public goToLink() {
     window.open(
-      "https://liberating-rodent-f3f.notion.site/4e2148bfe8704aa6b6dbc619d539c8c3?v=76a73b4693404e64a56ab8f8ff538e4d",
+      "https://help-frameweb.malme.app/",
       "_blank"
     );
   }

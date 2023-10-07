@@ -42,6 +42,7 @@
                         <!--  -->
                         <button *ngIf="ResultData.isCalculated" ngbDropdownItem (click)="pickup()"
                             translate>menu.outputFile</button>
+                        <button *ngIf="electronService.isElectron" ngbDropdownItem (click)="newWindow()" translate>menu.NewWindow</button>
                     </div>
                 </div>
             </li>
@@ -101,7 +102,9 @@
             {{fileName}}</h1>
     </ng-template>
 
+    
     <div class="rightArea">
+        <!--
         <div class="point-area" *ngIf="auth.currentUser as user" >
             <div class="flex">
                 <div class="label" translate>menu.today_used_point</div>
@@ -114,6 +117,7 @@
                 <div class="used" style="width:calc(267763 / 1000000 * 100%);"></div>
             </div>
         </div>
+    -->
 
 
         <div class="login-area">

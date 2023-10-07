@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { CSS2DObject } from '../libs/CSS2DRenderer.js';
 
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min'
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -331,10 +332,17 @@ export class ThreeNodesService {
       case 'click':
         this.nodeList.children.map(item => {
           if (intersects.length > 0 && item === intersects[0].object) {
+            // console.log(item.position);
             // 色を赤くする
+            this.sendNodeSubject(item.position);
             const material = item['material'];
             material['color'].setHex(0xff0000);
             material['opacity'] = 1.00;
+          }
+          else{
+            const material = item['material'];
+            material['color'].setHex(0X212529);
+            material["opacity"] = 1.0;
           }
         });
         break;
@@ -382,6 +390,13 @@ export class ThreeNodesService {
     this.scene.render();
   }
 
+
+  private nodeSelectedInThreeSubject = new Subject<number>();
+  nodeSelected$ = this.nodeSelectedInThreeSubject.asObservable();
+
+  sendNodeSubject(position: any) {
+    this.nodeSelectedInThreeSubject.next(position);
+  }
 }
 
 

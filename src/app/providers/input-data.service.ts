@@ -18,6 +18,7 @@ import { TranslateService } from "@ngx-translate/core";
 
 import packageJson from '../../../package.json';
 import { forEach } from "@angular-devkit/schematics";
+import { InputRigidZoneService } from "../components/input/input-rigid-zone/input-rigid-zone.service";
 
 @Injectable({
   providedIn: "root",
@@ -38,6 +39,7 @@ export class InputDataService {
     public notice: InputNoticePointsService,
     public pickup: InputPickupService,
     private three: SceneService,
+    private rigid: InputRigidZoneService,
     private translate: TranslateService
   ) {
     this.clear();
@@ -67,6 +69,7 @@ export class InputDataService {
     this.define.clear();
     this.combine.clear();
     this.pickup.clear();
+    this.rigid.clear();
     this.result = null
   }
 
@@ -86,6 +89,7 @@ export class InputDataService {
     this.combine.setCombineJson(jsonData);
     this.pickup.setPickUpJson(jsonData);
     this.versionChecker(jsonData);
+    this.rigid.setRigidJson(jsonData);
 
     if ("dimension" in jsonData) {
       this.helper.dimension = jsonData["dimension"] as number;
@@ -229,7 +233,12 @@ export class InputDataService {
     } else if (empty === 0) {
       jsonData["element"] = {};
     }
-
+    const rigid: {} = this.rigid.getRigidJson();
+    if (Object.keys(rigid).length > 0) {
+      jsonData["rigid"] = rigid;
+    } else if (empty === 0) {
+      jsonData["rigid"] = {};
+    }
     const joint: {} = this.joint.getJointJson(empty);
     if (Object.keys(joint).length > 0) {
       jsonData["joint"] = joint;

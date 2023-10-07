@@ -6,6 +6,7 @@ import { ThreeNodesService } from "./three-nodes.service";
 import * as THREE from "three";
 import { CSS2DObject } from "../libs/CSS2DRenderer.js";
 import { Vector3 } from "three";
+import { Subject } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -495,9 +496,15 @@ export class ThreeMembersService {
       case "click":
         this.memberList.children.map((item) => {
           if (intersects.length > 0 && item === intersects[0].object) {
+            this.sendMemberSubject(item);
             // 色を赤くする
             const material = item['material'];
             material["color"].setHex(0xff0000);
+            material["opacity"] = 1.0;
+          }
+          else{
+            const material = item['material'];
+            material['color'].setHex(0X212529);
             material["opacity"] = 1.0;
           }
         });
@@ -559,4 +566,10 @@ export class ThreeMembersService {
     this.scene.render();
   }
 
+  private memberSelectedInThreeSubject = new Subject<any>();
+  memberSelected$ = this.memberSelectedInThreeSubject.asObservable();
+
+  sendMemberSubject(item: any) {
+    this.memberSelectedInThreeSubject.next(item);
+  }
 }

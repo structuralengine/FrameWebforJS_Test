@@ -16,6 +16,7 @@ import pq from "pqgrid";
 import { SheetComponent } from '../../input/sheet/sheet.component';
 import { ColorPaletteService } from '../../three/color-palette/color-palette.service';
 import { ThreeSectionForceService } from '../../three/geometry/three-section-force/three-section-force.service';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -85,6 +86,7 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
     public docLayout: DocLayoutService,
     public colorPaletteService: ColorPaletteService,
     private three_fesc: ThreeSectionForceService,
+    private translate: TranslateService,
   ) {
     this.dataset = new Array();
     this.KEYS = this.data.fsecKeys;
@@ -261,6 +263,18 @@ export class ResultCombineFsecComponent implements OnInit, OnDestroy {
       this.helper.dimension === 3 ? this.columnHeaders3D : this.columnHeaders2D,
     dataModel: {
       data: this.datasetNew,
+    },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        }
+      ]
     },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;

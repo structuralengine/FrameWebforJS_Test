@@ -9,6 +9,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { PagerService } from "../pager/pager.service";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
+import { ThreeFixNodeService } from "../../three/geometry/three-fix-node.service";
 
 @Component({
   selector: "app-input-fix-node",
@@ -23,8 +24,8 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
   private page = 1;
   private dataset = [];
 
-  private columnKeys3D: string[] = ['n', 'tx', 'ty', 'tz', 'rx', 'ry', 'rz'];
-  private columnKeys2D: string[] = ['n', 'tx', 'ty', 'rz'];
+  private columnKeys3D: string[] = ["n", "tx", "ty", "tz", "rx", "ry", "rz"];
+  private columnKeys2D: string[] = ["n", "tx", "ty", "rz"];
   private columnHeaders3D = [
     {
       title: this.translate.instant("input.input-fix-node.node"),
@@ -156,7 +157,9 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService,
-    private pagerService: PagerService, public docLayout:DocLayoutService
+    private threeFixNodeService: ThreeFixNodeService,
+    private pagerService: PagerService,
+    public docLayout: DocLayoutService
   ) {
     this.currentRow = null;
     this.currentColumn = null;
@@ -172,9 +175,42 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
     this.three.ChangePage(1);
   }
   ngAfterViewInit() {
-    this.docLayout.handleMove.subscribe(data => {
-    this.options.height = data - 60;
-    })
+    this.docLayout.handleMove.subscribe((data) => {
+      this.options.height = data - 60;
+    });
+
+    this.threeFixNodeService.fixNodeSelected$.subscribe((item: any) => {
+      var name = item.name.replace("fixnode", "");
+      var indexRow = name.match(/\d+/g)[0];
+      var col = name.match(/[a-zA-Z]+/g)[0];
+      var indexCol;
+      if (this.helper.dimension === 3) {
+        indexCol = this.columnKeys3D.findIndex((x) => x === col);
+      } else {
+        indexCol = this.columnKeys2D.findIndex((x) => x === col);
+      }
+      if (indexRow >= 29) {
+        let d = Math.ceil(indexRow / 29);
+        this.grid.grid.scrollY(
+          d * this.grid.div.nativeElement.clientHeight,
+          () => {
+            this.grid.grid.setSelection({
+              rowIndx: indexRow - 1,
+              rowIndxPage: 1,
+              colIndx: indexCol,
+              focus: true,
+            });
+          }
+        );
+      } else {
+        this.grid.grid.setSelection({
+          rowIndx: indexRow - 1,
+          rowIndxPage: 1,
+          colIndx: indexCol,
+          focus: true,
+        });
+      }
+    });
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
@@ -227,6 +263,39 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
     dataModel: {
       data: this.dataset,
     },
+    contextMenu: {
+      on: true,
+      items: [
+        {
+          name: this.translate.instant("action_key.copy"),
+          shortcut: 'Ctrl + C',
+          action: function (evt, ui, item) {
+            this.copy();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.paste"),
+          shortcut: 'Ctrl + V',
+          action: function (evt, ui, item) {
+            this.paste();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.cut"),
+          shortcut: 'Ctrl + X',
+          action: function (evt, ui, item) {
+            this.cut();
+          }
+        },
+        {
+          name: this.translate.instant("action_key.undo"),
+          shortcut: 'Ctrl + Z',
+          action: function (evt, ui, item) {
+            this.History().undo();
+          }
+        }
+      ]
+    },
     beforeTableView: (evt, ui) => {
       const finalV = ui.finalV;
       const dataV = this.dataset.length;
@@ -243,7 +312,7 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
       const row = range[0].r1 + 1;
       const columnList = this.getColumnList(this.helper.dimension);
       const column = columnList[range[0].c1];
-      if (this.currentRow !== row || this.currentColumn !== column ){
+      if (this.currentRow !== row || this.currentColumn !== column) {
         //選択行の変更があるとき，ハイライトを実行する
         this.three.selectChange("fix_nodes", row, column);
       }
@@ -282,7 +351,7 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
 
   width = this.helper.dimension === 3 ? 712 : 412;
 
-  private getColumnList (dimension): string[] {
+  private getColumnList(dimension): string[] {
     if (dimension === 3) {
       return this.columnKeys3D;
     } else {
