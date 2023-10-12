@@ -188,7 +188,7 @@ export class InputMemberDetailService {
   getValueMaterial(element: any, value: any) {
     //["E", "G", 'Xp', 'A', 'J', 'Iy', 'Iz', 'n']
     if (element.element && value != "") {
-      var el = element.element[1].filter((x) => x.id === value)[0];
+      var el = element.element[1].filter((x) => +x.id === +value)[0];
       if (el) {
         this.entity.eastic = el.E;
         this.entity.steelElastic = el.G;

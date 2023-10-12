@@ -24,43 +24,47 @@
         <td class="member-title" rowspan="4" translate>input.input-members.node_i</td>
         <td class="member-unit">No</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.ni}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.ni" name="ni" id="ni" (change)="onChangeNodeI($event, 0)"/></td>
+        <td class="member-value-2"><input type="number" 
+          onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" 
+          [(ngModel)]="inputMemberDetailService.entity.ni" name="ni" id="ni" 
+          (ngModelChange)="onChangeNodeI($event, 0)"/></td>
       </tr>
       <tr>
         <td class="member-unit">X</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.nix}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.nix" name="nix" id="nix" /></td>
+        <td class="member-value"><input type="number" [(ngModel)]="inputMemberDetailService.entity.nix" name="nix" id="nix" /></td>
       </tr>
       <tr>
         <td class="member-unit">Y</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.niy}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.niy" name="niy" id="niy" /></td>
+        <td class="member-value"><input type="number" [(ngModel)]="inputMemberDetailService.entity.niy" name="niy" id="niy" /></td>
       </tr>
       <tr>
         <td class="member-unit">Z</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.niz}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.niz" name="niz" id="niz" /></td>
+        <td class="member-value"><input type="number" [(ngModel)]="inputMemberDetailService.entity.niz" name="niz" id="niz" /></td>
       </tr>
       <tr>
         <td class="member-title" rowspan="4" translate>input.input-members.node_j</td>
         <td class="member-unit">No</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.nj}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.nj" name="nj" id="nj" (change)="onChangeNodeI($event, 1)"/></td>
+        <td class="member-value"><input type="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" 
+           [(ngModel)]="inputMemberDetailService.entity.nj" name="nj" id="nj" (ngModelChange)="onChangeNodeI($event, 1)"/></td>
       </tr>
       <tr>
         <td class="member-unit">X</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.njx}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.njx" name="njx" id="njx" /></td>
+        <td class="member-value"><input type="number" [(ngModel)]="inputMemberDetailService.entity.njx" name="njx" id="njx" /></td>
       </tr>
       <tr>
         <td class="member-unit">Y</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.njy}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.njy" name="njy" id="njy" /></td>
+        <td class="member-value"><input type="number" [(ngModel)]="inputMemberDetailService.entity.njy" name="njy" id="njy" /></td>
       </tr>
       <tr>
         <td class="member-unit">Z</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.njz}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.njz" name="njz" id="njz" /></td>
+        <td class="member-value"><input type="number" [(ngModel)]="inputMemberDetailService.entity.njz" name="njz" id="njz" /></td>
       </tr>
       <tr>
         <td class="member-title" translate>input.input-members.distance</td>
@@ -71,13 +75,15 @@
         <td class="member-title" translate>input.input-members.codeAngle</td>
         <td class="member-unit">°</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.cg}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.cg" name="cg" id="cg" /></td>
+        <td class="member-value"><input type="number" [(ngModel)]="inputMemberDetailService.entity.cg" name="cg" id="cg" /></td>
       </tr>
       <tr>
         <td class="member-title" translate>input.input-members.material</td>
         <td class="member-unit"></td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.e}}</td> -->
-        <td class="member-value"><input type="text" [(ngModel)]="inputMemberDetailService.entity.e" name="e" id="e" (change)="onChangeMaterial($event)"/></td>
+        <td class="member-value"><input type="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" 
+                                          [(ngModel)]="inputMemberDetailService.entity.e" name="e" id="e" 
+                                          (ngModelChange)="onChangeMaterial($event)"/></td>
       </tr>
       <tr>
         <td class="member-title" translate>input.input-elements.elastic</td>

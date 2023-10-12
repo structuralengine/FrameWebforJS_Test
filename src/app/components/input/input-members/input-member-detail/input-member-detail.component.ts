@@ -38,11 +38,15 @@ export class InputMemberDetailComponent implements OnInit {
     this.inputMemberDetailService.updateDetail(this.data, this.element);
   }
   onChangeNodeI(event:any, type: any){
-    let valueInput = event.target.value;
-    this.inputMemberDetailService.getValueNodeI(this.data, valueInput, type);
+    if(event != null){      
+      let valueInput = event;    
+      this.inputMemberDetailService.getValueNodeI(this.data, valueInput, type); 
+    }      
   }
   onChangeMaterial(event:any){
-    let valueInput = event.target.value;
-    this.inputMemberDetailService.getValueMaterial(this.element, valueInput);
+    if(event != null){      
+      let valueInput = event;    
+      this.inputMemberDetailService.getValueMaterial(this.element, new String(valueInput)); 
+    }      
   }
 }
