@@ -38,9 +38,15 @@ export class InputMemberDetailComponent implements OnInit {
     this.inputMemberDetailService.updateDetail(this.data, this.element);
   }
   onChangeNodeI(event:any, type: any){
-    if(event != null){      
-      let valueInput = event;    
-      this.inputMemberDetailService.getValueNodeI(this.data, valueInput, type); 
+    console.log("event", event)
+    if(event != null){   
+      if (/^[0-9]*$/.test(event)) {
+        let valueInput = event;    
+        this.inputMemberDetailService.getValueNodeI(this.data, valueInput, type);        
+      } else {       
+        this.inputMemberDetailService.entity.ni = '';
+      } 
+     
     }      
   }
   onChangeMaterial(event:any){
