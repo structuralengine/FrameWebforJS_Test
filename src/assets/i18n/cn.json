@@ -54,7 +54,9 @@
         "new_points": "分。",
         "control": "控制",
         "today_used_point": "今天使用的积分",
-        "back": "后退"
+        "back": "后退",
+        "save": "节省",
+        "update_success": "更新成功"
     },
     "input": {
         "input-fix-node": {
