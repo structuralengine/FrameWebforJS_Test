@@ -95,6 +95,7 @@ export class InputMemberDetailService {
       nodei.z = this.entity.niz;
     } else {
       data.node.node.push({
+        id: this.entity.ni,
         x: this.entity.nix,
         y: this.entity.niy,
         z: this.entity.niz,
@@ -109,6 +110,7 @@ export class InputMemberDetailService {
       nodej.z = this.entity.njz;
     } else {
       data.node.node.push({
+        id: this.entity.nj,
         x: this.entity.njx,
         y: this.entity.njy,
         z: this.entity.njz,
@@ -128,6 +130,7 @@ export class InputMemberDetailService {
       el.n = this.entity.nameOfMaterial;
     } else {
       element.element[1].push({
+        id: this.entity.e,
         E: this.entity.eastic,
         G: this.entity.steelElastic,
         Xp: this.entity.cte,
@@ -159,7 +162,7 @@ export class InputMemberDetailService {
   // type 0-1: nodeI-nodeJ
   getValueNodeI(data: any, value: any, type: any) {
     var node = data.node.node.filter((x) => x.id == value)[0];
-    if (node) {
+    if (node && (node.x != "" && node.y != "" && node.z != "")) {
       if (type === 0) {
         this.entity.nix = node.x;
         this.entity.niy = node.y;
