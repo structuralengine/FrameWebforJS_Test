@@ -13,7 +13,6 @@ import { InputMemberDetailService } from "../../input/input-members/input-member
   providedIn: "root",
 })
 export class ThreeMembersService {
-
   private geometry: THREE.CylinderBufferGeometry;
 
   public maxDistance: number;
@@ -32,12 +31,13 @@ export class ThreeMembersService {
   private objVisible: boolean;
   private txtVisible: boolean;
 
-  constructor( private scene: SceneService,
-              private nodeThree: ThreeNodesService,
-              private node: InputNodesService,
-              private member: InputMembersService,
-              private inputMemberDetailService :InputMemberDetailService) {
-
+  constructor(
+    private scene: SceneService,
+    private nodeThree: ThreeNodesService,
+    private node: InputNodesService,
+    private member: InputMembersService,
+    private inputMemberDetailService: InputMemberDetailService
+  ) {
     this.geometry = new THREE.CylinderBufferGeometry();
     this.memberList = new THREE.Object3D();
     this.axisList = new Array();
@@ -67,7 +67,6 @@ export class ThreeMembersService {
       this.txtVisible = value;
       this.scene.render();
     });
-
   }
 
   // 要素の太さを決定する基準値
@@ -78,7 +77,6 @@ export class ThreeMembersService {
 
   // データが変更された時の処理
   public changeData(): object {
-    
     // 格点データを入手
     const nodeData = this.node.getNodeJson(0);
     const nodeKeys = Object.keys(nodeData);
@@ -127,7 +125,7 @@ export class ThreeMembersService {
         new THREE.MeshBasicMaterial({ color: 0x000000 })
       );
       mesh.name = "member" + key;
-      mesh['element'] = 'element' + member.e;
+      mesh["element"] = "element" + member.e;
       mesh.rotation.z = Math.acos(v.y / len);
       mesh.rotation.y = 0.5 * Math.PI + Math.atan2(v.x, v.z);
       mesh.position.set(x, y, z);
@@ -178,9 +176,13 @@ export class ThreeMembersService {
     return jsonData;
   }
 
-  //シートの選択行が指すオブジェクトをハイライトする
-  public selectChange(index, mode = "members"): void{
+  public updateDetail() {
+    this.changeData();
+    this.scene.render();
+  }
 
+  //シートの選択行が指すオブジェクトをハイライトする
+  public selectChange(index, mode = "members"): void {
     // if (this.currentIndex === index){
     //   //選択行の変更がないとき，何もしない
     //   return
@@ -189,17 +191,17 @@ export class ThreeMembersService {
     const axisKey_list = [];
 
     //全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
-    for (let item of this.memberList.children){
-      item['material']['color'].setHex(0X000000);
-      if( mode === "elements"){
-        if (item['element'] === 'element' + index.toString()){
-          item['material']['color'].setHex(0XFF0000);
+    for (let item of this.memberList.children) {
+      item["material"]["color"].setHex(0x000000);
+      if (mode === "elements") {
+        if (item["element"] === "element" + index.toString()) {
+          item["material"]["color"].setHex(0xff0000);
           // ハイライトした部材の名称を保存しておく
-          axisKey_list.push(item.name + 'axis'); 
+          axisKey_list.push(item.name + "axis");
         }
       } else {
-        if (item.name === 'member' + index.toString()){
-          item['material']['color'].setHex(0XFF0000);
+        if (item.name === "member" + index.toString()) {
+          item["material"]["color"].setHex(0xff0000);
           this.scene.getScreenPosition(item);
         }
       }
@@ -208,17 +210,17 @@ export class ThreeMembersService {
     // axisを全て非表示にし、選択行の部材のaxisのみを表示する
     for (let axis of this.axisList) {
       axis.visible = false;
-      if ( mode === "elements") {
+      if (mode === "elements") {
         // ハイライトした部材に対応するaxisを探す。
-        const targetAxis = axisKey_list.find(function(element){
+        const targetAxis = axisKey_list.find(function (element) {
           return element === axis.name;
         });
         // 部材に対応するaxisがあれば、そのaxisを表示する。
-        if ( targetAxis !== undefined ) {
+        if (targetAxis !== undefined) {
           axis.visible = true;
         }
       } else {
-        if (axis.name === 'member' + index.toString() + 'axis') {
+        if (axis.name === "member" + index.toString() + "axis") {
           axis.visible = true;
         }
       }
@@ -231,25 +233,21 @@ export class ThreeMembersService {
 
   // 着目点のselectChange
   public selectChange_points(m_no: string): void {
-
     // 全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
-    for (let item of this.memberList.children){
-      item['material']['color'].setHex(0X000000);
-      if (item.name === 'member' + m_no.toString()){
-        item['material']['color'].setHex(0XFF0000);
+    for (let item of this.memberList.children) {
+      item["material"]["color"].setHex(0x000000);
+      if (item.name === "member" + m_no.toString()) {
+        item["material"]["color"].setHex(0xff0000);
       }
     }
-
   }
 
   // 着目点のselectChange
   public selectChange_clear_points(): void {
-
     // 全てのハイライトを元に戻し，選択行のオブジェクトのみハイライトを適応する
-    for (let item of this.memberList.children){
-      item['material']['color'].setHex(0X000000);
+    for (let item of this.memberList.children) {
+      item["material"]["color"].setHex(0x000000);
     }
-
   }
 
   // データをクリアする
@@ -277,16 +275,15 @@ export class ThreeMembersService {
 
   // スケールを反映する
   private onResize(): void {
-
     let sc = this.scale / 100; // this.scale は 100 が基準値なので、100 のとき 1 となるように変換する
     sc = Math.max(sc, 0.001); // ゼロは許容しない
 
     let scale: number = this.baseScale() * sc;
-  
+
     for (const item of this.memberList.children) {
       item.scale.set(scale, 1, scale);
     }
-    scale *= 50 ;
+    scale *= 50;
     for (const arrows of this.axisList) {
       for (const item of arrows.children) {
         item.scale.set(scale, scale, scale);
@@ -296,7 +293,6 @@ export class ThreeMembersService {
 
   // 表示設定を変更する
   public visibleChange(flag: boolean, text: boolean, gui: boolean): void {
-
     this.selectChange(-1);
 
     // 表示設定
@@ -321,7 +317,7 @@ export class ThreeMembersService {
       this.selectionItem = null;
       this.memberList.children.map((item) => {
         // 元の色にする
-        const material = item['material'];
+        const material = item["material"];
         material["color"].setHex(0x000000);
         material["opacity"] = 1.0;
       });
@@ -358,9 +354,15 @@ export class ThreeMembersService {
   }
 
   // 部材座標軸を
-  public localAxis( xi: number, yi: number, zi: number,
-                    xj: number, yj: number, zj: number,
-                    theta: number ): any {
+  public localAxis(
+    xi: number,
+    yi: number,
+    zi: number,
+    xj: number,
+    yj: number,
+    zj: number,
+    theta: number
+  ): any {
     const xM: number[] = [1, 0, 0]; // x だけ1の行列
     const yM: number[] = [0, 1, 0]; // y だけ1の行列
     const zM: number[] = [0, 0, 1]; // z だけ1の行列
@@ -372,17 +374,17 @@ export class ThreeMembersService {
     const X = new Vector3(
       tt[0][0] * xM[0] + tt[0][1] * xM[1] + tt[0][2] * xM[2],
       tt[1][0] * xM[0] + tt[1][1] * xM[1] + tt[1][2] * xM[2],
-      tt[2][0] * xM[0] + tt[2][1] * xM[1] + tt[2][2] * xM[2],
+      tt[2][0] * xM[0] + tt[2][1] * xM[1] + tt[2][2] * xM[2]
     );
     const Y = new Vector3(
       tt[0][0] * yM[0] + tt[0][1] * yM[1] + tt[0][2] * yM[2],
       tt[1][0] * yM[0] + tt[1][1] * yM[1] + tt[1][2] * yM[2],
-      tt[2][0] * yM[0] + tt[2][1] * yM[1] + tt[2][2] * yM[2],
+      tt[2][0] * yM[0] + tt[2][1] * yM[1] + tt[2][2] * yM[2]
     );
     const Z = new Vector3(
       tt[0][0] * zM[0] + tt[0][1] * zM[1] + tt[0][2] * zM[2],
       tt[1][0] * zM[0] + tt[1][1] * zM[1] + tt[1][2] * zM[2],
-      tt[2][0] * zM[0] + tt[2][1] * zM[1] + tt[2][2] * zM[2],
+      tt[2][0] * zM[0] + tt[2][1] * zM[1] + tt[2][2] * zM[2]
     );
     const result = {
       x: X,
@@ -392,10 +394,15 @@ export class ThreeMembersService {
     return result;
   }
 
-  public tMatrix( xi: number, yi: number, zi: number,
-                  xj: number, yj: number, zj: number,
-                  theta: number ): any {
-
+  public tMatrix(
+    xi: number,
+    yi: number,
+    zi: number,
+    xj: number,
+    yj: number,
+    zj: number,
+    theta: number
+  ): any {
     const DX: number = xj - xi;
     const DY: number = yj - yi;
     const DZ: number = zj - zi;
@@ -483,14 +490,13 @@ export class ThreeMembersService {
 
   // マウス位置とぶつかったオブジェクトを検出する
   public detectObject(raycaster: THREE.Raycaster, action: string): void {
-    
     if (this.memberList.children.length === 0) {
       return; // 対象がなければ何もしない
     }
 
     // 交差しているオブジェクトを取得
     const intersects = raycaster.intersectObjects(this.memberList.children);
-    if ( intersects.length <= 0 ){
+    if (intersects.length <= 0) {
       return;
     }
 
@@ -500,14 +506,13 @@ export class ThreeMembersService {
           if (intersects.length > 0 && item === intersects[0].object) {
             this.sendMemberSubject(item);
             // 色を赤くする
-            const material = item['material'];
+            const material = item["material"];
             material["color"].setHex(0xff0000);
             material["opacity"] = 1.0;
             this.inputMemberDetailService.setShowHideDetail(true);
-          }
-          else{
-            const material = item['material'];
-            material['color'].setHex(0X212529);
+          } else {
+            const material = item["material"];
+            material["color"].setHex(0x212529);
             material["opacity"] = 1.0;
           }
         });
@@ -517,7 +522,7 @@ export class ThreeMembersService {
         if (intersects.length > 0) {
           this.selectionItem = null;
           this.memberList.children.map((item) => {
-            const material = item['material'];
+            const material = item["material"];
             if (item === intersects[0].object) {
               // 色を赤くする
               material["color"].setHex(0xff0000);
@@ -545,7 +550,7 @@ export class ThreeMembersService {
 
       case "hover":
         this.memberList.children.map((item) => {
-          const material = item['material'];
+          const material = item["material"];
           if (intersects.length > 0 && item === intersects[0].object) {
             // 色を赤くする
             material["color"].setHex(0xff0000);

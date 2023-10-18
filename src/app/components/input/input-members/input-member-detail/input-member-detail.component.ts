@@ -1,7 +1,4 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { DataHelperModule } from "../../../../providers/data-helper.module";
-import { AppComponent } from "src/app/app.component";
-import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
 import { ThreeMembersService } from "../../../three/geometry/three-members.service";
 import { InputMemberDetailService } from "./input-member-detail.service";
@@ -19,10 +16,8 @@ export class InputMemberDetailComponent implements OnInit {
   constructor(
     private data: InputMembersService,
     private element: InputElementsService,
-    private helper: DataHelperModule,
-    private app: AppComponent,
     private threeMembersService: ThreeMembersService,
-    private translate: TranslateService, public docLayout:DocLayoutService,
+    public docLayout:DocLayoutService,
     public inputMemberDetailService: InputMemberDetailService
   ) {
   }
@@ -36,9 +31,9 @@ export class InputMemberDetailComponent implements OnInit {
   }
   updateDetail(){
     this.inputMemberDetailService.updateDetail(this.data, this.element);
+    this.threeMembersService.updateDetail();
   }
   onChangeNodeI(event:any, type: any){
-    console.log("event", event)
     if(event != null){   
       if (/^[0-9]*$/.test(event)) {
         let valueInput = event;    
@@ -46,7 +41,6 @@ export class InputMemberDetailComponent implements OnInit {
       } else {       
         this.inputMemberDetailService.entity.ni = '';
       } 
-     
     }      
   }
   onChangeMaterial(event:any){

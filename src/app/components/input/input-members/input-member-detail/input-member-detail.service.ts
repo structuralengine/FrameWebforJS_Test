@@ -6,6 +6,7 @@ import { DataHelperModule } from "../../../../providers/data-helper.module";
 import { InputNodesService } from "../../input-nodes/input-nodes.service";
 import { InputMembersService } from "../input-members.service";
 import { TranslateService } from "@ngx-translate/core";
+import { SceneService } from 'src/app/components/three/scene.service';
 
 @Injectable({
   providedIn: "root",
@@ -15,7 +16,9 @@ export class InputMemberDetailService {
   public entity: any = {};
   constructor(
     private data: InputMembersService,
+    private node: InputNodesService,
     private translate: TranslateService,
+    private scene: SceneService,
     private inputNodesService: InputNodesService,
     private helper: DataHelperModule
   ) {
@@ -149,13 +152,10 @@ export class InputMemberDetailService {
     memberUpdate.e = this.entity.e;
     memberUpdate.cg = this.entity.cg;
     memberUpdate.n = this.entity.n;
+    memberUpdate.L = this.entity.L;
 
     this.helper.alert(
-      this.translate.instant("menu.update_success") // 一時的にポイント消費量の通知を削除
-      /*this.user.deduct_points
-      + this.translate.instant("menu.deduct_points")
-      + this.user.new_points
-      + this.translate.instant("menu.new_points")*/
+      this.translate.instant("menu.update_success")
     );
   }
 
@@ -183,6 +183,7 @@ export class InputMemberDetailService {
         this.entity.njz = 0;
       }
     }
+    this.changeDataLength();
   }
 
   getValueMaterial(element: any, value: any) {
@@ -204,6 +205,30 @@ export class InputMemberDetailService {
     } else {
       this.initializeValueMaterial();
     }
+  }
+
+  changeDataLength(){
+    const ni: string = this.entity.ni;
+    const nj: string = this.entity.nj;
+    if (ni === null || nj === null) {
+      return null;
+    }
+
+    const iPos = this.node.getNodePos(ni)
+    const jPos = this.node.getNodePos(nj)
+    if (iPos == null || jPos == null) {
+      return null;
+    }
+
+    const xi: number = iPos['x'];
+    const yi: number = iPos['y'];
+    const zi: number = iPos['z'];
+    const xj: number = jPos['x'];
+    const yj: number = jPos['y'];
+    const zj: number = jPos['z'];
+
+    const l: number = Math.sqrt((xi - xj) ** 2 + (yi - yj) ** 2 + (zi - zj) ** 2);
+    this.entity.L =  l != null ? l.toFixed(3) : l;
   }
 
   initializeValueMaterial() {
