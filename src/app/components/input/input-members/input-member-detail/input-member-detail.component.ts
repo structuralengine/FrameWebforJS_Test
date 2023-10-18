@@ -4,6 +4,7 @@ import { ThreeMembersService } from "../../../three/geometry/three-members.servi
 import { InputMemberDetailService } from "./input-member-detail.service";
 import { InputMembersService } from "../input-members.service";
 import { InputElementsService } from "../../input-elements/input-elements.service";
+import { ThreeNodesService } from "src/app/components/three/geometry/three-nodes.service";
 
 @Component({
   selector: "app-input-member-detail",
@@ -17,6 +18,7 @@ export class InputMemberDetailComponent implements OnInit {
     private data: InputMembersService,
     private element: InputElementsService,
     private threeMembersService: ThreeMembersService,
+    private threeNodesService : ThreeNodesService,
     public docLayout:DocLayoutService,
     public inputMemberDetailService: InputMemberDetailService
   ) {
@@ -31,6 +33,9 @@ export class InputMemberDetailComponent implements OnInit {
   }
   updateDetail(){
     this.inputMemberDetailService.updateDetail(this.data, this.element);
+    // load data node in model
+    this.threeNodesService.changeData();
+    // load data member in model
     this.threeMembersService.updateDetail();
   }
   onChangeNodeI(event:any, type: any){

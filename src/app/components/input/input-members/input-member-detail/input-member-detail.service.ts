@@ -53,7 +53,12 @@ export class InputMemberDetailService {
     this.entity.id = member.id; //Member No
     this.entity.ni = member.ni;
     this.entity.nj = member.nj;
-    this.entity.L = member.L; //Distance
+    // check the Length of members not loaded by paging
+    if(member.L === ""){
+      this.entity.L =  this.changeDataLength(this.entity.ni, this.entity.nj);
+    }else{
+      this.entity.L = member.L; //Distance
+    }
     this.entity.e = member.e; //Material No
     this.entity.cg = member.cg; //Angle of Rocation
 
@@ -152,7 +157,18 @@ export class InputMemberDetailService {
     memberUpdate.e = this.entity.e;
     memberUpdate.cg = this.entity.cg;
     memberUpdate.n = this.entity.n;
-    memberUpdate.L = this.entity.L;
+    memberUpdate.L = this.changeDataLength(this.entity.ni, this.entity.nj);this.entity.L;
+    this.entity.L = memberUpdate.L;
+
+    var changeNodeLength = this.data.member.filter(x => 
+      x.ni === this.entity.ni || 
+      x.nj === this.entity.ni || 
+      x.ni === this.entity.nj || x.nj === this.entity.nj
+    );
+    changeNodeLength.forEach(element => {
+      var l = this.changeDataLength(element.ni, element.nj);
+      element.L = l;
+    })
 
     this.helper.alert(
       this.translate.instant("menu.update_success")
@@ -183,7 +199,7 @@ export class InputMemberDetailService {
         this.entity.njz = 0;
       }
     }
-    this.changeDataLength();
+    this.changeDataLength(this.entity.ni, this.entity.nj);
   }
 
   getValueMaterial(element: any, value: any) {
@@ -207,9 +223,9 @@ export class InputMemberDetailService {
     }
   }
 
-  changeDataLength(){
-    const ni: string = this.entity.ni;
-    const nj: string = this.entity.nj;
+  changeDataLength(valueI: any, valueJ : any) : any{
+    const ni: string = valueI;
+    const nj: string = valueJ;
     if (ni === null || nj === null) {
       return null;
     }
@@ -228,7 +244,7 @@ export class InputMemberDetailService {
     const zj: number = jPos['z'];
 
     const l: number = Math.sqrt((xi - xj) ** 2 + (yi - yj) ** 2 + (zi - zj) ** 2);
-    this.entity.L =  l != null ? l.toFixed(3) : l;
+    return l != null ? l.toFixed(3) : l;
   }
 
   initializeValueMaterial() {
