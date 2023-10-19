@@ -17,12 +17,12 @@
     <tbody>
       <tr>
         <td class="member-title" translate>input.input-members.member</td>
-        <td class="member-unit" translate>input.input-members.no</td>
+        <td class="member-unit" translate>input.input-members.No</td>
         <td class="member-value">{{inputMemberDetailService.entity.id}}</td>
       </tr>
       <tr>
         <td class="member-title" rowspan="4" translate>input.input-members.node_i</td>
-        <td class="member-unit" translate>input.input-members.no</td>
+        <td class="member-unit" translate>input.input-members.No</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.ni}}</td> -->
         <td class="member-value-2"><input type="number" 
           onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" 
@@ -46,7 +46,7 @@
       </tr>
       <tr>
         <td class="member-title" rowspan="4" translate>input.input-members.node_j</td>
-        <td class="member-unit" translate>input.input-members.no</td>
+        <td class="member-unit" translate>input.input-members.No</td>
         <!-- <td class="member-value">{{inputMemberDetailService.entity.nj}}</td> -->
         <td class="member-value"><input type="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" 
            [(ngModel)]="inputMemberDetailService.entity.nj" name="nj" id="nj" (ngModelChange)="onChangeNodeI($event, 1)"/></td>
