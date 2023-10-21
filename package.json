@@ -6,8 +6,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host=127.0.0.1",
-    "build": "ng build --configuration production --base-href \"https://frameweb.structuralengine.com/\" && angular-cli-ghpages",
-    "build-action": "ng build --configuration production --base-href \"https://frameweb.structuralengine.com/\"",
+    "build": "ng build --configuration production --base-href \"https://frameweb.malme.app/\" && angular-cli-ghpages",
+    "build-action": "ng build --configuration production --base-href \"https://frameweb.malme.app/\"",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
