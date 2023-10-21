@@ -61,7 +61,7 @@ export class LoginDialogComponent implements OnInit {
     
     let config = {
       method: 'post',
-      url: 'https://auth.structuralengine.com/realms/structural-engine/protocol/openid-connect/token',
+      url: 'https://auth.malme.app/realms/structural-engine/protocol/openid-connect/token',
       headers: { 
         'Content-Type': 'application/x-www-form-urlencoded'
       },
@@ -75,7 +75,7 @@ export class LoginDialogComponent implements OnInit {
         keycloakInstance.token = response.data.access_token;
         keycloakInstance.refreshToken = response.data.refresh_token;
         keycloakInstance.idToken = response.data.id_token;
-        axios.get('https://auth.structuralengine.com/realms/structural-engine/protocol/openid-connect/userinfo', {
+        axios.get('https://auth.malme.app/realms/structural-engine/protocol/openid-connect/userinfo', {
           headers: {
             Authorization: `Bearer ${keycloakInstance.token}`
           }

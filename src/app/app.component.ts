@@ -85,6 +85,7 @@ export class AppComponent implements OnInit {
   }
 
   public contentsDailogShow(id): void {
+    this.fsec.clearGradient();
     this.deactiveButtons();
     document.getElementById(id).classList.add("active");
     this.changePosition();

@@ -54,7 +54,10 @@
         "new_points": "points.",
         "control": "Control",
         "today_used_point": "Points Used Today",
-        "NewWindow":"New window"
+        "NewWindow":"New window",
+        "back": "Back",
+        "save": "Save",
+        "update_success": "Update success!!"
     },
     "input": {
         "input-fix-node": {

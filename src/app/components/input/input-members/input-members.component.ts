@@ -9,6 +9,7 @@ import { AppComponent } from "src/app/app.component";
 import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
 import { ThreeMembersService } from "../../three/geometry/three-members.service";
+import { InputMemberDetailService } from "./input-member-detail/input-member-detail.service";
 
 @Component({
   selector: "app-input-members",
@@ -18,6 +19,7 @@ import { ThreeMembersService } from "../../three/geometry/three-members.service"
 export class InputMembersComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
 
+  public isMemberDetailShow : boolean = false;
   private dataset = [];
   private columnKeys = ['ni', 'nj', 'L', 'e', 'cg', 'n'];
   private columnHeaders3D = [
@@ -173,7 +175,8 @@ export class InputMembersComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private threeMembersService: ThreeMembersService,
-    private translate: TranslateService, public docLayout:DocLayoutService
+    private translate: TranslateService, public docLayout:DocLayoutService,
+    public inputMemberDetailService :InputMemberDetailService
   ) {
 
     this.currentIndex = null;
@@ -184,6 +187,7 @@ export class InputMembersComponent implements OnInit {
     this.ROWS_COUNT = this.rowsCount();
     // three.js にモードの変更を通知する
     this.three.ChangeMode("members");
+    this.inputMemberDetailService.setShowHideDetail(false);
   }
 
 
@@ -195,20 +199,22 @@ export class InputMembersComponent implements OnInit {
     this.threeMembersService.memberSelected$.subscribe((item : any) => {
       var name = item.name;
       var dataNode = this.data.member.filter(m => "member" + m.id === name)[0];
+      console.log(dataNode)
       if(dataNode.pq_ri === undefined){
         let indexRow = dataNode.id;
         if(indexRow >= 29){
           let d = Math.ceil(indexRow / 29);
           this.grid.grid.scrollY((d * this.grid.div.nativeElement.clientHeight), () => {
-            // this.grid.grid.goToPage({ rowIndx: indexRow, page: 2 } )
             this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
           });
         }else{
           this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
         }
+        this.inputMemberDetailService.setDataEntity(this.data, this.element, dataNode);
       }else{
         let indexRow = dataNode.pq_ri;
         this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
+        this.inputMemberDetailService.setDataEntity(this.data, this.element, dataNode);
       }
     });
   }
@@ -297,7 +303,9 @@ export class InputMembersComponent implements OnInit {
       }
       if (finalV >= dataV - 1) {
         this.loadData(dataV + this.ROWS_COUNT);
-        this.grid.refreshDataAndView();
+        if(this.grid != null){
+          this.grid.refreshDataAndView();
+        }
       }
     },
     selectEnd: (evt, ui) => {

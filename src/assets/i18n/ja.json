@@ -55,7 +55,10 @@
         "new_points": "です。",
         "control": "コントロール",
         "today_used_point": "本日の使用ポイント",
-        "NewWindow":"新しいウィンドウ"
+        "NewWindow":"新しいウィンドウ",
+        "back": "戻る",
+        "save": "保存",
+        "update_success": "更新成功"
     },
     "input": {
         "input-fix-node": {
