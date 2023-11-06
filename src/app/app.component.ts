@@ -299,7 +299,10 @@ export class AppComponent implements OnInit {
             this.ResultData.loadResultData(_jsonData);
             this.ResultData.isCalculated = true;
           } catch (e) {
-            this.helper.alert(e);
+            if(e.message.includes("NaN"))
+              this.helper.alert(this.translate.instant("message.mes"))
+            else
+              this.helper.alert(e);
           } finally {
             modalRef.close(); // モーダルダイアログを消す
             this.helper.alert(
