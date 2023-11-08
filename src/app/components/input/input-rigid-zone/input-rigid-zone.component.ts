@@ -10,6 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
 import { InputRigidZoneService } from "./input-rigid-zone.service";
 import { InputNodesService } from "../input-nodes/input-nodes.service";
+import { ThreeRigidZoneService } from "../../three/geometry/three-rigid-zone.service";
 
 @Component({
   selector: 'app-input-rigid-zone',
@@ -19,7 +20,7 @@ import { InputNodesService } from "../input-nodes/input-nodes.service";
 export class InputRigidZoneComponent implements OnInit {
   @ViewChild("grid") grid: SheetComponent;
   private dataset = [];
-  private columnKeys = ['m', 'Ilength','Jlength', 'e', 'L', 'e1', 'n'];
+  private columnKeys = ['m', 'L','e','n','Ilength','Jlength', 'e1', ];
   private columnHeaders3D = [
     {
       title: this.translate.instant("input.input-rigid.member"),
@@ -44,7 +45,7 @@ export class InputRigidZoneComponent implements OnInit {
           title: "(m)",
           dataType: "float",
           format: "#.000",
-          dataIndx: this.columnKeys[4],
+          dataIndx: this.columnKeys[1],
           sortable: false,
           width: 100,
           editable: false,
@@ -59,7 +60,7 @@ export class InputRigidZoneComponent implements OnInit {
         {
           title: this.translate.instant("input.input-rigid.no"),
           dataType: "integer",
-          dataIndx: this.columnKeys[3],
+          dataIndx: this.columnKeys[2],
           sortable: false,
           minwidth: 100,
           align: "left",
@@ -73,7 +74,7 @@ export class InputRigidZoneComponent implements OnInit {
       title: this.translate.instant("input.input-rigid.material_name"),
       align: "center",
       dataType: "string",
-      dataIndx: this.columnKeys[6],
+      dataIndx: this.columnKeys[3],
       sortable: false,
       width: 100,
       editable: false,
@@ -86,7 +87,7 @@ export class InputRigidZoneComponent implements OnInit {
         {
           title: this.translate.instant("input.input-rigid.node_i"),
           dataType: "float",
-          dataIndx: this.columnKeys[1],
+          dataIndx: this.columnKeys[4],
           sortable: false,
           minwidth: 100,
           format: "#.00",
@@ -95,7 +96,7 @@ export class InputRigidZoneComponent implements OnInit {
         {
           title: this.translate.instant("input.input-rigid.node_j"),
           dataType: "float",
-          dataIndx: this.columnKeys[2],
+          dataIndx: this.columnKeys[5],
           sortable: false,
           minwidth: 100,
           format: "#.00",
@@ -104,7 +105,7 @@ export class InputRigidZoneComponent implements OnInit {
         {
           title: this.translate.instant("input.input-rigid.materialNo"),
           dataType: "integer",
-          dataIndx: this.columnKeys[5],
+          dataIndx: this.columnKeys[6],
           sortable: false,
           minwidth: 100,
           width: 100,
@@ -136,7 +137,7 @@ export class InputRigidZoneComponent implements OnInit {
           title: "(m)",
           dataType: "float",
           format: "#.000",
-          dataIndx: this.columnKeys[4],
+          dataIndx: this.columnKeys[1],
           sortable: false,
           width: 100,
           editable: false,
@@ -151,7 +152,7 @@ export class InputRigidZoneComponent implements OnInit {
         {
           title: this.translate.instant("input.input-rigid.no"),
           dataType: "integer",
-          dataIndx: this.columnKeys[3],
+          dataIndx: this.columnKeys[2],
           sortable: false,
           align: "left",
           minwidth: 100,
@@ -165,7 +166,7 @@ export class InputRigidZoneComponent implements OnInit {
       title: this.translate.instant("input.input-rigid.material_name"),
       align: "center",
       dataType: "string",
-      dataIndx: this.columnKeys[6],
+      dataIndx: this.columnKeys[3],
       sortable: false,
       width: 100,
       editable: false,
@@ -178,7 +179,7 @@ export class InputRigidZoneComponent implements OnInit {
         {
           title: this.translate.instant("input.input-rigid.node_i"),
           dataType: "float",
-          dataIndx: this.columnKeys[1],
+          dataIndx: this.columnKeys[4],
           sortable: false,
           format: "#.00",
           minwidth: 100,
@@ -187,7 +188,7 @@ export class InputRigidZoneComponent implements OnInit {
         {
           title: this.translate.instant("input.input-rigid.node_j"),
           dataType: "float",
-          dataIndx: this.columnKeys[2],
+          dataIndx: this.columnKeys[5],
           sortable: false,
           minwidth: 100,
           format: "#.00",
@@ -196,7 +197,7 @@ export class InputRigidZoneComponent implements OnInit {
         {
           title: this.translate.instant("input.input-rigid.materialNo"),
           dataType: "integer", 
-          dataIndx: this.columnKeys[5],
+          dataIndx: this.columnKeys[6],
           sortable: false,
           minwidth: 100,
           width: 100        
@@ -205,7 +206,6 @@ export class InputRigidZoneComponent implements OnInit {
     },
   ];
   private ROWS_COUNT = 15;
-
   private currentIndex: string;
   constructor(
     private data: InputRigidZoneService,
@@ -216,18 +216,32 @@ export class InputRigidZoneComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private translate: TranslateService,
+    private threeRigidZoneService: ThreeRigidZoneService,
     public docLayout: DocLayoutService) {
-      this.currentIndex = null;
+      this.currentIndex = null;     
   }
   
   ngOnInit() {
     this.ROWS_COUNT = this.rowsCount();
     // three.js にモードの変更を通知する
     //this.three.ChangeMode("members");
+    this.three.ChangeMode("rigid_zone");
+    this.three.changeData('rigid_zone');
   }
   ngAfterViewInit() {
     this.docLayout.handleMove.subscribe(data => {
     this.options.height = data - 60;
+    })
+    this.threeRigidZoneService.rigidSelected$.subscribe((item: any) =>{
+        var name = item.name.replace("rigid", "");
+        var index;
+        index = name.indexOf("I");
+        if(index === -1){
+          index = name.indexOf("J");
+        }
+        var indexRow = name.substring(0, index);
+        var col = name.substring(index, index.length);
+        var indexCol = this.columnKeys.findIndex((x) => x === col+"length");
     })
   }
   private loadData(row: number): void {
@@ -324,11 +338,11 @@ export class InputRigidZoneComponent implements OnInit {
       const range = ui.selection.iCells.ranges;
       const row = range[0].r1 + 1;
       const column = this.columnKeys[range[0].c1];
-      // if (this.currentIndex !== row){
+       //if (this.currentIndex !== row){
         //選択行の変更があるとき，ハイライトを実行する
-        this.three.selectChange("members", row, '');
-      // }
-      // this.currentIndex = row;
+        this.three.selectChange("rigid_zone", row, column);
+      //}
+      this.currentIndex = row;
     },
   };
 

@@ -780,6 +780,7 @@ export class InputLoadComponent implements OnInit, OnDestroy {
         }
         this.currentRow = row;
         this.currentCol = column;
+        console.log("click ", column)
       },
       change: (evt, ui) => {
         console.log("UI: ", ui)
