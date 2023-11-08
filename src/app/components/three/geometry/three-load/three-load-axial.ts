@@ -229,9 +229,10 @@ export class ThreeLoadAxial {
         text.position.x -= 0.5 * height;
       }
       text.position.y -= 0.5 * width;
-      text.rotateX(Math.PI);
+      // text.rotateX(Math.PI);
       if (localAxis.x.y === 1 || localAxis.x.y === -1) text.rotateZ(Math.PI/2);
       text.name = key;
+      text.scale.x = -1;
       child.add(text);
     }
     
@@ -286,7 +287,7 @@ export class ThreeLoadAxial {
         new THREE.Vector2(points[1].x, y4),
         new THREE.Vector2(points[1].x, points[1].y),
       ];
-      dim1 = this.dim.create(p, L1.toFixed(3))
+      dim1 = this.dim.create(p, L1.toFixed(3), -1)
       dim1.visible = true;
       dim1.name = "Dimension1";
       dim.add(dim1);
@@ -298,7 +299,7 @@ export class ThreeLoadAxial {
       new THREE.Vector2(points[2].x, y4),
       new THREE.Vector2(points[2].x, points[2].y),
     ];
-    dim2 = this.dim.create(p, L.toFixed(3))
+    dim2 = this.dim.create(p, L.toFixed(3), -1)
     dim2.visible = true;
     dim2.name = "Dimension2";
     dim.add(dim2);
@@ -311,7 +312,7 @@ export class ThreeLoadAxial {
         new THREE.Vector2(x4, y4),
         new THREE.Vector2(x4, 0),
       ];
-      dim3 = this.dim.create(p, L2.toFixed(3))
+      dim3 = this.dim.create(p, L2.toFixed(3), -1)
       dim3.visible = true;
       dim3.name = "Dimension3";
       dim.add(dim3);
