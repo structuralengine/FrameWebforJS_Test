@@ -232,17 +232,33 @@ export class InputRigidZoneComponent implements OnInit {
     this.docLayout.handleMove.subscribe(data => {
     this.options.height = data - 60;
     })
-    this.threeRigidZoneService.rigidSelected$.subscribe((item: any) =>{
-        var name = item.name.replace("rigid", "");
-        var index;
-        index = name.indexOf("I");
-        if(index === -1){
-          index = name.indexOf("J");
-        }
-        var indexRow = name.substring(0, index);
-        var col = name.substring(index, index.length);
-        var indexCol = this.columnKeys.findIndex((x) => x === col+"length");
-    })
+    this.threeRigidZoneService.rigidSelected$.subscribe((item: any) => {
+      var name = item.name.replace('rigid', '');
+      var nameColumn = name.substring(0, 7);
+      var indexRow = +name.replace(nameColumn, '');
+      var indexCol = this.columnKeys.findIndex((x) => x === nameColumn);
+      if (indexRow >= 29) {
+        let d = Math.ceil(indexRow / 29);
+        this.grid.grid.scrollY(
+          d * this.grid.div.nativeElement.clientHeight,
+          () => {
+            this.grid.grid.setSelection({
+              rowIndx: indexRow - 1,
+              rowIndxPage: 1,
+              colIndx: indexCol,
+              focus: true,
+            });
+          }
+        );
+      } else {
+        this.grid.grid.setSelection({
+          rowIndx: indexRow - 1,
+          rowIndxPage: 1,
+          colIndx: indexCol,
+          focus: true,
+        });
+      }
+    });
   }
   private loadData(row: number): void {
     for (let i = this.dataset.length + 1; i <= row; i++) {

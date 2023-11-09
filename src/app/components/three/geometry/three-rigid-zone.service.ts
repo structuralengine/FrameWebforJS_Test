@@ -112,18 +112,18 @@ export class ThreeRigidZoneService {
 
             if (jLength !== null) {
                 point.push(l - jLength)
-                row = `J${m}`
+                row = `Jlength${m}`
             }
             else {
                 point.push(iLength)
-                row = `I${m}`
+                row = `Ilength${m}`
             }
             if (iLength !== null && jLength !== null) {
                 point.push(iLength)
             }
             for (let i = 0; i < point.length; i++) {
                 if (i > 0) {
-                    row = `I${m}`
+                    row = `Ilength${m}`
                 }
                 const item = this.rigidZoneList.children.find((target) => {
                     return (target.name === 'rigid' + row);
