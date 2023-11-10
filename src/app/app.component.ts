@@ -261,6 +261,7 @@ export class AppComponent implements OnInit {
         (response) => {
           // 通信成功時の処理（成功コールバック）
           console.log(this.translate.instant("menu.success"));
+          let check = true;
           try {
             if (response.includes("error") || response.includes("exceeded")) {
               throw response;
@@ -299,14 +300,18 @@ export class AppComponent implements OnInit {
             this.ResultData.loadResultData(_jsonData);
             this.ResultData.isCalculated = true;
           } catch (e) {
-            if(e.message.includes("NaN"))
-              this.helper.alert(this.translate.instant("message.mes"))
+            if(e.message.includes("NaN")){
+              this.helper.alert(this.translate.instant("message.mes"));
+              check = false;
+            }
+              
             else
               this.helper.alert(e);
-          } finally {
+          } finally {          
             modalRef.close(); // モーダルダイアログを消す
-            this.helper.alert(
-              this.translate.instant("menu.calc_complete") // 一時的にポイント消費量の通知を削除
+            if(check)
+              this.helper.alert(
+                this.translate.instant("menu.calc_complete") // 一時的にポイント消費量の通知を削除
               /*this.user.deduct_points
               + this.translate.instant("menu.deduct_points")
               + this.user.new_points
