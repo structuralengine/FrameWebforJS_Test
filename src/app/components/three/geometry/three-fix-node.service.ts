@@ -309,7 +309,7 @@ export class ThreeFixNodeService {
     let newPosition : any = {...position};
     switch (pin.direction) {
       case ('x'):
-        newPosition.x = position.x + (position.x < 0 ? 0 - this.scaleNode : this.scaleNode);
+        newPosition.x = position.x - this.scaleNode;
         break;
       case ('y'):
         newPosition.y = position.y + (position.y < 0 ? 0 - this.scaleNode : this.scaleNode);
