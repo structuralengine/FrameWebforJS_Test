@@ -96,7 +96,7 @@ export class ThreeFixNodeService {
 
   public baseScale(): number {
     // 最も距離の近い2つの節点距離
-    return 0.27;// this.nodeThree.minDistance;
+    return this.nodeThree.minDistance;
   }
 
   public center(): any {
