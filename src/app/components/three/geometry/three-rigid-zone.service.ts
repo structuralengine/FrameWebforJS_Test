@@ -14,6 +14,7 @@ import { Subject } from "rxjs";
 export class ThreeRigidZoneService {
     private geometry: THREE.SphereBufferGeometry;
     private rigidZoneList: THREE.Object3D;
+    private rigidZoneList1: THREE.Object3D;
     private scale: number;
     private params: any;
     private gui: any;
@@ -29,9 +30,11 @@ export class ThreeRigidZoneService {
 
         this.geometry = new THREE.SphereBufferGeometry(1);
         this.rigidZoneList = new THREE.Object3D();
+        this.rigidZoneList1 = new THREE.Object3D();
         this.nPointList = new Array()
         this.ClearData();
         this.scene.add(this.rigidZoneList);
+        this.scene.add(this.rigidZoneList1);
         this.objVisible = true;
         this.txtVisible = false;
 
@@ -60,10 +63,6 @@ export class ThreeRigidZoneService {
     }
     public selectChange(index, index_sub): void {
 
-        // if (this.currentIndex === index){
-        //   //選択行の変更がないとき，何もしない
-        //   return
-        // }
         const jsonData = this.rigidZone.getRigidJson();
         if (Object.keys(jsonData).length <= 0) {
             return;
@@ -153,6 +152,38 @@ export class ThreeRigidZoneService {
                     mesh.scale.set(scale, scale, scale)
                     this.scene.add(mesh);
                     this.rigidZoneList.children.push(mesh);
+
+                    const memb = this.member.getMemberNo(m)
+                    let i = null;
+                    let v;
+                    if(row.includes("I")){
+                        i = nodeData[memb['ni']]
+                        v = new THREE.Vector3(i.x - axis.x, i.y - axis.y, i.z - axis.z);
+                    }                       
+                    else{
+                         i = nodeData[memb['nj']]
+                         v = new THREE.Vector3(axis.x - i.x, axis.y - i.y, axis.z - i.z);
+                    }
+                    const len: number = v.length();
+                    if (len < 0.001) {
+                        continue;
+                    }
+
+                    const geometry1 = new THREE.CylinderBufferGeometry(0.04, 0.04, len-0.08, 12);
+                    
+                    const mesh1 = new THREE.Mesh(
+                        geometry1,
+                        new THREE.MeshBasicMaterial({ color: 0x000000 })
+                    );
+                    const x: number = (i.x + +axis.x) / 2;
+                    const y: number = (i.y + +axis.y) / 2;
+                    const z: number = (i.z + +axis.z) / 2; 
+                    mesh1.rotation.z = Math.acos(v.y / len);
+                    mesh1.rotation.y = 0.5 * Math.PI + Math.atan2(v.x, v.z);                 
+                    mesh1.position.set(x, y, z);
+                    
+                    this.rigidZoneList1.children.push(mesh1);
+
                 }
             }
         }
@@ -166,7 +197,7 @@ export class ThreeRigidZoneService {
     }
     public visibleChange(flag: boolean): void {
 
-        // this.selectChange(-1, -1)
+        this.selectChange(-1, -1)
 
         if (this.objVisible === flag) {
             return;
