@@ -78,7 +78,7 @@ export class ThreeFixNodeService {
     }
 
     const gui_step: number = 5 * 0.01;
-    this.gui = this.scene.gui.add(this.params, 'fixnodeScale', 0, 5).step(gui_step).onChange((value) => {
+    this.gui = this.scene.gui.add(this.params, 'fixnodeScale', 5, 100).step(gui_step).onChange((value) => {
       this.scale = value;
       this.onResize();
       this.scene.render();
@@ -152,7 +152,6 @@ export class ThreeFixNodeService {
         } else if (position.x > this.center().x) {
           spring.relationship = 'large';
         }
-        //this.CreateSpring(spring, position, this.baseScale(), target.n);
         this.CreateSpring(spring, position, this.baseScale(), target.row);
       }
       if (target.ty ** 2 !== 0 && target.ty ** 2 !== 1) {
@@ -163,7 +162,6 @@ export class ThreeFixNodeService {
         } else if (position.y > this.center().y) {
           spring.relationship = 'large';
         }
-        //this.CreateSpring(spring, position, this.baseScale(), target.n);
         this.CreateSpring(spring, position, this.baseScale(), target.row);
       }
       if (target.tz ** 2 !== 0 && target.tz ** 2 !== 1) {
@@ -174,7 +172,6 @@ export class ThreeFixNodeService {
         } else if (position.z > this.center().z) {
           spring.relationship = 'large';
         }
-        //this.CreateSpring(spring, position, this.baseScale(), target.n);
         this.CreateSpring(spring, position, this.baseScale(), target.row);
       }
 
@@ -183,19 +180,16 @@ export class ThreeFixNodeService {
       if (target.rx ** 2 !== 0 && target.rx ** 2 !== 1) {
         rotatingspring.color = 0xff0000;
         rotatingspring.direction = 'x';
-        //this.CreateRotatingSpring(rotatingspring, position, this.baseScale(), target.n);
         this.CreateRotatingSpring(rotatingspring, position, this.baseScale(), target.row);
       }
       if (target.ry ** 2 !== 0 && target.ry ** 2 !== 1) {
         rotatingspring.color = 0x00ff00;
         rotatingspring.direction = 'y';
-        //this.CreateRotatingSpring(rotatingspring, position, this.baseScale(), target.n);
         this.CreateRotatingSpring(rotatingspring, position, this.baseScale(), target.row);
       }
       if (target.rz ** 2 !== 0 && target.rz ** 2 !== 1) {
         rotatingspring.color = 0x0000ff;
         rotatingspring.direction = 'z';
-        //this.CreateRotatingSpring(rotatingspring, position, this.baseScale(), target.n);
         this.CreateRotatingSpring(rotatingspring, position, this.baseScale(), target.row);
       }
 
@@ -220,7 +214,6 @@ export class ThreeFixNodeService {
         } else if (position.z > this.center().z) {
           fixed_Parfect.relationshipZ = 'large';
         }
-        //this.CreateFixed_P(fixed_Parfect, position, this.baseScale(), target.n);
         this.CreateFixed_P(fixed_Parfect, position, this.baseScale(), target.row);
         continue;
       }
@@ -233,7 +226,6 @@ export class ThreeFixNodeService {
         } else {
           pin['relationship'] = 'large';
         }
-        //this.CreatePin(pin, position, this.baseScale(), target.n);
         this.CreatePin(pin, position, this.baseScale(), target.row);
       }
       if (target.ty === 1) {
@@ -243,7 +235,6 @@ export class ThreeFixNodeService {
         } else {
           pin['relationship'] = 'large';
         }
-        //this.CreatePin(pin, position, this.baseScale(), target.n);
         this.CreatePin(pin, position, this.baseScale(), target.row);
       }
       if (target.tz === 1) {
@@ -253,7 +244,6 @@ export class ThreeFixNodeService {
         } else {
           pin['relationship'] = 'large';
         }
-        //this.CreatePin(pin, position, this.baseScale(), target.n);
         this.CreatePin(pin, position, this.baseScale(), target.row);
       }
 
@@ -267,7 +257,6 @@ export class ThreeFixNodeService {
         } else if (position.x > this.center().x) {
           fixed.relationship = 'large';
         }
-        //this.CreateFixed(fixed, position, this.baseScale(), target.n);
         this.CreateFixed(fixed, position, this.baseScale(), target.row);
       }
       if (target.ry === 1) {
@@ -278,7 +267,6 @@ export class ThreeFixNodeService {
         } else if (position.y > this.center().y) {
           fixed.relationship = 'large';
         }
-        //this.CreateFixed(fixed, position, this.baseScale(), target.n);
         this.CreateFixed(fixed, position, this.baseScale(), target.row);
       }
       if (target.rz === 1) {
@@ -289,7 +277,6 @@ export class ThreeFixNodeService {
         } else if (position.z > this.center().z) {
           fixed.relationship = 'large';
         }
-        //this.CreateFixed(fixed, position, this.baseScale(), target.n);
         this.CreateFixed(fixed, position, this.baseScale(), target.row);
       }
 
@@ -300,7 +287,7 @@ export class ThreeFixNodeService {
 
   // ピン支点を描く
   public CreatePin(pin, position, maxLength, row) {
-    const height: number = maxLength * 0.2;
+    const height: number = this.nodeThree.sizeNode * 0.3;
     const radius: number = height * 0.3;
     const geometry = new THREE.ConeBufferGeometry(radius, height, 12, 1, false);
     geometry.translate(0, -height / 2, 0);
@@ -309,13 +296,13 @@ export class ThreeFixNodeService {
     let newPosition : any = {...position};
     switch (pin.direction) {
       case ('x'):
-        newPosition.x = position.x - this.scaleNode;
+        newPosition.x = position.x + (pin.relationship === "small" ? 0 - this.scaleNode : this.scaleNode);
         break;
       case ('y'):
-        newPosition.y = position.y + (position.y < 0 ? 0 - this.scaleNode : this.scaleNode);
+        newPosition.y = position.y + (pin.relationship === "small" ? 0 - this.scaleNode : this.scaleNode);
         break;
       case ('z'):
-        newPosition.z = position.z + this.scaleNode;
+        newPosition.z = position.z + (pin.relationship === "large" ? 0 - this.scaleNode : this.scaleNode);
         break;
     }
 
@@ -421,18 +408,19 @@ export class ThreeFixNodeService {
 
   // バネ支点を描く
   public CreateSpring(spring, position, maxLength, row) {
+
     let geometry = new THREE.BufferGeometry();
     let vertices = [];
     let increase = 0.00015;
     switch (spring.relationship) {
       case "small": {
         // increase = 0.0001;
-        increase = this.nodeThree.sizeNode / 1000; //Changing the increase according to the diameter of the node ensures that when drawing and changing the scales it is still equal to the size of the node
+        increase = this.nodeThree.sizeNode / 500; //Changing the increase according to the diameter of the node ensures that when drawing and changing the scales it is still equal to the size of the node
         break;
       }
       case "large": {
         // increase = -0.0001;
-        increase = -(this.nodeThree.sizeNode / 1000); //Changing the increase according to the diameter of the node ensures that when drawing and changing the scales it is still equal to the size of the node
+        increase = -(this.nodeThree.sizeNode / 500); //Changing the increase according to the diameter of the node ensures that when drawing and changing the scales it is still equal to the size of the node
         break;
       }
     }
@@ -440,26 +428,27 @@ export class ThreeFixNodeService {
     const split = 10;
     // const radius = 0.1;
     //Changing the increase according to the diameter of the node ensures that when drawing and changing the scales it is still equal to the size of the node
-    const radius = this.nodeThree.sizeNode / 2.5;
+    const radius = this.nodeThree.sizeNode; //(aaaa.x * bbb) / 2;//
+    const scaleSpring = 0.06;
     let x = position.x;
     let y = position.y;
     let z = position.z;
     for (let i = 0; i <= laps * 360; i += split) {
       switch (spring.direction) {
         case ('x'):
-          x = - i * increase * maxLength;
-          y = radius * Math.cos(Math.PI / 180 * i) * maxLength;
-          z = radius * Math.sin(Math.PI / 180 * i) * maxLength;
+          x = - i * increase * scaleSpring;
+          y = radius * Math.cos(Math.PI / 180 * i) * scaleSpring;
+          z = radius * Math.sin(Math.PI / 180 * i) * scaleSpring;
           break;
         case ('y'):
-          x = radius * Math.cos(Math.PI / 180 * i) * maxLength;
-          y = i * increase * maxLength;
-          z = radius * Math.sin(Math.PI / 180 * i) * maxLength;
+          x = radius * Math.cos(Math.PI / 180 * i) * scaleSpring;
+          y = i * increase * scaleSpring;
+          z = radius * Math.sin(Math.PI / 180 * i) * scaleSpring;
           break;
         case ('z'):
-          x = radius * Math.cos(Math.PI / 180 * i) * maxLength;
-          y = radius * Math.sin(Math.PI / 180 * i) * maxLength;
-          z = i * increase * maxLength;
+          x = radius * Math.cos(Math.PI / 180 * i) * scaleSpring;
+          y = radius * Math.sin(Math.PI / 180 * i) * scaleSpring;
+          z = i * increase * scaleSpring;
           break;
       }
       vertices.push(new THREE.Vector3(x, y, z));
@@ -468,19 +457,17 @@ export class ThreeFixNodeService {
     geometry = new THREE.BufferGeometry().setFromPoints(vertices);
     const line = new THREE.LineBasicMaterial({ color: spring.color, opacity: 0.60 });
     const mesh = new THREE.Line(geometry, line);
-
     //When increasing the scale of the node it will be translated to draw from the border node and not from the center
-    let newPosition = {...position};
+    let newPosition : any = {...position};
     switch (spring.direction) {
-      case "x":
-        newPosition.x = position.x + (position.x < 0 ? 0 - this.scaleNode : this.scaleNode);
+      case ('x'):
+        newPosition.x = position.x + (spring.relationship === "small" ? 0 - this.scaleNode : this.scaleNode);
         break;
-      case "y": {
-        newPosition.y = position.y + (spring.relationship === "large" ? (0 - this.scaleNode) : this.scaleNode);
+      case ('y'):
+        newPosition.y = position.y + (spring.relationship === "large" ? 0 - this.scaleNode : this.scaleNode);
         break;
-      }
-      case "z":
-        newPosition.z = position.z + this.scaleNode;
+      case ('z'):
+        newPosition.z = position.z + (spring.relationship === "large" ? 0 - this.scaleNode : this.scaleNode);
         break;
     }
     mesh.position.set(newPosition.x, newPosition.y, newPosition.z);
@@ -497,7 +484,7 @@ export class ThreeFixNodeService {
     const laps = 4 + 0.25;
     const split = 10;
     //The distance between the helices will increase proportionally to the distance of the node
-    const radius = this.nodeThree.sizeNode * 0.00048;
+    const radius = this.nodeThree.sizeNode * 0.00015;
     let x = position.x;
     let y = position.y;
     let z = position.z;
@@ -505,17 +492,17 @@ export class ThreeFixNodeService {
       switch (rotatingspring.direction) {
         case 'x':
           x = 0;
-          y = radius * Math.cos(Math.PI / 180 * j) * maxLength * j;
-          z = radius * Math.sin(Math.PI / 180 * j) * maxLength * j;
+          y = radius * Math.cos(Math.PI / 180 * j) * j;
+          z = radius * Math.sin(Math.PI / 180 * j) * j;
           break;
         case 'y':
-          x = radius * Math.cos(Math.PI / 180 * j) * maxLength * j;
+          x = radius * Math.cos(Math.PI / 180 * j) * j;
           y = 0;
-          z = radius * Math.sin(Math.PI / 180 * j) * maxLength * j;
+          z = radius * Math.sin(Math.PI / 180 * j) * j;
           break;
         case 'z':
-          x = radius * Math.cos(Math.PI / 180 * j) * maxLength * j;
-          y = radius * Math.sin(Math.PI / 180 * j) * maxLength * j;
+          x = radius * Math.cos(Math.PI / 180 * j) * j;
+          y = radius * Math.sin(Math.PI / 180 * j) * j;
           z = 0;
           break;
       }
