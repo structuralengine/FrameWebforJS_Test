@@ -1,0 +1,25 @@
+<div class="preset">
+  <div class="presetArea">
+    <div class="headArea">
+      <h2 translate>Preset</h2>
+      <a routerLink="/" (click)="onPageBack()">×</a>
+    </div>
+    <div class="bodyArea">
+      <div class="presetdata-choice">
+        <div class="presetdata-choice-child" *ngFor="let item of presetService.sortBy('order')">
+          <div class="presetdata-choice-img"><img src="{{item.fileThumb}}" /></div>
+          <div class="presetdata-choice-title">
+            <label style="width: 100%">
+              <input type="radio" name="radio-preset" class="radio-input" id="print5" (click)="presetService.selectRadio(item)"/>
+              <span class="radio-parts">{{item.title}}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footerArea">
+      <a routerLink="/" class="button cancel" (click)="onPageBack()">キャンセル</a>
+      <a routerLink="/" class="button cancel" (click)="openFile()">Open</a>
+    </div>
+  </div>
+</div>
