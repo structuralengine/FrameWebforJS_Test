@@ -416,5 +416,16 @@
     },
     "message":{
         "mes": "The elastic modulus in the material menu is too small. Please check the units."
+    },
+    "control":{
+        "3D":"3D",
+        "GridHelper":"网格显示",
+        "Perspective":"角度指示",
+        "nodeNo":"节点编号指示",
+        "memberNo":"部件号指示",
+        "nodeScale":"节点显示尺寸",
+        "fixnodeScale":"支点显示屏尺寸",
+        "memberScale":"部件显示尺寸",
+        "LoadScale":"加载显示屏尺寸"
     }
 }

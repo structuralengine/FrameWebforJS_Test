@@ -10,6 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
 import { ThreeMembersService } from "../../three/geometry/three-members.service";
 import { InputMemberDetailService } from "./input-member-detail/input-member-detail.service";
+import { LanguagesService } from "src/app/providers/languages.service";
 
 @Component({
   selector: "app-input-members",
@@ -175,6 +176,7 @@ export class InputMembersComponent implements OnInit {
     private app: AppComponent,
     private three: ThreeService,
     private threeMembersService: ThreeMembersService,
+    private language: LanguagesService,
     private translate: TranslateService, public docLayout:DocLayoutService,
     public inputMemberDetailService :InputMemberDetailService
   ) {
@@ -217,6 +219,7 @@ export class InputMembersComponent implements OnInit {
         this.inputMemberDetailService.setDataEntity(this.data, this.element, dataNode);
       }
     });
+    this.language.tranText();
   }
 
   // 指定行row 以降のデータを読み取る
