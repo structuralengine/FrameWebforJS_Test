@@ -18,7 +18,7 @@ export class ThreeLoadDimension {
   }
 
    // 寸法線を編集する
-   public create( points: THREE.Vector2[], textStr: string ): THREE.Group {
+   public create( points: THREE.Vector2[], textStr: string, scaleX: number = 1 ): THREE.Group {
 
     const positions = [
       new THREE.Vector3(points[0].x, points[0].y, 0),
@@ -80,7 +80,6 @@ export class ThreeLoadDimension {
     } else {
       if (points[1].y > points[0].y) vartical = 'bottom';
     }
-
     const text = this.text.create(textStr, new THREE.Vector2(x, y), 0.08);
     const height = Math.abs(text.geometry.boundingBox.max.y - text.geometry.boundingBox.min.y);
     const width = Math.abs(text.geometry.boundingBox.max.x - text.geometry.boundingBox.min.x);
@@ -99,6 +98,7 @@ export class ThreeLoadDimension {
     // text.rotateY(Math.PI);
     text.name = "text";
     text.scale.y = 2.0;
+    text.scale.x = scaleX;
     group.add(text);
 
     return group;

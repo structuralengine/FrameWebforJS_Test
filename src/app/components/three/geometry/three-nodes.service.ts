@@ -26,7 +26,8 @@ export class ThreeNodesService {
   // private currentIndex: string;
 
   // 大きさを調整するためのスケール
-  private scale: number;
+  public scale: number;
+  public sizeNode: any;
   private params: any;          // GUIの表示制御
   private gui: any;
 
@@ -271,6 +272,13 @@ export class ThreeNodesService {
       item.scale.x = this.baseScale * sc;
       item.scale.y = this.baseScale * sc;
       item.scale.z = this.baseScale * sc;
+    }
+
+    // since the button sizes are equal, just get the size of the first button
+    let node0 = this.nodeList.children[0];
+    if(node0){
+      var box = new THREE.Box3().setFromObject( node0 );
+      this.sizeNode = box.max.x - box.min.x;
     }
   }
 
