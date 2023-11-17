@@ -19,7 +19,7 @@
     </div>
     <div class="footerArea">
       <a routerLink="/" class="button cancel" (click)="onPageBack()">キャンセル</a>
-      <a routerLink="/" class="button cancel" (click)="openFile()">Open</a>
+      <button [disabled]="presetService.isDisabled === true ? 'disabled' : ''" routerLink="/" class="button open" (click)="openFile()" disabled>Open</button>
     </div>
   </div>
 </div>

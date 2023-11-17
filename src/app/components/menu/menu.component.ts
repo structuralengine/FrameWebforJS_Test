@@ -26,6 +26,9 @@ import packageJson from '../../../../package.json';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { MenuService } from "./menu.service";
+import { AppService } from "src/app/app.service";
+import { Router } from "@angular/router";
+import { PresetService } from "../preset/preset.service";
 
 @Component({
   selector: "app-menu",
@@ -38,6 +41,7 @@ export class MenuComponent implements OnInit {
   public userProfile: KeycloakProfile | null = null;
 
   constructor(
+    private router: Router,
     private modalService: NgbModal,
     private app: AppComponent,
     private scene: SceneService,
@@ -57,6 +61,8 @@ export class MenuComponent implements OnInit {
     public printCustomFsecService: PrintCustomFsecService,
     private readonly keycloak: KeycloakService,
     public menuService: MenuService,
+    public appService: AppService,
+    public presetService : PresetService
   ) {
     this.menuService.fileName = "";
     this.three.fileName = "";
@@ -65,63 +71,81 @@ export class MenuComponent implements OnInit {
     this.auth.currentUser;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.menuService.fileName = "";
     this.three.fileName = "";
     this.helper.isContentsDailogShow = false;
-    this.setDimension(2);
+    this.menuService.setDimension(2);
+    const isLoggedIn = await this.keycloak.isLoggedIn();
+    if (isLoggedIn) {
+    const keycloakProfile = await this.keycloak.loadUserProfile();
+    if (keycloakProfile.id) {
+      const isOpenFirst = window.sessionStorage.getItem("openStart");
+      if(isOpenFirst === "1" || isOpenFirst === null){
+        this.router.navigate([{ outlets: { startOutlet: ["start"] } }]);
+        window.sessionStorage.setItem("openStart", "0");
+      }
+    }
   }
-
-  @HostListener('window:beforeunload', ['$event'])
-  onBeforeUnload($event: BeforeUnloadEvent) {
-    if (!this.electronService.isElectron) {
-      $event.returnValue = "Your work will be lost. Do you want to leave this site?";
+    else{
+      this.openFile();
     }
   }
 
-  @HostListener('document:keydown', ['$event'])
+  @HostListener("window:beforeunload", ["$event"])
+  onBeforeUnload($event: BeforeUnloadEvent) {
+    if (!this.electronService.isElectron) {
+      $event.returnValue =
+        "Your work will be lost. Do you want to leave this site?";
+    }
+  }
+
+  @HostListener("document:keydown", ["$event"])
   onKeyDown(event: KeyboardEvent): void {
     //Check if Ctrl and S key are both pressed
-    if (event.ctrlKey && (event.key === 'S' || event.key === 's')) {
+    if (event.ctrlKey && (event.key === "S" || event.key === "s")) {
       event.preventDefault(); // Prevent default behavior of Ctrl + S
       // Perform your action here
       this.overWrite();
     }
   }
-  public  newWindow(){
+  public newWindow() {
     this.electronService.ipcRenderer.send("newWindow");
   }
   // 新規作成
   async renew(): Promise<void> {
-    const isConfirm = await this.helper.confirm(this.translate.instant("window.confirm"));
-    if(isConfirm)
-    {
+    const isConfirm = await this.helper.confirm(
+      this.translate.instant("window.confirm")
+    );
+    if (isConfirm) {
       this.app.dialogClose(); // 現在表示中の画面を閉じる
-      this.InputData.clear();
-      this.ResultData.clear();
-      this.PrintData.clear();
-      this.CustomFsecData.clear();
-      this.three.ClearData();
-      this.menuService.fileName = "";
-      this.three.fileName = "";
-      this.three.mode = "";
-  
-      // "新規作成"のとき、印刷パネルのフラグをリセットする
-      this.printCustomFsecService.flg = undefined;
+      // this.InputData.clear();
+      // this.ResultData.clear();
+      // this.PrintData.clear();
+      // this.CustomFsecData.clear();
+      // this.three.ClearData();
+      // this.menuService.fileName = "";
+      // this.three.fileName = "";
+      // this.three.mode = "";
+
+      // // "新規作成"のとき、印刷パネルのフラグをリセットする
+      // this.printCustomFsecService.flg = undefined;
+      this.menuService.renew();
     }
   }
 
   // Electron でファイルを開く
   open_electron() {
-
-    const response = this.electronService.ipcRenderer.sendSync('open');
+    const response = this.electronService.ipcRenderer.sendSync("open");
 
     if (response.status !== true) {
-      this.helper.alert('ファイルを開くことに失敗しました, status:' + response.status);
+      this.helper.alert(
+        "ファイルを開くことに失敗しました, status:" + response.status
+      );
       return;
     }
     this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.app.addHiddenFromElements();
+    this.appService.addHiddenFromElements();
     this.InputData.clear();
     this.ResultData.clear();
     this.PrintData.clear();
@@ -150,59 +174,16 @@ export class MenuComponent implements OnInit {
       this.ResultData.isCalculated = false;
     }
     if (old !== this.helper.dimension) {
-      this.setDimension(this.helper.dimension);
+      this.menuService.setDimension(this.helper.dimension);
     }
     this.three.fileload();
     modalRef.close();
-
   }
 
   // ファイルを開く
   open(evt) {
-    this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.InputData.clear();
-    this.ResultData.clear();
-    this.PrintData.clear();
-    this.CustomFsecData.clear();
-    this.three.ClearData();
-    // this.countArea.clear();
-    const modalRef = this.modalService.open(WaitDialogComponent);
-
-    const file = evt.target.files[0];
-    this.menuService.fileName = file.name;
-    this.three.fileName = file.name;
-    evt.target.value = "";
-    this.fileToText(file)
-      .then((text) => {
-        // "ファイルを開く"のとき、印刷パネルのフラグをリセットする
-        this.printCustomFsecService.flg = undefined;
-
-        this.app.dialogClose(); // 現在表示中の画面を閉じる
-        this.ResultData.clear(); // 解析結果を削除
-        const old = this.helper.dimension;
-        const jsonData: {} = JSON.parse(text);
-        let resultData: {} = null;
-        if ("result" in jsonData) {
-          resultData = jsonData["result"];
-          delete jsonData["result"];
-        }
-        this.InputData.loadInputData(jsonData); // データを読み込む
-        if (resultData !== null) {
-          this.ResultData.loadResultData(resultData); // 解析結果を読み込む
-          this.ResultData.isCalculated = true;
-        } else {
-          this.ResultData.isCalculated = false;
-        }
-        if (old !== this.helper.dimension) {
-          this.setDimension(this.helper.dimension);
-        }
-        this.three.fileload();
-        modalRef.close();
-      })
-      .catch((err) => {
-        this.helper.alert(err);
-        modalRef.close();
-      });
+    this.appService.dialogClose(); // 現在表示中の画面を閉じる
+    this.menuService.open(evt);
   }
 
   // 上書き保存
@@ -213,20 +194,11 @@ export class MenuComponent implements OnInit {
       return;
     }
     const inputJson: string = JSON.stringify(this.InputData.getInputJson());
-    this.menuService.fileName = this.electronService.ipcRenderer.sendSync('overWrite', this.menuService.fileName, inputJson);
-  }
-
-  private fileToText(file): any {
-    const reader = new FileReader();
-    reader.readAsText(file);
-    return new Promise((resolve, reject) => {
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = () => {
-        reject(reader.error);
-      };
-    });
+    this.menuService.fileName = this.electronService.ipcRenderer.sendSync(
+      "overWrite",
+      this.menuService.fileName,
+      inputJson
+    );
   }
 
   // ファイルを保存
@@ -241,14 +213,18 @@ export class MenuComponent implements OnInit {
     }
     // 保存する
     if (this.electronService.isElectron) {
-      this.menuService.fileName = this.electronService.ipcRenderer.sendSync('saveFile', this.menuService.fileName, inputJson, "json");
+      this.menuService.fileName = this.electronService.ipcRenderer.sendSync(
+        "saveFile",
+        this.menuService.fileName,
+        inputJson,
+        "json"
+      );
     } else {
       const blob = new window.Blob([inputJson], { type: "text/plain" });
       FileSaver.saveAs(blob, this.menuService.fileName);
     }
   }
 
-  
   // ピックアップファイル出力
   public pickup(): void {
     let pickupJson: string;
@@ -267,9 +243,14 @@ export class MenuComponent implements OnInit {
     }
     // 保存する
     if (this.electronService.isElectron) {
-      this.electronService.ipcRenderer.sendSync('saveFile', filename, pickupJson, ext);
+      this.electronService.ipcRenderer.sendSync(
+        "saveFile",
+        filename,
+        pickupJson,
+        ext
+      );
     } else {
-      filename += '.';
+      filename += ".";
       filename += ext;
       FileSaver.saveAs(blob, filename);
     }
@@ -279,7 +260,9 @@ export class MenuComponent implements OnInit {
   async logIn() {
     if (this.electronService.isElectron) {
       this.app.dialogClose(); // 現在表示中の画面を閉じる
-      this.modalService.open(LoginDialogComponent, {backdrop: false}).result.then((result) => { });
+      this.modalService
+        .open(LoginDialogComponent, { backdrop: false })
+        .result.then((result) => {});
     } else {
       this.keycloak.login();
     }
@@ -288,9 +271,11 @@ export class MenuComponent implements OnInit {
   logOut(): void {
     if (this.electronService.isElectron) {
       this.user.setUserProfile(null);
+      window.sessionStorage.setItem("openStart", "1");
     } else {
       this.keycloak.logout(window.location.origin);
       this.user.setUserProfile(null);
+      window.sessionStorage.setItem("openStart", "1");
     }
   }
 
@@ -302,7 +287,6 @@ export class MenuComponent implements OnInit {
   public preset(): void {
     this.helper.isContentsDailogShow = true;
   }
-
 
   public contentsDailogShow(id): void {
     this.deactiveButtons();
@@ -332,21 +316,6 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  public setDimension(dim: number = null) {
-    this.scene.changeGui(this.helper.dimension);
-    if (dim === null) {
-      if (this.helper.dimension === 2) {
-        this.helper.dimension = 3;
-      } else {
-        this.helper.dimension = 2;
-      }
-    } else {
-      this.helper.dimension = dim;
-    }
-    this.app.dialogClose(); // 現在表示中の画面を閉じる
-    this.scene.changeGui(this.helper.dimension);
-  }
-
   // テスト ---------------------------------------------
   private saveResult(text: string): void {
     const blob = new window.Blob([text], { type: "text/plain" });
@@ -362,7 +331,8 @@ export class MenuComponent implements OnInit {
     this.three.fileName = file.name;
     evt.target.value = "";
 
-    this.fileToText(file)
+    this.menuService
+      .fileToText(file)
       .then((text) => {
         this.app.dialogClose(); // 現在表示中の画面を閉じる
         this.ResultData.clear();
@@ -378,9 +348,57 @@ export class MenuComponent implements OnInit {
   }
 
   public goToLink() {
-    window.open(
-      "https://help-frameweb.malme.app/",
-      "_blank"
-    );
+    window.open("https://help-frameweb.malme.app/", "_blank");
+  }
+
+  openFile(){
+    this.helper.isContentsDailogShow = false;
+    this.appService.addHiddenFromElements();
+    this.InputData.clear();
+    this.ResultData.clear();
+    this.CustomFsecData.clear();
+    this.three.ClearData();
+    // this.countArea.clear();
+    const modalRef = this.modalService.open(WaitDialogComponent);
+    this.http.get('./assets/preset/Ramen.json', {responseType: 'text'}).subscribe(text => {
+      this.menuService.fileName = 'Ramen.json';
+      this.three.fileName = 'Ramen.json';
+      this.printCustomFsecService.flg = undefined;
+      this.ResultData.clear(); // 解析結果を削除
+      const old = this.helper.dimension;
+      const jsonData: {} = JSON.parse(text);
+      let resultData: {} = null;
+      if ("result" in jsonData) {
+        resultData = jsonData["result"];
+        delete jsonData["result"];
+      }
+      this.InputData.loadInputData(jsonData); // データを読み込む
+      if (resultData !== null) {
+        this.ResultData.loadResultData(resultData); // 解析結果を読み込む
+        this.ResultData.isCalculated = true;
+      } else {
+        this.ResultData.isCalculated = false;
+      }
+      if (old !== this.helper.dimension) {
+        this.setDimension(this.helper.dimension);
+      }
+      this.three.fileload();
+      modalRef.close();
+    });
+  }
+
+  public setDimension(dim: number = null) {
+    this.scene.changeGui(this.helper.dimension);
+    if (dim === null) {
+      if (this.helper.dimension === 2) {
+        this.helper.dimension = 3;
+      } else {
+        this.helper.dimension = 2;
+      }
+    } else {
+      this.helper.dimension = dim;
+    }
+    this.app.dialogClose(); // 現在表示中の画面を閉じる
+    this.scene.changeGui(this.helper.dimension);
   }
 }

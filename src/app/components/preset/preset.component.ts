@@ -14,6 +14,7 @@ import { SceneService } from "../three/scene.service";
 import { InputDataService } from "src/app/providers/input-data.service";
 import { WaitDialogComponent } from "../wait-dialog/wait-dialog.component";
 import { MenuService } from "../menu/menu.service";
+import { AppService } from "src/app/app.service";
 
 @Component({
   selector: "app-preset",
@@ -22,7 +23,6 @@ import { MenuService } from "../menu/menu.service";
 })
 export class PresetComponent implements OnInit, OnDestroy {
   
-
   constructor(
     private router: Router,
     public presetService: PresetService,
@@ -37,24 +37,27 @@ export class PresetComponent implements OnInit, OnDestroy {
     private CustomFsecData: PrintCustomFsecService,
     private modalService: NgbModal,
     private scene: SceneService,
+    private appService: AppService,
     public InputData: InputDataService,
     public printCustomFsecService: PrintCustomFsecService
   ) {}
 
   ngOnInit() {
+    this.presetService.isDisabled = true;
     this.presetService.bindData();
   }
 
   ngOnDestroy(): void {}
 
   public onPageBack(): void {
+    this.presetService.fileSelected = {};
     this.helper.isContentsDailogShow = false;
-    this.app.addHiddenFromElements();
+    this.appService.addHiddenFromElements();
   }
 
   openFile(){
     this.helper.isContentsDailogShow = false;
-    this.app.addHiddenFromElements();
+    this.appService.addHiddenFromElements();
     this.InputData.clear();
     this.ResultData.clear();
     this.CustomFsecData.clear();
@@ -86,6 +89,7 @@ export class PresetComponent implements OnInit, OnDestroy {
       this.three.fileload();
       modalRef.close();
     });
+    // this.presetService.fileSelected = {};
   }
 
   public setDimension(dim: number = null) {

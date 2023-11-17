@@ -92,13 +92,15 @@
         width: 100%;
         z-index: 1;
 
-        .button {
+        .button.open {
+            margin-left: 8px;
             border: none;
             color: #fff;
             font-size: 12px;
             font-weight: 700;
             border-radius: 4px;
-            padding: 0 25px;
+            background: #5095fc;
+            padding: 4px 20px;
 
             &.cancel {
                 margin-right: 8px;
@@ -108,6 +110,11 @@
                 height: 28px;
                 background-color: #5095FC;
             }
+        }
+        .button.open:disabled{
+            background: #767676;
+            border: 1px solid #5d5c5c;
+            color: #000;
         }
     }
 }

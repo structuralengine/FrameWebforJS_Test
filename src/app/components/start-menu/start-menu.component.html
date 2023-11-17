@@ -6,22 +6,27 @@
     </div>
     <div class="bodyArea">
       <div class="presetdata-choice">
-        <div class="presetdata-choice-child">
+        <div class="presetdata-choice-child" (click)="clickStartNew()">
           <div class="out-mat-icon">
-            <mat-icon>control_point</mat-icon>
+            <mat-icon class="mat-start">control_point</mat-icon>
+            <span class="radio-parts">Start New</span>
           </div>
-          
-          <span class="radio-parts">Start New</span>
         </div>
-    
         <div class="presetdata-choice-child">
-          <mat-icon>folder_open</mat-icon>
-          <span class="radio-parts">Open file</span>
+          <label style="width: 100%; margin: 0px">
+            <span class="out-mat-icon">
+              <mat-icon class="mat-file">folder_open</mat-icon>
+              <span class="radio-parts">Open file</span>
+              <input type="file" accept="application/json" (change)="clickOpenFile($event)" style="display: none" />
+            </span>
+          </label>
         </div>
-     
-        <div class="presetdata-choice-child">
-          <mat-icon>view_module</mat-icon>
-          <span class="radio-parts">Select Perset</span>
+
+        <div class="presetdata-choice-child" (click)="clickSelectPreset()">
+          <div class="out-mat-icon">
+            <mat-icon class="mat-perset">view_module</mat-icon>
+            <span class="radio-parts">Select Perset</span>
+          </div>
         </div>
       </div>
     </div>

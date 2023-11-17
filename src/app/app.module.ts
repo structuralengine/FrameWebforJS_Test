@@ -111,7 +111,7 @@ import { ActivateSessionComponent } from './components/activate-session/activate
 import { InputRigidZoneComponent } from "./components/input/input-rigid-zone/input-rigid-zone.component";
 
 import {MatIconModule} from '@angular/material/icon'
-
+import { AppService } from "./app.service";
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 
@@ -210,6 +210,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         InputRigidZoneComponent,
     ],
     providers: [
+        AppService,
         InputDataService,
         InputNodesService,
         InputMembersService,

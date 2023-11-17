@@ -9,8 +9,10 @@ export class PresetService {
   public presetLink = "./assets/preset/";
   constructor(
   ) {
-    
+    this.fileSelected = {};
   }
+
+  public isDisabled : boolean = true;
 
   bindData(){
     this.dataPreset = [];
@@ -48,5 +50,6 @@ export class PresetService {
   selectRadio(item: any){
     this.fileSelected = {};
     this.fileSelected = {...item};
+    this.isDisabled = false;
   }
 }
