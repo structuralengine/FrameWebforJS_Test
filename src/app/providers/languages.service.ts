@@ -64,7 +64,6 @@ export class LanguagesService {
     if (this.electronService.isElectron) {
       this.electronService.ipcRenderer.send("change-lang", this.browserLang);
     }
-    this.tranText();
   }
 
   private addHiddenFromElements(): void {
