@@ -10,6 +10,7 @@ import { ThreeMembersService } from './three-members.service';
 import { CubeCamera } from 'three';
 import { DataHelperModule } from 'src/app/providers/data-helper.module';
 import { Subject } from 'rxjs';
+import { LanguagesService } from 'src/app/providers/languages.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class ThreeFixNodeService {
   private gui: any;
 
   constructor(
+    private languagesService: LanguagesService,
     private helper: DataHelperModule,
     private scene: SceneService,
     private nodeThree: ThreeNodesService,
@@ -83,6 +85,7 @@ export class ThreeFixNodeService {
       this.onResize();
       this.scene.render();
     });
+    this.languagesService.tranText();
   }
 
   // guiを非表示にする

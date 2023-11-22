@@ -8,6 +8,7 @@ import { ThreeNodesService } from './three-nodes.service';
 import * as THREE from 'three';
 import { ThreeMembersService } from './three-members.service';
 import { Subject } from 'rxjs';
+import { LanguagesService } from 'src/app/providers/languages.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class ThreeFixMemberService {
   private gui: any;
 
   constructor(private scene: SceneService,
+    private languagesService: LanguagesService,
               private nodeThree: ThreeNodesService,
               private node: InputNodesService,
               private member: InputMembersService,
@@ -91,6 +93,7 @@ export class ThreeFixMemberService {
       this.onResize();
       this.scene.render();
     });
+    this.languagesService.tranText();
   }
 
   // guiを非表示にする

@@ -3284,6 +3284,7 @@ function _add( gui, object, property, params ) {
 	var name = document.createElement( 'span' );
 	dom.addClass( name, 'property-name' );
 	name.innerHTML = controller.property;
+	name.setAttribute('id', controller.property);
 	var container = document.createElement( 'div' );
 	container.appendChild( name );
 	container.appendChild( controller.domElement );

@@ -8,6 +8,7 @@ import { CSS2DObject } from "../libs/CSS2DRenderer.js";
 import { Vector3 } from "three";
 import { Subject } from "rxjs";
 import { InputMemberDetailService } from "../../input/input-members/input-member-detail/input-member-detail.service";
+import { LanguagesService } from "src/app/providers/languages.service";
 
 @Injectable({
   providedIn: "root",
@@ -32,6 +33,7 @@ export class ThreeMembersService {
   private txtVisible: boolean;
 
   constructor(
+    private languagesService: LanguagesService,
     private scene: SceneService,
     private nodeThree: ThreeNodesService,
     private node: InputNodesService,
@@ -67,6 +69,7 @@ export class ThreeMembersService {
       this.txtVisible = value;
       this.scene.render();
     });
+    this.languagesService.tranText();
   }
 
   // 要素の太さを決定する基準値
