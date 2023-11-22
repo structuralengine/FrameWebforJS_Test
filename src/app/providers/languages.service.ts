@@ -67,62 +67,6 @@ export class LanguagesService {
     this.tranText();
   }
 
-  public tranText() {
-   
-    // forkJoin(this.translate.use('en'),this.translate.use('cn'),this.translate.use('ja')).subscribe(()=>{
-    //   let domElement: any = document.getElementsByClassName("property-name");
-    //   for (var i = 0; i < domElement.length; i++) {
-    //     let originValue = domElement[i].id;
-    //     switch(originValue){
-    //       case "3D":{
-    //         domElement[i].innerHTML = this.translate.instant('control.3D');
-    //         break;
-    //       }
-    //       case "GridHelper":{
-    //         domElement[i].innerHTML = this.translate.instant('control.GridHelper');
-    //         break;
-    //       }
-    //       case "Perspective":{
-    //         domElement[i].innerHTML = this.translate.instant('control.Perspective');
-    //         break;
-    //       }
-    //       case "nodeNo":{
-    //         domElement[i].innerHTML = this.translate.instant('control.nodeNo');
-    //         break;
-    //       }
-    //       case "memberNo":{
-    //         domElement[i].innerHTML = this.translate.instant('control.memberNo');
-    //         break;
-    //       }
-    //       case "nodeScale":{
-    //         domElement[i].innerHTML = this.translate.instant('control.nodeScale');
-    //         break;
-    //       }
-    //       case "fixnodeScale":{
-    //         domElement[i].innerHTML = this.translate.instant('control.fixnodeScale');
-    //         break;
-    //       }
-    //       case "memberScale":{
-    //         domElement[i].innerHTML = this.translate.instant('control.memberScale');
-    //         break;
-    //       }
-    //       case "LoadScale":{
-    //         domElement[i].innerHTML = this.translate.instant('control.LoadScale');
-    //         break;
-    //       }
-    //       // case "dispScale":{
-    //       //   domElement[i].innerHTML = this.translate.instant('control.');
-    //       //   break;
-    //       // }
-    //       // case "reactScale":{
-    //       //   domElement[i].innerHTML = this.translate.instant('control.');
-    //       //   break;
-    //       // }
-    //     }
-    //   }
-    // })
-  }
-
   private addHiddenFromElements(): void {
     this.addHiddenFromClass(".panel-element-content-container");
     this.addHiddenFromClass("#my_dock_manager");
