@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { UserInfoService } from "./providers/user-info.service";
 import { ResultDataService } from "./providers/result-data.service";
@@ -26,7 +26,7 @@ import { LanguagesService } from './providers/languages.service';
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   @Output() pagerEvent = new EventEmitter<number>();
   @ViewChild("grid") grid: SheetComponent;
   
@@ -51,6 +51,9 @@ export class AppComponent implements OnInit {
     public language: LanguagesService
   ) {
     this.translate.setDefaultLang("ja");
+  }
+  ngAfterViewInit(): void {
+    this.language.tranText();
   }
 
   ngOnInit() {

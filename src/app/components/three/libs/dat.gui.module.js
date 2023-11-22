@@ -3282,8 +3282,11 @@ function _add( gui, object, property, params ) {
 	recallSavedValue( gui, controller );
 	dom.addClass( controller.domElement, 'c' );
 	var name = document.createElement( 'span' );
+	name.setAttribute('translate', '')
+	name.setAttribute('ng-reflect-translate', '')
+	name.setAttribute('id', controller.property)
 	dom.addClass( name, 'property-name' );
-	name.innerHTML = controller.property;
+	name.innerHTML = 'menu.file';//controller.property;
 	name.setAttribute('id', controller.property);
 	var container = document.createElement( 'div' );
 	container.appendChild( name );
