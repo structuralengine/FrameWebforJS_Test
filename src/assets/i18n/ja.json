@@ -426,9 +426,13 @@
         "Perspective":"パース表示",
         "nodeNo":"節点番号表示",
         "memberNo":"部材番号表示",
-        "nodeScale":"節点表示サイズ",
-        "fixnodeScale":"支点表示サイズ",
-        "memberScale":"部材表示サイズ",
-        "LoadScale":"荷重表示サイズ"
+        "nodeScale":"節点表示表示",
+        "fixnodeScale":"支点表示表示",
+        "memberScale":"部材表示表示",
+        "LoadScale":"荷重表示表示",
+        "dispScale":"変位表示倍率",
+        "reactScale":"反力表示倍率",
+        "forceScale":"断面力表示倍率",
+        "meshScale":"パネル表示倍率"
     }
 }

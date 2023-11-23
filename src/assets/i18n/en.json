@@ -428,6 +428,10 @@
         "nodeScale":"Node Scale",
         "fixnodeScale":"Fix-node Scale",
         "memberScale":"Member Scale",
-        "LoadScale":"Load Scale"
+        "LoadScale":"Load Scale",
+        "dispScale":"dispScale",
+        "reactScale":"eactScale",
+        "forceScale":"forceScale",
+        "meshScale":"meshScale"
     }
 }

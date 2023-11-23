@@ -149,7 +149,7 @@ export class LanguagesService {
         }
         case 'axialForce': {
           domElement[i].innerHTML =
-            this.translate.instant('control.axialForce');
+            this.translate.instant('print.custom.print-custom-three.axialForce');
           break;
         }
         case 'meshScale': {
@@ -164,31 +164,31 @@ export class LanguagesService {
         }
         case 'shearForceY': {
           domElement[i].innerHTML = this.translate.instant(
-            'control.shearForceY'
+            'print.custom.print-custom-three.y_shear'
           );
           break;
         }
         case 'shearForceZ': {
           domElement[i].innerHTML = this.translate.instant(
-            'control.shearForceZ'
+            'print.custom.print-custom-three.z_shear'
           );
           break;
         }
         case 'momentX': {
-          domElement[i].innerHTML = this.translate.instant('control.momentX');
+          domElement[i].innerHTML = this.translate.instant('print.custom.print-custom-three.x_torsion');
           break;
         }
         case 'momentY': {
-          domElement[i].innerHTML = this.translate.instant('control.momentY');
+          domElement[i].innerHTML = this.translate.instant('print.custom.print-custom-three.y_moment');
           break;
         }
         case 'momentZ': {
-          domElement[i].innerHTML = this.translate.instant('control.momentZ');
+          domElement[i].innerHTML = this.translate.instant('print.custom.print-custom-three.z_moment');
           break;
         }
         case 'torsionalMoment': {
           domElement[i].innerHTML = this.translate.instant(
-            'control.torsionalMoment'
+            'print.custom.print-custom-three.x_torsion'
           );
           break;
         }

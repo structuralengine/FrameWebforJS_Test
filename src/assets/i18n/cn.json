@@ -426,6 +426,10 @@
         "nodeScale":"节点显示尺寸",
         "fixnodeScale":"支点显示屏尺寸",
         "memberScale":"部件显示尺寸",
-        "LoadScale":"加载显示屏尺寸"
+        "LoadScale":"加载显示屏尺寸",
+        "dispScale":"流离失所显示屏尺寸",
+        "reactScale":"反动势力显示屏尺寸",
+        "forceScale":"截面力显示屏尺寸",
+        "meshScale":"面板显示屏尺寸"
     }
 }

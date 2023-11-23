@@ -345,6 +345,7 @@ export class ThreeMembersService {
         this.onResize();
         this.scene.render();
       });
+      this.languagesService.tranText();
   }
 
   // guiを非表示にする
