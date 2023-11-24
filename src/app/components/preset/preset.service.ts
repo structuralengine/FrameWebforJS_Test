@@ -17,9 +17,9 @@ export class PresetService {
   bindData(){
     this.dataPreset = [];
     this.dataPreset.push({
-      title: "Ramen viaduct",
-      fileThumb: this.presetLink + "thumbnail-image/Ramen.png",
-      fileName: "Ramen.json",
+      title: "3DTest03_A",
+      fileThumb: this.presetLink + "thumbnail-image/3DTest03_A.png",
+      fileName: "3DTest03_A.json",
       order: 1,
     });
     this.dataPreset.push({

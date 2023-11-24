@@ -360,9 +360,9 @@ export class MenuComponent implements OnInit {
     this.three.ClearData();
     // this.countArea.clear();
     const modalRef = this.modalService.open(WaitDialogComponent);
-    this.http.get('./assets/preset/Ramen.json', {responseType: 'text'}).subscribe(text => {
-      this.menuService.fileName = 'Ramen.json';
-      this.three.fileName = 'Ramen.json';
+    this.http.get('./assets/preset/3DTest03_A.json', {responseType: 'text'}).subscribe(text => {
+      this.menuService.fileName = '3DTest03_A.json';
+      this.three.fileName = '3DTest03_A.json';
       this.printCustomFsecService.flg = undefined;
       this.ResultData.clear(); // 解析結果を削除
       const old = this.helper.dimension;
