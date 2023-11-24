@@ -7,13 +7,13 @@
     <div class="bodyArea">
       <div class="presetdata-choice">
         <div class="presetdata-choice-child" *ngFor="let item of presetService.sortBy('order')">
-          <div class="presetdata-choice-img"><img src="{{item.fileThumb}}" /></div>
+          <label style="width: 100%">
+          <div class="presetdata-choice-img" style="cursor: pointer;" ><img src="{{item.fileThumb}}" (click)="presetService.selectRadio(item)"/></div>
           <div class="presetdata-choice-title">
-            <label style="width: 100%">
               <input type="radio" name="radio-preset" class="radio-input" id="print5" (click)="presetService.selectRadio(item)"/>
-              <span class="radio-parts">{{item.title}}</span>
-            </label>
+              <span class="radio-parts" translate="">{{item.title}}</span>
           </div>
+        </label>
         </div>
       </div>
     </div>

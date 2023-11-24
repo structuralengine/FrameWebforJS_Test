@@ -418,5 +418,11 @@
     },
     "message":{
         "mes": "The elastic modulus in the material menu is too small. Please check the units."
+    },
+    "preset":{
+        "ramen-viaduct" : "架构",
+        "concrete-t-beam-bridge" : "T 梁桥",
+        "u-shaped-retaining-wall" : "U 型挡土墙",
+        "portal-bracing" : "龙门式桥墩"
     }
 }

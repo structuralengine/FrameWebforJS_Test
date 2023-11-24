@@ -13,29 +13,28 @@ export class PresetService {
   }
 
   public isDisabled : boolean = true;
-
   bindData(){
     this.dataPreset = [];
     this.dataPreset.push({
-      title: "3DTest03_A",
-      fileThumb: this.presetLink + "thumbnail-image/3DTest03_A.png",
-      fileName: "3DTest03_A.json",
+      title: "preset.ramen-viaduct",
+      fileThumb: this.presetLink + "thumbnail-image/Ramen.png",
+      fileName: "Ramen.json",
       order: 1,
     });
     this.dataPreset.push({
-      title: "Concrete T-beam bridge",
+      title: "preset.concrete-t-beam-bridge",
       fileThumb: this.presetLink + "thumbnail-image/ConcreteT-beam.png",
       fileName: "ConcreteT-beam.json",
       order: 2,
     });
     this.dataPreset.push({
-      title: "U-shaped retaining wall",
+      title: "preset.u-shaped-retaining-wall",
       fileThumb: this.presetLink + "thumbnail-image/U-shapedWall.png",
       fileName: "U-shapedWall.json",
       order: 3,
     });
     this.dataPreset.push({
-      title: "Portal bracing",
+      title: "preset.portal-bracing",
       fileThumb: this.presetLink + "thumbnail-image/PortalBracing.png",
       fileName: "PortalBracing.json",
       order: 4,

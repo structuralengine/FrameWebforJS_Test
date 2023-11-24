@@ -421,5 +421,11 @@
     },
     "message":{
         "mes": "材料メニューの弾性係数が小さすぎます。単位をご確認ください。"
+    },
+    "preset":{
+        "ramen-viaduct" : "ラーメン構造",
+        "concrete-t-beam-bridge" : "Ct桁",
+        "u-shaped-retaining-wall" : "U型擁壁",
+        "portal-bracing" : "門型橋脚"
     }
 }

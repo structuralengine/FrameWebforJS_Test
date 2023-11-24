@@ -420,5 +420,11 @@
     },
     "message":{
         "mes": "The elastic modulus in the material menu is too small. Please check the units."
+    },
+    "preset":{
+        "ramen-viaduct" : "Ramen viaduct",
+        "concrete-t-beam-bridge" : "Concrete T-beam bridge",
+        "u-shaped-retaining-wall" : "U-shaped retaining wall",
+        "portal-bracing" : "Portal bracing"
     }
 }
