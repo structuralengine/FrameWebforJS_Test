@@ -56,7 +56,9 @@
         "today_used_point": "今天使用的积分",
         "back": "后退",
         "save": "节省",
-        "update_success": "更新成功"
+        "update_success": "更新成功",
+        "select_preset": "选择预置",
+        "preset": "预设"
     },
     "input": {
         "input-fix-node": {

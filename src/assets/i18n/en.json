@@ -57,7 +57,9 @@
         "NewWindow":"New window",
         "back": "Back",
         "save": "Save",
-        "update_success": "Update success!!"
+        "update_success": "Update success!!",
+        "select_preset": "Select Preset",
+        "preset": "Preset"
     },
     "input": {
         "input-fix-node": {

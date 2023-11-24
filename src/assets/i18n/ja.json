@@ -58,7 +58,9 @@
         "NewWindow":"新しいウィンドウ",
         "back": "戻る",
         "save": "保存",
-        "update_success": "更新成功"
+        "update_success": "更新成功",
+        "select_preset": "プリセットを開く",
+        "preset": "プリセット"
     },
     "input": {
         "input-fix-node": {
