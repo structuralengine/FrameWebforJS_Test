@@ -416,5 +416,8 @@
         "paste": "Paste",
         "undo": "Undo",
         "cut": "Cut"
+    },
+    "message":{
+        "mes": "The elastic modulus in the material menu is too small. Please check the units."
     }
 }

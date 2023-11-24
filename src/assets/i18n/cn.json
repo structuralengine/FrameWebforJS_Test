@@ -414,5 +414,8 @@
         "paste": "貼上",
         "undo": "復原動作",
         "cut": "剪下"
+    },
+    "message":{
+        "mes": "The elastic modulus in the material menu is too small. Please check the units."
     }
 }
