@@ -84,7 +84,8 @@
             "No": "No",
             "member": "部材",
             "rigid": "剛域",
-            "MemberData": "部材データ"
+            "MemberData": "部材データ",
+            "RigidZone": "剛域"
         },
         "input-rigid":{
             "node": "節点",

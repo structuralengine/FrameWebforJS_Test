@@ -82,7 +82,8 @@
             "No": "编码",
             "member": "构件",
             "rigid": "避难",
-            "MemberData": "构件数据"
+            "MemberData": "构件输入",
+            "RigidZone":"硬区"
         },
         "input-rigid": {
             "node": "节点",

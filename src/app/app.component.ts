@@ -308,6 +308,7 @@ export class AppComponent implements OnInit {
             else
               this.helper.alert(e);
           } finally {          
+
             modalRef.close(); // モーダルダイアログを消す
             if(check)
               this.helper.alert(

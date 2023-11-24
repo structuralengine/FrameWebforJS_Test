@@ -53,7 +53,7 @@ export class ThreeNoticePointsService {
     this.txtVisible = false;
 
     // gui
-    this.scale = 100;
+    this.scale = 300;
     this.params = {
       nodeNo: this.txtVisible,
       nodeScale: this.scale

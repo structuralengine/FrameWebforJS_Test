@@ -24,6 +24,7 @@ import { ResultCombineFsecService } from "../result/result-combine-fsec/result-c
 import { MaxMinService } from "./max-min/max-min.service";
 import { MaxMinComponent } from "./max-min/max-min.component";
 import { InputLoadService } from "../input/input-load/input-load.service";
+import { ThreeRigidZoneService } from "./geometry/three-rigid-zone.service";
 
 @Injectable({
   providedIn: "root",
@@ -62,6 +63,7 @@ export class ThreeService {
     private resultFsec: ResultCombineFsecService,
     private inputLoadData: InputLoadService,
     private threeNoticePoints: ThreeNoticePointsService,
+    private rigid: ThreeRigidZoneService
   ) { }
 
   //////////////////////////////////////////////////////
@@ -134,7 +136,8 @@ export class ThreeService {
       case "load_values":
         this.load.changeData(index);
         break;
-
+      case "rigid_zone":
+        this.rigid.changeData()
       default:
         // 何御しない
         return;
@@ -183,7 +186,9 @@ export class ThreeService {
       case "notice-points":
         this.points.selectChange(index,index_sub);
         break;
-
+      case "rigid_zone":
+        this.rigid.selectChange(index,index_sub);
+        break;
       case "joints":
         this.joint.selectChange(index, index_sub);
         break;
@@ -225,7 +230,7 @@ export class ThreeService {
     this.disg.ClearData();
     this.reac.ClearData();
     this.fsec.ClearData();
-
+    this.rigid.ClearData();
     // 再描画
     this.max_min.maxMinClear(); //max,min表示消す
     this.scene.setNewHelper(100);
@@ -349,6 +354,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     if (ModeName === "members" || ModeName === "elements") {
@@ -363,6 +369,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     if (ModeName === "notice_points") {
@@ -377,6 +384,21 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
+    }
+    if (ModeName === "rigid_zone") {
+      this.node.visibleChange(true, false, false);
+      this.member.visibleChange(true, true, false);
+      this.fixNode.visibleChange(false);
+      this.fixMember.visibleChange(false);
+      this.joint.visibleChange(false);
+      this.points.visibleChange(false);
+      this.panel.visibleChange(true, 0.3);
+      this.load.visibleChange(false, false);
+      this.disg.visibleChange(false);
+      this.reac.visibleChange(false);
+      this.fsec.visibleChange("");
+      this.rigid.visibleChange(true);
     }
 
     if (ModeName === "joints") {
@@ -391,6 +413,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     if (ModeName === "panel") {
@@ -405,6 +428,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     if (ModeName === "fix_nodes") {
@@ -419,6 +443,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     if (ModeName === "fix_member") {
@@ -433,6 +458,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     // 荷重図
@@ -449,6 +475,7 @@ export class ThreeService {
         this.points.visibleChange(false);
         this.panel.visibleChange(true, 0.3);
         this.load.visibleChange(true, true);
+        this.rigid.visibleChange(false);
       }
 
       if (ModeName === "load_values") {
@@ -479,6 +506,7 @@ export class ThreeService {
       this.disg.visibleChange(true);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     if (ModeName === "comb_disg" || ModeName === "pik_disg") {
@@ -494,6 +522,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     if (ModeName === "reac") {
@@ -508,6 +537,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(true);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     if (ModeName === "comb_reac" || ModeName === "pik_reac") {
@@ -523,6 +553,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange("");
+      this.rigid.visibleChange(false);
     }
 
     // 断面力図
@@ -538,6 +569,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange(ModeName);
+      this.rigid.visibleChange(false);
       let key: string;
       if (this.secForce.currentRadio === 'axialForce' ||
         this.secForce.currentRadio === 'torsionalMoment') {
@@ -574,6 +606,7 @@ export class ThreeService {
       this.disg.visibleChange(false);
       this.reac.visibleChange(false);
       this.fsec.visibleChange(ModeName);
+      this.rigid.visibleChange(false);
       let key: string;
       if (this.secForce.currentRadio === 'axialForce' ||
         this.secForce.currentRadio === 'torsionalMoment') {
@@ -641,7 +674,8 @@ export class ThreeService {
       case "notice_points":
         this.threeNoticePoints.detectObject(raycaster, action);
         break;
-
+      case "rigid_zone":
+        this.rigid.detectObject(raycaster, action);
       case "load_names":
         break;
 

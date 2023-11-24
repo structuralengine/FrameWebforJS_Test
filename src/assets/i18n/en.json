@@ -83,7 +83,8 @@
             "no": "No",
             "member": "Member",
             "rigid": "Rigid Zone",
-            "MemberData": "Member Data"
+            "MemberData": "Member Data",
+            "RigidZone": "Rigid Zone"
         },
         "input-rigid": {
             "node": "Node",
