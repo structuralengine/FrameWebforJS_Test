@@ -18,25 +18,25 @@ export class PresetService {
     this.dataPreset.push({
       title: "preset.ramen-viaduct",
       fileThumb: this.presetLink + "thumbnail-image/Ramen.png",
-      fileName: "Ramen.json",
+      fileName: "サンプル（ラーメン高架橋）.json",
       order: 1,
     });
     this.dataPreset.push({
       title: "preset.concrete-t-beam-bridge",
       fileThumb: this.presetLink + "thumbnail-image/ConcreteT-beam.png",
-      fileName: "ConcreteT-beam.json",
+      fileName: "サンプル（Ct桁）.json",
       order: 2,
     });
     this.dataPreset.push({
       title: "preset.u-shaped-retaining-wall",
       fileThumb: this.presetLink + "thumbnail-image/U-shapedWall.png",
-      fileName: "U-shapedWall.json",
+      fileName: "サンプル（U型擁壁）.json",
       order: 3,
     });
     this.dataPreset.push({
       title: "preset.portal-bracing",
       fileThumb: this.presetLink + "thumbnail-image/PortalBracing.png",
-      fileName: "PortalBracing.json",
+      fileName: "サンプル（門型橋脚）.json",
       order: 4,
     });
   }
