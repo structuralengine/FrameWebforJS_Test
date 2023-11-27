@@ -6,6 +6,7 @@ import { CSS2DObject } from '../libs/CSS2DRenderer.js';
 
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min'
 import { Subject } from 'rxjs';
+import { LanguagesService } from 'src/app/providers/languages.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,8 @@ export class ThreeNodesService {
   private txtVisible: boolean;
  
   constructor(private scene: SceneService,
-              private node: InputNodesService) {
+              private node: InputNodesService,
+              private languagesService: LanguagesService,) {
 
     this.geometry = new THREE.SphereBufferGeometry(1);
     this.nodeList = new THREE.Object3D();
@@ -66,7 +68,7 @@ export class ThreeNodesService {
       this.txtVisible = value;
       this.scene.render();
     });
-
+    this.languagesService.tranText();
   }
 
   // データが変更された時の処理
@@ -312,6 +314,7 @@ export class ThreeNodesService {
       this.onResize();
       this.scene.render();
     });
+    this.languagesService.tranText();
   }
 
   // guiを非表示にする

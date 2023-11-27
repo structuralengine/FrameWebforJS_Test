@@ -17,6 +17,7 @@ import { ThreeMembersService } from './three-members.service';
 import { ThreePanelService } from './three-panel.service';
 import { InputLoadService } from '../../input/input-load/input-load.service';
 import { Object3D } from 'three';
+import { LanguagesService } from 'src/app/providers/languages.service';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,7 @@ export class ThreeDisplacementService {
 
 
   constructor(private scene: SceneService,
+    private languagesService: LanguagesService,
     private node: InputNodesService,
     private member: InputMembersService,
     private panel: InputPanelService,
@@ -122,6 +124,7 @@ export class ThreeDisplacementService {
       this.onResize();
       this.scene.render();
     });
+    this.languagesService.tranText();
   }
 
   private guiDisable(): void {

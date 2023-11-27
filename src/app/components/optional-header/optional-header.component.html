@@ -73,7 +73,7 @@
     <app-pager-direction *ngIf="showNotBasicComponent && helper.isContentsDailogShow"></app-pager-direction>
 
     <app-pager *ngIf="showPagerComponent && helper.isContentsDailogShow"></app-pager>
-    <!-- <div class="btn-group" *ngIf="showMemberComponent && helper.isContentsDailogShow">
+    <div class="btn-group" *ngIf="showMemberComponent && helper.isContentsDailogShow">
       <div class="upDownArea">
         <button (click)="previousMemberPage()" [disabled]="selectedMemberPage == memberPages[0]">
           <img src="./assets/icons/icon-vector.svg" class="top" />
@@ -86,14 +86,14 @@
         <img src="./assets/icons/icon-list.svg" />
         <select [(ngModel)]="selectedMemberLink" (change)="onLinkChange($event.target['value'])">
           <option [value]="'/input-members'">
-            &nbsp;&nbsp;&nbsp;<p translate>MemberData</p>&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;<p translate>input.input-members.MemberData</p>&nbsp;&nbsp;&nbsp;
           </option>
           <option [value]="'/input-rigid_zone'">
-            &nbsp;&nbsp;&nbsp;<p translate>Rigid Zone</p>&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;<p translate>input.input-members.RigidZone</p>&nbsp;&nbsp;&nbsp;
           </option>
         </select>
       </div>
-    </div> -->
+    </div>
     <div class="gui-container"></div>
     <div class="control" (click)="onToggleControl()" [ngClass]="{ 'control-active': isControlOpen }">
       <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"

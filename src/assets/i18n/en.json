@@ -85,7 +85,8 @@
             "no": "No",
             "member": "Member",
             "rigid": "Rigid Zone",
-            "MemberData": "Member Data"
+            "MemberData": "Member Data",
+            "RigidZone": "Rigid Zone"
         },
         "input-rigid": {
             "node": "Node",
@@ -426,5 +427,20 @@
         "concrete-t-beam-bridge" : "Concrete T-beam bridge",
         "u-shaped-retaining-wall" : "U-shaped retaining wall",
         "portal-bracing" : "Portal bracing"
+    },
+    "control":{
+        "3D":"3D",
+        "GridHelper":"Grid Helper",
+        "Perspective":"Perspective",
+        "nodeNo":"Node No",
+        "memberNo":"Member No",
+        "nodeScale":"Node Scale",
+        "fixnodeScale":"Fix-node Scale",
+        "memberScale":"Member Scale",
+        "LoadScale":"Load Scale",
+        "dispScale":"dispScale",
+        "reactScale":"eactScale",
+        "forceScale":"forceScale",
+        "meshScale":"meshScale"
     }
 }

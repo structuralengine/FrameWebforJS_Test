@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { UserInfoService } from "./providers/user-info.service";
 import { ResultDataService } from "./providers/result-data.service";
@@ -27,7 +27,7 @@ import { AppService } from "./app.service";
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   @Output() pagerEvent = new EventEmitter<number>();
   @ViewChild("grid") grid: SheetComponent;
   
@@ -54,6 +54,9 @@ export class AppComponent implements OnInit {
   ) {
     this.translate.setDefaultLang("ja");
     if(window.sessionStorage.getItem("openStart") === null) window.sessionStorage.setItem("openStart", "1")
+  }
+  ngAfterViewInit(): void {
+    this.language.tranText();
   }
 
   ngOnInit() {
@@ -282,6 +285,7 @@ export class AppComponent implements OnInit {
             else
               this.helper.alert(e);
           } finally {          
+
             modalRef.close(); // モーダルダイアログを消す
             if(check)
               this.helper.alert(

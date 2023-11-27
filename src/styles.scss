@@ -309,6 +309,13 @@ body {
       font-size: 12px;
       font-weight: 700;
       font-family: "Noto Sans JP", sans-serif;
+      width: 55%;
+    }
+    .c{
+      width: 45%;
+      input[type="checkbox"]{
+        margin-left: 4px;
+      }
     }
     .cr {
       &.boolean {
