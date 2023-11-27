@@ -419,5 +419,20 @@
     },
     "message":{
         "mes": "The elastic modulus in the material menu is too small. Please check the units."
+    },
+    "control":{
+        "3D":"3D",
+        "GridHelper":"Grid Helper",
+        "Perspective":"Perspective",
+        "nodeNo":"Node No",
+        "memberNo":"Member No",
+        "nodeScale":"Node Scale",
+        "fixnodeScale":"Fix-node Scale",
+        "memberScale":"Member Scale",
+        "LoadScale":"Load Scale",
+        "dispScale":"dispScale",
+        "reactScale":"eactScale",
+        "forceScale":"forceScale",
+        "meshScale":"meshScale"
     }
 }

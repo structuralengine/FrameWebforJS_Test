@@ -1,3 +1,4 @@
+import { AfterViewInit } from '@angular/core';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { InputNodesService } from './input-nodes.service';
 import { DataHelperModule } from '../../../providers/data-helper.module';
@@ -10,13 +11,14 @@ import { DocLayoutService } from 'src/app/providers/doc-layout.service';
 import { Subscription } from 'rxjs';
 import { ThreeNodesService } from '../../three/geometry/three-nodes.service';
 import { TranslateService } from '@ngx-translate/core';
+import { LanguagesService } from 'src/app/providers/languages.service';
 
 @Component({
   selector: 'app-input-nodes',
   templateUrl: './input-nodes.component.html',
   styleUrls: ['./input-nodes.component.scss', '../../../app.component.scss'],
 })
-export class InputNodesComponent implements OnInit {
+export class InputNodesComponent implements OnInit, AfterViewInit {
   @ViewChild('grid') grid: SheetComponent;
 
   private dataset = [];
@@ -78,6 +80,7 @@ export class InputNodesComponent implements OnInit {
     private three: ThreeService,
     private threeNodesService : ThreeNodesService,
     private translate: TranslateService,
+    private language: LanguagesService,
     public docLayout: DocLayoutService
   ) {
     this.currentRow = null;
@@ -115,6 +118,7 @@ export class InputNodesComponent implements OnInit {
         this.grid.grid.setSelection({rowIndx: indexRow,rowIndxPage:1,colIndx:1, focus: true});
       }
     });
+    this.language.tranText();
   }
 
   test(){

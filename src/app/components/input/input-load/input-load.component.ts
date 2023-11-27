@@ -14,6 +14,7 @@ import { WaitDialogComponent } from "../../wait-dialog/wait-dialog.component";
 import { Subscription } from "rxjs";
 import { PagerService } from "../pager/pager.service";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
+import { LanguagesService } from "src/app/providers/languages.service";
 
 @Component({
   selector: "app-input-load",
@@ -714,6 +715,7 @@ export class InputLoadComponent implements OnInit, OnDestroy {
     private threeLoad: ThreeLoadService,
     private modalService: NgbModal,
     private translate: TranslateService,
+    private language: LanguagesService,
     private pagerService: PagerService, public docLayout:DocLayoutService
   ) {
 
@@ -888,6 +890,7 @@ export class InputLoadComponent implements OnInit, OnDestroy {
     this.docLayout.handleMove.subscribe(data => {
     this.options.height = data - 60;
     })
+    this.language.tranText();
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();

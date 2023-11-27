@@ -8,6 +8,7 @@ import { AppComponent } from "src/app/app.component";
 import { ThreeLoadService } from "../../three/geometry/three-load/three-load.service";
 import { TranslateService } from "@ngx-translate/core";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
+import { LanguagesService } from "src/app/providers/languages.service";
 
 @Component({
   selector: "app-input-load-name",
@@ -89,6 +90,7 @@ export class InputLoadNameComponent implements OnInit {
     private app: AppComponent,
     private helper: DataHelperModule,
     private threeload: ThreeLoadService,
+    private language: LanguagesService,
     private translate: TranslateService, public docLayout:DocLayoutService
   ) {
     this.loadData(this.ROWS_COUNT);
@@ -104,6 +106,7 @@ export class InputLoadNameComponent implements OnInit {
     this.docLayout.handleMove.subscribe(data => {
     this.options.height = data - 60;
     })
+    this.language.tranText();
   }
   // 指定行row 以降のデータを読み取る
   private loadData(row: number): void {

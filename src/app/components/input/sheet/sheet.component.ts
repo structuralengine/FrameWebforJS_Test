@@ -70,7 +70,18 @@ export class SheetComponent implements AfterViewInit, OnChanges {
 
       return true;
     };
-
+    this.options.editorKeyDown = (evt, ui) => {
+      let mov = 1;
+      if(evt.keyCode === 13) {
+        this.grid.setSelection({
+          rowIndx: ui.rowIndx + mov,
+          colIndx: 0,
+          focus: true,
+        });
+        return false;
+      }
+      return true;
+    }
     this.grid = pq.grid(this.div.nativeElement, this.options);
   }
 

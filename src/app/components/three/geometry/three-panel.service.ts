@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { LanguagesService } from 'src/app/providers/languages.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class ThreePanelService {
   private gui: any;
 
   constructor(
+    private languagesService: LanguagesService,
     private scene: SceneService,
     private node: InputNodesService,
     private panel: InputPanelService,
@@ -81,6 +83,7 @@ export class ThreePanelService {
       this.scale = value;
       this.post_gmsh();
     });
+    this.languagesService.tranText();
   }
 
   // guiを非表示にする
