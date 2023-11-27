@@ -81,8 +81,11 @@ import { ThreeComponent } from "./components/three/three.component";
 import { SceneService } from "./components/three/scene.service";
 import { InputPanelComponent } from "./components/input/input-panel/input-panel.component";
 
+import { StartMenuComponent } from "./components/start-menu/start-menu.component";
 import { PrintComponent } from "./components/print/print.component";
 import { PrintService } from "./components/print/print.service";
+import { PresetComponent } from "./components/preset/preset.component";
+import { PresetService } from "./components/preset/preset.service";
 import { PrintLayoutComponent } from "./components/print/print-layout/print-layout.component";
 import { InvoiceComponent } from "./components/print/invoice/invoice.component";
 
@@ -107,6 +110,8 @@ import { OptionalHeaderComponent } from "./components/optional-header/optional-h
 import { ActivateSessionComponent } from './components/activate-session/activate-session.component';
 import { InputRigidZoneComponent } from "./components/input/input-rigid-zone/input-rigid-zone.component";
 
+import {MatIconModule} from '@angular/material/icon'
+import { AppService } from "./app.service";
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 
@@ -149,7 +154,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
                 deps: [HttpClient],
             },
         }),
-        ScrollingModule
+        ScrollingModule,
+        MatIconModule
     ],
     declarations: [
         AppComponent,
@@ -181,7 +187,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
         ResultCombineFsecComponent,
         ThreeComponent,
         InputPanelComponent,
+        StartMenuComponent,
         PrintComponent,
+        PresetComponent,
         PrintLayoutComponent,
         InvoiceComponent,
         PagerComponent,
@@ -202,6 +210,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         InputRigidZoneComponent,
     ],
     providers: [
+        AppService,
         InputDataService,
         InputNodesService,
         InputMembersService,
@@ -216,6 +225,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         InputCombineService,
         InputPickupService,
         PrintService,
+        PresetService,
         ResultDataService,
         ResultDisgService,
         ResultReacService,

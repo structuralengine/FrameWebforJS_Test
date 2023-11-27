@@ -20,6 +20,7 @@ import { environment } from "src/environments/environment";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LanguagesService } from './providers/languages.service';
+import { AppService } from "./app.service";
 
 @Component({
   selector: "app-root",
@@ -48,9 +49,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     private InputData: InputDataService,
     private http: HttpClient,
     public user: UserInfoService,
-    public language: LanguagesService
+    public language: LanguagesService,
+    public appService: AppService
   ) {
     this.translate.setDefaultLang("ja");
+    if(window.sessionStorage.getItem("openStart") === null) window.sessionStorage.setItem("openStart", "1")
   }
   ngAfterViewInit(): void {
     this.language.tranText();
@@ -68,23 +71,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public dialogClose(): void {
-    this.helper.isContentsDailogShow = false;
-    this.addHiddenFromElements();
-
-    // 印刷ウィンドウの変数をリセット
-    this.resetPrintdialog();
-  }
-
-  // 印刷ウィンドウの変数をリセット
-  public resetPrintdialog(): void {
-    for (let i = 0; i < this.printService.printTargetValues.length; i++) {
-      this.printService.printTargetValues[i].value = false;
-    }
-
-    this.printService.resetPrintOption(); // いずれ消したい
-    //this.printService.selectPrintCase('');
-    this.printService.clearPrintCase(); // いずれ消したい
-
+    this.appService.dialogClose();
   }
 
   public contentsDailogShow(id): void {
@@ -128,25 +115,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.removeHiddenFromClass("#my_dock_manager");
     this.removeHiddenFromClass(".dialog-floating");
   }
-  public addHiddenFromElements(): void {
-    this.addHiddenFromClass(".panel-element-content-container");
-    this.addHiddenFromClass("#my_dock_manager");
-    this.addHiddenFromClass(".dialog-floating");
-  }
-
   private removeHiddenFromClass(selector: string): void {
     const element = document.querySelector(selector);
     if (element) {
       element.classList.remove("hidden");
     }
   }
-  private addHiddenFromClass(selector: string): void {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.classList.add("hidden");
-    }
-  }
-
   // フローティングウィンドウの位置
   public dragPosition = { x: 0, y: 0 };
   public changePosition() {

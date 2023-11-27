@@ -56,7 +56,9 @@
         "today_used_point": "今天使用的积分",
         "back": "后退",
         "save": "节省",
-        "update_success": "更新成功"
+        "update_success": "更新成功",
+        "select_preset": "选择预置",
+        "preset": "预设"
     },
     "input": {
         "input-fix-node": {
@@ -418,6 +420,12 @@
     "message":{
         "mes": "The elastic modulus in the material menu is too small. Please check the units."
     },
+    "preset":{
+        "ramen-viaduct" : "架构",
+        "concrete-t-beam-bridge" : "T 梁桥",
+        "u-shaped-retaining-wall" : "U 型挡土墙",
+        "portal-bracing" : "龙门式桥墩"
+          },
     "control":{
         "3D":"3D",
         "GridHelper":"网格显示",

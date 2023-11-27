@@ -57,7 +57,9 @@
         "NewWindow":"New window",
         "back": "Back",
         "save": "Save",
-        "update_success": "Update success!!"
+        "update_success": "Update success!!",
+        "select_preset": "Select Preset",
+        "preset": "Preset"
     },
     "input": {
         "input-fix-node": {
@@ -419,6 +421,12 @@
     },
     "message":{
         "mes": "The elastic modulus in the material menu is too small. Please check the units."
+    },
+    "preset":{
+        "ramen-viaduct" : "Ramen viaduct",
+        "concrete-t-beam-bridge" : "Concrete T-beam bridge",
+        "u-shaped-retaining-wall" : "U-shaped retaining wall",
+        "portal-bracing" : "Portal bracing"
     },
     "control":{
         "3D":"3D",
