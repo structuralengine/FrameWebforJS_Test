@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
 import { PagerService } from "../pager/pager.service";
 import { DocLayoutService } from "src/app/providers/doc-layout.service";
 import { ThreeFixNodeService } from "../../three/geometry/three-fix-node.service";
+import { LanguagesService } from "src/app/providers/languages.service";
 
 @Component({
   selector: "app-input-fix-node",
@@ -159,6 +160,7 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private threeFixNodeService: ThreeFixNodeService,
     private pagerService: PagerService,
+    private language: LanguagesService,
     public docLayout: DocLayoutService
   ) {
     this.currentRow = null;
@@ -211,6 +213,7 @@ export class InputFixNodeComponent implements OnInit, OnDestroy {
         });
       }
     });
+    this.language.tranText();
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();

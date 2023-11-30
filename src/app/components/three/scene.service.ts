@@ -1,3 +1,4 @@
+import { LanguagesService } from 'src/app/providers/languages.service';
 import { Injectable,ElementRef } from "@angular/core";
 import * as THREE from "three";
 import { ThreeComponent } from "./three.component";
@@ -45,7 +46,9 @@ export class SceneService {
 
   // 初期化
   public constructor(
-    private helper: DataHelperModule) {
+    private helper: DataHelperModule,
+    private language: LanguagesService
+    ) {
 
     // シーンを作成
     this.scene = new THREE.Scene();
@@ -126,13 +129,12 @@ export class SceneService {
     this.gui.add(this.params, "Perspective").onChange((value) => {
         this.OrthographicCamera_onChange(value);
     });
-
+   
     // 再描画するボタンの登録
     // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
 
     // gui はデフォルトで、展開状態にしておく
     this.gui.open();
-
     // コントロール
     this.addControls();
 
