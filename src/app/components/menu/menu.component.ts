@@ -360,9 +360,9 @@ export class MenuComponent implements OnInit {
     this.three.ClearData();
     // this.countArea.clear();
     const modalRef = this.modalService.open(WaitDialogComponent);
-    this.http.get('./assets/preset/サンプル（ラーメン高架橋）.json', {responseType: 'text'}).subscribe(text => {
-      this.menuService.fileName = 'サンプル（ラーメン高架橋）.json';
-      this.three.fileName = 'サンプル（ラーメン高架橋）.json';
+    this.http.get('./assets/preset/サンプル（門型橋脚）.json', {responseType: 'text'}).subscribe(text => {
+      this.menuService.fileName = 'サンプル（門型橋脚）.json';
+      this.three.fileName = 'サンプル（門型橋脚）.json';
       this.printCustomFsecService.flg = undefined;
       this.ResultData.clear(); // 解析結果を削除
       const old = this.helper.dimension;
