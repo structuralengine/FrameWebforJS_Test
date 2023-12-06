@@ -121,73 +121,157 @@ body {
     background-color: #669987;
   }
 }
+.btn-group.toggled {
+  .btn-wrap {
+    // position: relative;
+    display: flex;
+    flex-direction: row;
 
-.btn-wrap {
-  position: relative;
-  .explain-area {
-    position: absolute;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 1s cubic-bezier(0.075, 0.82, 0.165, 1),
-      visibility 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-    padding: 14px 18px;
-    top: -10px;
-    right: -214px;
-    color: var(--text_main);
-    background-color: var(--base);
-    transition-delay: 0s;
-    text-align: left;
-    width: 210px;
-    border-radius: 4px;
-    .item-name {
-      font-size: 14px;
-      font-weight: 900;
-    }
-    .item-description {
-      margin-top: 8px;
-      font-size: 11px;
-      font-weight: 900;
-    }
-    .btn {
-      margin-top: 8px;
-      padding: 7px 8px;
-      border: 1px solid var(--text_main);
-      font-size: 12px;
-      font-weight: 900;
-      &:hover {
-        background: var(--text_main);
-        color: var(--primary);
-        opacity: 0.9;
-      }
-    }
-    &::before {
-      content: "";
+    .explain-area {
       position: absolute;
       opacity: 0;
       visibility: hidden;
       transition: opacity 1s cubic-bezier(0.075, 0.82, 0.165, 1),
         visibility 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-      top: 20px;
-      left: -7px;
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
-      border-right: 8px solid var(--base);
-    }
-  }
-  &:hover {
-    .explain-area {
-      opacity: 1;
-      visibility: visible;
-      transition-delay: 0.6s;
+      padding: 14px 18px;
+      right: -214px;
+      color: var(--text_main);
+      background-color: var(--base);
+      transition-delay: 0s;
+      text-align: left;
+      width: 210px;
+      border-radius: 4px;
+
+      .item-name {
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .item-description {
+        margin-top: 8px;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .btn {
+        margin-top: 8px;
+        padding: 7px 8px;
+        border: 1px solid var(--text_main);
+        font-size: 12px;
+        font-weight: 900;
+
+        &:hover {
+          background: var(--text_main);
+          color: var(--primary);
+          opacity: 0.9;
+        }
+      }
+
       &::before {
+        content: "";
+        position: absolute;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 1s cubic-bezier(0.075, 0.82, 0.165, 1),
+          visibility 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+        top: 10px;
+        left: -7px;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-right: 8px solid var(--base);
+      }
+    }
+
+    &:hover {
+      .explain-area {
         opacity: 1;
         visibility: visible;
         transition-delay: 0.6s;
+
+        &::before {
+          opacity: 1;
+          visibility: visible;
+          transition-delay: 0.6s;
+        }
       }
     }
   }
 }
+.btn-group:not(.toggled) {
+  .btn-wrap {
+    display: flex;
+    flex-direction: row;
 
+    .explain-area {
+      position: absolute;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s cubic-bezier(0.075, 0.82, 0.165, 1),
+        visibility 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+      padding: 14px 18px;
+      right: -214px;
+      color: var(--text_main);
+      background-color: var(--base);
+      transition-delay: 0s;
+      text-align: left;
+      width: 210px;
+      border-radius: 4px;
+
+      .item-name {
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .item-description {
+        margin-top: 8px;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .btn {
+        margin-top: 8px;
+        padding: 7px 8px;
+        border: 1px solid var(--text_main);
+        font-size: 12px;
+        font-weight: 900;
+
+        &:hover {
+          background: var(--text_main);
+          color: var(--primary);
+          opacity: 0.9;
+        }
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 1s cubic-bezier(0.075, 0.82, 0.165, 1),
+          visibility 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+        top: 10px;
+        left: -7px;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-right: 8px solid var(--base);
+      }
+    }
+
+    &:hover {
+      .explain-area {
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0.6s;
+
+        &::before {
+          opacity: 1;
+          visibility: visible;
+          transition-delay: 0.6s;
+        }
+      }
+    }
+  }
+}
 .btn-blue {
   color: #333333;
 }
