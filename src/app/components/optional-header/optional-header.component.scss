@@ -6,7 +6,7 @@
   align-items: center;
   background: rgba(0, 0, 0, 0.1);
   .pagerWrap {
-    width: 350px;
+    width: 380px;
     display: flex;
     gap: 16px;
     height: 100%;
@@ -19,6 +19,29 @@
   .upDownArea {
     display: flex;
     flex-direction: column;
+  }
+  .buttonSelect{
+    display: flex;
+    flex-direction: row;
+    gap:16px;
+    button{
+      height: 27px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      &.active{
+        background-color: #5095fc;
+      }
+      span{
+        color: #fff;
+        font-size: 12px;
+      }
+    }
+  }
+  .noActive{
+    opacity: 0.6;
+    pointer-events: none;
   }
   button {
     display: inherit;

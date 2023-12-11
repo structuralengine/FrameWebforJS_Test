@@ -1,24 +1,9 @@
 <div class="pagerArea">
   <div class="pagerWrap" [ngClass]="{ left: showResultComponent || showLoadComponent }">
     <div class="btn-group" *ngIf="showLoadComponent && helper.isContentsDailogShow">
-      <div class="upDownArea">
-        <button (click)="previousLoadPage()" [disabled]="selectedLoadPage == loadPages[0]">
-          <img src="./assets/icons/icon-vector.svg" class="top" />
-        </button>
-        <button (click)="nextLoadPage()" [disabled]="selectedLoadPage == loadPages[loadPages.length - 1]">
-          <img src="./assets/icons/icon-vector.svg" class="bottom" />
-        </button>
-      </div>
-      <div class="selectArea">
-        <img src="./assets/icons/icon-list.svg" />
-        <select [(ngModel)]="selectedLink" (change)="onLinkChange($event.target['value'])">
-          <option [value]="'/input-load-name'">
-            &nbsp;&nbsp;&nbsp;<p translate>input.input-load-name.load_Name</p>&nbsp;&nbsp;&nbsp;
-          </option>
-          <option [value]="'/input-loads'">
-            &nbsp;&nbsp;&nbsp;<p translate>input.input-load-name.loadStrength</p>&nbsp;&nbsp;&nbsp;
-          </option>
-        </select>
+      <div class="buttonSelect" >
+            <button [ngClass]="{'active':activeLoadName}" (click)="previousLoadPage()"><span translate>input.input-load-name.load_Name</span></button>
+            <button  [ngClass]="{'active':activeLoadStrength}" (click)="nextLoadPage()" ><span translate>input.input-load-name.loadStrength</span></button>
       </div>
     </div>
     <div class="btn-group" *ngIf="showDefineComponent && helper.isContentsDailogShow">
@@ -72,7 +57,9 @@
 
     <app-pager-direction *ngIf="showNotBasicComponent && helper.isContentsDailogShow"></app-pager-direction>
 
+   <div [ngClass]="{'noActive':url==='/input-load-name'} ">
     <app-pager *ngIf="showPagerComponent && helper.isContentsDailogShow"></app-pager>
+   </div>
     <div class="btn-group" *ngIf="showMemberComponent && helper.isContentsDailogShow">
       <div class="upDownArea">
         <button (click)="previousMemberPage()" [disabled]="selectedMemberPage == memberPages[0]">
