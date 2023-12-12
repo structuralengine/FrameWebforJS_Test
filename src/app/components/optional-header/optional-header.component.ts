@@ -195,6 +195,11 @@ export class OptionalHeaderComponent implements OnInit {
     this.onLinkChange(this.selectedDefineLink);
   }
 
+  handleDefinePage(select: any) {
+    this.selectedDefineLink = select;
+    this.onLinkChange(this.selectedDefineLink);
+  }
+
   previousResultPage() {
     this.selectedResultPage--;
     const resultURL = this.selectedUrlChange();
@@ -203,6 +208,12 @@ export class OptionalHeaderComponent implements OnInit {
 
   nextResultPage() {
     this.selectedResultPage++;
+    const resultURL = this.selectedUrlChange();
+    this.router.navigate([resultURL[this.selectedResultPage - 1]]);
+  }
+
+  handleResultPage(select:any){
+    this.selectedResultPage= select
     const resultURL = this.selectedUrlChange();
     this.router.navigate([resultURL[this.selectedResultPage - 1]]);
   }
