@@ -5,66 +5,80 @@
   height: 40px;
   align-items: center;
   background: rgba(0, 0, 0, 0.1);
+
   .pagerWrap {
-    width: 820px;
+    // width: 820px;
     display: flex;
     gap: 16px;
     height: 100%;
     align-items: center;
     justify-content: center;
+
     &.left {
       justify-content: flex-start;
     }
   }
+
   .upDownArea {
     display: flex;
     flex-direction: column;
   }
-  .buttonSelect{
+
+  .buttonSelect {
     display: flex;
     flex-direction: row;
-    gap:16px;
-    button{
+    gap: 16px;
+
+    button {
       height: 27px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 4px;
-      &.active{
+
+      &.active {
         background-color: #5095fc;
       }
-      span{
+
+      span {
         color: #fff;
         font-size: 12px;
       }
     }
   }
-  .noActive{
+
+  .noActive {
     opacity: 0.6;
     pointer-events: none;
   }
+
   button {
     display: inherit;
     margin: 0;
     border: none;
     padding: 3px 9px;
     background-color: #222222;
+
     &:nth-child(1) {
       border-radius: 2px 0 0 0;
       margin-bottom: 1px;
     }
+
     &:nth-child(2) {
       border-radius: 0 0 0 2px;
     }
+
     &:disabled {
       img {
         opacity: 0.3;
       }
     }
   }
+
   .bottom {
     transform: rotate(180deg);
   }
+
   .selectArea {
     margin-left: 1px;
     padding: 0 8px;
@@ -73,6 +87,7 @@
     height: 27px;
     display: flex;
     align-items: center;
+
     select {
       border: none;
       background-color: #222222;
@@ -98,13 +113,17 @@
   height: 27px;
   display: flex;
   align-items: center;
+
   &.control-active {
     color: #5095fc;
+
     path {
       fill: #5095fc;
     }
   }
+
   cursor: pointer;
+
   span {
     margin-left: 4px;
   }
