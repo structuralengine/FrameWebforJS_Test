@@ -1,4 +1,4 @@
-<div class="pagerArea">
+<div class="pagerArea" [ngClass]="{ leftArea: showResultComponent }">
   <div class="pagerWrap" [ngClass]="{ left: showResultComponent || showLoadComponent }">
     <div class="btn-group" *ngIf="showLoadComponent && helper.isContentsDailogShow">
       <div class="buttonSelect" >
