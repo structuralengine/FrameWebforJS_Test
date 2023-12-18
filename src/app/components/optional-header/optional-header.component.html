@@ -1,4 +1,4 @@
-<div class="pagerArea">
+<div class="pagerArea" [ngClass]="{ leftArea: showResultComponent }">
   <div class="pagerWrap" [ngClass]="{ left: showResultComponent || showLoadComponent }">
     <div class="btn-group" *ngIf="showLoadComponent && helper.isContentsDailogShow">
       <div class="buttonSelect" >
@@ -7,51 +7,17 @@
       </div>
     </div>
     <div class="btn-group" *ngIf="showDefineComponent && helper.isContentsDailogShow">
-      <div class="upDownArea">
-        <button (click)="previousDefinePage()" [disabled]="selectedDefinePage == definePages[0]">
-          <img src="./assets/icons/icon-vector.svg" class="top" />
-        </button>
-        <button (click)="nextDefinePage()" [disabled]="selectedDefinePage == definePages[definePages.length - 1]">
-          <img src="./assets/icons/icon-vector.svg" class="bottom" />
-        </button>
-      </div>
-      <div class="selectArea">
-        <img src="./assets/icons/icon-list.svg" />
-        <select [(ngModel)]="selectedDefineLink" (change)="onLinkChange($event.target['value'])">
-          <option [value]="'/input-define'">
-            &nbsp;&nbsp;&nbsp;<p translate>input.input-define.DEFINE</p>&nbsp;&nbsp;&nbsp;
-          </option>
-          <option [value]="'/input-combine'">
-            &nbsp;&nbsp;&nbsp;<p translate>input.input-define.COMBINE</p>&nbsp;&nbsp;&nbsp;
-          </option>
-          <option [value]="'/input-pickup'">
-            &nbsp;&nbsp;&nbsp;<p translate>input.input-define.PICKUP</p>&nbsp;&nbsp;&nbsp;
-          </option>
-        </select>
+      <div class="buttonSelect">
+        <button [ngClass]="{'active':selectedDefineLink === '/input-define'}" (click)="handleDefinePage('/input-define')"><span translate>input.input-define.DEFINE</span></button>
+        <button [ngClass]="{'active':selectedDefineLink === '/input-combine'}" (click)="handleDefinePage('/input-combine')" ><span translate>input.input-define.COMBINE</span></button>
+        <button [ngClass]="{'active':selectedDefineLink === '/input-pickup'}" (click)="handleDefinePage('/input-pickup')" ><span translate>input.input-define.PICKUP</span></button>
       </div>
     </div>
     <div class="btn-group" *ngIf="showResultComponent && helper.isContentsDailogShow">
-      <div class="upDownArea">
-        <button (click)="previousResultPage()" [disabled]="selectedResultPage == resultPages[0]">
-          <img src="./assets/icons/icon-vector.svg" class="top" />
-        </button>
-        <button (click)="nextResultPage()" [disabled]="selectedResultPage == resultPages[resultPages.length - 1]">
-          <img src="./assets/icons/icon-vector.svg" class="bottom" />
-        </button>
-      </div>
-      <div class="selectArea">
-        <img src="./assets/icons/icon-list.svg" />
-        <select [(ngModel)]="selectedResultPage" (change)="onResultLinkChange($event.target['value'])">
-          <option [value]="1">
-            &nbsp;&nbsp;&nbsp;<p translate>result.result-disg.basicCase</p>&nbsp;&nbsp;&nbsp;
-          </option>
-          <option [value]="2">
-            &nbsp;&nbsp;&nbsp;<p translate>result.COMBINE</p>&nbsp;&nbsp;&nbsp;
-          </option>
-          <option [value]="3">
-            &nbsp;&nbsp;&nbsp;<p translate>result.PICKUP</p>&nbsp;&nbsp;&nbsp;
-          </option>
-        </select>
+      <div class="buttonSelect">
+        <button [ngClass]="{'active':selectedResultPage === 1}" (click)="handleResultPage(1)"><span translate>result.result-disg.basicCase</span></button>
+        <button [ngClass]="{'active':selectedResultPage === 2}" (click)="handleResultPage(2)" ><span translate>result.COMBINE</span></button>
+        <button [ngClass]="{'active':selectedResultPage === 3}" (click)="handleResultPage(3)" ><span translate>result.PICKUP</span></button>
       </div>
     </div>
 
