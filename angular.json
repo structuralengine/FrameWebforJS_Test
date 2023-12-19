@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "FrameWebforJS": {
+    "FrameWebforJS_Test": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -100,11 +100,11 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "FrameWebforJS:build"
+            "browserTarget": "FrameWebforJS_Test:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "FrameWebforJS:build:production"
+              "browserTarget": "FrameWebforJS_Test:build:production"
             }
           }
         },
@@ -120,7 +120,7 @@
               },
               "replaceDuplicatePlugins": true
             },
-            "browserTarget": "FrameWebforJS:build"
+            "browserTarget": "FrameWebforJS_Test:build"
           }
         },
         "test": {
@@ -157,11 +157,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "FrameWebforJS:serve"
+            "devServerTarget": "FrameWebforJS_Test:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "FrameWebforJS:serve:production"
+              "devServerTarget": "FrameWebforJS_Test:serve:production"
             }
           }
         }
