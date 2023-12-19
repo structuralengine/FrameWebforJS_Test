@@ -1,7 +1,7 @@
 {
   "name": "frame-web-for-js",
 
-  "version": "2.2.3",
+  "version": "2.2.4",
 
 
   "scripts": {
@@ -20,7 +20,7 @@
     "filecopy1": "node -e \"require('fs').copyFileSync('dev-app-update.yml', 'dist/dev-app-update.yml')\"",
     "filecopy2": "node -e \"require('fs').copyFileSync('app-update.yml', 'dist/app-update.yml')\""
   },
-  "description": "FrameWebforJS",
+  "description": "FrameWebforJS_Test",
   "author": {
     "name": "MALME INC.",
     "email": "support@structuralengine.com"
