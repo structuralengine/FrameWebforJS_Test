@@ -15,7 +15,7 @@
     <div class="btn-group" [ngClass]="{ toggled: isToggled }">
       <app-max-min style="position: absolute;right: -8px;top: 8px;white-space: nowrap;"></app-max-min>
       <app-color-palette style="position: absolute;right: -8px;top: 5px;white-space: nowrap;"></app-color-palette>
-      <nav class="nav-left-body-container">
+      <nav class="nav-left-body-container" (scroll)="onScroll($event)">
         <div class="input-area">
           <a (click)="calcrate()" class="btn-md btn-calc">
             <div class="icon-calc">
@@ -71,7 +71,7 @@
               </div>
               <p translate>app.node</p>
             </a>
-            <div class="explain-area">
+            <div class="explain-area" [style.transform]="translateY">
               <div class="item-name" translate>app.node</div>
               <div class="item-description" *ngIf="helper.dimension == 3" translate>
                 app.description.node-3D
@@ -116,7 +116,7 @@
               </div>
               <p translate>app.fixNode</p>
             </a>
-            <div class="explain-area">
+            <div class="explain-area" [style.transform]="translateY">
               <div class="item-name" translate>app.fixNode</div>
               <div class="item-description" translate>
                 app.description.fixNode
@@ -184,7 +184,7 @@
               </div>
               <p translate>app.member</p>
             </a>
-            <div class="explain-area">
+            <div class="explain-area" [style.transform]="translateY">
               <div class="item-name" translate>app.member</div>
               <div class="item-description" translate>
                 app.description.member
@@ -233,7 +233,7 @@
               </div>
               <p translate>app.element</p>
             </a>
-            <div class="explain-area">
+            <div class="explain-area" [style.transform]="translateY">
               <div class="item-name" translate>app.element</div>
               <div class="item-description" translate>
                 app.description.element
@@ -274,7 +274,7 @@
                 </div>
                 <p translate>app.panel</p>
               </a>
-              <div class="explain-area">
+              <div class="explain-area" [style.transform]="translateY">
                 <div class="item-name" translate>app.panel</div>
                 <div class="item-description" translate>
                   app.description.panel
@@ -396,7 +396,7 @@
               </div>
               <p translate>app.noticePoint</p>
             </a>
-            <div class="explain-area">
+            <div class="explain-area" [style.transform]="translateY">
               <div class="item-name" translate>app.noticePoint</div>
               <div class="item-description" translate>
                 app.description.noticePoint
@@ -431,7 +431,7 @@
               </div>
               <p translate>app.fixMember</p>
             </a>
-            <div class="explain-area">
+            <div class="explain-area" [style.transform]="translateY">
               <div class="item-name" translate>app.fixMember</div>
               <div class="item-description" translate>
                 app.description.fixMember
@@ -473,7 +473,7 @@
               </div>
               <p translate>app.loadName</p>
             </a>
-            <div class="explain-area">
+            <div class="explain-area" [style.transform]="translateY">
               <div class="item-name" translate>app.loadName</div>
               <div class="item-description" translate>
                 app.description.loadName
@@ -529,7 +529,7 @@
               </div>
               <p translate>app.inputDefine</p>
             </a>
-            <div class="explain-area">
+            <div class="explain-area" [style.transform]="translateY">
               <div class="item-name" translate>app.inputDefine</div>
               <div class="item-description" translate>
                 app.description.inputDefine

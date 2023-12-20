@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, ElementRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { UserInfoService } from "./providers/user-info.service";
 import { ResultDataService } from "./providers/result-data.service";
@@ -30,7 +30,7 @@ import { AppService } from "./app.service";
 export class AppComponent implements OnInit, AfterViewInit {
   @Output() pagerEvent = new EventEmitter<number>();
   @ViewChild("grid") grid: SheetComponent;
-  
+  translateY: string = "translateY(0)";
   btnReac!: string;
   isToggled: Boolean = true;
   eventFromChild: number;
@@ -50,7 +50,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private http: HttpClient,
     public user: UserInfoService,
     public language: LanguagesService,
-    public appService: AppService
+    public appService: AppService,
+    private elem: ElementRef
   ) {
     this.translate.setDefaultLang("ja");
     if(window.sessionStorage.getItem("openStart") === null) window.sessionStorage.setItem("openStart", "1")
@@ -61,6 +62,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.helper.isContentsDailogShow = false;
+  }
+
+  onScroll(event): void {
+    let scrollTop = event.srcElement.scrollTop;
+    this.translateY = "translateY(-" + scrollTop + "px)";
+    // Interpret the scroll event
+    // Do stuff on inner div scroll
   }
 
   // 計算結果表示ボタンを無効にする
