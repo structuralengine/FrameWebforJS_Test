@@ -40,8 +40,25 @@ app.whenReady().then(async () => {
   if (!isDev) {
     // 起動時に1回だけ
     log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
-
     await autoUpdater.checkForUpdates();
+    autoUpdater.on('update-available', () => {
+      autoUpdater.downloadUpdate();
+    });
+    
+    //when update downloaded, reboot to install
+    autoUpdater.on('update-downloaded', function (e) {
+      let langText = require(`../assets/i18n/${locale}.json`)
+      let choice = dialog.showMessageBoxSync(this,
+        {
+          type: 'question',
+          buttons: [langText.modal.reboot, langText.modal.cancel],
+          title: langText.modal.updateTitle,
+          message: langText.modal.updateMessage,
+        });
+      if (choice == 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
   }
 });
 
