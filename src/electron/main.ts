@@ -27,7 +27,7 @@ async function createWindow() {
         title: langText.window.closeTitle,
         message: langText.window.closeMessage,
       });
-    if (choice==1) {
+    if (choice == 1) {
       e.preventDefault();
     }
   });
@@ -46,7 +46,25 @@ app.whenReady().then(async () => {
 });
 
 autoUpdater.checkForUpdatesAndNotify();
-ipcMain.on("newWindow", async() => await createWindow());
+autoUpdater.on('update-available', () => {
+  autoUpdater.downloadUpdate();
+});
+
+//when update downloaded, reboot to install
+autoUpdater.on('update-downloaded', function (e) {
+  let langText = require(`../assets/i18n/${locale}.json`)
+  let choice = dialog.showMessageBoxSync(this,
+    {
+      type: 'question',
+      buttons: [langText.modal.reboot, langText.modal.cancel],
+      title: langText.modal.updateTitle,
+      message: langText.modal.updateMessage,
+    });
+  if (choice == 0) {
+    autoUpdater.quitAndInstall();
+  }
+});
+ipcMain.on("newWindow", async () => await createWindow());
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
 ipcMain.on('open', (event: Electron.IpcMainEvent) => {
@@ -136,5 +154,5 @@ ipcMain.on(
 
 ipcMain.on(
   'change-lang', (event, lang) => {
-  locale = lang;
-})
+    locale = lang;
+  })
