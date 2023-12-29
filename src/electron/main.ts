@@ -43,11 +43,13 @@ app.whenReady().then(async () => {
     await autoUpdater.checkForUpdates();
     autoUpdater.on('update-available', () => {
       autoUpdater.downloadUpdate();
+      window.alert("dev Tupdate-available");
     });
     
     //when update downloaded, reboot to install
     autoUpdater.on('update-downloaded', function (e) {
       let langText = require(`../assets/i18n/${locale}.json`)
+      window.alert("dev Tupdate-download");
       let choice = dialog.showMessageBoxSync(this,
         {
           type: 'question',
@@ -62,15 +64,16 @@ app.whenReady().then(async () => {
   }
 });
 
-autoUpdater.checkForUpdatesAndNotify();
 autoUpdater.on('update-available', () => {
+  window.alert("Tupdate-available");
   autoUpdater.downloadUpdate();
 });
 
 //when update downloaded, reboot to install
 autoUpdater.on('update-downloaded', function (e) {
   let langText = require(`../assets/i18n/${locale}.json`)
-  let choice = dialog.showMessageBoxSync(this,
+  window.alert("Test thôi");
+  let choice = dialog.showMessageBoxSync(mainWindow,
     {
       type: 'question',
       buttons: [langText.modal.reboot, langText.modal.cancel],
@@ -81,6 +84,10 @@ autoUpdater.on('update-downloaded', function (e) {
     autoUpdater.quitAndInstall();
   }
 });
+ipcMain.on("ready", () => {
+  setInterval(() => autoUpdater.checkForUpdatesAndNotify(), 1000*60*10)
+})
+//autoUpdater.checkForUpdatesAndNotify();
 ipcMain.on("newWindow", async () => await createWindow());
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
