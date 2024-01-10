@@ -10,6 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { SceneService } from "../three/scene.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { WaitDialogComponent } from "../wait-dialog/wait-dialog.component";
+import internal from "stream";
 
 @Injectable({
   providedIn: "root",
@@ -55,7 +56,7 @@ export class MenuService {
     const modalRef = this.modalService.open(WaitDialogComponent);
 
     const file = evt.target.files[0];
-    this.fileName = file.name;
+    this.fileName = this.shortenFilename(file.name) ;
     this.three.fileName = file.name;
     evt.target.value = "";
     this.fileToText(file)
@@ -117,5 +118,9 @@ export class MenuService {
     }
     // this.app.dialogClose(); // 現在表示中の画面を閉じる
     this.scene.changeGui(this.helper.dimension);
+  }
+
+  public shortenFilename(filename: string, maxLength: number = 25) {
+    return filename.length <= maxLength ? filename : `${filename.slice(0, maxLength-10)}...${filename.slice(-10)}`;
   }
 }
