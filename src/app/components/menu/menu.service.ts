@@ -17,6 +17,7 @@ import internal from "stream";
 })
 export class MenuService {
   public fileName = "";
+  public shortName = "";
   constructor(
     private helper: DataHelperModule,
     public language: LanguagesService,
@@ -31,6 +32,7 @@ export class MenuService {
     private modalService: NgbModal,
   ) {
     this.fileName = '';
+    this.shortName = this.fileName;
   }
 
   async renew(): Promise<void> {
@@ -56,8 +58,10 @@ export class MenuService {
     const modalRef = this.modalService.open(WaitDialogComponent);
 
     const file = evt.target.files[0];
-    this.fileName = this.shortenFilename(file.name) ;
+    this.fileName =file.name;
     this.three.fileName = file.name;
+    this.shortName = this.shortenFilename(this.fileName)
+
     evt.target.value = "";
     this.fileToText(file)
       .then((text) => {
