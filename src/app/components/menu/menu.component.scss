@@ -27,6 +27,15 @@ $border-color: #42c1ca;
     padding-right: 12px;
 }
 
+.file-layout {
+    display: flex;
+    gap: 4px;
+    width: 70%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
 .title-and-menu {
     position: relative;
     display: flex;
@@ -112,6 +121,7 @@ i.fas {
         margin-right: 4px;
     }
 }
+
 
 .login-item {
     color: #fff;

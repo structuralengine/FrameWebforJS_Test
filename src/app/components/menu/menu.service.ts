@@ -120,8 +120,13 @@ export class MenuService {
     this.scene.changeGui(this.helper.dimension);
   }
 
-  public shortenFilename(filename: string, maxLength: number = 25) {
+  public getFileNameFromUrl(url) {
+    return url.replace(/^.*[\\/]/, '')
+  }
+
+  public shortenFilename(filename: string, maxLength: number = 30) {
     let tempName = filename;
-    return tempName.length <= maxLength ? tempName : `${tempName.slice(0, maxLength-10)}...${tempName.slice(-10)}`;
+    tempName = this.getFileNameFromUrl(tempName);
+    return tempName.length <= maxLength ? tempName : '...'+ tempName.slice(tempName.length - maxLength);
   }
 }
