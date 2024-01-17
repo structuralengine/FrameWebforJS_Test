@@ -27,6 +27,7 @@ export class PrintService {
   public pickupJson: any;
 
   public flg: number = -1; // リファクタリング前の変数をズルズル使っている感じがするので直したほうがいいか？
+  public arrFlg:any=[0];
 
   public print_target: any; // Three.js 印刷 の図のデータ
   public printOption = [];
@@ -177,6 +178,7 @@ export class PrintService {
   //
   // すごく付け焼き刃な対応があるのでいずれ直したい。
   public selectRadio(id: number) {
+    this.arrFlg= new Array();
     var e = document.getElementById("printCus6");
     if (11 != id && null !== e) {
       e.setAttribute("checked", null);
@@ -197,6 +199,45 @@ export class PrintService {
       }
     }
 
+    this.priCount = 0;
+
+    this.newPrintJson();
+  }
+
+  public selectCheckbox(id: number) {
+    this.flg= -1;
+    var e = document.getElementById("printCus6");
+    if (11 != id && null !== e) {
+      e.setAttribute("checked", null);
+    }
+  if(this.arrFlg.length===0){
+    this.arrFlg.push(id)
+  }else{
+    let index=  this.arrFlg.findIndex(e => e===id);
+    if(index === -1){
+      this.arrFlg.push(id)
+    }else{
+      this.arrFlg.splice(index, 1);
+    }
+  }
+  if(this.arrFlg.length===1){
+    this.flg= this.arrFlg[0]
+  }
+    this.printOption = new Array();
+    this.printCase = "";
+    for (const key of Object.keys(this.optionList)) {
+      this.optionList[key].value = false;
+      for (const flgId of this.arrFlg){
+        if (this.optionList[key].id == flgId) {
+          this.optionList[key].value = true;
+          // this.flg = id;
+          // this.selectedIndex = this.optionList[key].id;
+          if ([10, 11, 12, 13, 14, 15, 16].includes(this.optionList[key].id)) {
+            this.printCase = key;
+          }
+        }
+      }
+    }
     this.priCount = 0;
 
     this.newPrintJson();
@@ -503,6 +544,9 @@ export class PrintService {
           kk = item.m === "" ? kk : Number(item.m) - 1;
           // 指定の部材番号データのみ
           if ('check' in choiceMember[kk]) {
+            if(this.arrFlg.length >1){
+              choiceMember[kk].check = true
+            }
             if (choiceMember[kk].check === false) {
               continue;
             }
@@ -522,6 +566,9 @@ export class PrintService {
               kk = item.m === "" ? kk : Number(item.m) - 1;
               // 指定の部材番号データのみ
               if ('check' in choiceMember[kk]) {
+                if(this.arrFlg.length >1){
+                  choiceMember[kk].check = true
+                }
                 if (choiceMember[kk].check === false) {
                   continue;
                 }
@@ -571,10 +618,13 @@ export class PrintService {
 
           // LL,combine,Pickup用，反力か変位かをデータ形式から判断する
           // dx_maxがある時：変位量データ
-          const axis = (key0 === "dx_max")
+          let axis = (key0 === "dx_max")
             ? this.customDisg.disgEditable
             : this.customReac.reacEditable;
 
+          if(this.arrFlg.length > 1){
+            axis[list]= true
+          }
           // 軸方向にチェックがついていた時
           if (axis[list] === true) {
             this.priCount += 2;

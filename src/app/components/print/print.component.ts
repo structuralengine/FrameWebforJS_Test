@@ -44,8 +44,9 @@ export class PrintComponent implements OnInit, OnDestroy {
 
   private a: boolean;
   ngOnInit() {
-    this.printService.selectRadio(0);
-    this.printService.flg = 0;
+    // this.printService.selectRadio(0);
+    // this.printService.flg = 0;
+    this.printService.arrFlg=[0]
     this.id = document.getElementById("printButton");
     this.a = this.max_min.visible;
     this.max_min.visible = false;
@@ -155,7 +156,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         for (var key of ["node", "member", "dimension", "language"]) {
           json[key] = this.printService.json[key];
         }
-
+       
         // 印刷ケースを選択 ここから
         if (this.three.mode == "fsec") {
           json["load"] = this.printService.json["load"];
