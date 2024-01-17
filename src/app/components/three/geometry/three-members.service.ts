@@ -67,7 +67,6 @@ export class ThreeMembersService {
         mesh.getObjectByName("font").visible = value;
       }
       this.txtVisible = value;
-      console.log(this.txtVisible,"value");
       this.scene.render();
     });
     this.languagesService.tranText();
