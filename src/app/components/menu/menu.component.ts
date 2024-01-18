@@ -74,6 +74,7 @@ export class MenuComponent implements OnInit {
   async ngOnInit() {
     this.menuService.fileName = "";
     this.three.fileName = "";
+
     this.helper.isContentsDailogShow = false;
     this.menuService.setDimension(2);
     const isLoggedIn = await this.keycloak.isLoggedIn();
@@ -156,7 +157,6 @@ export class MenuComponent implements OnInit {
 
     this.menuService.fileName = response.path;
     this.three.fileName = response.path;
-
     this.app.dialogClose(); // 現在表示中の画面を閉じる
     this.ResultData.clear(); // 解析結果を削除
     const old = this.helper.dimension;
