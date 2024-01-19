@@ -259,19 +259,11 @@
                   </li>
 
                   
-                  <li *ngIf="helper.dimension === 3">
+                  <li>
                     <label style="width: 100%">
                       <input type="radio" name="radio-print" class="radio-input" id="printCase6"
                       [checked]="printService.flg === 16"
                         (click)="printService.selectRadio(16)" [disabled]="ResultData.isCalculated?null:'1'" />
-                      <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
-                        print.reactionDiagram</span>
-                    </label>
-                  </li>
-                  <li *ngIf="helper.dimension === 2">
-                    <label style="width: 100%">
-                      <input type="checkbox" name="radio-print" class="radio-input" id="printCase6"
-                        (click)="printService.selectCheckbox(16)" [checked]="printService.arrFlg.includes(16)" [disabled]="ResultData.isCalculated?null:'1'" />
                       <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
                         print.reactionDiagram</span>
                     </label>
