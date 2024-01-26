@@ -83,6 +83,9 @@ export class SheetComponent implements AfterViewInit, OnChanges {
       return true;
     }
     this.grid = pq.grid(this.div.nativeElement, this.options);
+    this.grid.Columns().alter(() => {
+      this.grid.option('rowSpanHead', true)
+    })
   }
 
   ngOnChanges(obj: SimpleChanges) {
