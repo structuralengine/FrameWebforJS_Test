@@ -230,7 +230,72 @@ export class SceneService {
     this.camera.name = "camera";
     this.scene.add(this.camera);
   }
+  
+  public resetCamera() {
+    // 一旦カメラを消す
+    const target = this.scene.getObjectByName("camera");
+    if (target !== undefined) {
+      this.scene.remove(this.camera);
+    }
+    let perspectiveCameraInit = new THREE.PerspectiveCamera(
+      70,
+      this.aspectRatio,
+      0.1,
+      1000
+    );
+    perspectiveCameraInit.position.set(50, 50, -50);
 
+    let orthographicCameraInit = new THREE.OrthographicCamera(
+      -this.Width / 10,
+      this.Width / 10,
+      this.Height / 10,
+      -this.Height / 10,
+      -1000,
+      1000
+    );
+
+    // カメラを登録しなおす
+    if(this.helper.dimension === 3) {
+      // 3次元の場合
+      if (this.params.Perspective) {
+        this.camera = perspectiveCameraInit;  // 遠近感ありの場合
+      } else {
+        this.camera = orthographicCameraInit; // 遠近感なしの場合 平行投影するカメラ
+      }
+    }
+    else{
+      // 2次元の場合
+      this.camera = orthographicCameraInit; // 平行投影するカメラ
+    }
+
+    // 3次元なら回転できる、2次元なら回転できないように設定する
+    if (this.controls !== null)
+      this.controls.enableRotate = this.helper.dimension === 3;
+
+    this.camera.name = "camera";
+    this.scene.add(this.camera);
+    
+    this.controls.object = this.camera; // OrbitControl の登録カメラを変更
+    if (this.helper.dimension === 2) {
+      // 2次元に切り替わった場合は、ポジションと回転角をリセットする
+      const pos = orthographicCameraInit.position;
+      this.camera.up = new THREE.Vector3( 0, -1, 0 );
+      this.camera.position.set(pos.x, pos.y, -10);
+      this.controls.target.set(pos.x, pos.y, 0);
+    } else {
+      // 3次元の場合は、ポジションと回転角は引き継ぐ
+      const pos = perspectiveCameraInit.position;
+      const rot = perspectiveCameraInit.rotation;
+      this.camera.up = new THREE.Vector3( 0, 0, -1 );
+      this.camera.position.set(pos.x, pos.y, pos.z);
+      this.camera.rotation.set(rot.x, rot.y, rot.z);
+    }
+    // Gizmoを作り直す
+    this.addGizmo();
+
+    this.camera.updateMatrix();
+    this.controls.update();
+  }
 
   // 床面を生成する
   private createHelper() {
