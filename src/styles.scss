@@ -419,3 +419,7 @@ body {
 @import "~pqgrid/themes/steelblue/pqgrid.css";
 @import "../node_modules/dock-spawn-ts/lib/css/dock-manager.css";
 @import "../node_modules/dock-spawn-ts/lib/css/dock-manager-style.css";
+
+#chatplusview.chatplusview-basic.closed #outline{
+  display: none;
+}
