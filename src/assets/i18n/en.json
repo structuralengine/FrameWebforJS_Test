@@ -59,7 +59,8 @@
         "save": "Save",
         "update_success": "Update success!!",
         "select_preset": "Select Preset",
-        "preset": "Preset"
+        "preset": "Preset",
+        "contact":"Contact"
     },
     "input": {
         "input-fix-node": {
