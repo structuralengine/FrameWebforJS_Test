@@ -58,7 +58,8 @@
         "save": "节省",
         "update_success": "更新成功",
         "select_preset": "选择预置",
-        "preset": "预设"
+        "preset": "预设",
+        "contact":"询问"
     },
     "input": {
         "input-fix-node": {
