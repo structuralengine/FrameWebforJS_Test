@@ -60,7 +60,8 @@
         "save": "保存",
         "update_success": "更新成功",
         "select_preset": "プリセットを開く",
-        "preset": "プリセット"
+        "preset": "プリセット",
+        "contact":"お問い合わせ"
     },
     "input": {
         "input-fix-node": {

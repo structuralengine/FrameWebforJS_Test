@@ -401,4 +401,11 @@ export class MenuComponent implements OnInit {
     this.app.dialogClose(); // 現在表示中の画面を閉じる
     this.scene.changeGui(this.helper.dimension);
   }
+  
+  handelClickChat(){
+   const elementChat = document.getElementById("chatplusheader");
+   console.log("elementChat",elementChat)
+   elementChat.click()
+  }
 }
+ 
