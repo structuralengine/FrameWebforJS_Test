@@ -17,7 +17,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
   @Input() options: any;
 
   public grid: pq.gridT.instance = null;
-
+  isCtrlShiftPressed = false; // Flag to track Ctrl + Shift key combination
   constructor(
     public helper: DataHelperModule,
   ) {
@@ -98,8 +98,36 @@ export class SheetComponent implements AfterViewInit, OnChanges {
 
   ngAfterViewInit() {
     this.createGrid();
+    this.div.nativeElement.addEventListener('wheel', this.onMouseWheel.bind(this));
+    this.div.nativeElement.addEventListener('keydown', this.onKeyDown.bind(this));
+    this.div.nativeElement.addEventListener('keyup', this.onKeyUp.bind(this));
+  }
+  onKeyDown(event: KeyboardEvent) {
+    if (event.ctrlKey && event.shiftKey) {
+      this.isCtrlShiftPressed = true;
+      event.preventDefault(); // Prevent the default behavior of the mouse wheel
+    }
   }
 
+  onKeyUp(event: KeyboardEvent) {
+    if (!event.ctrlKey || !event.shiftKey) {
+      this.isCtrlShiftPressed = false;
+    }
+  }
+
+  onMouseWheel(event: WheelEvent) {
+    if (this.isCtrlShiftPressed) {
+      event.preventDefault(); // Prevent the default behavior of the mouse wheel
+      const scrollAmount = 100; // Adjust the scroll amount as per your requirement
+      if (event.deltaY > 0) {
+        // Scroll right
+        this.div.nativeElement.scrollLeft += scrollAmount;
+      } else if (event.deltaY < 0) {
+        // Scroll left
+        this.div.nativeElement.scrollLeft -= scrollAmount;
+      }
+    }
+  }
   refreshDataAndView() {
     if (this.grid === null) {
       return;
