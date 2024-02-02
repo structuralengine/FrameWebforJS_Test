@@ -36,7 +36,7 @@
     },
     "menu": {
         "file": "ファイル",
-        "softName": "立体骨組構造解析ソフト",
+        "softName": "立体骨組構造解析ソフト_Test",
         "newEntry": "新規作成",
         "openFile": "ファイルを開く",
         "saveFile": "ファイルを保存",
