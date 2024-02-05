@@ -17,6 +17,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
   @Input() options: any;
 
   public grid: pq.gridT.instance = null;
+  public colsShow: any[] = new Array();
   isCtrlShiftPressed = false; // Flag to track Ctrl + Shift key combination
   constructor(
     public helper: DataHelperModule,
@@ -26,12 +27,12 @@ export class SheetComponent implements AfterViewInit, OnChanges {
   private createGrid() {
     this.options.beforeCellKeyDown = (evt, ui) => {
       let mov = 1;
-      /*
+      
       // Shiftを押したら左に動く
       if (evt.shiftKey === true){
         mov = -1;
       }
-      */
+      
       if (evt.key === 'Enter') {
         const $cell = this.grid.getCell({
           rowIndx: ui.rowIndx + mov,
@@ -49,7 +50,47 @@ export class SheetComponent implements AfterViewInit, OnChanges {
           rowIndx: ui.rowIndx,
           colIndx: ui.colIndx + mov,
         });
-
+        if (evt.shiftKey) {
+          // 「Shift」「Tab」
+          if (!(ui.rowIndx === 0 && ui.colIndx === 0)) {
+            const indexCrr = this.colsShow.indexOf(ui.colIndx);
+            let colPre = this.colsShow[indexCrr - 1];
+            if (indexCrr === 0) {
+              colPre = this.colsShow[this.colsShow.length - 1]
+              this.grid.setSelection({
+                rowIndx: ui.rowIndx - mov,
+                colIndx: colPre,
+                focus: true,
+              });
+            }
+            else {
+              this.grid.setSelection({
+                rowIndx: ui.rowIndx,
+                colIndx: colPre,
+                focus: true,
+              });
+            }
+          }
+          // if (ui.colIndx > 0) {
+          //   // 左に移動
+          //   const countCols = this.grid.getColModel().length - 1;
+          //   const colIndx = ui.colIndx > countCols ? countCols : ui.colIndx;
+          //   this.grid.setSelection({
+          //     rowIndx: ui.rowIndx,
+          //     colIndx: colIndx - mov,
+          //     focus: true,
+          //   });
+          // } else {
+          //   // 前の行の右端に移動
+          //   if (ui.rowIndx - mov >= 0) {
+          //     this.grid.setSelection({
+          //       rowIndx: ui.rowIndx - mov,
+          //       colIndx: this.grid.getColModel().length,
+          //       focus: true,
+          //     });
+          //   }
+          // }
+        } 
         if ($cell.length > 0) {
           // 右に移動
           this.grid.setSelection({
@@ -103,7 +144,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
     this.div.nativeElement.addEventListener('keyup', this.onKeyUp.bind(this));
   }
   onKeyDown(event: KeyboardEvent) {
-    if (event.ctrlKey && event.shiftKey) {
+    if (event.shiftKey) {
       this.isCtrlShiftPressed = true;
       event.preventDefault(); // Prevent the default behavior of the mouse wheel
     }
