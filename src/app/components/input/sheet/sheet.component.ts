@@ -29,9 +29,11 @@ export class SheetComponent implements AfterViewInit, OnChanges {
       let mov = 1;
       
       // Shiftを押したら左に動く
-      if (evt.shiftKey === true){
-        mov = -1;
-      }
+      // if (evt.shiftKey === true){
+      //   // debugger
+      //   console.log('Shift');
+      //   mov = -1;
+      // }
       
       if (evt.key === 'Enter') {
         const $cell = this.grid.getCell({
@@ -50,7 +52,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
           rowIndx: ui.rowIndx,
           colIndx: ui.colIndx + mov,
         });
-        if (evt.shiftKey) {
+        if (evt.shiftKey === true) {
           // 「Shift」「Tab」
           if (!(ui.rowIndx === 0 && ui.colIndx === 0)) {
             const indexCrr = this.colsShow.indexOf(ui.colIndx);
@@ -71,41 +73,73 @@ export class SheetComponent implements AfterViewInit, OnChanges {
               });
             }
           }
-          // if (ui.colIndx > 0) {
-          //   // 左に移動
-          //   const countCols = this.grid.getColModel().length - 1;
-          //   const colIndx = ui.colIndx > countCols ? countCols : ui.colIndx;
+          if (ui.colIndx > 0) {
+            // 左に移動
+            const countCols = this.grid.getColModel().length - 1;
+            const colIndx = ui.colIndx > countCols ? countCols : ui.colIndx;
+            this.grid.setSelection({
+              rowIndx: ui.rowIndx,
+              colIndx: colIndx - mov,
+              focus: true,
+            });
+          } else {
+            // 前の行の右端に移動
+            if (ui.rowIndx - mov >= 0) {
+              this.grid.setSelection({
+                rowIndx: ui.rowIndx - mov,
+                colIndx: this.grid.getColModel().length,
+                focus: true,
+              });
+            }
+          }
+        } else {
+          const indexCrr = this.colsShow.indexOf(ui.colIndx);
+          let colNext = this.colsShow[indexCrr + 1];
+          if (indexCrr === this.colsShow.length - 1) {
+            this.grid.setSelection({
+              rowIndx: ui.rowIndx + mov,
+              colIndx: 0,
+              focus: true,
+            });
+          }
+          else {
+            this.grid.setSelection({
+              rowIndx: ui.rowIndx,
+              colIndx: colNext,
+              focus: true,
+            });
+          }
+          // if ($cell.length > 0) {
+          //   // 右に移動
           //   this.grid.setSelection({
           //     rowIndx: ui.rowIndx,
-          //     colIndx: colIndx - mov,
+          //     colIndx: ui.colIndx + mov,
           //     focus: true,
           //   });
           // } else {
-          //   // 前の行の右端に移動
-          //   if (ui.rowIndx - mov >= 0) {
-          //     this.grid.setSelection({
-          //       rowIndx: ui.rowIndx - mov,
-          //       colIndx: this.grid.getColModel().length,
-          //       focus: true,
-          //     });
-          //   }
+          //   // 次の行の左端に移動
+          //   this.grid.setSelection({
+          //     rowIndx: ui.rowIndx + mov,
+          //     colIndx: 0,
+          //     focus: true,
+          //   });
           // }
-        } 
-        if ($cell.length > 0) {
-          // 右に移動
-          this.grid.setSelection({
-            rowIndx: ui.rowIndx,
-            colIndx: ui.colIndx + mov,
-            focus: true,
-          });
-        } else {
-          // 次の行の左端に移動
-          this.grid.setSelection({
-            rowIndx: ui.rowIndx + mov,
-            colIndx: 0,
-            focus: true,
-          });
         }
+        // if ($cell.length > 0) {
+        //   // 右に移動
+        //   this.grid.setSelection({
+        //     rowIndx: ui.rowIndx,
+        //     colIndx: ui.colIndx + mov,
+        //     focus: true,
+        //   });
+        // } else {
+        //   // 次の行の左端に移動
+        //   this.grid.setSelection({
+        //     rowIndx: ui.rowIndx + mov,
+        //     colIndx: 0,
+        //     focus: true,
+        //   });
+        // }
         return false;
       }
 
@@ -144,7 +178,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
     this.div.nativeElement.addEventListener('keyup', this.onKeyUp.bind(this));
   }
   onKeyDown(event: KeyboardEvent) {
-    if (event.shiftKey) {
+    if (event.ctrlKey && event.shiftKey) {
       this.isCtrlShiftPressed = true;
       event.preventDefault(); // Prevent the default behavior of the mouse wheel
     }
