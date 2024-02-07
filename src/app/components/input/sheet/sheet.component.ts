@@ -86,6 +86,8 @@ export class SheetComponent implements AfterViewInit, OnChanges {
     this.grid.Columns().alter(() => {
       this.grid.option('rowSpanHead', true)
     })
+    this.grid.option('fillHandle', 'all');
+    this.grid.option("autofill", true);
   }
 
   ngOnChanges(obj: SimpleChanges) {
