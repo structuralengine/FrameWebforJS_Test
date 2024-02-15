@@ -38,6 +38,7 @@ app.whenReady().then(async () => {
   await createWindow();
 
   if (!isDev) {
+    debugger
     // 起動時に1回だけ
     log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
     await autoUpdater.checkForUpdates();
