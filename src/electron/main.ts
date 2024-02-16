@@ -41,7 +41,7 @@ app.whenReady().then(async () => {
     debugger
     // 起動時に1回だけ
     log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
-    await autoUpdater.checkForUpdates();
+    await autoUpdater.checkForUpdatesAndNotify();
     autoUpdater.on('update-available', () => {
       autoUpdater.downloadUpdate();
       window.alert("dev Tupdate-available");
