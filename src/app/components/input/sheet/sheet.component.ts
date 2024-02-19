@@ -52,7 +52,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
           rowIndx: ui.rowIndx,
           colIndx: ui.colIndx + mov,
         });
-        if (evt.shiftKey === true) {
+        if (evt.shiftKey) {
           // 「Shift」「Tab」
           if (!(ui.rowIndx === 0 && ui.colIndx === 0)) {
             const indexCrr = this.colsShow.indexOf(ui.colIndx);
@@ -85,9 +85,10 @@ export class SheetComponent implements AfterViewInit, OnChanges {
           } else {
             // 前の行の右端に移動
             if (ui.rowIndx - mov >= 0) {
+              const prevRowCols = this.grid.getColModel().length - 1;
               this.grid.setSelection({
                 rowIndx: ui.rowIndx - mov,
-                colIndx: this.grid.getColModel().length,
+                colIndx: prevRowCols ,
                 focus: true,
               });
             }
