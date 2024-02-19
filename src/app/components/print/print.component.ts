@@ -767,10 +767,10 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
       }
       console.log("json",json)
-      // this.loadind_enable();
-      // const base64Encoded = this.getPostJson(json);
-      // this.pdfPreView(base64Encoded);
-      // this.router.navigate(["/"]);
+      this.loadind_enable();
+      const base64Encoded = this.getPostJson(json);
+      this.pdfPreView(base64Encoded);
+      this.router.navigate(["/"]);
     }
     
   }
