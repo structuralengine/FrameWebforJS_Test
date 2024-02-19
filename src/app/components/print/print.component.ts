@@ -478,8 +478,9 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
       }
     }else{
-      const json: any = this.printService.json as {};
+      let json: any = this.printService.json as {};
       console.log("print",this.printService.arrFlg)
+      // data Calculation Results
       if (Object.keys(json).length !== 0) {
         var checkSelectItem = false;
         switch (this.printService.flg) {
@@ -538,7 +539,9 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
     
       }
+      //Print screen and Reaction diagram
       if(this.printService.printCases.length===0 && this.printService.printCase !==""){
+      json={}
       if(this.printService.flg===10){
         for (let i = 0; i < this.printService.printTargetValues.length; i++) {
           if (i < this.printService.printTargetValues.length - 1)
@@ -573,7 +576,9 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.helper.alert(this.translate.instant("print.selectTarget"));
         return;
       }
+      return;
       }
+      //data Load diagram, Sectional force diagram, Combine force diagram, Pickup force diagram
       if(this.printService.printCases.length!==0 && this.printService.printCase ===""){
         this.printService.optionList["input"].value = true;
         for(let key of this.printService.printCases ){
@@ -616,6 +621,10 @@ export class PrintComponent implements OnInit, OnDestroy {
             if(key === "PrintLoad"){
               json["PrintLoad"]={
                 diagramInput,
+                load : this.printService.json["load"],
+                fix_node:this.printService.json["fix_node"],
+                element: this.printService.json["element"],
+                fix_member:this.printService.json["fix_member"],
                 ...initData,
                }
             }
@@ -647,147 +656,11 @@ export class PrintComponent implements OnInit, OnDestroy {
           }
         }
       }
-      // this.loadind_enable();
-      // this.pdfPreView(this.getPostJson(json));
-      // this.router.navigate(["/"]);
-      // if (
-      //   this.helper.dimension === 2 &&
-      //   ["fsec", "comb_fsec", "pick_fsec", 'PrintLoad'].includes(this.three.mode)
-      // ) {
-      //   console.log("図の印刷: " + this.check_ts() + " msec");
-
-      //   // loadingの表示
-      //   this.loadind_enable();
-
-      //   // データの集計
-      //   console.log("データを集計中...: " + this.check_ts() + " msec");
-      //   this.printService.optionList["input"].value = true;
-      //   this.printService.optionList[this.three.mode].value = true;
-      //   this.printService.getPrintDatas();
-      //   console.log("データの集計完了.: " + this.check_ts() + " msec");
-
-      //   // PDFサーバーに送る
-      //   const json = {};
-      //   for (var key of ["node", "member", "dimension", "language"]) {
-      //     json[key] = this.printService.json[key];
-      //   }
-       
-      //   // 印刷ケースを選択 ここから
-      //   if (this.three.mode == "fsec") {
-      //     json["load"] = this.printService.json["load"];
-      //     json["fsec"] = this.printService.json["fsec"];
-      //   }
-      //   if (this.three.mode === "comb_fsec") {
-      //     json["combine"] = this.printService.json["combine"];
-      //     json["fsecCombine"] = this.printService.json["fsecCombine"];
-      //   }
-      //   if (this.three.mode === "pick_fsec") {
-      //     json["pickup"] = this.printService.json["pickup"];
-      //     json["fsecPickup"] = this.printService.json["fsecPickup"];
-      //   }
-      //   // 印刷ケースの選択 ここまで
-
-      //   //console.log("印刷ケースの選択 ここまで: " + this.check_ts() + " msec");
-
-      //   // 印刷対象を選択 ここから
-      //   // 断面力図の種類を指定する
-      //   const output = [];
-      //   var selected: boolean = false;
-      //   if (this.printService.customThree.threeEditable[5] && this.printService.flg !== 15) {
-      //     // z軸周りのモーメント図
-      //     output.push("mz");
-      //     selected = true;
-      //   }
-
-      //   if (this.printService.customThree.threeEditable[1] && this.printService.flg !== 15) {
-      //     // y方向のせん断力図
-      //     output.push("fy");
-      //     selected = true;
-      //   }
-
-      //   if (this.printService.customThree.threeEditable[0] && this.printService.flg !== 15) {
-      //     // 軸力図
-      //     output.push("fx");
-      //     selected = true;
-      //   }
-
-      //   if (
-      //     11 == this.printService.flg &&
-      //     this.printService.customThree.threeEditable[6]
-      //   ) {
-      //     output.push("disg"); // 変位図
-      //     selected = true;
-
-      //     // この場合は変位のデータも必要になる
-      //     json["disg"] = this.printService.json["disg"];
-      //     json["disgName"] = this.printService.json["disgName"];
-      //   }
-
-      //   //For printLoad
-      //   if (this.printService.flg == 15) {
-      //     output.push("axis"); // default load, axis
-      //     output.push("load");
-      //     json["load"] = this.printService.json["load"];
-      //     json["loadName"] = this.printService.json["loadName"];
-      //     json["fix_node"] = this.printService.json["fix_node"];
-      //     json["element"] = this.printService.json["element"];
-      //     json["fix_member"] = this.printService.json["fix_member"];
-      //     selected = true;
-      //   }
-
-      //   // 印刷対象を選択 ここまで
-
-      //   //console.log("印刷対象を選択 ここまで: " + this.check_ts() + " msec");
-
-      //   if (!selected) {
-      //     this.helper.alert(this.translate.instant("print.selectTarget"));
-      //     this.loadind_desable();
-      //     return;
-      //   }
-
-      //   json["pageOrientation"] = this.printService.pageOrientation;
-      //   if (this.printService.flg == 15) {
-      //     json["diagramInput"] = {
-      //       layout: this.printService.printLayout,
-      //       output,
-      //       //single_layout_cases: [1, 2, 3,]
-      //     };
-      //     if (null !== this.printService.axis_scale_x.value)
-      //       json["diagramInput"].scaleX =
-      //         1.0 / Number(this.printService.axis_scale_x.value);
-
-      //     if (null !== this.printService.axis_scale_y.value)
-      //       json["diagramInput"].scaleY =
-      //         1.0 / Number(this.printService.axis_scale_y.value);
-      //   }
-      //   else {
-      //     json["diagramResult"] = {
-      //       layout: this.printService.printLayout,
-      //       output,
-      //     };
-
-      //     if (null !== this.printService.axis_scale_x.value)
-      //       json["diagramResult"].scaleX =
-      //         1.0 / Number(this.printService.axis_scale_x.value);
-
-      //     if (null !== this.printService.axis_scale_y.value)
-      //       json["diagramResult"].scaleY =
-      //         1.0 / Number(this.printService.axis_scale_y.value);
-
-      //   }
-
-      //   json["ver"] = packageJson.version;
-      //   const base64Encoded = this.getPostJson(json);
-
-      //   //console.log("base64EncodedをgetPostJsonしたところまで: " + this.check_ts() + " msec");
-
-      //   this.pdfPreView(base64Encoded);
-
-      //   //console.log("this.pdfPreView(base64Encoded);が終了: " + this.check_ts() + " msec");
-      // } 
+      console.log("json",json)
+      this.loadind_enable();
       const base64Encoded = this.getPostJson(json);
       this.pdfPreView(base64Encoded);
-      console.log("json",json)
+      // this.router.navigate(["/"]);
     }
     
   }
