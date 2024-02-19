@@ -36,23 +36,21 @@ async function createWindow() {
 
 app.whenReady().then(async () => {
   await createWindow();
-  
   // if (!isDev) {
-    debugger
-    autoUpdater.setFeedURL('https://github.com/structuralengine/FrameWebforJS_Test');
-    window.alert(autoUpdater.getFeedURL());
     // 起動時に1回だけ
     log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
+    dialog.showMessageBox({message: isDev.toString()});
+    dialog.showMessageBox({message: app.getVersion()});
     await autoUpdater.checkForUpdatesAndNotify();
     autoUpdater.on('update-available', () => {
       autoUpdater.downloadUpdate();
-      window.alert("dev Tupdate-available");
+      dialog.showMessageBox({message: "dev Tupdate-available"});
     });
     
     //when update downloaded, reboot to install
     autoUpdater.on('update-downloaded', function (e) {
       let langText = require(`../assets/i18n/${locale}.json`)
-      window.alert("dev Tupdate-download");
+      dialog.showMessageBox({message: "dev Tupdate-download"});
       let choice = dialog.showMessageBoxSync(this,
         {
           type: 'question',
@@ -68,14 +66,14 @@ app.whenReady().then(async () => {
 });
 
 autoUpdater.on('update-available', () => {
-  window.alert("Tupdate-available");
+  dialog.showMessageBox({message: "Tupdate-available"});
   autoUpdater.downloadUpdate();
 });
 
 //when update downloaded, reboot to install
 autoUpdater.on('update-downloaded', function (e) {
   let langText = require(`../assets/i18n/${locale}.json`)
-  window.alert("Test thôi");
+  dialog.showMessageBox({message: "Test thôi"});
   let choice = dialog.showMessageBoxSync(mainWindow,
     {
       type: 'question',
