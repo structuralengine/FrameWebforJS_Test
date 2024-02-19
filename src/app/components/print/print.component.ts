@@ -55,6 +55,7 @@ export class PrintComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.max_min.visible = this.a;
+    this.printService.arrFlg=[]
   }
 
   public options = {
@@ -581,9 +582,9 @@ export class PrintComponent implements OnInit, OnDestroy {
       //data Load diagram, Sectional force diagram, Combine force diagram, Pickup force diagram
       if(this.printService.printCases.length!==0 && this.printService.printCase ===""){
         this.printService.optionList["input"].value = true;
+        let mode = ""; 
         for(let key of this.printService.printCases ){
           this.printService.optionList[key].value = true;
-          let mode = ""; 
           if(key==="PrintLoad"){
             mode = "PrintLoad";
           }
@@ -599,9 +600,8 @@ export class PrintComponent implements OnInit, OnDestroy {
           this.printService.optionList[mode].value = true;
         }
         this.printService.getPrintDatas();
-        console.log("print",this.printService.arrFlg);
-        console.log("this.printService.json",this.printService.json)
         if(this.printService.arrFlg.length>1){
+           // multiple check print screen
           let diagramResult = { 
             layout: "single",
             output: [
@@ -654,12 +654,122 @@ export class PrintComponent implements OnInit, OnDestroy {
             }
            
           }
+        }else{
+          // single check print screen
+          console.log("run",mode);
+          var selected: boolean = false;
+          let initData= {}
+          const output = [];
+          for (var key of ["node", "member", "dimension", "language"]) {
+             initData[key]=  this.printService.json[key]
+          }
+          let keyScreen=""
+          for(let key of this.printService.printCases ){
+            keyScreen=key
+            if(key === "PrintLoad"){
+              json["PrintLoad"]={
+                load : this.printService.json["load"],
+                fix_node:this.printService.json["fix_node"],
+                element: this.printService.json["element"],
+                fix_member:this.printService.json["fix_member"],
+                ...initData,
+               }
+            }
+            if(key === "PrintDiagram"){
+              json["PrintDiagram"]={
+                load : this.printService.json["load"],
+                fsec : this.printService.json["fsec"],
+                ...initData,
+              }
+            }
+            if(key === "CombPrintDiagram"){
+              json["CombPrintDiagram"]={
+                combine : this.printService.json["combine"],
+                fsecCombine : this.printService.json["fsecCombine"],
+                ...initData,
+              }
+            }
+            if(key === "PickPrintDiagram"){
+              json["PickPrintDiagram"]={
+                pickup : this.printService.json["pickup"],
+                fsecPickup : this.printService.json["fsecPickup"],
+                ...initData,
+              }
+            }
+          }
+          json[keyScreen]["pageOrientation"] = this.printService.pageOrientation;
+          if(keyScreen==="PrintLoad"){
+            for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+              if (i < this.printService.printTargetValues.length - 1)
+                this.printService.customThree.threeEditable[i] = true;
+            }
+            output.push("axis"); // default load, axis
+            output.push("load");
+            selected = true;
+            json[keyScreen]["diagramInput"] = {
+              layout: this.printService.printLayout,
+              output,
+            };
+            if (null !== this.printService.axis_scale_x.value)
+              json[keyScreen]["diagramInput"].scaleX =
+                1.0 / Number(this.printService.axis_scale_x.value);
+  
+            if (null !== this.printService.axis_scale_y.value)
+              json[keyScreen]["diagramInput"].scaleY =
+                1.0 / Number(this.printService.axis_scale_y.value);
+          }else{
+            for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+              const isSelected = this.printService.printTargetValues[i].value;
+      
+              this.printService.customThree.threeEditable[i] = isSelected;
+            }
+            if (this.printService.customThree.threeEditable[5]) {
+              output.push("mz");  
+              selected = true;       
+            }
+    
+            if (this.printService.customThree.threeEditable[1]) {
+              output.push("fy");
+              selected = true;
+            }
+    
+            if (this.printService.customThree.threeEditable[0] ) {
+              output.push("fx");
+              selected = true;
+            }
+            if (
+              keyScreen==="PrintDiagram" &&
+              this.printService.customThree.threeEditable[6]
+            ) {
+              output.push("disg");
+              selected = true;
+              json[keyScreen]["disg"] = this.printService.json["disg"];
+              json[keyScreen]["disgName"] = this.printService.json["disgName"];
+            }
+            json[keyScreen]["diagramResult"] = {
+              layout: this.printService.printLayout,
+              output,
+            };
+  
+            if (null !== this.printService.axis_scale_x.value)
+              json[keyScreen]["diagramResult"].scaleX =
+                1.0 / Number(this.printService.axis_scale_x.value);
+  
+            if (null !== this.printService.axis_scale_y.value)
+              json[keyScreen]["diagramResult"].scaleY =
+                1.0 / Number(this.printService.axis_scale_y.value);
+          }
+          if (!selected) {
+            this.helper.alert(this.translate.instant("print.selectTarget"));
+            this.loadind_desable();
+            return;
+          }
         }
       }
       console.log("json",json)
-      this.loadind_enable();
-      const base64Encoded = this.getPostJson(json);
-      this.pdfPreView(base64Encoded);
+      // this.loadind_enable();
+      // const base64Encoded = this.getPostJson(json);
+      // this.pdfPreView(base64Encoded);
       // this.router.navigate(["/"]);
     }
     

@@ -27,7 +27,7 @@ export class PrintService {
   public pickupJson: any;
 
   public flg: number = -1; // リファクタリング前の変数をズルズル使っている感じがするので直したほうがいいか？
-  public arrFlg: any = [0];
+  public arrFlg: any = [];
 
   public print_target: any; // Three.js 印刷 の図のデータ
   public printOption = [];
@@ -231,7 +231,7 @@ export class PrintService {
     for (const key of Object.keys(this.optionList)) {
       this.optionList[key].value = false;
       for (const flgId of this.arrFlg) {
-        if (this.optionList[key].id == flgId) {
+        if (this.optionList[key].id === flgId) {
           this.optionList[key].value = true;
           // this.flg = id;
           // this.selectedIndex = this.optionList[key].id;
@@ -243,7 +243,6 @@ export class PrintService {
       }
     }
     this.priCount = 0;
-    console.log("this.printCases",this.printCases)
     this.newPrintJson();
   }
 
