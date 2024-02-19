@@ -785,6 +785,8 @@ export class PrintComponent implements OnInit, OnDestroy {
 
       //   //console.log("this.pdfPreView(base64Encoded);が終了: " + this.check_ts() + " msec");
       // } 
+      const base64Encoded = this.getPostJson(json);
+      this.pdfPreView(base64Encoded);
       console.log("json",json)
     }
     
