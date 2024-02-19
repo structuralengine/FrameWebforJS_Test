@@ -479,8 +479,15 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
       }
     }else{
-      let json: any = this.printService.json as {};
-      console.log("print",this.printService.arrFlg)
+      let json: any = {};
+      const dataCheck=[0,1,3,2,4,5,6,7,8,9]
+      console.log("print",this.printService.arrFlg);
+        for(let data of this.printService.arrFlg){
+          if(dataCheck.includes(data)){
+            json=this.printService.json
+            break;
+          }
+        }
       // data Calculation Results
       if (Object.keys(json).length !== 0) {
         var checkSelectItem = false;
@@ -767,10 +774,10 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
       }
       console.log("json",json)
-      this.loadind_enable();
-      const base64Encoded = this.getPostJson(json);
-      this.pdfPreView(base64Encoded);
-      this.router.navigate(["/"]);
+      // this.loadind_enable();
+      // const base64Encoded = this.getPostJson(json);
+      // this.pdfPreView(base64Encoded);
+      // this.router.navigate(["/"]);
     }
     
   }
