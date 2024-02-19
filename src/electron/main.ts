@@ -40,6 +40,7 @@ app.whenReady().then(async () => {
   // if (!isDev) {
     debugger
     autoUpdater.setFeedURL('https://github.com/structuralengine/FrameWebforJS_Test');
+    window.alert(autoUpdater.getFeedURL());
     // 起動時に1回だけ
     log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
     await autoUpdater.checkForUpdatesAndNotify();
