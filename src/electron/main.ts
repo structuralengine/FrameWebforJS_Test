@@ -36,9 +36,10 @@ async function createWindow() {
 
 app.whenReady().then(async () => {
   await createWindow();
-
-  if (!isDev) {
+  
+  // if (!isDev) {
     debugger
+    autoUpdater.setFeedURL('https://github.com/structuralengine/FrameWebforJS_Test');
     // 起動時に1回だけ
     log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
     await autoUpdater.checkForUpdatesAndNotify();
@@ -62,7 +63,7 @@ app.whenReady().then(async () => {
         autoUpdater.quitAndInstall();
       }
     });
-  }
+  // }
 });
 
 autoUpdater.on('update-available', () => {

@@ -1,6 +1,6 @@
 {
   "name": "frame-web-for-js-test",
-  "version": "2.3.8",
+  "version": "2.3.9",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host=127.0.0.1",
@@ -74,7 +74,7 @@
     "troika-three-text": "^0.42.0",
     "ts-loader": "^9.2.5",
     "tslib": "^2.0.0",
-    "update-electron-app": "^2.0.1",
+    "update-electron-app": "^3.0.0",
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
