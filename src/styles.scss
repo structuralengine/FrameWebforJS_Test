@@ -29,7 +29,7 @@ a[href="https://paramquery.com/pro"] {
 .obit-controls-gizmo {
   position: absolute;
   top: 109px;
-  right: 19px;
+  left: 210px;
   z-index: 1;
 }
 
@@ -419,3 +419,7 @@ body {
 @import "~pqgrid/themes/steelblue/pqgrid.css";
 @import "../node_modules/dock-spawn-ts/lib/css/dock-manager.css";
 @import "../node_modules/dock-spawn-ts/lib/css/dock-manager-style.css";
+
+#chatplusview.chatplusview-basic.closed #outline{
+  display: none;
+}
