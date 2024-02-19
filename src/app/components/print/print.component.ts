@@ -46,7 +46,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // this.printService.selectRadio(0);
     // this.printService.flg = 0;
-    this.printService.arrFlg=[0]
+    this.printService.selectCheckbox(0);
     this.id = document.getElementById("printButton");
     this.a = this.max_min.visible;
     this.max_min.visible = false;
@@ -271,7 +271,6 @@ export class PrintComponent implements OnInit, OnDestroy {
         //console.log("this.pdfPreView(base64Encoded);が終了: " + this.check_ts() + " msec");
       } else {
         // 3D図の印刷
-
         if (
           this.printService.customThree.threeEditable.filter((x) => x === true)
             .length > 0
@@ -365,6 +364,430 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.router.navigate(["/"]);
       }
     }
+  }
+  public onPrintPDFNew(): void {
+    if(this.helper.dimension ===3){
+      this.reset_ts();
+      console.log("starting onPrintPDF...: 0 msec");
+      // 印刷対象を取得して、セット
+      if (
+        this.printService.flg === 14  ||
+        this.printService.flg === 10 ||
+        this.printService.flg === 15
+      ) {
+        for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+          if (i < this.printService.printTargetValues.length - 1)
+            this.printService.customThree.threeEditable[i] = true;
+        }
+      } else {
+        for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+          const isSelected = this.printService.printTargetValues[i].value;
+  
+          this.printService.customThree.threeEditable[i] = isSelected;
+        }
+      }
+  
+      if (this.printService.is_printing_screen()) {
+        // 図の印刷
+        if (
+          this.printService.customThree.threeEditable.filter((x) => x === true)
+            .length > 0
+        ) {
+          console.log("3D図の印刷: " + this.check_ts() + " msec");
+          this.router.navigate(["/"]);
+          this.three.getCaptureImage().then((print_target) => {
+            console.log(
+              "getCaptureImage.then start: " + this.check_ts() + " msec"
+            );
+
+            this.printService.print_target = print_target;
+            this.printService.printDocument("invoice", [""]);
+
+            console.log(
+              "getCaptureImage.then last: " + this.check_ts() + " msec"
+            );
+          });
+        } else {
+          this.helper.alert(this.translate.instant("print.selectTarget"));
+          return;
+        }
+      } else {
+        const json: any = this.printService.json;
+        if (Object.keys(json).length !== 0) {
+          var checkSelectItem = false;
+          switch (this.printService.flg) {
+            case 2: {
+              var checkSelect = json.disgCombine;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 3: {
+              var checkSelect = json.disgPickup;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 5: {
+              var checkSelect = json.reacCombine;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 6: {
+              var checkSelect = json.reacPickup;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 7: {
+              var checkSelect = json.fsec;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 8: {
+              var checkSelect = json.fsecCombine;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              if (!checkSelectItem) {
+                const checkChild = Object.values(checkSelect).map(v => {
+                  return Object.values(v).map(v2 => Object.values(v2)?.length > 0).filter(v2 => v2 === true);
+                })
+                checkSelectItem = this.checkDataExisted(checkChild);
+              }
+              break;
+            }
+            case 9: {
+              var checkSelect = json.fsecPickup;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              if (!checkSelectItem) {
+                const checkChild = Object.values(checkSelect).map(v => {
+                  return Object.values(v).map(v2 => Object.values(v2)?.length > 0).filter(v2 => v2 === true);
+                })
+                checkSelectItem = this.checkDataExisted(checkChild);
+              }
+              break;
+            }
+          }
+  
+          if (checkSelectItem) {
+            this.helper.alert(this.translate.instant("print.selectTarget"));
+            return;
+          }
+  
+          // loadingの表示
+          this.loadind_enable();
+          // PDFサーバーに送る
+          this.pdfPreView(this.getPostJson(json));
+          this.router.navigate(["/"]);
+        }
+      }
+    }else{
+      const json: any = this.printService.json as {};
+      console.log("print",this.printService.arrFlg)
+      if (Object.keys(json).length !== 0) {
+        var checkSelectItem = false;
+        switch (this.printService.flg) {
+          case 2: {
+            var checkSelect = json.disgCombine;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 3: {
+            var checkSelect = json.disgPickup;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 5: {
+            var checkSelect = json.reacCombine;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 6: {
+            var checkSelect = json.reacPickup;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 7: {
+            var checkSelect = json.fsec;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 8: {
+            var checkSelect = json.fsecCombine;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            if (!checkSelectItem) {
+              const checkChild = Object.values(checkSelect).map(v => {
+                return Object.values(v).map(v2 => Object.values(v2)?.length > 0).filter(v2 => v2 === true);
+              })
+              checkSelectItem = this.checkDataExisted(checkChild);
+            }
+            break;
+          }
+          case 9: {
+            var checkSelect = json.fsecPickup;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            if (!checkSelectItem) {
+              const checkChild = Object.values(checkSelect).map(v => {
+                return Object.values(v).map(v2 => Object.values(v2)?.length > 0).filter(v2 => v2 === true);
+              })
+              checkSelectItem = this.checkDataExisted(checkChild);
+            }
+            break;
+          }
+        }
+
+        if (checkSelectItem) {
+          this.helper.alert(this.translate.instant("print.selectTarget"));
+          return;
+        }
+    
+      }
+      if(this.printService.printCases.length===0 && this.printService.printCase !==""){
+      if(this.printService.flg===10){
+        for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+          if (i < this.printService.printTargetValues.length - 1)
+            this.printService.customThree.threeEditable[i] = true;
+        }
+      }else{
+        for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+          const isSelected = this.printService.printTargetValues[i].value;
+  
+          this.printService.customThree.threeEditable[i] = isSelected;
+        }
+      }
+      if (
+        this.printService.customThree.threeEditable.filter((x) => x === true)
+          .length > 0
+      ) {
+        console.log("3D図の印刷: " + this.check_ts() + " msec");
+        this.router.navigate(["/"]);
+        this.three.getCaptureImage().then((print_target) => {
+          console.log(
+            "getCaptureImage.then start: " + this.check_ts() + " msec"
+          );
+
+          this.printService.print_target = print_target;
+          this.printService.printDocument("invoice", [""]);
+
+          console.log(
+            "getCaptureImage.then last: " + this.check_ts() + " msec"
+          );
+        });
+      } else {
+        this.helper.alert(this.translate.instant("print.selectTarget"));
+        return;
+      }
+      }
+      if(this.printService.printCases.length!==0 && this.printService.printCase ===""){
+        this.printService.optionList["input"].value = true;
+        for(let key of this.printService.printCases ){
+          this.printService.optionList[key].value = true;
+          let mode = ""; 
+          if(key==="PrintLoad"){
+            mode = "PrintLoad";
+          }
+          if(key==="PrintDiagram"){
+            mode = "fsec";
+          }
+          if(key==="CombPrintDiagram"){
+            mode = "comb_fsec";
+          }
+          if(key==="PickPrintDiagram"){
+            mode = "pick_fsec";
+          }
+          this.printService.optionList[mode].value = true;
+        }
+        this.printService.getPrintDatas();
+        console.log("print",this.printService.arrFlg);
+        console.log("this.printService.json",this.printService.json)
+        if(this.printService.arrFlg.length>1){
+          let diagramResult = { 
+            layout: "single",
+            output: [
+              "fx"
+          ]}
+          let diagramInput = {
+            layout: "single",
+            output: [
+              "axis",
+              "load"
+          ]}
+          let initData= {pageOrientation: "Vertical"}
+          for (var key of ["node", "member", "dimension", "language"]) {
+             initData[key]=  this.printService.json[key]
+          }
+          for(let key of this.printService.printCases ){
+            if(key === "PrintLoad"){
+              json["PrintLoad"]={
+                diagramInput,
+                ...initData,
+               }
+            }
+            if(key === "PrintDiagram"){
+              json["PrintDiagram"]={
+                diagramResult,
+                load : this.printService.json["load"],
+                fsec : this.printService.json["fsec"],
+                ...initData,
+              }
+            }
+            if(key === "CombPrintDiagram"){
+              json["CombPrintDiagram"]={
+                diagramResult,
+                combine : this.printService.json["combine"],
+                fsecCombine : this.printService.json["fsecCombine"],
+                ...initData,
+              }
+            }
+            if(key === "PickPrintDiagram"){
+              json["PickPrintDiagram"]={
+                diagramResult,
+                pickup : this.printService.json["pickup"],
+                fsecPickup : this.printService.json["fsecPickup"],
+                ...initData,
+              }
+            }
+           
+          }
+        }
+      }
+      // this.loadind_enable();
+      // this.pdfPreView(this.getPostJson(json));
+      // this.router.navigate(["/"]);
+      // if (
+      //   this.helper.dimension === 2 &&
+      //   ["fsec", "comb_fsec", "pick_fsec", 'PrintLoad'].includes(this.three.mode)
+      // ) {
+      //   console.log("図の印刷: " + this.check_ts() + " msec");
+
+      //   // loadingの表示
+      //   this.loadind_enable();
+
+      //   // データの集計
+      //   console.log("データを集計中...: " + this.check_ts() + " msec");
+      //   this.printService.optionList["input"].value = true;
+      //   this.printService.optionList[this.three.mode].value = true;
+      //   this.printService.getPrintDatas();
+      //   console.log("データの集計完了.: " + this.check_ts() + " msec");
+
+      //   // PDFサーバーに送る
+      //   const json = {};
+      //   for (var key of ["node", "member", "dimension", "language"]) {
+      //     json[key] = this.printService.json[key];
+      //   }
+       
+      //   // 印刷ケースを選択 ここから
+      //   if (this.three.mode == "fsec") {
+      //     json["load"] = this.printService.json["load"];
+      //     json["fsec"] = this.printService.json["fsec"];
+      //   }
+      //   if (this.three.mode === "comb_fsec") {
+      //     json["combine"] = this.printService.json["combine"];
+      //     json["fsecCombine"] = this.printService.json["fsecCombine"];
+      //   }
+      //   if (this.three.mode === "pick_fsec") {
+      //     json["pickup"] = this.printService.json["pickup"];
+      //     json["fsecPickup"] = this.printService.json["fsecPickup"];
+      //   }
+      //   // 印刷ケースの選択 ここまで
+
+      //   //console.log("印刷ケースの選択 ここまで: " + this.check_ts() + " msec");
+
+      //   // 印刷対象を選択 ここから
+      //   // 断面力図の種類を指定する
+      //   const output = [];
+      //   var selected: boolean = false;
+      //   if (this.printService.customThree.threeEditable[5] && this.printService.flg !== 15) {
+      //     // z軸周りのモーメント図
+      //     output.push("mz");
+      //     selected = true;
+      //   }
+
+      //   if (this.printService.customThree.threeEditable[1] && this.printService.flg !== 15) {
+      //     // y方向のせん断力図
+      //     output.push("fy");
+      //     selected = true;
+      //   }
+
+      //   if (this.printService.customThree.threeEditable[0] && this.printService.flg !== 15) {
+      //     // 軸力図
+      //     output.push("fx");
+      //     selected = true;
+      //   }
+
+      //   if (
+      //     11 == this.printService.flg &&
+      //     this.printService.customThree.threeEditable[6]
+      //   ) {
+      //     output.push("disg"); // 変位図
+      //     selected = true;
+
+      //     // この場合は変位のデータも必要になる
+      //     json["disg"] = this.printService.json["disg"];
+      //     json["disgName"] = this.printService.json["disgName"];
+      //   }
+
+      //   //For printLoad
+      //   if (this.printService.flg == 15) {
+      //     output.push("axis"); // default load, axis
+      //     output.push("load");
+      //     json["load"] = this.printService.json["load"];
+      //     json["loadName"] = this.printService.json["loadName"];
+      //     json["fix_node"] = this.printService.json["fix_node"];
+      //     json["element"] = this.printService.json["element"];
+      //     json["fix_member"] = this.printService.json["fix_member"];
+      //     selected = true;
+      //   }
+
+      //   // 印刷対象を選択 ここまで
+
+      //   //console.log("印刷対象を選択 ここまで: " + this.check_ts() + " msec");
+
+      //   if (!selected) {
+      //     this.helper.alert(this.translate.instant("print.selectTarget"));
+      //     this.loadind_desable();
+      //     return;
+      //   }
+
+      //   json["pageOrientation"] = this.printService.pageOrientation;
+      //   if (this.printService.flg == 15) {
+      //     json["diagramInput"] = {
+      //       layout: this.printService.printLayout,
+      //       output,
+      //       //single_layout_cases: [1, 2, 3,]
+      //     };
+      //     if (null !== this.printService.axis_scale_x.value)
+      //       json["diagramInput"].scaleX =
+      //         1.0 / Number(this.printService.axis_scale_x.value);
+
+      //     if (null !== this.printService.axis_scale_y.value)
+      //       json["diagramInput"].scaleY =
+      //         1.0 / Number(this.printService.axis_scale_y.value);
+      //   }
+      //   else {
+      //     json["diagramResult"] = {
+      //       layout: this.printService.printLayout,
+      //       output,
+      //     };
+
+      //     if (null !== this.printService.axis_scale_x.value)
+      //       json["diagramResult"].scaleX =
+      //         1.0 / Number(this.printService.axis_scale_x.value);
+
+      //     if (null !== this.printService.axis_scale_y.value)
+      //       json["diagramResult"].scaleY =
+      //         1.0 / Number(this.printService.axis_scale_y.value);
+
+      //   }
+
+      //   json["ver"] = packageJson.version;
+      //   const base64Encoded = this.getPostJson(json);
+
+      //   //console.log("base64EncodedをgetPostJsonしたところまで: " + this.check_ts() + " msec");
+
+      //   this.pdfPreView(base64Encoded);
+
+      //   //console.log("this.pdfPreView(base64Encoded);が終了: " + this.check_ts() + " msec");
+      // } 
+      console.log("json",json)
+    }
+    
   }
 
   private checkDataExisted(data: any): boolean {

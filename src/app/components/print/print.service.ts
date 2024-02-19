@@ -42,6 +42,7 @@ export class PrintService {
 
   // 印刷ケースのラジオボタン値
   public printCase: string;
+  public printCases: any=[];
 
   // 印刷対象のチェックボックス値
   public printTargetValues = [
@@ -186,6 +187,7 @@ export class PrintService {
 
     this.printOption = new Array();
     this.printCase = "";
+    this.printCases = [];
     for (const key of Object.keys(this.optionList)) {
       this.optionList[key].value = false;
       if (this.optionList[key].id == id) {
@@ -225,6 +227,7 @@ export class PrintService {
     }
     this.printOption = new Array();
     this.printCase = "";
+    this.printCases=[]
     for (const key of Object.keys(this.optionList)) {
       this.optionList[key].value = false;
       for (const flgId of this.arrFlg) {
@@ -232,14 +235,15 @@ export class PrintService {
           this.optionList[key].value = true;
           // this.flg = id;
           // this.selectedIndex = this.optionList[key].id;
-          if ([10, 11, 12, 13, 14, 15, 16].includes(this.optionList[key].id)) {
-            this.printCase = key;
+          if ([ 11, 12, 13, 15].includes(this.optionList[key].id)) {
+            this.printCases.push(key);
+            // this.printCase = key;
           }
         }
       }
     }
     this.priCount = 0;
-
+    console.log("this.printCases",this.printCases)
     this.newPrintJson();
   }
 
