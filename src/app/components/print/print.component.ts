@@ -484,6 +484,7 @@ export class PrintComponent implements OnInit, OnDestroy {
       console.log("print",this.printService.arrFlg);
         for(let data of this.printService.arrFlg){
           if(dataCheck.includes(data)){
+            this.printService.getPrintDatas()
             json=this.printService.json
             break;
           }
