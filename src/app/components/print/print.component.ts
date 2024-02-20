@@ -620,7 +620,7 @@ export class PrintComponent implements OnInit, OnDestroy {
               "axis",
               "load"
           ]}
-          let initData= {pageOrientation: "Vertical"}
+          let initData= {pageOrientation: "Vertical",ver:packageJson.version}
           for (var key of ["node", "member", "dimension", "language"]) {
              initData[key]=  this.printService.json[key]
           }
@@ -665,7 +665,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           // single check print screen
           console.log("run",mode);
           var selected: boolean = false;
-          let initData= {}
+          let initData= {ver:packageJson.version}
           const output = [];
           for (var key of ["node", "member", "dimension", "language"]) {
              initData[key]=  this.printService.json[key]
