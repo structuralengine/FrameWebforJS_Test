@@ -54,25 +54,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
         });
         if (evt.shiftKey) {
           // 「Shift」「Tab」
-          if (!(ui.rowIndx === 0 && ui.colIndx === 0)) {
-            const indexCrr = this.colsShow.indexOf(ui.colIndx);
-            let colPre = this.colsShow[indexCrr - 1];
-            if (indexCrr === 0) {
-              colPre = this.colsShow[this.colsShow.length - 1]
-              this.grid.setSelection({
-                rowIndx: ui.rowIndx - mov,
-                colIndx: colPre,
-                focus: true,
-              });
-            }
-            else {
-              this.grid.setSelection({
-                rowIndx: ui.rowIndx,
-                colIndx: colPre,
-                focus: true,
-              });
-            }
-          }
+         
           if (ui.colIndx > 0) {
             // 左に移動
             const countCols = this.grid.getColModel().length - 1;
@@ -143,7 +125,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
         // }
         return false;
       }
-
+     
       return true;
     };
     this.options.editorKeyDown = (evt, ui) => {
@@ -192,16 +174,33 @@ export class SheetComponent implements AfterViewInit, OnChanges {
   }
 
   onMouseWheel(event: WheelEvent) {
-    if (this.isCtrlShiftPressed) {
+    if (event.ctrlKey ) {
       event.preventDefault(); // Prevent the default behavior of the mouse wheel
-      const scrollAmount = 100; // Adjust the scroll amount as per your requirement
-      if (event.deltaY > 0) {
-        // Scroll right
-        this.div.nativeElement.scrollLeft += scrollAmount;
-      } else if (event.deltaY < 0) {
-        // Scroll left
-        this.div.nativeElement.scrollLeft -= scrollAmount;
+      if(event.shiftKey){
+        // debugger
+        event.preventDefault();
+        const scrollAmount = 20; // Adjust the scroll amount as per your requirement
+        let elementChildren = this.div.nativeElement;
+        let element = document.getElementsByClassName("pq-cont-right")
+    
+        if (event.deltaY > 0) {
+             for (let i = 0; i < element.length; i++) {
+            let elemento = element[i];
+            elemento.scrollLeft += scrollAmount;
+        }
+          
+            elementChildren.scrollLeft += scrollAmount;
+
+
+        } else if (event.deltaY < 0) {
+         // Scroll up
+         for (let i = 0; i < element.length; i++) {
+          let elemento = element[i];
+          elemento.scrollLeft -= scrollAmount;
+        }
+        }
       }
+
     }
   }
   refreshDataAndView() {
