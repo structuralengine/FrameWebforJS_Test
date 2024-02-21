@@ -3,6 +3,7 @@ import { autoUpdater } from 'electron-updater';
 import * as fs from 'fs';
 import log from 'electron-log';
 import isDev from 'electron-is-dev';
+import path from 'path'
 // 起動 --------------------------------------------------------------
 
 let mainWindow: BrowserWindow;
@@ -38,6 +39,7 @@ app.whenReady().then(async () => {
   await createWindow();
   // if (!isDev) {
     // 起動時に1回だけ
+    log.transports.file.resolvePath = () => path.join('E:\Le Tuan Anh\harmony-labo\FrameWebforJS_Test\src\logs\main.logs')
     log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
     dialog.showMessageBox({message: isDev.toString()});
     dialog.showMessageBox({message: app.getVersion()});
