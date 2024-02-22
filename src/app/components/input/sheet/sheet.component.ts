@@ -47,50 +47,32 @@ export class SheetComponent implements AfterViewInit, OnChanges {
         });
         return false;
       }
-      if(evt.key === 'Tab') {
-        const $cell = this.grid.getCell({
-          rowIndx: ui.rowIndx,
-          colIndx: ui.colIndx + mov,
-        });
-        this.grid.setSelection({
-          rowIndx: ui.rowIndx ,
-          colIndx: ui.colIndx + mov,
-          focus: true,
-        });
-        return false;
-      }
       if (evt.key === 'Tab') {
-        const $cell = this.grid.getCell({
-          rowIndx: ui.rowIndx,
-          colIndx: ui.colIndx + mov,
-        });
         if (evt.shiftKey) {
-          // 「Shift」「Tab」
-         
-          if (ui.colIndx > 0) {
-            // 左に移動
-            const countCols = this.grid.getColModel().length - 1;
-            const colIndx = ui.colIndx > countCols ? countCols : ui.colIndx;
-            this.grid.setSelection({
-              rowIndx: ui.rowIndx,
-              colIndx: colIndx - mov,
-              focus: true,
-            });
-          } else {
-            // 前の行の右端に移動
-            if (ui.rowIndx - mov >= 0) {
-              const prevRowCols = this.grid.getColModel().length - 1;
+          // 「Shift」 と「Tab」を同時に押した際に左へセルを進める
+          if (!(ui.rowIndx === 0 && ui.colIndx === 0)) {
+            const indexCrr = ui.colIndx;
+            const countCols = this.grid.getColModel().length;
+            
+            if (indexCrr === 0) {
               this.grid.setSelection({
                 rowIndx: ui.rowIndx - mov,
-                colIndx: prevRowCols ,
+                colIndx: countCols - 1,
+                focus: true,
+              });
+            }
+            else {
+              this.grid.setSelection({
+                rowIndx: ui.rowIndx,
+                colIndx: indexCrr - 1,
                 focus: true,
               });
             }
           }
         } else {
-          const indexCrr = this.colsShow.indexOf(ui.colIndx);
-          let colNext = this.colsShow[indexCrr + 1];
-          if (indexCrr === this.colsShow.length - 1) {
+          const countCols = this.grid.getColModel().length;
+          const indexCrr = ui.colIndx;
+          if (indexCrr === countCols - 1) {
             this.grid.setSelection({
               rowIndx: ui.rowIndx + mov,
               colIndx: 0,
@@ -100,7 +82,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
           else {
             this.grid.setSelection({
               rowIndx: ui.rowIndx,
-              colIndx: colNext,
+              colIndx: indexCrr+ mov,
               focus: true,
             });
           }
@@ -120,21 +102,7 @@ export class SheetComponent implements AfterViewInit, OnChanges {
           //   });
           // }
         }
-        // if ($cell.length > 0) {
-        //   // 右に移動
-        //   this.grid.setSelection({
-        //     rowIndx: ui.rowIndx,
-        //     colIndx: ui.colIndx + mov,
-        //     focus: true,
-        //   });
-        // } else {
-        //   // 次の行の左端に移動
-        //   this.grid.setSelection({
-        //     rowIndx: ui.rowIndx + mov,
-        //     colIndx: 0,
-        //     focus: true,
-        //   });
-        // }
+
         return false;
       }
      
