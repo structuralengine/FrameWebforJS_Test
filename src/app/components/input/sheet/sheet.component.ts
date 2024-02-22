@@ -48,7 +48,10 @@ export class SheetComponent implements AfterViewInit, OnChanges {
         return false;
       }
       if(evt.key === 'Tab') {
-        debugger
+        const $cell = this.grid.getCell({
+          rowIndx: ui.rowIndx,
+          colIndx: ui.colIndx + mov,
+        });
         this.grid.setSelection({
           rowIndx: ui.rowIndx ,
           colIndx: ui.colIndx + mov,
