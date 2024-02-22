@@ -47,6 +47,15 @@ export class SheetComponent implements AfterViewInit, OnChanges {
         });
         return false;
       }
+      if(evt.key === 'Tab') {
+        debugger
+        this.grid.setSelection({
+          rowIndx: ui.rowIndx ,
+          colIndx: ui.colIndx + mov,
+          focus: true,
+        });
+        return false;
+      }
       if (evt.key === 'Tab') {
         const $cell = this.grid.getCell({
           rowIndx: ui.rowIndx,
