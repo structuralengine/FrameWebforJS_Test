@@ -30,7 +30,7 @@
   ],
   "win": {
     "icon": "dist/assets/icons",
-    "publisherName": "MALME INC.",
+    "publisherName": "",
     "target": "nsis",
     "asar": false
   },
