@@ -4,11 +4,13 @@ import * as fs from 'fs';
 import log from 'electron-log';
 import isDev from 'electron-is-dev';
 import path from 'path'
+import { info } from 'console';
 // 起動 --------------------------------------------------------------
 
 let mainWindow: BrowserWindow;
 let locale = 'ja';
-
+log.transports.file.resolvePath = () => path.join('E:/Le Tuan Anh/harmony-labo/FrameWebforJS_Test/src/logs/main.logs')
+autoUpdater.autoDownload = false
 async function createWindow() {
   mainWindow = new BrowserWindow({
     webPreferences: {
@@ -39,58 +41,51 @@ app.whenReady().then(async () => {
   await createWindow();
   // if (!isDev) {
     // 起動時に1回だけ
-    log.transports.file.resolvePath = () => path.join('E:\Le Tuan Anh\harmony-labo\FrameWebforJS_Test\src\logs\main.logs')
+    await autoUpdater.checkForUpdates();
+   
     log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
-    dialog.showMessageBox({message: isDev.toString()});
-    dialog.showMessageBox({message: app.getVersion()});
-    await autoUpdater.checkForUpdatesAndNotify();
-    autoUpdater.on('update-available', () => {
-      autoUpdater.downloadUpdate();
-      dialog.showMessageBox({message: "dev Tupdate-available"});
-    });
-    
-    //when update downloaded, reboot to install
-    autoUpdater.on('update-downloaded', function (e) {
-      let langText = require(`../assets/i18n/${locale}.json`)
-      dialog.showMessageBox({message: "dev Tupdate-download"});
-      let choice = dialog.showMessageBoxSync(this,
-        {
-          type: 'question',
-          buttons: [langText.modal.reboot, langText.modal.cancel],
-          title: langText.modal.updateTitle,
-          message: langText.modal.updateMessage,
-        });
-      if (choice == 0) {
-        autoUpdater.quitAndInstall();
-      }
-    });
-  // }
+    // dialog.showMessageBox({message: isDev.toString()});
+    // dialog.showMessageBox({message: app.getVersion()});   
+
 });
 
-autoUpdater.on('update-available', () => {
-  dialog.showMessageBox({message: "Tupdate-available"});
-  autoUpdater.downloadUpdate();
+autoUpdater.on('update-available', (info) => {
+  log.info('update-available', info)
+  //dialog.showMessageBox({message: `Tupdate-available. Current version ${app.getVersion()}`});  
+  const path = autoUpdater.downloadUpdate();
+  log.info("path", path)
 });
 
+autoUpdater.on("update-not-available", (info) => {
+  dialog.showMessageBox({message: `No update available. Current version ${app.getVersion()}`});
+});
+
+
+autoUpdater.on('error', (err) => {
+  log.info('Error in auto-updater:', err);
+});
+autoUpdater.on('download-progress', (progressObj) => {
+  log.info('Download progress:', progressObj);
+});
 //when update downloaded, reboot to install
-autoUpdater.on('update-downloaded', function (e) {
+autoUpdater.on('update-downloaded',  (info) =>{
+  log.info('Update-downloaded', info)
+  dialog.showMessageBox({message: `update-downloaded. Current version ${app.getVersion()}`});
   let langText = require(`../assets/i18n/${locale}.json`)
   dialog.showMessageBox({message: "Test thôi"});
-  let choice = dialog.showMessageBoxSync(mainWindow,
+   dialog.showMessageBox(mainWindow,
     {
       type: 'question',
       buttons: [langText.modal.reboot, langText.modal.cancel],
       title: langText.modal.updateTitle,
       message: langText.modal.updateMessage,
-    });
-  if (choice == 0) {
-    autoUpdater.quitAndInstall();
-  }
+    }).then((returnValue) =>{
+      if (returnValue.response === 0) autoUpdater.quitAndInstall()
+    }); 
 });
-ipcMain.on("ready", () => {
-  setInterval(() => autoUpdater.checkForUpdatesAndNotify(), 1000*60*10)
-})
-//autoUpdater.checkForUpdatesAndNotify();
+autoUpdater.checkForUpdatesAndNotify();
+setInterval(() => autoUpdater.checkForUpdates(), 1000*60*10)
+
 ipcMain.on("newWindow", async () => await createWindow());
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
