@@ -40,12 +40,12 @@ async function createWindow() {
 app.whenReady().then(async () => {
   await createWindow();
   // if (!isDev) {
-    // 起動時に1回だけ
-    await autoUpdater.checkForUpdates();
-   
-    log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
-    // dialog.showMessageBox({message: isDev.toString()});
-    // dialog.showMessageBox({message: app.getVersion()});   
+  // 起動時に1回だけ
+  await autoUpdater.checkForUpdates();
+
+  log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
+  dialog.showMessageBox({message: isDev.toString()});
+  // dialog.showMessageBox({message: app.getVersion()});   
 
 });
 
@@ -56,10 +56,9 @@ autoUpdater.on('update-available', (info) => {
   log.info("path", path)
 });
 
-autoUpdater.on("update-not-available", (info) => {
-  dialog.showMessageBox({message: `No update available. Current version ${app.getVersion()}`});
-});
-
+// autoUpdater.on("update-not-available", (info) => {
+//   dialog.showMessageBox({ message: `No update available. Current version ${app.getVersion()}` });
+// });
 
 autoUpdater.on('error', (err) => {
   log.info('Error in auto-updater:', err);
@@ -68,23 +67,22 @@ autoUpdater.on('download-progress', (progressObj) => {
   log.info('Download progress:', progressObj);
 });
 //when update downloaded, reboot to install
-autoUpdater.on('update-downloaded',  (info) =>{
-  log.info('Update-downloaded', info)
-  dialog.showMessageBox({message: `update-downloaded. Current version ${app.getVersion()}`});
+autoUpdater.on('update-downloaded', (info) => {
+  log.info('Update-downloaded', info) 
   let langText = require(`../assets/i18n/${locale}.json`)
-  dialog.showMessageBox({message: "Test thôi"});
-   dialog.showMessageBox(mainWindow,
-    {
-      type: 'question',
-      buttons: [langText.modal.reboot, langText.modal.cancel],
-      title: langText.modal.updateTitle,
-      message: langText.modal.updateMessage,
-    }).then((returnValue) =>{
-      if (returnValue.response === 0) autoUpdater.quitAndInstall()
-    }); 
+  let choice = dialog.showMessageBoxSync(this,
+  {
+    type: 'info',
+    buttons: [langText.modal.reboot, langText.modal.cancel],   
+    message: langText.modal.updateMessage,
+  });
+  if (choice==0) {
+    autoUpdater.quitAndInstall(); 
+  }   
 });
-autoUpdater.checkForUpdatesAndNotify();
-setInterval(() => autoUpdater.checkForUpdates(), 1000*60*10)
+
+//autoUpdater.checkForUpdatesAndNotify();
+//setInterval(() => autoUpdater.checkForUpdates(), 1000 * 60 * 10)
 
 ipcMain.on("newWindow", async () => await createWindow());
 // Angular -> Electron --------------------------------------------------

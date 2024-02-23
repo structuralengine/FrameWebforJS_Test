@@ -404,7 +404,10 @@
     "modal": {
         "close": "閉じる",
         "cancel": "キャンセル",
-        "ok": "OK"
+        "ok": "OK",
+        "reboot": "Reboot",
+        "updateMessage": "Update is available. \n Do you want to reboot to perform the update?",
+        "updateTitle": "Application update"
     },
     "window": {
         "closeTitle": "確認",
