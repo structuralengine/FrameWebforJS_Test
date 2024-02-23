@@ -29,8 +29,7 @@
     }
   ],
   "win": {
-    "icon": "dist/assets/icons",
-    "publisherName": "",
+    "icon": "dist/assets/icons",  
     "target": "nsis",
     "asar": false,
     "verifyUpdateCodeSignature": false 

@@ -72,7 +72,7 @@ autoUpdater.on('update-downloaded', (info) => {
   let langText = require(`../assets/i18n/${locale}.json`)
   let choice = dialog.showMessageBoxSync(this,
   {
-    type: 'info',
+    type: 'question',
     buttons: [langText.modal.reboot, langText.modal.cancel],   
     message: langText.modal.updateMessage,
   });
