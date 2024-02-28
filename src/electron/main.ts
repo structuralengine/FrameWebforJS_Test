@@ -4,10 +4,10 @@ import * as fs from 'fs';
 import log from 'electron-log';
 import isDev from 'electron-is-dev';
 import path from 'path'
-import { info } from 'console';
 // 起動 --------------------------------------------------------------
 
 let mainWindow: BrowserWindow;
+let check = false;
 let locale = 'ja';
 log.transports.file.resolvePath = () => path.join('E:/Le Tuan Anh/harmony-labo/FrameWebforJS_Test/src/logs/main.logs')
 autoUpdater.autoDownload = false
@@ -20,19 +20,21 @@ async function createWindow() {
   });
   mainWindow.maximize();
   mainWindow.setMenuBarVisibility(false);
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();`
   mainWindow.on('close', function (e) {
-    let langText = require(`../assets/i18n/${locale}.json`)
-    let choice = dialog.showMessageBoxSync(this,
-      {
-        type: 'question',
-        buttons: ['Yes', 'No'],
-        title: langText.window.closeTitle,
-        message: langText.window.closeMessage,
-      });
-    if (choice == 1) {
-      e.preventDefault();
-    }
+    if(!check){
+      let langText = require(`../assets/i18n/${locale}.json`)
+      let choice = dialog.showMessageBoxSync(this,
+        {
+          type: 'question',
+          buttons: ['Yes', 'No'],
+          title: langText.window.closeTitle,
+          message: langText.window.closeMessage,
+        });
+      if (choice == 1) {
+        e.preventDefault();
+      }
+    }  
   });
   await mainWindow.loadFile('index.html');
 }
@@ -42,24 +44,14 @@ app.whenReady().then(async () => {
   // if (!isDev) {
   // 起動時に1回だけ
   await autoUpdater.checkForUpdates();
-
   log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
-  dialog.showMessageBox({message: isDev.toString()});
-  // dialog.showMessageBox({message: app.getVersion()});   
-
 });
 
 autoUpdater.on('update-available', (info) => {
   log.info('update-available', info)
-  //dialog.showMessageBox({message: `Tupdate-available. Current version ${app.getVersion()}`});  
   const path = autoUpdater.downloadUpdate();
   log.info("path", path)
 });
-
-// autoUpdater.on("update-not-available", (info) => {
-//   dialog.showMessageBox({ message: `No update available. Current version ${app.getVersion()}` });
-// });
-
 autoUpdater.on('error', (err) => {
   log.info('Error in auto-updater:', err);
 });
@@ -68,22 +60,48 @@ autoUpdater.on('download-progress', (progressObj) => {
 });
 //when update downloaded, reboot to install
 autoUpdater.on('update-downloaded', (info) => {
-  log.info('Update-downloaded', info) 
+  log.info('Update-downloaded', info)
   let langText = require(`../assets/i18n/${locale}.json`)
-  let choice = dialog.showMessageBoxSync(this,
-  {
-    type: 'question',
-    buttons: [langText.modal.reboot, langText.modal.cancel],   
-    message: langText.modal.updateMessage,
-  });
-  if (choice==0) {
-    autoUpdater.quitAndInstall(); 
-  }   
+  let choice = dialog.showMessageBoxSync(mainWindow,
+    {
+      type: 'question',
+      buttons: ['ok', 'cancel'],
+      message: langText.modal.updateMessage,
+    });
+  if (choice == 0) {
+    let langText = require(`../assets/i18n/${locale}.json`)
+    let choice = dialog.showMessageBoxSync(this,
+      {
+        type: 'question',
+        buttons: ['Yes', 'No'],
+        title: langText.window.closeTitle,
+        message: langText.window.closeMessage,
+      });
+    if (choice == 0) {
+      //e.preventDefault();
+      check = true;
+      autoUpdater.quitAndInstall();
+    }       
+  }
+  check = false;
 });
-
-//autoUpdater.checkForUpdatesAndNotify();
-//setInterval(() => autoUpdater.checkForUpdates(), 1000 * 60 * 10)
-
+// app.on('before-quit', function (e) {
+//   log.info('chay quit') 
+//   setTimeout(() => {
+//     let langText = require(`../assets/i18n/${locale}.json`)
+//     let choice = dialog.showMessageBoxSync(this,
+//       {
+//         type: 'question',
+//         buttons: ['Yes', 'No'],
+//         title: langText.window.closeTitle,
+//         message: langText.window.closeMessage,
+//       });
+//     if (choice == 1) {
+//       e.preventDefault();
+//     }
+//   }, 2000)
+  
+// })
 ipcMain.on("newWindow", async () => await createWindow());
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
