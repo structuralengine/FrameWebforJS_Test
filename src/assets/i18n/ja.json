@@ -404,9 +404,9 @@
     "modal": {
         "close": "閉じる",
         "cancel": "キャンセル",
-        "ok": "OK",
-        "reboot": "Reboot",
-        "updateMessage": "Update is available. \n Do you want to reboot to perform the update?",
+        "ok": "はい",
+        "reboot": "後でアップデート",
+        "updateMessage": "アップデートがあります。\n 再起動してアップデートを行いますか？",
         "updateTitle": "Application update"
     },
     "window": {
