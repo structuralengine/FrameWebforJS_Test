@@ -23,6 +23,7 @@ import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
 import { withLatestFrom } from "rxjs-compat/operator/withLatestFrom";
 import { forEach } from '@angular-devkit/schematics';
+import { LanguagesService } from "src/app/providers/languages.service";
 
 @Injectable({
   providedIn: "root",
@@ -56,6 +57,7 @@ export class ThreeLoadService {
 
   // 初期化
   constructor(
+    private languagesService: LanguagesService,
     private scene: SceneService,
     private helper: DataHelperModule,
     private nodeThree: ThreeNodesService,
@@ -1460,6 +1462,8 @@ export class ThreeLoadService {
           this.onResize();
           this.scene.render();
         });
+        this.languagesService.tranText();
+
     }
   }
 

@@ -58,7 +58,10 @@
         "NewWindow":"新しいウィンドウ",
         "back": "戻る",
         "save": "保存",
-        "update_success": "更新成功"
+        "update_success": "更新成功",
+        "select_preset": "プリセットを開く",
+        "preset": "プリセット",
+        "contact":"お問い合わせ"
     },
     "input": {
         "input-fix-node": {
@@ -84,7 +87,8 @@
             "No": "No",
             "member": "部材",
             "rigid": "剛域",
-            "MemberData": "部材データ"
+            "MemberData": "部材データ",
+            "RigidZone": "剛域"
         },
         "input-rigid":{
             "node": "節点",
@@ -422,5 +426,26 @@
     },
     "message":{
         "mes": "材料メニューの弾性係数が小さすぎます。単位をご確認ください。"
+    },
+    "preset":{
+        "ramen-viaduct" : "ラーメン構造",
+        "concrete-t-beam-bridge" : "Ct桁",
+        "u-shaped-retaining-wall" : "U型擁壁",
+        "portal-bracing" : "門型橋脚"
+    },
+    "control":{
+        "3D":"3D",
+        "GridHelper":"グリッド表示",
+        "Perspective":"パース表示",
+        "nodeNo":"節点番号表示",
+        "memberNo":"部材番号表示",
+        "nodeScale":"節点表示倍率",
+        "fixnodeScale":"支点表示倍率",
+        "memberScale":"部材表示倍率",
+        "LoadScale":"荷重表示倍率",
+        "dispScale":"変位表示倍率",
+        "reactScale":"反力表示倍率",
+        "forceScale":"断面力表示倍率",
+        "meshScale":"パネル表示倍率"
     }
 }

@@ -11,6 +11,7 @@ import { InputNodesService } from '../../../components/input/input-nodes/input-n
 import { ResultCombineReacService } from '../../result/result-combine-reac/result-combine-reac.service';
 import { ResultPickupReacService } from '../../result/result-pickup-reac/result-pickup-reac.service';
 import { ThreeNodesService } from './three-nodes.service';
+import { LanguagesService } from 'src/app/providers/languages.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,7 @@ export class ThreeReactService {
   private gui_max_scale: number;
 
   constructor(private scene: SceneService,
+    private languagesService: LanguagesService,
     private helper: DataHelperModule,
     private nodeThree: ThreeNodesService,
     private node: InputNodesService,) {
@@ -82,6 +84,7 @@ export class ThreeReactService {
         this.onResize();
         this.scene.render();
       });
+    this.languagesService.tranText();
   }
 
   // guiを非表示にする

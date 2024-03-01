@@ -32,6 +32,8 @@ jobs:
         run: npm install -g @angular/cli@12.2.7 && npm install
 
       - name: Build Angular app
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: npm run build-action
 
       - name: Upload artifact

@@ -34,6 +34,8 @@ jobs:
         run: npm install -g @angular/cli@12.2.7 && npm install
 
       - name: Build Windows app
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           build_script_name: "electron:windows"

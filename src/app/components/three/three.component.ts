@@ -183,4 +183,8 @@ export class ThreeComponent implements AfterViewInit, OnDestroy {
       this.downloadLink.nativeElement.click();
     });
   }
+  onToggleHome() {
+    this.scene.resetCamera()
+    this.scene.render();
+  }
 }
