@@ -315,7 +315,7 @@
         "SectionForce": "断面力",
         "combine_SectionForce": "コンバイン 断面力",
         "pickup_SectionForce": "ピックアップ 断面力",
-        "PrintScreen": "画面印刷",
+        "PrintScreen": "図化出力",
         "PrintLoad": "荷重図",
         "PrintDiagram": "断面力図",
         "disgDiagram": "変位図",

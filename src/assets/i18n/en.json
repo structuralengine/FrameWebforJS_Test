@@ -314,7 +314,7 @@
         "SectionForce": "SectionForce",
         "combine_SectionForce": "SectionForce (COMBINE)",
         "pickup_SectionForce": "SectionForce (PICKUP)",
-        "PrintScreen": "Print screen",
+        "PrintScreen": "Graphical output",
         "PrintLoad": "Load diagram",
         "PrintDiagram": "Sectional force diagram",
         "disgDiagram": "Displacement diagram",
