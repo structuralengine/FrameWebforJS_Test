@@ -481,11 +481,13 @@ export class PrintComponent implements OnInit, OnDestroy {
     }else{
       let json: any = {};
       const dataCheck=[0,1,3,2,4,5,6,7,8,9]
+      json["hasPrintCalculation"]= false
       console.log("print",this.printService.arrFlg);
         for(let data of this.printService.arrFlg){
           if(dataCheck.includes(data)){
             this.printService.getPrintDatas()
             json=this.printService.json
+            json["hasPrintCalculation"]= true
             break;
           }
         }
@@ -586,7 +588,7 @@ export class PrintComponent implements OnInit, OnDestroy {
         return;
       }
       return;
-      }
+    }
       //data Load diagram, Sectional force diagram, Combine force diagram, Pickup force diagram
       if(this.printService.printCases.length!==0 && this.printService.printCase ===""){
         this.printService.optionList["input"].value = true;
