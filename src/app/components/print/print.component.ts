@@ -625,42 +625,52 @@ export class PrintComponent implements OnInit, OnDestroy {
           for (var key of ["node", "member", "dimension", "language"]) {
              initData[key]=  this.printService.json[key]
           }
+          json = {...json, ...initData}
           for(let key of this.printService.printCases ){
             if(key === "PrintLoad"){
+              json["load"] = this.printService.json["load"],
+              json["fix_node"]=this.printService.json["fix_node"],
+              json["element"]= this.printService.json["element"],
+              json["fix_member"]=this.printService.json["fix_member"],
               json["PrintLoad"]={
                 diagramInput,
-                load : this.printService.json["load"],
-                fix_node:this.printService.json["fix_node"],
-                element: this.printService.json["element"],
-                fix_member:this.printService.json["fix_member"],
-                ...initData,
+                // load : this.printService.json["load"],
+                // fix_node:this.printService.json["fix_node"],
+                // element: this.printService.json["element"],
+                // fix_member:this.printService.json["fix_member"],
+                // ...initData,
                }
             }
             if(key === "PrintDiagram"){
+              json["load"] = this.printService.json["load"],
+              json['fsec'] =this.printService.json["fsec"],
               json["PrintDiagram"]={
                 diagramResult,
-                load : this.printService.json["load"],
-                fsec : this.printService.json["fsec"],
-                ...initData,
+                // load : this.printService.json["load"],
+                // fsec : this.printService.json["fsec"],
+                // ...initData,
               }
             }
             if(key === "CombPrintDiagram"){
+               json["combine"] = this.printService.json["combine"],
+              json["fsecCombine"] = this.printService.json["fsecCombine"],
               json["CombPrintDiagram"]={
                 diagramResult,
-                combine : this.printService.json["combine"],
-                fsecCombine : this.printService.json["fsecCombine"],
-                ...initData,
+                // combine : this.printService.json["combine"],
+                // fsecCombine : this.printService.json["fsecCombine"],
+                // ...initData,
               }
             }
             if(key === "PickPrintDiagram"){
+              json["pickup"]= this.printService.json["pickup"],
+              json["fsecPickup"] = this.printService.json["fsecPickup"],
               json["PickPrintDiagram"]={
                 diagramResult,
-                pickup : this.printService.json["pickup"],
-                fsecPickup : this.printService.json["fsecPickup"],
-                ...initData,
+                // pickup : this.printService.json["pickup"],
+                // fsecPickup : this.printService.json["fsecPickup"],
+                // ...initData,
               }
-            }
-           
+            } 
           }
         }else{
           // single check print screen
@@ -671,37 +681,34 @@ export class PrintComponent implements OnInit, OnDestroy {
           for (var key of ["node", "member", "dimension", "language"]) {
              initData[key]=  this.printService.json[key]
           }
+          json ={...json, ...initData}
           let keyScreen=""
           for(let key of this.printService.printCases ){
             keyScreen=key
             if(key === "PrintLoad"){
+              json["load"] = this.printService.json["load"],
+              json["fix_node"]=this.printService.json["fix_node"],
+              json["element"]= this.printService.json["element"],
+              json["fix_member"]=this.printService.json["fix_member"],
               json["PrintLoad"]={
-                load : this.printService.json["load"],
-                fix_node:this.printService.json["fix_node"],
-                element: this.printService.json["element"],
-                fix_member:this.printService.json["fix_member"],
-                ...initData,
                }
             }
             if(key === "PrintDiagram"){
+              json["load"] = this.printService.json["load"],
+              json['fsec'] =this.printService.json["fsec"],
               json["PrintDiagram"]={
-                load : this.printService.json["load"],
-                fsec : this.printService.json["fsec"],
-                ...initData,
               }
             }
             if(key === "CombPrintDiagram"){
+               json["combine"] = this.printService.json["combine"],
+              json["fsecCombine"] = this.printService.json["fsecCombine"],
               json["CombPrintDiagram"]={
-                combine : this.printService.json["combine"],
-                fsecCombine : this.printService.json["fsecCombine"],
-                ...initData,
               }
             }
             if(key === "PickPrintDiagram"){
+              json["pickup"]= this.printService.json["pickup"],
+              json["fsecPickup"] = this.printService.json["fsecPickup"],
               json["PickPrintDiagram"]={
-                pickup : this.printService.json["pickup"],
-                fsecPickup : this.printService.json["fsecPickup"],
-                ...initData,
               }
             }
           }
@@ -775,10 +782,10 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
       }
       console.log("json",json)
-      this.loadind_enable();
-      const base64Encoded = this.getPostJson(json);
-      this.pdfPreView(base64Encoded);
-      this.router.navigate(["/"]);
+      // this.loadind_enable();
+      // const base64Encoded = this.getPostJson(json);
+      // this.pdfPreView(base64Encoded);
+      // this.router.navigate(["/"]);
     }
     
   }
