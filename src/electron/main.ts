@@ -66,7 +66,8 @@ autoUpdater.on('update-downloaded', (info) => {
   let choice = dialog.showMessageBoxSync(mainWindow,
     {
       type: 'question',
-      buttons: [langText.modal.ok, langText.modal.reboot],
+      //buttons: [langText.modal.ok, langText.modal.reboot],
+      buttons: ["Ok", "Cancel"],
       message: langText.modal.updateMessage,
     });
   if (choice == 0) {
