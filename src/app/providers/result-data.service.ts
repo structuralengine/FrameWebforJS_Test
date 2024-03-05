@@ -208,6 +208,7 @@ export class ResultDataService {
 
     for (let No = 1; No <= Object.keys(p).length; No++) {
       const c = p[No.toString()];
+      if(!c){continue;}
       const rows: number = Object.keys(c["fx_max"]).length;
 
       for (const symbol of ["fx", "fy", "fz", "mx", "my", "mz"]) {

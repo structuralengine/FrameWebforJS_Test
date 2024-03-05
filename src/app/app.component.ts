@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, ElementRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { UserInfoService } from "./providers/user-info.service";
 import { ResultDataService } from "./providers/result-data.service";
@@ -20,16 +20,17 @@ import { environment } from "src/environments/environment";
 import { SheetComponent } from "./components/input/sheet/sheet.component";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LanguagesService } from './providers/languages.service';
+import { AppService } from "./app.service";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   @Output() pagerEvent = new EventEmitter<number>();
   @ViewChild("grid") grid: SheetComponent;
-  
+  translateY: string = "translateY(0)";
   btnReac!: string;
   isToggled: Boolean = true;
   eventFromChild: number;
@@ -48,13 +49,26 @@ export class AppComponent implements OnInit {
     private InputData: InputDataService,
     private http: HttpClient,
     public user: UserInfoService,
-    public language: LanguagesService
+    public language: LanguagesService,
+    public appService: AppService,
+    private elem: ElementRef
   ) {
     this.translate.setDefaultLang("ja");
+    if(window.sessionStorage.getItem("openStart") === null) window.sessionStorage.setItem("openStart", "1")
+  }
+  ngAfterViewInit(): void {
+    this.language.tranText();
   }
 
   ngOnInit() {
     this.helper.isContentsDailogShow = false;
+  }
+
+  onScroll(event): void {
+    let scrollTop = event.srcElement.scrollTop;
+    this.translateY = "translateY(-" + scrollTop + "px)";
+    // Interpret the scroll event
+    // Do stuff on inner div scroll
   }
 
   // 計算結果表示ボタンを無効にする
@@ -65,23 +79,7 @@ export class AppComponent implements OnInit {
   }
 
   public dialogClose(): void {
-    this.helper.isContentsDailogShow = false;
-    this.addHiddenFromElements();
-
-    // 印刷ウィンドウの変数をリセット
-    this.resetPrintdialog();
-  }
-
-  // 印刷ウィンドウの変数をリセット
-  public resetPrintdialog(): void {
-    for (let i = 0; i < this.printService.printTargetValues.length; i++) {
-      this.printService.printTargetValues[i].value = false;
-    }
-
-    this.printService.resetPrintOption(); // いずれ消したい
-    //this.printService.selectPrintCase('');
-    this.printService.clearPrintCase(); // いずれ消したい
-
+    this.appService.dialogClose();
   }
 
   public contentsDailogShow(id): void {
@@ -125,25 +123,12 @@ export class AppComponent implements OnInit {
     this.removeHiddenFromClass("#my_dock_manager");
     this.removeHiddenFromClass(".dialog-floating");
   }
-  public addHiddenFromElements(): void {
-    this.addHiddenFromClass(".panel-element-content-container");
-    this.addHiddenFromClass("#my_dock_manager");
-    this.addHiddenFromClass(".dialog-floating");
-  }
-
   private removeHiddenFromClass(selector: string): void {
     const element = document.querySelector(selector);
     if (element) {
       element.classList.remove("hidden");
     }
   }
-  private addHiddenFromClass(selector: string): void {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.classList.add("hidden");
-    }
-  }
-
   // フローティングウィンドウの位置
   public dragPosition = { x: 0, y: 0 };
   public changePosition() {
@@ -308,6 +293,7 @@ export class AppComponent implements OnInit {
             else
               this.helper.alert(e);
           } finally {          
+
             modalRef.close(); // モーダルダイアログを消す
             if(check)
               this.helper.alert(

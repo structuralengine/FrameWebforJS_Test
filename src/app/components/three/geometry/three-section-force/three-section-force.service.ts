@@ -17,6 +17,7 @@ import { ResultFsecService } from "src/app/components/result/result-fsec/result-
 import { InputPanelService } from "src/app/components/input/input-panel/input-panel.service";
 import { ThreeService } from "../../three.service";
 import { ResultFsecBehaviorSubject } from "../../color-palette/color-palette-behaviorsubject.service";
+import { LanguagesService } from "src/app/providers/languages.service";
 
 @Injectable({
   providedIn: "root",
@@ -63,6 +64,7 @@ export class ThreeSectionForceService {
     [229, 226, 171],
   ];
   constructor(
+    private languagesService: LanguagesService,
     private scene: SceneService,
     private max_min: MaxMinService,
     private helper: DataHelperModule,
@@ -190,7 +192,7 @@ export class ThreeSectionForceService {
           this.scene.render();
         }),
     };
-
+    this.languagesService.tranText();
     // this.gui['textCount'] = this.scene.gui.add(this.params, 'textCount', 0, 100).step(10).onFinishChange((value) => {
     //   // guiによる設定
     //   this.textCount = value;
@@ -232,6 +234,7 @@ export class ThreeSectionForceService {
           this.scene.render();
         });
     }
+    this.languagesService.tranText();
   }
 
   private guiDisable(): void {

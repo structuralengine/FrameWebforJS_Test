@@ -1,11 +1,12 @@
 {
-  "name": "frame-web-for-js-test",
-  "version": "2.3.15",
+  "name": "frame-web-for-js",
+  "version": "2.3.7",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host=127.0.0.1",
-    "build": "ng build --configuration production --base-href \"https://structuralengine.github.io/FrameWebforJS_Test/\" && angular-cli-ghpages",
-    "build-action": "ng build --configuration production --base-href \"https://structuralengine.github.io/FrameWebforJS_Test/\"",
+    "build": "ng build --configuration production --base-href \"https://frameweb.malme.app/\" && npm run filecopy3 && angular-cli-ghpages",
+    "build-action": "ng build --configuration production --base-href \"https://frameweb.malme.app/\" && npm run filecopy3",
+
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -15,7 +16,8 @@
     "build:prod": "ng build --configuration production --optimization --extract-licenses --build-optimizer && webpack --config webpack.electron.prod.config.js && npm run filecopy1 && npm run filecopy2",
     "start:prod": "electron dist/index.js",
     "filecopy1": "node -e \"require('fs').copyFileSync('dev-app-update.yml', 'dist/dev-app-update.yml')\"",
-    "filecopy2": "node -e \"require('fs').copyFileSync('app-update.yml', 'dist/app-update.yml')\""
+    "filecopy2": "node -e \"require('fs').copyFileSync('app-update.yml', 'dist/app-update.yml')\"",
+    "filecopy3": "node -e \"require('fs').copyFileSync('src/404.html', 'dist/404.html')\""
   },
   "description": "FrameWebforJS_Test",
   "author": {
@@ -66,7 +68,7 @@
     "keycloak-js": "^20.0.5",
     "nanoid": "^4.0.2",
     "pako": "^2.0.2",
-    "pqgrid": "file:./paramquery-8.4.0/",
+    "pqgrid": "file:./paramquery-9.0.1/",
     "print-js": "^1.6.0",
     "rxjs": "~6.6.2",
     "rxjs-compat": "^6.5.3",

@@ -24,10 +24,12 @@ import { ResultCombineFsecComponent } from './components/result/result-combine-f
 import { ResultPickupDisgComponent } from './components/result/result-pickup-disg/result-pickup-disg.component';
 import { ResultPickupReacComponent } from './components/result/result-pickup-reac/result-pickup-reac.component';
 import { ResultPickupFsecComponent } from './components/result/result-pickup-fsec/result-pickup-fsec.component';
+import { StartMenuComponent } from './components/start-menu/start-menu.component'
 import { PrintComponent } from './components/print/print.component'
 import { PrintLayoutComponent } from './components/print/print-layout/print-layout.component';
 import { InvoiceComponent } from './components/print/invoice/invoice.component';
 import { InputRigidZoneComponent } from './components/input/input-rigid-zone/input-rigid-zone.component';
+import { PresetComponent } from './components/preset/preset.component';
 
 const routes: Routes = [
   { path: 'input-nodes', component: InputNodesComponent },
@@ -46,8 +48,9 @@ const routes: Routes = [
   { path: 'input-combine', component: InputCombineComponent },
   { path: 'input-pickup', component: InputPickupComponent },
 
+  { path: 'start', outlet:'startOutlet',component: StartMenuComponent },
   { path: 'print', outlet:'printOutlet',component: PrintComponent },
-
+  { path: 'preset', outlet:'presetOutlet',component: PresetComponent },
   { path: 'result-disg', component: ResultDisgComponent },
   { path: 'result-reac', component: ResultReacComponent },
   { path: 'result-fsec', component: ResultFsecComponent },

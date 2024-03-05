@@ -9,6 +9,7 @@ const URL_INPUTS = [
   "/input-elements",
   "/input-joints",
   "/input-loads",
+  "/input-load-name",
   "/input-fix_members"  
 ];
 const URL_RESULTS = [
@@ -86,6 +87,10 @@ export class OptionalHeaderComponent implements OnInit {
     "/result-pic_fsec",
   ];
 
+  activeLoadName: boolean = true;
+  activeLoadStrength: boolean = false;
+  url: string =""
+
   constructor(
     private router: Router,
     private scene: SceneService,
@@ -95,8 +100,17 @@ export class OptionalHeaderComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         console.log("event", event.url)
+        this.url= event.url
+        if(event.url==="/input-load-name"){
+         this.activeLoadName=true,
+         this.activeLoadStrength= false;
+        }
+        if(event.url==="/input-loads"){
+          this.activeLoadName=false,
+          this.activeLoadStrength= true;
+        }
         this.showPagerComponent = URL_INPUTS.concat(URL_RESULTS).includes(
-          event.url
+          event.url 
         );
         this.showMemberComponent = URL_MEM.includes(event.url);
         this.showLoadComponent = URL_LOAD.includes(event.url);
@@ -148,12 +162,16 @@ export class OptionalHeaderComponent implements OnInit {
   previousLoadPage() {
     this.selectedLoadPage--;
     this.selectedLink = "/input-load-name";
+    this.activeLoadName= true;
+    this.activeLoadStrength= false;
     this.onLinkChange(this.selectedLink);
   }
 
   nextLoadPage() {
     this.selectedLoadPage++;
     this.selectedLink = "/input-loads";
+    this.activeLoadName= false;
+    this.activeLoadStrength= true;
     this.onLinkChange(this.selectedLink);
   }
 
@@ -177,6 +195,11 @@ export class OptionalHeaderComponent implements OnInit {
     this.onLinkChange(this.selectedDefineLink);
   }
 
+  handleDefinePage(select: any) {
+    this.selectedDefineLink = select;
+    this.onLinkChange(this.selectedDefineLink);
+  }
+
   previousResultPage() {
     this.selectedResultPage--;
     const resultURL = this.selectedUrlChange();
@@ -185,6 +208,12 @@ export class OptionalHeaderComponent implements OnInit {
 
   nextResultPage() {
     this.selectedResultPage++;
+    const resultURL = this.selectedUrlChange();
+    this.router.navigate([resultURL[this.selectedResultPage - 1]]);
+  }
+
+  handleResultPage(select:any){
+    this.selectedResultPage= select
     const resultURL = this.selectedUrlChange();
     this.router.navigate([resultURL[this.selectedResultPage - 1]]);
   }

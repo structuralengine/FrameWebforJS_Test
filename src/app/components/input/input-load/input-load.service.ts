@@ -294,6 +294,7 @@ export class InputLoadService {
       if (load_id in load_name) {
         jsonData = JSON.parse(JSON.stringify(load_name[load_id]));
       } else {
+        jsonData["rate"] = 1;
         jsonData["fix_node"] = 1;
         jsonData["fix_member"] = 1;
         jsonData["element"] = 1;
@@ -314,7 +315,7 @@ export class InputLoadService {
       let flg: boolean = false;
       if (empty === 0) {
         flg = true;
-        for (const key of ["fix_node", "fix_member", "element", "joint"]) {
+        for (const key of ["fix_node", "fix_member", "element", "joint", "rate"]) {
           if (jsonData[key] === empty) {
             jsonData[key] = 1;
           }
@@ -393,6 +394,7 @@ export class InputLoadService {
       const load_id = (i + 1).toString();
 
       const temp = {
+        rate: rate == null ? empty : rate,
         fix_node: fix_node == null ? empty : fix_node,
         fix_member: fix_member == null ? empty : fix_member,
         element: element == null ? empty : element,
