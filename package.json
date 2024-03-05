@@ -1,9 +1,7 @@
 {
-  "name": "frame-web-for-js",
+  "name": "frame-web-for-js-test",
 
-  "version": "2.3.7",
-
-
+  "version": "2.3.10",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host=127.0.0.1",

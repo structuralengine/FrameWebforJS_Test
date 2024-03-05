@@ -9,11 +9,11 @@ import path from 'path'
 let mainWindow: BrowserWindow;
 let check = -1;
 let locale = 'ja';
-log.transports.file.resolvePath = () => path.join('E:/Le Tuan Anh/harmony-labo/FrameWebforJS_Test/src/logs/main.logs')
+log.transports.file.resolvePath = () => path.join('E:/Le Tuan Anh/FrameWebforJS_Test/src/logs/main.logs')
 autoUpdater.autoDownload = false
 async function createWindow() {
   check = -1;
-  log.info("check install", check);
+  log.info("check install k", check);
   mainWindow = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
@@ -66,7 +66,7 @@ autoUpdater.on('update-downloaded', (info) => {
   let choice = dialog.showMessageBoxSync(mainWindow,
     {
       type: 'question',
-      buttons: [langText.modal.ok, langText.modal.reboot],
+      buttons: ["Ok", "Cancel"],
       message: langText.modal.updateMessage,
     });
   if (choice == 0) {

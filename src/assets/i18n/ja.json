@@ -410,7 +410,7 @@
         "cancel": "キャンセル",
         "ok": "はい",
         "reboot": "後でアップデート",
-        "updateMessage": "アップデートがあります。\n 再起動してアップデートを行いますか？",
+        "updateMessage": "アップデートがあります。\n 再起動してアップデートを行いますか？\nキャンセルを選ばれた場合、アプリ終了後に自動アップデートされます。",
         "updateTitle": "Application update"
     },
     "window": {
