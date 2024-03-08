@@ -318,7 +318,8 @@ export class PrintService {
       // 69：1ページ当たりの入る行数
       this.pageCount = Math.ceil((Math.ceil(this.priCount / 69) * 2) / 50) * 50;
       // 概算ページ数が1000ページ(this.printPossible)を超えると，印刷不可
-      this.pageOver = this.pageCount > this.printPossible ? true : false;
+      // this.pageOver = this.pageCount > this.printPossible ? true : false;
+      this.pageOver =  false; //set false to accept multi print
 
       // 概算ページ数が50いかない場合と，入力データ，画像データの時には，概算ページ数を非表示にする．
       if (!(this.optionList['input'].value == true || this.is_printing_screen())) {
