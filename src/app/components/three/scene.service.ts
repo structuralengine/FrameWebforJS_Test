@@ -134,7 +134,8 @@ export class SceneService {
     // this.gui.add( this.params, 'ReDraw' ); // あまり使わなかったので コメントアウト
 
     // gui はデフォルトで、展開状態にしておく
-    this.gui.open();
+    // this.gui.open();
+    this.gui.close();
     // コントロール
     this.addControls();
 
