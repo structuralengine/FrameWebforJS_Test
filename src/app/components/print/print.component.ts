@@ -817,14 +817,14 @@ export class PrintComponent implements OnInit, OnDestroy {
       this.loadind_enable();
 
       //Temporarily limit the encoded json characters to avoid memory overflow
-      if (JSON.stringify(json).length > 90000000) {
-        this.loadind_desable();
-        this.helper.alert(this.translate.instant("message.mes-warning"));
-      } else {
+      // if (JSON.stringify(json).length > 90000000) {
+        // this.loadind_desable();
+        // this.helper.alert(this.translate.instant("message.mes-warning"));
+      // } else {
         const base64Encoded = this.getPostJson(json);
         this.pdfPreView(base64Encoded);
         this.router.navigate(["/"]);
-      }
+      // }
     }
   }
 
@@ -852,7 +852,12 @@ export class PrintComponent implements OnInit, OnDestroy {
           }
         } catch (e) {}
         this.loadind_desable();
-        this.helper.alert(err["message"]);
+        let alertMessage = err["message"];
+        if (alertMessage.includes("0 Unknown Error")) {
+          this.helper.alert(this.translate.instant("message.mes-warning"));
+        } else {
+          this.helper.alert(err["message"]);
+        }
       }
     );
   }
