@@ -64,7 +64,7 @@ export class OptionalHeaderComponent implements OnInit {
   selectedDisgLink: string = "/result-disg";
   selectedReacLink: string = "/result-reac";
   selectedFsecLink: string = "/result-fsec";
-  isControlOpen: boolean = true;
+  isControlOpen: boolean = false;
   selectedLoadPage: number = 1;
   selectedDefinePage: number = 1;
   selectedResultPage: number = 1;
@@ -128,7 +128,9 @@ export class OptionalHeaderComponent implements OnInit {
       });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.handleShow(2)
+  }
   initSelectedValue(url: string) {
     if (url === "/input-load-name") {
       this.selectedLink = url;
@@ -145,8 +147,6 @@ export class OptionalHeaderComponent implements OnInit {
     }else {
       this.onLinkChange(url);
     }
-    this.onToggleControl()
-    this.handleShow(2)
   }
 
   onToggleControl() {
