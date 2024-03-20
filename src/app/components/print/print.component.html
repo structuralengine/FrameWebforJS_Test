@@ -213,8 +213,8 @@
                   <!-- 2Dモードや計算前に関わらず、常に選択できる -->
 
                   <li *ngIf="helper.dimension === 3">
-                    <label style="width: 100%">
-                      <input type="radio" name="radio-print" class="radio-input" id="printCase5"
+                    <label style="width: 100% ; opacity: 0.5">
+                      <input type="radio" name="radio-print" class="radio-input" id="printCase5" disabled="true"
                       [checked]="printService.flg === 15"
                         (click)="printService.selectRadio(15)" />
                       <span class="radio-parts" translate>print.PrintLoad</span>
