@@ -498,13 +498,18 @@ export class PrintComponent implements OnInit, OnDestroy {
       let json: any = {};
       const dataCheck = [0, 1, 3, 2, 4, 5, 6, 7, 8, 9];
       json["hasPrintCalculation"] = false;
+      json["hasPrintInputData"] = false;
       for (let data of this.printService.arrFlg) {
         if (dataCheck.includes(data)) {
           this.printService.getPrintDatas();
           json = this.printService.json;
           json["hasPrintCalculation"] = true;
+          
+          //print input
+          if(this.printService.arrFlg.includes(0)) json["hasPrintInputData"] = true;
           break;
         }
+       
       }
       // data Calculation Results
       if (Object.keys(json).length !== 0) {
