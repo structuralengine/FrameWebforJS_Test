@@ -29,7 +29,7 @@ a[href="https://paramquery.com/pro"] {
 .obit-controls-gizmo {
   position: absolute;
   top: 109px;
-  right: 19px;
+  left: 230px;
   z-index: 1;
 }
 
@@ -286,6 +286,8 @@ body {
 
 .pq-td-div {
   background: #56585c !important;
+  text-overflow: unset !important;
+  white-space: unset !important;
 }
 .pq-title-span {
   color: white;
@@ -412,8 +414,12 @@ body {
 
 /* Add application styles & imports to this file! */
 
-@import url("https://unpkg.com/pqgrid@7.5.0/pqgrid.min.css");
+@import url("https://unpkg.com/pqgrid@9.0.1/pqgrid.min.css");
 @import "~pqgrid/pqgrid.ui.min.css";
 @import "~pqgrid/themes/steelblue/pqgrid.css";
 @import "../node_modules/dock-spawn-ts/lib/css/dock-manager.css";
 @import "../node_modules/dock-spawn-ts/lib/css/dock-manager-style.css";
+
+#chatplusview.chatplusview-basic.closed #outline{
+  display: none;
+}

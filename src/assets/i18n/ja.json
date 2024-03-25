@@ -60,7 +60,8 @@
         "save": "保存",
         "update_success": "更新成功",
         "select_preset": "プリセットを開く",
-        "preset": "プリセット"
+        "preset": "プリセット",
+        "contact":"お問い合わせ"
     },
     "input": {
         "input-fix-node": {
@@ -407,7 +408,8 @@
     "modal": {
         "close": "閉じる",
         "cancel": "キャンセル",
-        "ok": "OK"
+        "ok": "はい",    
+        "updateMessage": "アップデートがあります。\n 再起動してアップデートを行いますか？\nキャンセルを選ばれた場合、アプリ終了後に自動アップデートされます。"        
     },
     "window": {
         "closeTitle": "確認",

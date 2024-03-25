@@ -6993,7 +6993,7 @@ jest-worker@^27.4.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jquery-ui-pack@^1.12.3, jquery-ui-pack@1.12.3:
+jquery-ui-pack@^1.12.3, jquery-ui-pack@>=1.12.3, jquery-ui-pack@1.12.3:
   version "1.12.3"
   resolved "https://registry.npmjs.org/jquery-ui-pack/-/jquery-ui-pack-1.12.3.tgz"
   integrity sha512-a3n/AzOT+pvhsrk8/FD3AQAe8nLI19NBhhS0jSHSEhND76X1CFbxSWonqpnjmxgXk4Yd4IfdVd1ZiKdbBes60g==
@@ -8505,9 +8505,9 @@ postcss-value-parser@^4.1.0, postcss-value-parser@^4.2.0:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-"pqgrid@file:./paramquery-8.4.0/":
-  version "8.4.0"
-  resolved "file:paramquery-8.4.0"
+"pqgrid@file:./paramquery-9.0.1/":
+  version "9.0.1"
+  resolved "file:paramquery-9.0.1"
 
 prepend-http@^1.0.0:
   version "1.0.4"

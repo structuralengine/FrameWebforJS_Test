@@ -138,7 +138,7 @@ export class ThreeMembersService {
       // 文字をシーンに追加
       const div = document.createElement("div");
       div.className = "label";
-      div.textContent = key;
+      div.textContent = `(${key})`;
       div.style.marginTop = "-1em";
       const label = new CSS2DObject(div);
 

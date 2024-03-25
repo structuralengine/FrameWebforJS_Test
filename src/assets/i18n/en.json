@@ -59,7 +59,8 @@
         "save": "Save",
         "update_success": "Update success!!",
         "select_preset": "Select Preset",
-        "preset": "Preset"
+        "preset": "Preset",
+        "contact":"Contact"
     },
     "input": {
         "input-fix-node": {
@@ -406,7 +407,9 @@
     "modal": {
         "close": "Close",
         "cancel": "Cancel",
-        "ok": "OK"
+        "ok": "OK",               
+        "updateMessage": "Update is available.\nDo you want to reboot to perform the update?\nIf you choose to cancel, the application will be automatically updated after it is closed."
+       
     },
     "window": {
         "closeTitle": "Confirm",
