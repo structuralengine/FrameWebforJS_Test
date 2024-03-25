@@ -213,15 +213,15 @@
                   <!-- 2Dモードや計算前に関わらず、常に選択できる -->
                   <!-- Can hide this button for 3D, currently set it cannot be selected -->
                   <li *ngIf="helper.dimension === 3">
-                    <label style="width: 100% ; opacity: 0.5">
-                      <input type="radio" name="radio-print" class="radio-input" id="printCase5" disabled="true"
+                    <label style="width: 100%" class="checkDisable">
+                      <input type="radio" name="radio-print" class="radio-input" id="printCase5"
                       [checked]="printService.flg === 15"
                         (click)="printService.selectRadio(15)" />
                       <span class="radio-parts" translate>print.PrintLoad</span>
                     </label>
                   </li>
-                  <li *ngIf="helper.dimension === 2">
-                    <label style="width: 100%">
+                  <li *ngIf="helper.dimension === 2"  >
+                    <label style="width: 100%" [ngClass]="{checkDisable:helper.dimensionInit===3}">
                       <input type="checkbox" name="radio-print" class="radio-input" id="printCase5"
                         (click)="printService.selectCheckbox(15)" [checked]="printService.arrFlg.includes(15)" />
                       <span class="radio-parts" translate>print.PrintLoad</span>

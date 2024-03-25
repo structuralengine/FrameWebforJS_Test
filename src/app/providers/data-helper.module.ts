@@ -16,6 +16,9 @@ export class DataHelperModule {
 
   // ３次元解析=3, ２次元解析=2
   public dimension: number;
+
+  //remember dimension when open file
+  public dimensionInit: number;
   public isContentsDailogShow: boolean;
 
   // アラートを表示する

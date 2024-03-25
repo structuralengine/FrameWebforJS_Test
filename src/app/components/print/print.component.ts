@@ -498,7 +498,6 @@ export class PrintComponent implements OnInit, OnDestroy {
       let json: any = {};
       const dataCheck = [0, 1, 3, 2, 4, 5, 6, 7, 8, 9];
       json["hasPrintCalculation"] = false;
-      console.log("print", this.printService.arrFlg);
       for (let data of this.printService.arrFlg) {
         if (dataCheck.includes(data)) {
           this.printService.getPrintDatas();
@@ -813,18 +812,10 @@ export class PrintComponent implements OnInit, OnDestroy {
           }
         }
       }
-      //console.log("json",json)
       this.loadind_enable();
-
-      //Temporarily limit the encoded json characters to avoid memory overflow
-      // if (JSON.stringify(json).length > 90000000) {
-        // this.loadind_desable();
-        // this.helper.alert(this.translate.instant("message.mes-warning"));
-      // } else {
-        const base64Encoded = this.getPostJson(json);
-        this.pdfPreView(base64Encoded);
-        this.router.navigate(["/"]);
-      // }
+      const base64Encoded = this.getPostJson(json);
+      this.pdfPreView(base64Encoded);
+      this.router.navigate(["/"]);
     }
   }
 
