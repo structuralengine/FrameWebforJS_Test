@@ -385,6 +385,33 @@ export class PrintComponent implements OnInit, OnDestroy {
     if (this.helper.dimension === 3) {
       this.reset_ts();
       console.log("starting onPrintPDF...: 0 msec");
+      // 印刷ケースをセット
+      let mode = "";
+      if (this.printService.printCase === "PrintScreen") {
+        // 画面印刷
+        mode = "default";
+      } else if (this.printService.printCase === "PrintLoad") {
+        // 荷重図
+        mode = "PrintLoad";
+      } else if (this.printService.printCase === "PrintDiagram") {
+        // 断面力図
+        mode = "fsec";
+      } else if (this.printService.printCase === "disgDiagram") {
+        // 変位
+        mode = "disg";
+      } else if (this.printService.printCase === "CombPrintDiagram") {
+        // Combine 断面力図
+        mode = "comb_fsec";
+      } else if (this.printService.printCase === "PickPrintDiagram") {
+        // Pickup 断面力図
+        mode = "pick_fsec";
+      } else if (this.printService.printCase === "ReactionDiagram") {
+        // Pickup 断面力図
+        mode = "reac";
+      }
+
+      this.three.ChangeMode(mode);
+      this.three.mode = mode;
       // 印刷対象を取得して、セット
       if (
         this.printService.flg === 14 ||
@@ -430,7 +457,8 @@ export class PrintComponent implements OnInit, OnDestroy {
       } else {
         const json: any = this.printService.json;
         //check true print input
-        if(this.printService.arrFlg.includes(0)) json["hasPrintInputData"] = true;
+        if (this.printService.arrFlg.includes(0))
+          json["hasPrintInputData"] = true;
         if (Object.keys(json).length !== 0) {
           var checkSelectItem = false;
           switch (this.printService.flg) {
@@ -509,12 +537,12 @@ export class PrintComponent implements OnInit, OnDestroy {
           this.printService.getPrintDatas();
           json = this.printService.json;
           json["hasPrintCalculation"] = true;
-          
+
           //print input
-          if(this.printService.arrFlg.includes(0)) json["hasPrintInputData"] = true;
+          if (this.printService.arrFlg.includes(0))
+            json["hasPrintInputData"] = true;
           break;
         }
-       
       }
       // data Calculation Results
       if (Object.keys(json).length !== 0) {
@@ -625,18 +653,16 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printService.printCases.length !== 0 &&
         this.printService.printCase === ""
       ) {
-
         //has multi check print screen
-        if (this.printService.arrFlg.length > 1)
-        {
-          this.printService.printTargetValues =  [
-            { value: true }, 
-            { value: true }, 
-            { value: false }, 
-            { value: false }, 
-            { value: false }, 
-            { value: true }, 
-            { value: false }, 
+        if (this.printService.arrFlg.length > 1) {
+          this.printService.printTargetValues = [
+            { value: true },
+            { value: true },
+            { value: false },
+            { value: false },
+            { value: false },
+            { value: true },
+            { value: false },
           ];
         }
         this.printService.optionList["input"].value = true;
@@ -687,11 +713,6 @@ export class PrintComponent implements OnInit, OnDestroy {
                 (json["fix_member"] = this.printService.json["fix_member"]),
                 (json["PrintLoad"] = {
                   diagramInput,
-                  // load : this.printService.json["load"],
-                  // fix_node:this.printService.json["fix_node"],
-                  // element: this.printService.json["element"],
-                  // fix_member:this.printService.json["fix_member"],
-                  // ...initData,
                 });
             }
             if (key === "PrintDiagram") {
@@ -700,14 +721,12 @@ export class PrintComponent implements OnInit, OnDestroy {
                 output: ["mz", "fy", "fx", "disg"],
               };
               (json["load"] = this.printService.json["load"]),
-              (json["fsec"] = this.printService.json["fsec"]),
-              (json["PrintDiagram"] = {
-                disg: this.printService.json["disg"],
-                disgName:this.printService.json["disgName"],
-                diagramResult : diagramResultTemp,
-                  // load : this.printService.json["load"],
-                  // fsec : this.printService.json["fsec"],
-                  // ...initData,
+                (json["fsec"] = this.printService.json["fsec"]),
+                (json["PrintDiagram"] = {
+                  disg: this.printService.json["disg"],
+                  disgName: this.printService.json["disgName"],
+                  diagramResult: diagramResultTemp,
+                 
                 });
             }
             if (key === "CombPrintDiagram") {
@@ -715,9 +734,7 @@ export class PrintComponent implements OnInit, OnDestroy {
                 (json["fsecCombine"] = this.printService.json["fsecCombine"]),
                 (json["CombPrintDiagram"] = {
                   diagramResult,
-                  // combine : this.printService.json["combine"],
-                  // fsecCombine : this.printService.json["fsecCombine"],
-                  // ...initData,
+                 
                 });
             }
             if (key === "PickPrintDiagram") {
@@ -725,9 +742,7 @@ export class PrintComponent implements OnInit, OnDestroy {
                 (json["fsecPickup"] = this.printService.json["fsecPickup"]),
                 (json["PickPrintDiagram"] = {
                   diagramResult,
-                  // pickup : this.printService.json["pickup"],
-                  // fsecPickup : this.printService.json["fsecPickup"],
-                  // ...initData,
+                 
                 });
             }
           }
