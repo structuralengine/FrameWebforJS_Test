@@ -82,6 +82,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     this.app.dialogClose();
   }
 
+  //OLD LOGIC SINGLE PRINT
   public onPrintPDF(): void {
     this.reset_ts();
     console.log("starting onPrintPDF...: 0 msec");
@@ -378,6 +379,8 @@ export class PrintComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  //NEW LOGIC MULTI PRINT
   public onPrintPDFNew(): void {
     if (this.helper.dimension === 3) {
       this.reset_ts();
@@ -426,6 +429,8 @@ export class PrintComponent implements OnInit, OnDestroy {
         }
       } else {
         const json: any = this.printService.json;
+        //check true print input
+        if(this.printService.arrFlg.includes(0)) json["hasPrintInputData"] = true;
         if (Object.keys(json).length !== 0) {
           var checkSelectItem = false;
           switch (this.printService.flg) {
