@@ -356,7 +356,7 @@ export class PrintService {
     if (this.ResultData.isCalculated == true) {
 
       // 変位量
-      if ((this.optionList['disg'].value || (11 == this.flg && this.printTargetValues[6].value))
+      if ((this.optionList['disg'].value || (11 == this.flg && this.printTargetValues[6].value) || (this.arrFlg.includes(11) && this.printTargetValues[6].value))
         && Object.keys(this.ResultData.disg.disg).length !== 0) {
         this.json["disg"] = this.dataChoice(this.ResultData.disg.disg);
         this.json["disgName"] = this.getNames(this.json["disg"]);

@@ -620,6 +620,20 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.printService.printCases.length !== 0 &&
         this.printService.printCase === ""
       ) {
+
+        //has multi check print screen
+        if (this.printService.arrFlg.length > 1)
+        {
+          this.printService.printTargetValues =  [
+            { value: true }, 
+            { value: true }, 
+            { value: false }, 
+            { value: false }, 
+            { value: false }, 
+            { value: true }, 
+            { value: false }, 
+          ];
+        }
         this.printService.optionList["input"].value = true;
         let mode = "";
         for (let key of this.printService.printCases) {
@@ -629,6 +643,9 @@ export class PrintComponent implements OnInit, OnDestroy {
           }
           if (key === "PrintDiagram") {
             mode = "fsec";
+
+            //set to get value of disg and disgname json
+            this.printService.printTargetValues[6].value = true;
           }
           if (key === "CombPrintDiagram") {
             mode = "comb_fsec";
@@ -643,7 +660,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           // multiple check print screen
           let diagramResult = {
             layout: "single",
-            output: ["fx"],
+            output: ["mz", "fy", "fx"],
           };
           let diagramInput = {
             layout: "single",
@@ -673,10 +690,16 @@ export class PrintComponent implements OnInit, OnDestroy {
                 });
             }
             if (key === "PrintDiagram") {
+              let diagramResultTemp = {
+                layout: "single",
+                output: ["mz", "fy", "fx", "disg"],
+              };
               (json["load"] = this.printService.json["load"]),
-                (json["fsec"] = this.printService.json["fsec"]),
-                (json["PrintDiagram"] = {
-                  diagramResult,
+              (json["fsec"] = this.printService.json["fsec"]),
+              (json["PrintDiagram"] = {
+                disg: this.printService.json["disg"],
+                disgName:this.printService.json["disgName"],
+                diagramResult : diagramResultTemp,
                   // load : this.printService.json["load"],
                   // fsec : this.printService.json["fsec"],
                   // ...initData,
@@ -705,7 +728,6 @@ export class PrintComponent implements OnInit, OnDestroy {
           }
         } else {
           // single check print screen
-          console.log("run", mode);
           var selected: boolean = false;
           let initData = { ver: packageJson.version };
           const output = [];
