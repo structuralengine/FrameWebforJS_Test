@@ -55,8 +55,6 @@ export class OptionalHeaderComponent implements OnInit {
   showReacComponent: boolean;
   showFsecComponent: boolean;
   showMemberComponent: boolean;
-  show2D: boolean;
-  show3D: boolean;
 
   selectedLink: string = "/input-load-name";
   selectedMemberLink: string ='/input-members'
@@ -237,13 +235,9 @@ export class OptionalHeaderComponent implements OnInit {
   }
   handleShow(dimension:number){
     if(dimension===2){
-      this.show2D=true;
-      this.show3D=false;
       this.helper.dimension = 2
       this.scene.changeGui(2);
     }else{
-      this.show3D=true;
-      this.show2D=false;
       this.helper.dimension = 3
       this.scene.changeGui(3);
     }
