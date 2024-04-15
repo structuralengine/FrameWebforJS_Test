@@ -10,8 +10,8 @@ import { ElectronService } from "src/app/providers/electron.service";
 import { MaxMinService } from "../three/max-min/max-min.service";
 import { DataHelperModule } from "src/app/providers/data-helper.module";
 import { TranslateService } from "@ngx-translate/core";
-import packageJson from '../../../../package.json';
-import { AppComponent } from '../../app.component';
+import packageJson from "../../../../package.json";
+import { AppComponent } from "../../app.component";
 import { environment } from "src/environments/environment";
 import { Router } from "@angular/router";
 
@@ -40,12 +40,13 @@ export class PrintComponent implements OnInit, OnDestroy {
     public helper: DataHelperModule,
     private translate: TranslateService,
     private app: AppComponent
-  ) { }
+  ) {}
 
   private a: boolean;
   ngOnInit() {
-    this.printService.selectRadio(0);
-    this.printService.flg = 0;
+    // this.printService.selectRadio(0);
+    // this.printService.flg = 0;
+    this.printService.selectCheckbox(0);
     this.id = document.getElementById("printButton");
     this.a = this.max_min.visible;
     this.max_min.visible = false;
@@ -54,6 +55,7 @@ export class PrintComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.max_min.visible = this.a;
+    this.printService.arrFlg = [];
   }
 
   public options = {
@@ -80,6 +82,7 @@ export class PrintComponent implements OnInit, OnDestroy {
     this.app.dialogClose();
   }
 
+  //OLD LOGIC SINGLE PRINT
   public onPrintPDF(): void {
     this.reset_ts();
     console.log("starting onPrintPDF...: 0 msec");
@@ -104,10 +107,9 @@ export class PrintComponent implements OnInit, OnDestroy {
     } else if (this.printService.printCase === "PickPrintDiagram") {
       // Pickup 断面力図
       mode = "pick_fsec";
-    }
-    else if (this.printService.printCase === 'ReactionDiagram') {
+    } else if (this.printService.printCase === "ReactionDiagram") {
       // Pickup 断面力図
-      mode = 'reac';
+      mode = "reac";
     }
 
     this.three.ChangeMode(mode);
@@ -136,7 +138,9 @@ export class PrintComponent implements OnInit, OnDestroy {
       // 図の印刷
       if (
         this.helper.dimension === 2 &&
-        ["fsec", "comb_fsec", "pick_fsec", 'PrintLoad'].includes(this.three.mode)
+        ["fsec", "comb_fsec", "pick_fsec", "PrintLoad"].includes(
+          this.three.mode
+        )
       ) {
         console.log("図の印刷: " + this.check_ts() + " msec");
 
@@ -177,19 +181,28 @@ export class PrintComponent implements OnInit, OnDestroy {
         // 断面力図の種類を指定する
         const output = [];
         var selected: boolean = false;
-        if (this.printService.customThree.threeEditable[5] && this.printService.flg !== 15) {
+        if (
+          this.printService.customThree.threeEditable[5] &&
+          this.printService.flg !== 15
+        ) {
           // z軸周りのモーメント図
           output.push("mz");
           selected = true;
         }
 
-        if (this.printService.customThree.threeEditable[1] && this.printService.flg !== 15) {
+        if (
+          this.printService.customThree.threeEditable[1] &&
+          this.printService.flg !== 15
+        ) {
           // y方向のせん断力図
           output.push("fy");
           selected = true;
         }
 
-        if (this.printService.customThree.threeEditable[0] && this.printService.flg !== 15) {
+        if (
+          this.printService.customThree.threeEditable[0] &&
+          this.printService.flg !== 15
+        ) {
           // 軸力図
           output.push("fx");
           selected = true;
@@ -243,8 +256,7 @@ export class PrintComponent implements OnInit, OnDestroy {
           if (null !== this.printService.axis_scale_y.value)
             json["diagramInput"].scaleY =
               1.0 / Number(this.printService.axis_scale_y.value);
-        }
-        else {
+        } else {
           json["diagramResult"] = {
             layout: this.printService.printLayout,
             output,
@@ -257,7 +269,6 @@ export class PrintComponent implements OnInit, OnDestroy {
           if (null !== this.printService.axis_scale_y.value)
             json["diagramResult"].scaleY =
               1.0 / Number(this.printService.axis_scale_y.value);
-
         }
 
         json["ver"] = packageJson.version;
@@ -270,7 +281,6 @@ export class PrintComponent implements OnInit, OnDestroy {
         //console.log("this.pdfPreView(base64Encoded);が終了: " + this.check_ts() + " msec");
       } else {
         // 3D図の印刷
-
         if (
           this.printService.customThree.threeEditable.filter((x) => x === true)
             .length > 0
@@ -332,9 +342,11 @@ export class PrintComponent implements OnInit, OnDestroy {
             var checkSelect = json.fsecCombine;
             checkSelectItem = this.checkDataExisted(checkSelect);
             if (!checkSelectItem) {
-              const checkChild = Object.values(checkSelect).map(v => {
-                return Object.values(v).map(v2 => Object.values(v2)?.length > 0).filter(v2 => v2 === true);
-              })
+              const checkChild = Object.values(checkSelect).map((v) => {
+                return Object.values(v)
+                  .map((v2) => Object.values(v2)?.length > 0)
+                  .filter((v2) => v2 === true);
+              });
               checkSelectItem = this.checkDataExisted(checkChild);
             }
             break;
@@ -343,9 +355,11 @@ export class PrintComponent implements OnInit, OnDestroy {
             var checkSelect = json.fsecPickup;
             checkSelectItem = this.checkDataExisted(checkSelect);
             if (!checkSelectItem) {
-              const checkChild = Object.values(checkSelect).map(v => {
-                return Object.values(v).map(v2 => Object.values(v2)?.length > 0).filter(v2 => v2 === true);
-              })
+              const checkChild = Object.values(checkSelect).map((v) => {
+                return Object.values(v)
+                  .map((v2) => Object.values(v2)?.length > 0)
+                  .filter((v2) => v2 === true);
+              });
               checkSelectItem = this.checkDataExisted(checkChild);
             }
             break;
@@ -363,6 +377,492 @@ export class PrintComponent implements OnInit, OnDestroy {
         this.pdfPreView(this.getPostJson(json));
         this.router.navigate(["/"]);
       }
+    }
+  }
+
+  //NEW LOGIC MULTI PRINT
+  public onPrintPDFNew(): void {
+    if (this.helper.dimension === 3) {
+      this.reset_ts();
+      console.log("starting onPrintPDF...: 0 msec");
+      // 印刷ケースをセット
+      let mode = "";
+      if (this.printService.printCase === "PrintScreen") {
+        // 画面印刷
+        mode = "default";
+      } else if (this.printService.printCase === "PrintLoad") {
+        // 荷重図
+        mode = "PrintLoad";
+      } else if (this.printService.printCase === "PrintDiagram") {
+        // 断面力図
+        mode = "fsec";
+      } else if (this.printService.printCase === "disgDiagram") {
+        // 変位
+        mode = "disg";
+      } else if (this.printService.printCase === "CombPrintDiagram") {
+        // Combine 断面力図
+        mode = "comb_fsec";
+      } else if (this.printService.printCase === "PickPrintDiagram") {
+        // Pickup 断面力図
+        mode = "pick_fsec";
+      } else if (this.printService.printCase === "ReactionDiagram") {
+        // Pickup 断面力図
+        mode = "reac";
+      }
+
+      this.three.ChangeMode(mode);
+      this.three.mode = mode;
+      // 印刷対象を取得して、セット
+      if (
+        this.printService.flg === 14 ||
+        this.printService.flg === 10 ||
+        this.printService.flg === 15
+      ) {
+        for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+          if (i < this.printService.printTargetValues.length - 1)
+            this.printService.customThree.threeEditable[i] = true;
+        }
+      } else {
+        for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+          const isSelected = this.printService.printTargetValues[i].value;
+
+          this.printService.customThree.threeEditable[i] = isSelected;
+        }
+      }
+
+      if (this.printService.is_printing_screen()) {
+        // 図の印刷
+        if (
+          this.printService.customThree.threeEditable.filter((x) => x === true)
+            .length > 0
+        ) {
+          console.log("3D図の印刷: " + this.check_ts() + " msec");
+          this.router.navigate(["/"]);
+          this.three.getCaptureImage().then((print_target) => {
+            console.log(
+              "getCaptureImage.then start: " + this.check_ts() + " msec"
+            );
+
+            this.printService.print_target = print_target;
+            this.printService.printDocument("invoice", [""]);
+
+            console.log(
+              "getCaptureImage.then last: " + this.check_ts() + " msec"
+            );
+          });
+        } else {
+          this.helper.alert(this.translate.instant("print.selectTarget"));
+          return;
+        }
+      } else {
+        const json: any = this.printService.json;
+        //check true print input
+        if (this.printService.arrFlg.includes(0))
+          json["hasPrintInputData"] = true;
+        if (Object.keys(json).length !== 0) {
+          var checkSelectItem = false;
+          switch (this.printService.flg) {
+            case 2: {
+              var checkSelect = json.disgCombine;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 3: {
+              var checkSelect = json.disgPickup;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 5: {
+              var checkSelect = json.reacCombine;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 6: {
+              var checkSelect = json.reacPickup;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 7: {
+              var checkSelect = json.fsec;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              break;
+            }
+            case 8: {
+              var checkSelect = json.fsecCombine;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              if (!checkSelectItem) {
+                const checkChild = Object.values(checkSelect).map((v) => {
+                  return Object.values(v)
+                    .map((v2) => Object.values(v2)?.length > 0)
+                    .filter((v2) => v2 === true);
+                });
+                checkSelectItem = this.checkDataExisted(checkChild);
+              }
+              break;
+            }
+            case 9: {
+              var checkSelect = json.fsecPickup;
+              checkSelectItem = this.checkDataExisted(checkSelect);
+              if (!checkSelectItem) {
+                const checkChild = Object.values(checkSelect).map((v) => {
+                  return Object.values(v)
+                    .map((v2) => Object.values(v2)?.length > 0)
+                    .filter((v2) => v2 === true);
+                });
+                checkSelectItem = this.checkDataExisted(checkChild);
+              }
+              break;
+            }
+          }
+
+          if (checkSelectItem) {
+            this.helper.alert(this.translate.instant("print.selectTarget"));
+            return;
+          }
+
+          // loadingの表示
+          this.loadind_enable();
+          // PDFサーバーに送る
+          this.pdfPreView(this.getPostJson(json));
+          this.router.navigate(["/"]);
+        }
+      }
+    } else {
+      let json: any = {};
+      const dataCheck = [0, 1, 3, 2, 4, 5, 6, 7, 8, 9];
+      json["hasPrintCalculation"] = false;
+      json["hasPrintInputData"] = false;
+      for (let data of this.printService.arrFlg) {
+        if (dataCheck.includes(data)) {
+          this.printService.getPrintDatas();
+          json = this.printService.json;
+          json["hasPrintCalculation"] = true;
+
+          //print input
+          if (this.printService.arrFlg.includes(0))
+            json["hasPrintInputData"] = true;
+          break;
+        }
+      }
+      // data Calculation Results
+      if (Object.keys(json).length !== 0) {
+        var checkSelectItem = false;
+        switch (this.printService.flg) {
+          case 2: {
+            var checkSelect = json.disgCombine;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 3: {
+            var checkSelect = json.disgPickup;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 5: {
+            var checkSelect = json.reacCombine;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 6: {
+            var checkSelect = json.reacPickup;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 7: {
+            var checkSelect = json.fsec;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            break;
+          }
+          case 8: {
+            var checkSelect = json.fsecCombine;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            if (!checkSelectItem) {
+              const checkChild = Object.values(checkSelect).map((v) => {
+                return Object.values(v)
+                  .map((v2) => Object.values(v2)?.length > 0)
+                  .filter((v2) => v2 === true);
+              });
+              checkSelectItem = this.checkDataExisted(checkChild);
+            }
+            break;
+          }
+          case 9: {
+            var checkSelect = json.fsecPickup;
+            checkSelectItem = this.checkDataExisted(checkSelect);
+            if (!checkSelectItem) {
+              const checkChild = Object.values(checkSelect).map((v) => {
+                return Object.values(v)
+                  .map((v2) => Object.values(v2)?.length > 0)
+                  .filter((v2) => v2 === true);
+              });
+              checkSelectItem = this.checkDataExisted(checkChild);
+            }
+            break;
+          }
+        }
+
+        if (checkSelectItem) {
+          this.helper.alert(this.translate.instant("print.selectTarget"));
+          return;
+        }
+      }
+      //Print screen and Reaction diagram
+      if (
+        this.printService.printCases.length === 0 &&
+        this.printService.printCase !== ""
+      ) {
+        json = {};
+        if (this.printService.flg === 10) {
+          for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+            if (i < this.printService.printTargetValues.length - 1)
+              this.printService.customThree.threeEditable[i] = true;
+          }
+        } else {
+          for (let i = 0; i < this.printService.printTargetValues.length; i++) {
+            const isSelected = this.printService.printTargetValues[i].value;
+
+            this.printService.customThree.threeEditable[i] = isSelected;
+          }
+        }
+        if (
+          this.printService.customThree.threeEditable.filter((x) => x === true)
+            .length > 0
+        ) {
+          console.log("3D図の印刷: " + this.check_ts() + " msec");
+          this.router.navigate(["/"]);
+          this.three.getCaptureImage().then((print_target) => {
+            console.log(
+              "getCaptureImage.then start: " + this.check_ts() + " msec"
+            );
+
+            this.printService.print_target = print_target;
+            this.printService.printDocument("invoice", [""]);
+
+            console.log(
+              "getCaptureImage.then last: " + this.check_ts() + " msec"
+            );
+          });
+        } else {
+          this.helper.alert(this.translate.instant("print.selectTarget"));
+          return;
+        }
+        return;
+      }
+      //data Load diagram, Sectional force diagram, Combine force diagram, Pickup force diagram
+      if (
+        this.printService.printCases.length !== 0 &&
+        this.printService.printCase === ""
+      ) {
+        //has multi check print screen
+        if (this.printService.arrFlg.length > 1) {
+          this.printService.printTargetValues = [
+            { value: true },
+            { value: true },
+            { value: false },
+            { value: false },
+            { value: false },
+            { value: true },
+            { value: false },
+          ];
+        }
+        this.printService.optionList["input"].value = true;
+        let mode = "";
+        for (let key of this.printService.printCases) {
+          this.printService.optionList[key].value = true;
+          if (key === "PrintLoad") {
+            mode = "PrintLoad";
+          }
+          if (key === "PrintDiagram") {
+            mode = "fsec";
+
+            //set to get value of disg and disgname json
+            this.printService.printTargetValues[6].value = true;
+          }
+          if (key === "CombPrintDiagram") {
+            mode = "comb_fsec";
+          }
+          if (key === "PickPrintDiagram") {
+            mode = "pick_fsec";
+          }
+          this.printService.optionList[mode].value = true;
+        }
+        this.printService.getPrintDatas();
+        if (this.printService.arrFlg.length > 1) {
+          // multiple check print screen
+          let diagramResult = {
+            layout: "single",
+            output: ["mz", "fy", "fx"],
+          };
+          let diagramInput = {
+            layout: "single",
+            output: ["axis", "load"],
+          };
+          let initData = {
+            pageOrientation: "Vertical",
+            ver: packageJson.version,
+          };
+          for (var key of ["node", "member", "dimension", "language"]) {
+            initData[key] = this.printService.json[key];
+          }
+          json = { ...json, ...initData };
+          for (let key of this.printService.printCases) {
+            if (key === "PrintLoad") {
+              (json["load"] = this.printService.json["load"]),
+                (json["fix_node"] = this.printService.json["fix_node"]),
+                (json["element"] = this.printService.json["element"]),
+                (json["fix_member"] = this.printService.json["fix_member"]),
+                (json["PrintLoad"] = {
+                  diagramInput,
+                });
+            }
+            if (key === "PrintDiagram") {
+              let diagramResultTemp = {
+                layout: "single",
+                output: ["mz", "fy", "fx", "disg"],
+              };
+              (json["load"] = this.printService.json["load"]),
+                (json["fsec"] = this.printService.json["fsec"]),
+                (json["PrintDiagram"] = {
+                  disg: this.printService.json["disg"],
+                  disgName: this.printService.json["disgName"],
+                  diagramResult: diagramResultTemp,
+                 
+                });
+            }
+            if (key === "CombPrintDiagram") {
+              (json["combine"] = this.printService.json["combine"]),
+                (json["fsecCombine"] = this.printService.json["fsecCombine"]),
+                (json["CombPrintDiagram"] = {
+                  diagramResult,
+                 
+                });
+            }
+            if (key === "PickPrintDiagram") {
+              (json["pickup"] = this.printService.json["pickup"]),
+                (json["fsecPickup"] = this.printService.json["fsecPickup"]),
+                (json["PickPrintDiagram"] = {
+                  diagramResult,
+                 
+                });
+            }
+          }
+        } else {
+          // single check print screen
+          var selected: boolean = false;
+          let initData = { ver: packageJson.version };
+          const output = [];
+          for (var key of ["node", "member", "dimension", "language"]) {
+            initData[key] = this.printService.json[key];
+          }
+          json = { ...json, ...initData };
+          let keyScreen = "";
+          for (let key of this.printService.printCases) {
+            keyScreen = key;
+            if (key === "PrintLoad") {
+              (json["load"] = this.printService.json["load"]),
+                (json["fix_node"] = this.printService.json["fix_node"]),
+                (json["element"] = this.printService.json["element"]),
+                (json["fix_member"] = this.printService.json["fix_member"]),
+                (json["PrintLoad"] = {});
+            }
+            if (key === "PrintDiagram") {
+              (json["load"] = this.printService.json["load"]),
+                (json["fsec"] = this.printService.json["fsec"]),
+                (json["PrintDiagram"] = {});
+            }
+            if (key === "CombPrintDiagram") {
+              (json["combine"] = this.printService.json["combine"]),
+                (json["fsecCombine"] = this.printService.json["fsecCombine"]),
+                (json["CombPrintDiagram"] = {});
+            }
+            if (key === "PickPrintDiagram") {
+              (json["pickup"] = this.printService.json["pickup"]),
+                (json["fsecPickup"] = this.printService.json["fsecPickup"]),
+                (json["PickPrintDiagram"] = {});
+            }
+          }
+          json[keyScreen]["pageOrientation"] =
+            this.printService.pageOrientation;
+          if (keyScreen === "PrintLoad") {
+            for (
+              let i = 0;
+              i < this.printService.printTargetValues.length;
+              i++
+            ) {
+              if (i < this.printService.printTargetValues.length - 1)
+                this.printService.customThree.threeEditable[i] = true;
+            }
+            output.push("axis"); // default load, axis
+            output.push("load");
+            selected = true;
+            json[keyScreen]["diagramInput"] = {
+              layout: this.printService.printLayout,
+              output,
+            };
+            if (null !== this.printService.axis_scale_x.value)
+              json[keyScreen]["diagramInput"].scaleX =
+                1.0 / Number(this.printService.axis_scale_x.value);
+
+            if (null !== this.printService.axis_scale_y.value)
+              json[keyScreen]["diagramInput"].scaleY =
+                1.0 / Number(this.printService.axis_scale_y.value);
+          } else {
+            for (
+              let i = 0;
+              i < this.printService.printTargetValues.length;
+              i++
+            ) {
+              const isSelected = this.printService.printTargetValues[i].value;
+
+              this.printService.customThree.threeEditable[i] = isSelected;
+            }
+            if (this.printService.customThree.threeEditable[5]) {
+              output.push("mz");
+              selected = true;
+            }
+
+            if (this.printService.customThree.threeEditable[1]) {
+              output.push("fy");
+              selected = true;
+            }
+
+            if (this.printService.customThree.threeEditable[0]) {
+              output.push("fx");
+              selected = true;
+            }
+            if (
+              keyScreen === "PrintDiagram" &&
+              this.printService.customThree.threeEditable[6]
+            ) {
+              output.push("disg");
+              selected = true;
+              json[keyScreen]["disg"] = this.printService.json["disg"];
+              json[keyScreen]["disgName"] = this.printService.json["disgName"];
+            }
+            json[keyScreen]["diagramResult"] = {
+              layout: this.printService.printLayout,
+              output,
+            };
+
+            if (null !== this.printService.axis_scale_x.value)
+              json[keyScreen]["diagramResult"].scaleX =
+                1.0 / Number(this.printService.axis_scale_x.value);
+
+            if (null !== this.printService.axis_scale_y.value)
+              json[keyScreen]["diagramResult"].scaleY =
+                1.0 / Number(this.printService.axis_scale_y.value);
+          }
+          if (!selected) {
+            this.helper.alert(this.translate.instant("print.selectTarget"));
+            this.loadind_desable();
+            return;
+          }
+        }
+      }
+      this.loadind_enable();
+      const base64Encoded = this.getPostJson(json);
+      this.pdfPreView(base64Encoded);
+      this.router.navigate(["/"]);
     }
   }
 
@@ -388,9 +888,14 @@ export class PrintComponent implements OnInit, OnDestroy {
               return;
             }
           }
-        } catch (e) { }
+        } catch (e) {}
         this.loadind_desable();
-        this.helper.alert(err["message"]);
+        let alertMessage = err["message"];
+        if (alertMessage.includes("0 Unknown Error")) {
+          this.helper.alert(this.translate.instant("message.mes-warning"));
+        } else {
+          this.helper.alert(err["message"]);
+        }
       }
     );
   }
@@ -399,14 +904,12 @@ export class PrintComponent implements OnInit, OnDestroy {
     console.log("getPostJson を実行中...");
 
     const jsonStr = JSON.stringify(json);
-    console.log(jsonStr);
     // pako を使ってgzip圧縮する
     const compressed = pako.gzip(jsonStr);
     //btoa() を使ってBase64エンコードする
     const base64Encoded = btoa(compressed);
 
     console.log("getPostJson が完了");
-
     return base64Encoded;
   }
 
