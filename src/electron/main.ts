@@ -9,7 +9,6 @@ import path from 'path'
 let mainWindow: BrowserWindow;
 let check = -1;
 let locale = 'ja';
-//log.transports.file.resolvePath = () => path.join('E:/Le Tuan Anh/FrameWebforJS_Test/src/logs/main.logs')
 autoUpdater.autoDownload = false
 async function createWindow() {
   check = -1;
@@ -86,6 +85,7 @@ autoUpdater.on('update-downloaded', (info) => {
   }
 
 });
+autoUpdater.checkForUpdates();
 ipcMain.on("newWindow", async () => await createWindow());
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
