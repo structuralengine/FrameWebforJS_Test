@@ -805,6 +805,7 @@ export class ThreeSectionForceService {
   public GetValueTable(vertexlist: any) {
     let re = [];
     let result = [];
+    if(!vertexlist) return re;
     for (const item of vertexlist) {
       let arr = [];
       this.memSeForce.forEach((mem: any) => {
