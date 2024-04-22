@@ -41,5 +41,3 @@ jobs:
           build_script_name: "electron:windows"
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          windows_certs: ${{ secrets.CODESIGN }}
-          windows_certs_password: ${{ secrets.PASSWORD }}
