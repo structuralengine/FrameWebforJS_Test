@@ -9,8 +9,16 @@ import path from 'path'
 let mainWindow: BrowserWindow;
 let check = -1;
 let locale = 'ja';
-log.transports.file.resolvePath = () => path.join('E:/Le Tuan Anh/harmony-labo/FrameWebforJS_Test/src/logs/main.logs')
-autoUpdater.autoDownload = false
+//log.transports.file.resolvePath = () => path.join('E:/Le Tuan Anh/harmony-labo/FrameWebforJS_Test/src/logs/main.logs')
+//autoUpdater.autoDownload = false
+
+const downloadHandler = window => {
+	window.webContents.session.on('will-download', function(_event, item, _webContents) {
+		let currentWindow = BrowserWindow.getFocusedWindow();
+
+		// Set OS documents folder as default path with the original file name
+		item.setSaveDialogOptions({ defaultPath: `${app.getPath('documents')}/${item.getFilename()}` });
+})}
 async function createWindow() {
   check = -1;
   log.info("check install", check);
@@ -39,14 +47,16 @@ async function createWindow() {
     }  
   });
   await mainWindow.loadFile('index.html');
+  downloadHandler(mainWindow);
 }
 
 app.whenReady().then(async () => {
   await createWindow();
-  // if (!isDev) {
-  // 起動時に1回だけ
-  await autoUpdater.checkForUpdates();
-  log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
+   if (!isDev) {
+    // 起動時に1回だけ
+    await autoUpdater.checkForUpdates();
+    log.info(`アップデートがあるか確認します。${app.name} ${app.getVersion()}`);
+   }
 });
 
 autoUpdater.on('update-available', (info) => {
@@ -87,6 +97,7 @@ autoUpdater.on('update-downloaded', (info) => {
   }
   
 });
+autoUpdater.checkForUpdates();
 ipcMain.on("newWindow", async () => await createWindow());
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
