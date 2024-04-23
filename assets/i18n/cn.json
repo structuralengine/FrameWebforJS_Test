@@ -56,7 +56,10 @@
         "today_used_point": "今天使用的积分",
         "back": "后退",
         "save": "节省",
-        "update_success": "更新成功"
+        "update_success": "更新成功",
+        "select_preset": "选择预置",
+        "preset": "预设",
+        "contact":"询问"
     },
     "input": {
         "input-fix-node": {
@@ -82,7 +85,8 @@
             "No": "编码",
             "member": "构件",
             "rigid": "避难",
-            "MemberData": "构件数据"
+            "MemberData": "构件输入",
+            "RigidZone":"硬区"
         },
         "input-rigid": {
             "node": "节点",
@@ -401,7 +405,10 @@
     "modal": {
         "close": "关闭",
         "cancel": "取消",
-        "ok": "确定"
+        "ok": "确定",
+        "reboot": "Reboot",
+        "updateMessage": "Update is available. \n Do you want to reboot to perform the update?",
+        "updateTitle": "Application update"
     },
     "window": {
         "closeTitle": "查看",
@@ -416,5 +423,26 @@
     },
     "message":{
         "mes": "The elastic modulus in the material menu is too small. Please check the units."
+    },
+    "preset":{
+        "ramen-viaduct" : "架构",
+        "concrete-t-beam-bridge" : "T 梁桥",
+        "u-shaped-retaining-wall" : "U 型挡土墙",
+        "portal-bracing" : "龙门式桥墩"
+          },
+    "control":{
+        "3D":"3D",
+        "GridHelper":"网格显示",
+        "Perspective":"角度指示",
+        "nodeNo":"节点编号指示",
+        "memberNo":"部件号指示",
+        "nodeScale":"节点显示尺寸",
+        "fixnodeScale":"支点显示屏尺寸",
+        "memberScale":"部件显示尺寸",
+        "LoadScale":"加载显示屏尺寸",
+        "dispScale":"流离失所显示屏尺寸",
+        "reactScale":"反动势力显示屏尺寸",
+        "forceScale":"截面力显示屏尺寸",
+        "meshScale":"面板显示屏尺寸"
     }
 }
