@@ -142,7 +142,7 @@ ipcMain.on(
     // 場所とファイル名を選択
     const pathDownloads = app.getPath("downloads")
     filename = filename.split('\\').pop();
-    const defaultPath = pathDownloads + "\\" + filename
+    const defaultPath = pathDownloads + "\\\\" + filename
     const path = dialog.showSaveDialogSync(mainWindow, {
       buttonLabel: 'save', // ボタンのラベル
       filters: [{ name: ext, extensions: [ext] }],
