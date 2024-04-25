@@ -140,10 +140,13 @@ ipcMain.on(
   'saveFile',
   async (event: Electron.IpcMainEvent, filename: string, data: string, ext: string) => {
     // 場所とファイル名を選択
+    const pathDownloads = app.getPath("downloads")
+    filename = filename.split('\\').pop();
+    const defaultPath = pathDownloads + "\\\\" + filename
     const path = dialog.showSaveDialogSync(mainWindow, {
       buttonLabel: 'save', // ボタンのラベル
       filters: [{ name: ext, extensions: [ext] }],
-      defaultPath: filename,
+      defaultPath: defaultPath,
       properties: [
         'createDirectory', // ディレクトリの作成を許可 (macOS)
       ],
