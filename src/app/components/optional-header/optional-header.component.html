@@ -1,8 +1,8 @@
 <div class="pagerArea" [ngClass]="{ leftArea: showResultComponent }">
   <div class="btn-group-show" >
     <div class="buttonShow" >
-          <button class="left-button" [ngClass]="{'active':show2D}" (click)="handleShow(2)"><span translate>2D</span></button>
-          <button class="right-button" [ngClass]="{'active':show3D}" (click)="handleShow(3)" ><span translate>3D</span></button>
+          <button class="left-button" [ngClass]="{'active':helper.dimension===2}" (click)="handleShow(2)"><span translate>2D</span></button>
+          <button class="right-button" [ngClass]="{'active':helper.dimension===3}" (click)="handleShow(3)" ><span translate>3D</span></button>
     </div>
   </div>
   <div class="pagerWrap" [ngClass]="{ left: showResultComponent || showLoadComponent }">

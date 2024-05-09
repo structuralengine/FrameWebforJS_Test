@@ -9,7 +9,6 @@ import path from 'path'
 let mainWindow: BrowserWindow;
 let check = -1;
 let locale = 'ja';
-//log.transports.file.resolvePath = () => path.join('E:/Le Tuan Anh/FrameWebforJS_Test/src/logs/main.logs')
 autoUpdater.autoDownload = false
 async function createWindow() {
   check = -1;
@@ -86,6 +85,7 @@ autoUpdater.on('update-downloaded', (info) => {
   }
 
 });
+autoUpdater.checkForUpdates();
 ipcMain.on("newWindow", async () => await createWindow());
 // Angular -> Electron --------------------------------------------------
 // ファイルを開く
@@ -140,10 +140,13 @@ ipcMain.on(
   'saveFile',
   async (event: Electron.IpcMainEvent, filename: string, data: string, ext: string) => {
     // 場所とファイル名を選択
+    const pathDownloads = app.getPath("downloads")
+    filename = filename.split('\\').pop();
+    const defaultPath = pathDownloads + "\\\\" + filename
     const path = dialog.showSaveDialogSync(mainWindow, {
       buttonLabel: 'save', // ボタンのラベル
       filters: [{ name: ext, extensions: [ext] }],
-      defaultPath: filename,
+      defaultPath: defaultPath,
       properties: [
         'createDirectory', // ディレクトリの作成を許可 (macOS)
       ],
