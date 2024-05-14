@@ -6993,7 +6993,7 @@ jest-worker@^27.4.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jquery-ui-pack@^1.12.3, jquery-ui-pack@>=1.12.3, jquery-ui-pack@1.12.3:
+jquery-ui-pack@>=1.12.3, jquery-ui-pack@1.12.3:
   version "1.12.3"
   resolved "https://registry.npmjs.org/jquery-ui-pack/-/jquery-ui-pack-1.12.3.tgz"
   integrity sha512-a3n/AzOT+pvhsrk8/FD3AQAe8nLI19NBhhS0jSHSEhND76X1CFbxSWonqpnjmxgXk4Yd4IfdVd1ZiKdbBes60g==

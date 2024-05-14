@@ -28,8 +28,9 @@ export class PrintService {
 
   public flg: number = -1; // リファクタリング前の変数をズルズル使っている感じがするので直したほうがいいか？
   public arrFlg: any = [];
+  public isCheckAll = false;
 
-  public print_target: any; // Three.js 印刷 の図のデータ
+  public print_target: any = []; // Three.js 印刷 の図のデータ
   public printOption = [];
   public printRadio: any;
   public json = {};
@@ -184,7 +185,9 @@ export class PrintService {
     if (11 != id && null !== e) {
       e.setAttribute("checked", null);
     }
-
+    if (this.isCheckAll) {
+      this.isCheckAll = !this.isCheckAll
+    }
     this.printOption = new Array();
     this.printCase = "";
     this.printCases = [];
@@ -220,8 +223,27 @@ export class PrintService {
         this.arrFlg.push(id)
       } else {
         this.arrFlg.splice(index, 1);
+        if (this.isCheckAll) {
+          this.isCheckAll = !this.isCheckAll
+        }
       }
     }
+
+    // check the All checkbox if all checkboxes are checked
+    if (!this.ResultData.isCalculated) {
+      if (this.arrFlg.length === 2) {
+        this.isCheckAll = true
+      }
+    }
+    else {
+      if (
+        (this.helper.dimension === 2 && this.arrFlg.length === 14) || 
+        (this.helper.dimension === 3 && this.arrFlg.length === 15)
+      ) {
+        this.isCheckAll = true
+      } 
+    }
+    
     if (this.arrFlg.length === 1) {
       this.flg = this.arrFlg[0]
     }
@@ -235,13 +257,52 @@ export class PrintService {
           this.optionList[key].value = true;
           // this.flg = id;
           // this.selectedIndex = this.optionList[key].id;
-          if ([ 11, 12, 13, 15].includes(this.optionList[key].id)) {
+          if ([ 11, 12, 13, 14, 15].includes(this.optionList[key].id)) {
             this.printCases.push(key);
             // this.printCase = key;
           }
         }
       }
     }
+    this.priCount = 0;
+    this.newPrintJson();
+  }
+
+  public checkAll(){
+    this.isCheckAll = !this.isCheckAll;
+
+    this.printOption = new Array();
+    this.printCase = "";
+
+    this.arrFlg = new Array();
+    this.printCases = [];
+    for (const key of Object.keys(this.optionList))
+      this.optionList[key].value = false;
+
+    if (this.isCheckAll) {
+      if (this.helper.dimension === 2) {
+        if (!this.ResultData.isCalculated) {
+          this.selectCheckbox(0); 
+          this.selectCheckbox(15); 
+        } else {
+          for (let i = 0; i <= 15; i++) {
+            if (i === 10 || i === 14) continue;
+            this.selectCheckbox(i);
+          }
+        }
+      } else {
+        if (!this.ResultData.isCalculated) {
+          this.selectCheckbox(0); 
+          this.selectCheckbox(15); 
+        } else {
+          for (let i = 0; i <= 15; i++) {
+            if (i == 10) continue;
+            this.selectCheckbox(i);
+          }
+        }
+      }
+    }
+
     this.priCount = 0;
     this.newPrintJson();
   }
