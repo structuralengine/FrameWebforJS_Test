@@ -35,7 +35,7 @@
     },
     "menu": {
         "file": "file",
-        "softName": "FrameWebForJS_Test",
+        "softName": "FrameWebForJS",
         "newEntry": "Create a new file",
         "openFile": "Open file",
         "saveFile": "Save a file",
@@ -315,7 +315,7 @@
         "SectionForce": "SectionForce",
         "combine_SectionForce": "SectionForce (COMBINE)",
         "pickup_SectionForce": "SectionForce (PICKUP)",
-        "PrintScreen": "Print screen",
+        "PrintScreen": "Graphical output",
         "PrintLoad": "Load diagram",
         "PrintDiagram": "Sectional force diagram",
         "disgDiagram": "Displacement diagram",
@@ -407,10 +407,9 @@
     "modal": {
         "close": "Close",
         "cancel": "Cancel",
-        "ok": "OK",
-        "reboot": "Reboot",
-        "updateMessage": "Update is available.\nDo you want to reboot to perform the update?\nIf you choose to cancel, the application will be automatically updated after it is closed.",
-        "updateTitle": "Application update"
+        "ok": "OK",               
+        "updateMessage": "Update is available.\nDo you want to reboot to perform the update?\nIf you choose to cancel, the application will be automatically updated after it is closed."
+       
     },
     "window": {
         "closeTitle": "Confirm",
@@ -424,7 +423,8 @@
         "cut": "Cut"
     },
     "message":{
-        "mes": "The elastic modulus in the material menu is too small. Please check the units."
+        "mes": "The elastic modulus in the material menu is too small. Please check the units.",
+        "mes-warning": "The file is too large. Please reduce the selection and output again."
     },
     "preset":{
         "ramen-viaduct" : "Ramen viaduct",

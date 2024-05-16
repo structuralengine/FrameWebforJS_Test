@@ -405,10 +405,7 @@
     "modal": {
         "close": "关闭",
         "cancel": "取消",
-        "ok": "确定",
-        "reboot": "Reboot",
-        "updateMessage": "Update is available. \n Do you want to reboot to perform the update?",
-        "updateTitle": "Application update"
+        "ok": "确定"
     },
     "window": {
         "closeTitle": "查看",
