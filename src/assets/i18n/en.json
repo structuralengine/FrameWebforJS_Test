@@ -384,7 +384,8 @@
                 "axis_scale_x": "X",
                 "axis_scale_y": "Y"
             }
-        }
+        },
+        "all":"All"
     },
     "providers": {
         "input-data": {
