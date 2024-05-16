@@ -385,7 +385,8 @@
                 "axis_scale_x": "横",
                 "axis_scale_y": "縦"
             }
-        }
+        },
+        "all":"すべて"
     },
     "providers": {
         "input-data": {
