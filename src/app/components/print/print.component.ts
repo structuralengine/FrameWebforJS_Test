@@ -520,10 +520,12 @@ export class PrintComponent implements OnInit, OnDestroy {
             return;
           }
           // loadingの表示
+          this.router.navigate(["/"]);
           this.loadind_enable();
           // PDFサーバーに送る
-          this.pdfPreView(this.getPostJson(json));
-          this.router.navigate(["/"]);
+          setTimeout(() => {
+            this.pdfPreView(this.getPostJson(json));
+          }, 1000)
         }
       }
     } else {
@@ -863,10 +865,11 @@ export class PrintComponent implements OnInit, OnDestroy {
           }
         }
       }
-      this.loadind_enable();
-      const base64Encoded = this.getPostJson(json);
-      this.pdfPreView(base64Encoded);
       this.router.navigate(["/"]);
+      this.loadind_enable();
+      setTimeout(() => {
+        this.pdfPreView(this.getPostJson(json));
+      }, 1000)
     }
   }
 
@@ -876,6 +879,14 @@ export class PrintComponent implements OnInit, OnDestroy {
 
   private pdfPreView(base64Encoded: string): void {
     console.log("pdfPreView を実行中...");
+
+    const maxFileSize = 100 * 1024 * 1024
+    const size = this.getFileSizeInMb(base64Encoded)
+    if (size >= maxFileSize) {
+      this.loadind_desable();
+      this.helper.alert(this.translate.instant("message.mes-warning"));
+      return;
+    }
 
     this.http.post(this.url, base64Encoded, this.options).subscribe(
       (response) => {
@@ -952,5 +963,12 @@ export class PrintComponent implements OnInit, OnDestroy {
       //Webアプリの場合
       printJS({ printable: base64, type: "pdf", base64: true });
     }
+  }
+
+  private getFileSizeInMb(base64: string) {
+    const encoder = new TextEncoder();
+    const encoded = encoder.encode(base64);
+    const bytes = encoded.byteLength;
+    return bytes;
   }
 }
