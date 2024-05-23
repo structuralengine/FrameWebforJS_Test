@@ -438,18 +438,21 @@ export class PrintComponent implements OnInit, OnDestroy {
         ) {
           console.log("3D図の印刷: " + this.check_ts() + " msec");
           this.router.navigate(["/"]);
-          this.three.getCaptureImage().then((print_target) => {
-            console.log(
-              "getCaptureImage.then start: " + this.check_ts() + " msec"
-            );
-
-            this.printService.print_target = print_target;
-            this.printService.printDocument("invoice", [""]);
-
-            console.log(
-              "getCaptureImage.then last: " + this.check_ts() + " msec"
-            );
-          });
+          this.loadind_enable();
+          setTimeout(()=> {
+            this.three.getCaptureImage().then((print_target) => {
+              console.log(
+                "getCaptureImage.then start: " + this.check_ts() + " msec"
+              );
+  
+              this.printService.print_target = print_target;
+              this.printService.printDocument("invoice", [""]);
+              this.loadind_desable();
+              console.log(
+                "getCaptureImage.then last: " + this.check_ts() + " msec"
+              );
+            });
+          }, 1000)
         } else {
           this.helper.alert(this.translate.instant("print.selectTarget"));
           return;
