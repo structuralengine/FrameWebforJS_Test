@@ -225,15 +225,15 @@
                   <!-- 荷重図 -->
                   <!-- 2Dモードや計算前に関わらず、常に選択できる -->
                   <!-- Can hide this button for 3D, currently set it cannot be selected -->
-                  <li *ngIf="helper.dimension === 3">
+                  <!-- <li *ngIf="helper.dimension === 3">
                     <label style="width: 100%">
                       <input type="radio" name="radio-print" class="radio-input" id="printCase5"
                       [checked]="printService.flg === 15"
                         (click)="printService.selectRadio(15)" />
                       <span class="radio-parts" translate>print.PrintLoad</span>
                     </label>
-                  </li>
-                  <li *ngIf="helper.dimension === 2"  >
+                  </li> -->
+                  <li>
                     <label style="width: 100%" >
                       <input type="checkbox" name="radio-print" class="radio-input" id="printCase5"
                         (click)="printService.selectCheckbox(15)" [checked]="printService.arrFlg.includes(15)" />
@@ -242,7 +242,7 @@
                   </li>
 
                   <!-- 断面力図 -->
-                  <li *ngIf="helper.dimension === 3">
+                  <!-- <li *ngIf="helper.dimension === 3">
                     <label style="width: 100%">
                       <input type="radio" name="radio-print" class="radio-input" id="printCase1"
                       [checked]="printService.flg === 11"
@@ -250,8 +250,8 @@
                       <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
                         print.PrintDiagram</span>
                     </label>
-                  </li>
-                  <li *ngIf="helper.dimension === 2">
+                  </li> -->
+                  <li>
                     <label style="width: 100%">
                       <input type="checkbox" name="radio-print" class="radio-input" id="printCase1"
                         (click)="printService.selectCheckbox(11)" [checked]="printService.arrFlg.includes(11)" [disabled]="ResultData.isCalculated?null:'1'" />
@@ -263,9 +263,9 @@
                   <!-- 3Dのときの変位図 -->
                   <li *ngIf="helper.dimension==3">
                     <label style="width: 100%">
-                      <input type="radio" name="radio-print" class="radio-input" id="printCase4"
-                      [checked]="printService.flg === 14"
-                        (click)="printService.selectRadio(14)" [disabled]="ResultData.isCalculated?null:'1'" />
+                      <input type="checkbox" name="radio-print" class="radio-input" id="printCase4"
+                      [checked]="printService.arrFlg.includes(14)"
+                        (click)="printService.selectCheckbox(14)" [disabled]="ResultData.isCalculated?null:'1'" />
                       <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
                         print.disgDiagram</span>
                     </label>
@@ -282,7 +282,7 @@
                     </label>
                   </li> -->
                   <!-- Combine 断面力図 -->
-                  <li *ngIf="helper.dimension === 3">
+                  <!-- <li *ngIf="helper.dimension === 3">
                     <label style="width: 100%">
                       <input type="radio" name="radio-print" class="radio-input" id="printCase2"
                       [checked]="printService.flg === 12"
@@ -290,8 +290,8 @@
                       <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
                         print.combPrintDiagram</span>
                     </label>
-                  </li>
-                  <li *ngIf="helper.dimension === 2">
+                  </li> -->
+                  <li>
                     <label style="width: 100%">
                       <input type="checkbox" name="radio-print" class="radio-input" id="printCase2"
                         (click)="printService.selectCheckbox(12)" [checked]="printService.arrFlg.includes(12)" [disabled]="ResultData.isCalculated?null:'1'" />
@@ -301,7 +301,7 @@
                   </li>
 
                   <!-- Pickup 断面力図 -->
-                  <li *ngIf="helper.dimension === 3">
+                  <!-- <li *ngIf="helper.dimension === 3">
                     <label style="width: 100%">
                       <input type="radio" name="radio-print" class="radio-input" id="printCase3"
                       [checked]="printService.flg === 13"
@@ -309,8 +309,8 @@
                       <span [class]="ResultData.isCalculated?'radio-parts':'radio-parts-disabled'" translate>
                         print.pickPrintDiagram</span>
                     </label>
-                  </li>
-                  <li *ngIf="helper.dimension === 2">
+                  </li> -->
+                  <li>
                     <label style="width: 100%">
                       <input type="checkbox" name="radio-print" class="radio-input" id="printCase3"
                         (click)="printService.selectCheckbox(13)" [checked]="printService.arrFlg.includes(13)" [disabled]="ResultData.isCalculated?null:'1'" />
