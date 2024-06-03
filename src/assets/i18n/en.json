@@ -18,6 +18,7 @@
         "memberSectionForce": "MemberSectionForce",
         "output": "Output",
         "preparing": "Preparing for printing",
+        "alertMultiPrinting" : "Too many pages have been printed. There is a possibility that the printer will be forced to terminate due to insufficient memory. Do you want to cancel printing?",
         "description": {
             "node-2D": "Specify coordinates in the X and Y directions and set node information",
             "node-3D": "Specify coordinates in the X, Y, and Z directions and set node information",

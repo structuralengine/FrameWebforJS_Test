@@ -18,6 +18,7 @@
         "memberSectionForce": "构件截面力",
         "output": "输出",
         "preparing": "准备打印",
+        "alertMultiPrinting" : "已打印过多份。可能会因内存不足而被迫终止。您想取消打印吗？",
         "description": {
             "node-2D": "指定X和Y方向的坐标并设置节点信息",
             "node-3D": "指定X、Y和Z方向的坐标并设置节点信息",

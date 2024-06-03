@@ -820,8 +820,8 @@ export class ThreeService {
               html2canvas(screenArea).then((canvas) => {
                 result.push({
                   title: `Case${i} ${loadName}`,
-                  disgSubInfo1: maxMinObj.max ?? '',
-                  disgSubInfo2: maxMinObj.min ?? '',
+                  disgSubInfo1: maxMinObj?.max ?? '',
+                  disgSubInfo2: maxMinObj?.min ?? '',
                   src: canvas.toDataURL(),
                 });
                 counter++;
@@ -873,7 +873,6 @@ export class ThreeService {
               //Set Min max for each Case
               let max_three = this.max_min.max_Three;
               let min_three = this.max_min.min_Three;
-
               // this.ChangePage(number,this.mode).finally(() => {
               html2canvas(screenArea).then((canvas) => {
                 console.log(title2, name, loadTypeJa);
@@ -1140,4 +1139,46 @@ export class ThreeService {
   //   //this.fsec.createPanel(vertexlist, key);
   //   this.fsec.createPanel1(arr, vertexlist, key);
   // }
+
+  public getTotalCaptureImage(): any {
+      let counter = 0;
+      const captureInfo = this.getCaptureCase();
+      const captureCase: string[] = captureInfo.captureCase;
+
+      if (captureCase.length === 0) {
+     
+      } else if (this.mode === "print_load") {
+        const ary = [...Array(this.inputLoadData.load_name.length)].map((_, i) => i + 1);
+          for (const [index, i] of ary.entries()) {
+            const columnItem = this.inputLoadData.getLoadNameColumns(i);
+            const loadName = columnItem.name;
+            if (loadName !== "") {
+              counter++;
+            }
+          }
+      } else if (this.mode === "disg") {
+        const ary = [...Array(this.inputLoadData.load_name.length)].map((_, i) => i + 1);
+
+          for (const [index, i] of ary.entries()) {
+            const columnItem = this.inputLoadData.getLoadNameColumns(i);
+            const loadName = columnItem.name;
+            if (loadName !== "") {
+              counter++;
+            }
+          }
+      } else if (
+        this.mode === "fsec" ||
+        this.mode === "comb_fsec" ||
+        this.mode === "pick_fsec"
+      ) {
+        let totalTrue = this.customThree.threeEditable.filter(x => x === true).length;
+        counter = captureCase.length * totalTrue;
+      } else {
+        this.currentIndex = -1; // this.ChangePageの冒頭ではじかれるため、this.currentIndexを調整
+        for (let i = 0; i < captureCase.length; i++) {
+          counter++;
+        }
+      }
+      return counter;
+  }
 }

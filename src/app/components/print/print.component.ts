@@ -381,7 +381,7 @@ export class PrintComponent implements OnInit, OnDestroy {
   }
 
   //NEW LOGIC MULTI PRINT
-  public onPrintPDFNew(): void {
+  public async onPrintPDFNew(): Promise<void> {
     if (this.helper.dimension === 3) {
       const dataCheckCalculation = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
       const arrFlg = this.printService.arrFlg;
@@ -521,26 +521,60 @@ export class PrintComponent implements OnInit, OnDestroy {
           if (modes.length !== 0) {
             this.router.navigate(["/"]);
             this.loadind_enable();
-            setTimeout(() => {
+            let count = 0;
               const capturePromises = modes.map(mode => {
-                this.three.ChangeMode(mode);
                 this.three.mode = mode
-                return this.three.getCaptureImage().then((print_target) => {
-                  console.log("getCaptureImage.then start: " + this.check_ts() + " msec");
-                  print_target["mode"] = mode;
-                  this.printService.print_target.push(print_target);
-                  console.log("getCaptureImage.then last: " + this.check_ts() + " msec");
-                });
+                count += this.three.getTotalCaptureImage()
               });
-              Promise.all(capturePromises)
-                .then(() => {
-                  json["PrintScreenData"] = this.printService.print_target
-                  this.pdfPreView(this.getPostJson(json));
-                })
-                .catch(error => {
-                  console.error("Error:", error);
-                });
-            }, 1000)
+              if(count < 120){
+                setTimeout(() => {
+                            const capturePromises = modes.map(mode => {
+                              this.three.ChangeMode(mode);
+                              this.three.mode = mode
+                              return this.three.getCaptureImage().then((print_target) => {
+                                console.log("getCaptureImage.then start: " + this.check_ts() + " msec");
+                                print_target["mode"] = mode;
+                                this.printService.print_target.push(print_target);
+                                console.log("getCaptureImage.then last: " + this.check_ts() + " msec");
+                              });
+                            });
+                            Promise.all(capturePromises)
+                              .then(() => {
+                                json["PrintScreenData"] = this.printService.print_target
+                                this.pdfPreView(this.getPostJson(json));
+                              })
+                              .catch(error => {
+                                console.error("Error:", error);
+                              });
+                          }, 1000)
+              }
+              else{
+                const isConfirm = await this.helper.confirm(this.translate.instant("app.alertMultiPrinting"));
+                if (!isConfirm) {
+                  setTimeout(() => {
+                    const capturePromises = modes.map(mode => {
+                      this.three.ChangeMode(mode);
+                      this.three.mode = mode
+                      return this.three.getCaptureImage().then((print_target) => {
+                        console.log("getCaptureImage.then start: " + this.check_ts() + " msec");
+                        print_target["mode"] = mode;
+                        this.printService.print_target.push(print_target);
+                        console.log("getCaptureImage.then last: " + this.check_ts() + " msec");
+                      });
+                    });
+                    Promise.all(capturePromises)
+                      .then(() => {
+                        json["PrintScreenData"] = this.printService.print_target
+                        this.pdfPreView(this.getPostJson(json));
+                      })
+                      .catch(error => {
+                        console.error("Error:", error);
+                      });
+                  }, 1000)
+                }else{
+                  this.loadind_desable();
+                }
+              }
           }
 
         }
