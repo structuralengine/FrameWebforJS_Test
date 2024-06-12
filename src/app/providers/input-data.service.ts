@@ -93,6 +93,7 @@ export class InputDataService {
 
     if ("dimension" in jsonData) {
       this.helper.dimension = jsonData["dimension"] as number;
+      this.helper.dimensionInit= jsonData["dimension"] as number;
     }
   }
 

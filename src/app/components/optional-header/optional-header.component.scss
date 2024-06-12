@@ -25,7 +25,36 @@
     display: flex;
     flex-direction: column;
   }
+  .btn-group-show{
+    position: absolute;
+    left: 14px;
+  }
+  .buttonShow{
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    button {
+      height: 30px;
+      width: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &.left-button{
+        border-radius: 4px 0 0 4px;
+      }
+      &.right-button{
+        border-radius: 0 4px 4px 0;
+      }
+      &.active span {
+        color: #5095fc;
+      }
 
+      span {
+        color: #fff;
+        font-size: 12px;
+      }
+    }
+  }
   .buttonSelect {
     display: flex;
     flex-direction: row;
