@@ -29,10 +29,11 @@
     }
   ],
   "win": {
-    "icon": "dist/assets/icons",  
+    "icon": "dist/assets/icons",
+    "publisherName": "MALME INC.",
     "target": "nsis",
     "asar": false,
-    "verifyUpdateCodeSignature": false 
+    "verifyUpdateCodeSignature": false
   },
   "mac": {
     "icon": "dist",
